@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r129 - in cms/trunk/themes/viperal/template/modules: . articles
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r129%20-%20in%20cms/trunk/themes/viperal/template/modules%3A%20.%20articles&In-Reply-To=%3C200509161956.j8GJuk58004032%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000049.html">
+   <LINK REL="Next"  HREF="000051.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r129 - in cms/trunk/themes/viperal/template/modules: . articles</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r129%20-%20in%20cms/trunk/themes/viperal/template/modules%3A%20.%20articles&In-Reply-To=%3C200509161956.j8GJuk58004032%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r129 - in cms/trunk/themes/viperal/template/modules: . articles">viperal at berlios.de
+       </A><BR>
+    <I>Fri Sep 16 21:56:46 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000049.html">[Viperals-svncheckins] r128 - in cms/trunk: . includes includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums modules/Quick_Message themes/viperal/style themes/viperal/template themes_admin/viperal_admin/template
+</A></li>
+        <LI>Next message: <A HREF="000051.html">[Viperals-svncheckins] r130 - in cms/trunk: . includes includes/cache includes/display includes/templates includes/templates/en includes/templates/en/email includes/templates/en/email/contact includes/templates/modules/Contact javascript language/en
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#50">[ date ]</a>
+              <a href="thread.html#50">[ thread ]</a>
+              <a href="subject.html#50">[ subject ]</a>
+              <a href="author.html#50">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-16 21:56:44 +0200 (Fri, 16 Sep 2005)
+New Revision: 129
+
+Added:
+   cms/trunk/themes/viperal/template/modules/articles/
+   cms/trunk/themes/viperal/template/modules/articles/index.html
+   cms/trunk/themes/viperal/template/modules/articles/print.html
+   cms/trunk/themes/viperal/template/modules/articles/view.html
+Removed:
+   cms/trunk/themes/viperal/template/modules/News/
+Log:
+
+
+Added: cms/trunk/themes/viperal/template/modules/articles/index.html
+===================================================================
+--- cms/trunk/themes/viperal/template/modules/articles/index.html	2005-09-16 19:22:36 UTC (rev 128)
++++ cms/trunk/themes/viperal/template/modules/articles/index.html	2005-09-16 19:56:44 UTC (rev 129)
+@@ -0,0 +1,26 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;div class=&quot;articles_block&quot;&gt;
++	&lt;!-- LOOP $articles --&gt;
++	&lt;div class=&quot;title&quot; onclick=&quot;switch_collapse('a_{ $articles:id }');&quot; style=&quot;cursor:pointer&quot;&gt;{ $articles:title }&lt;/div&gt;
++		&lt;div class=&quot;content&quot;&lt;!-- IF { $articles:collapse } --&gt; style=&quot;display: none&quot;&lt;!-- ENDIF --&gt; id=&quot;a_{ $articles:id }&quot;&gt;
++			{ $articles:content }
++			&lt;br clear=&quot;all&quot;&gt;
++			&lt;p&gt;
++				&lt;!-- IF { $articles:full_story } --&gt;&lt;a href=&quot;{ $articles:link_content }&quot; &gt; { $L_READMORE } ..&lt;/a&gt;&lt;!-- ENDIF --&gt;
++				&lt;hr /&gt;
++				&lt;div style=&quot;float: left; Top: -2.5em;&quot;&gt;
++					&lt;a onclick=&quot;window.open('{ $articles:link_print }', 'print{ $articles:id }', 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,width=600,height=400'); return false;&quot; href=&quot;{ $articles:link_print }&quot; &gt;&lt;img src=&quot;themes/viperal/images/print.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
++					&lt;a onclick=&quot;window.open('{ $articles:link_send }', 'send{ $articles:id }', 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,width=600'); return false;&quot; href=&quot;{ $articles:link_send }&quot; &gt;&lt;img src=&quot;themes/viperal/images/mail.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
++				&lt;/div&gt;
++				&lt;div style=&quot;float: right; Top: -2.5em;&quot;&gt;{ $L_POSTED } { $articles:time }&lt;br/&gt;
++					&lt;!-- IF { $articles:link_poster } --&gt;By: &lt;a href=&quot;{ $articles:link_poster }&quot;&gt;{ $articles:poster } &lt;/a&gt;&lt;!-- ELSE --&gt;By: { $articles:poster } &lt;!-- ENDIF --&gt;
++				&lt;/div&gt;
++			&lt;/p&gt;
++		&lt;/div&gt;
++	&lt;br /&gt;&lt;br /&gt;
++	&lt;!-- ENDLOOP $articles --&gt;
++	&lt;p align=&quot;center&quot;&gt; { $articles_pagination }&lt;/p&gt;
++&lt;/div&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Added: cms/trunk/themes/viperal/template/modules/articles/print.html
+===================================================================
+--- cms/trunk/themes/viperal/template/modules/articles/print.html	2005-09-16 19:22:36 UTC (rev 128)
++++ cms/trunk/themes/viperal/template/modules/articles/print.html	2005-09-16 19:56:44 UTC (rev 129)
+@@ -0,0 +1,26 @@
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: News&lt;/title&gt;
++&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset={ $SITE_CHARSET }&quot; /&gt;
++&lt;/head&gt;
++
++&lt;body&gt;
++	&lt;div class=&quot;articles_block&quot;&gt;
++		&lt;div class=&quot;title&quot;&gt;{ $ARTICLES_TITLE }&lt;/div&gt;
++			&lt;div class=&quot;content&quot;&gt;
++				{ $ARTICLES_TEXT }
++			&lt;br /&gt;&lt;br /&gt;&lt;hr /&gt;
++			&lt;div style=&quot;text-align: left; margin-left: 60%&quot;&gt;Posted: { $ARTICLES_TIME }&lt;br/&gt;
++				&lt;!-- IF { $ARTICLES_POSTER_LINK } --&gt;By: &lt;a href=&quot;{ $ARTICLES_POSTER_LINK }&quot;&gt;{ $ARTICLES_POSTER } &lt;/a&gt;&lt;!-- ELSE --&gt;By: { $ARTICLES_POSTER }&lt;!-- ENDIF --&gt;
++			&lt;/div&gt;
++		&lt;/div&gt;
++		&lt;br /&gt;
++		&lt;div style=&quot;text-align: center;&quot;&gt;
++			&lt;a href=&quot;#&quot; onclick=&quot;javascript:window.print(); return false&quot; title=&quot;Print&quot;&gt;{ $L_PRINT }&lt;/a&gt;&lt;br/&gt;
++			&lt;a href='javascript:window.close();'&gt;&lt;span class=&quot;small&quot;&gt; { $L_CLOSE_WINDOW }&lt;/a&gt;
++		&lt;/div&gt;
++	&lt;/div&gt;
++&lt;/body&gt;
++&lt;/html&gt;
+\ No newline at end of file
+
+Added: cms/trunk/themes/viperal/template/modules/articles/view.html
+===================================================================
+--- cms/trunk/themes/viperal/template/modules/articles/view.html	2005-09-16 19:22:36 UTC (rev 128)
++++ cms/trunk/themes/viperal/template/modules/articles/view.html	2005-09-16 19:56:44 UTC (rev 129)
+@@ -0,0 +1,19 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;div class=&quot;articles_block&quot;&gt;
++	&lt;div class=&quot;title&quot; onclick=&quot;blockswitch2('{ $ARTICLES_ID }');&quot; style=&quot;cursor:pointer&quot;&gt;{ $ARTICLES_TITLE }&lt;/div&gt;
++		&lt;div class=&quot;content&quot;&gt;
++			{ $ARTICLES_TEXT }
++			&lt;br /&gt;&lt;br /&gt;
++		&lt;hr /&gt;
++		&lt;div style=&quot;float: left; Top: -2.5em;&quot;&gt;
++			&lt;a onclick=&quot;window.open('{ $ARTICLES_LINK_PRINT }', 'print{ $ARTICLES_ID }', 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,width=600,height=400'); return false;&quot; href=&quot;{ $ARTICLES_LINK_PRINT }&quot; &gt;&lt;img src=&quot;themes/viperal/images/print.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
++			&lt;a onclick=&quot;window.open('{ $ARTICLES_LINK_SEND }', 'send{ $ARTICLES_ID }', 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,width=600'); return false;&quot; href=&quot;{ $ARTICLES_LINK_SEND }&quot; &gt;&lt;img src=&quot;themes/viperal/images/mail.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
++		&lt;/div&gt;
++		 &lt;div style=&quot;text-align: left; margin-left: 60%&quot;&gt;Posted: { $ARTICLES_TIME }&lt;br/&gt;
++		 &lt;!-- IF { $ARTICLES_POSTER_LINK } --&gt;By: &lt;a href=&quot;{ $ARTICLES_POSTER_LINK }&quot;&gt;{ $ARTICLES_POSTER } &lt;/a&gt;&lt;!-- ELSE --&gt;By: { $ARTICLES_POSTER } &lt;!-- ENDIF --&gt;&lt;/div&gt;&lt;/div&gt;
++		&lt;br /&gt;
++	&lt;/div&gt;
++&lt;br /&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000049.html">[Viperals-svncheckins] r128 - in cms/trunk: . includes includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums modules/Quick_Message themes/viperal/style themes/viperal/template themes_admin/viperal_admin/template
+</A></li>
+	<LI>Next message: <A HREF="000051.html">[Viperals-svncheckins] r130 - in cms/trunk: . includes includes/cache includes/display includes/templates includes/templates/en includes/templates/en/email includes/templates/en/email/contact includes/templates/modules/Contact javascript language/en
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#50">[ date ]</a>
+              <a href="thread.html#50">[ thread ]</a>
+              <a href="subject.html#50">[ subject ]</a>
+              <a href="author.html#50">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

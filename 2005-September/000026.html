@@ -1,0 +1,715 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r105 - in cms/branches/1.0alpha1: includes/templates/admin includes/templates/admin/articles modules/articles modules/articles/admin
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r105%20-%20in%20cms/branches/1.0alpha1%3A%20includes/templates/admin%20includes/templates/admin/articles%20modules/articles%20modules/articles/admin&In-Reply-To=%3C200509090132.j891WMOb020123%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000025.html">
+   <LINK REL="Next"  HREF="000027.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r105 - in cms/branches/1.0alpha1: includes/templates/admin includes/templates/admin/articles modules/articles modules/articles/admin</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r105%20-%20in%20cms/branches/1.0alpha1%3A%20includes/templates/admin%20includes/templates/admin/articles%20modules/articles%20modules/articles/admin&In-Reply-To=%3C200509090132.j891WMOb020123%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r105 - in cms/branches/1.0alpha1: includes/templates/admin includes/templates/admin/articles modules/articles modules/articles/admin">viperal at berlios.de
+       </A><BR>
+    <I>Fri Sep  9 03:32:22 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000025.html">[Viperals-svncheckins] r104 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/admin/functions branches/1.0alpha1/includes branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates/admin/blocks branches/1.0alpha1/includes/templates/admin/messages branches/1.0alpha1/install branches/1.0alpha1/modules/articles trunk trunk/admin trunk/admin/functions trunk/includes trunk/includes/display trunk/includes/templates/admin trunk/includes/templates/admin/articles trunk/includes/templates/admin/blocks trunk/includes/templates/admin/messages trunk/includes/templates/admin/modules trunk/install trunk/modules/articles trunk/modules/articles/admin
+</A></li>
+        <LI>Next message: <A HREF="000027.html">[Viperals-svncheckins] r106 - in cms/trunk: includes/templates includes/templates/installer install
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-09 03:31:49 +0200 (Fri, 09 Sep 2005)
+New Revision: 105
+
+Added:
+   cms/branches/1.0alpha1/includes/templates/admin/articles/
+   cms/branches/1.0alpha1/includes/templates/admin/articles/edit.html
+   cms/branches/1.0alpha1/includes/templates/admin/articles/index.html
+   cms/branches/1.0alpha1/modules/articles/admin/
+   cms/branches/1.0alpha1/modules/articles/admin/index.php
+Log:
+
+
+Added: cms/branches/1.0alpha1/includes/templates/admin/articles/edit.html
+===================================================================
+--- cms/branches/1.0alpha1/includes/templates/admin/articles/edit.html	2005-09-09 01:19:33 UTC (rev 104)
++++ cms/branches/1.0alpha1/includes/templates/admin/articles/edit.html	2005-09-09 01:31:49 UTC (rev 105)
+@@ -0,0 +1,114 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;style type=&quot;text/css&quot;&gt;@import url(javascript/jscalendar/skins/aqua/theme.css);&lt;/style&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/jscalendar/calendar.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/jscalendar/calendar-setup.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/jscalendar/lang/calendar-en.js&quot;&gt;&lt;/script&gt;
++
++{ $A_TABLE_OPEN }
++
++&lt;form action=&quot;{ $B_ACTION }&quot; name=&quot;message&quot; method=&quot;post&quot;&gt;
++	&lt;table class=&quot;tablebg&quot; align=&quot;center&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
++		&lt;tbody&gt;
++			&lt;!-- IF { $B_ERROR } --&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row2&quot; align=&quot;center&quot; colspan=&quot;3&quot;&gt;
++					&lt;font class=&quot;error&quot;&gt;{ $B_ERROR }&lt;/font&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;!-- ENDIF --&gt;
++
++			&lt;tr&gt; 
++				&lt;th colspan=&quot;3&quot; height=&quot;28&quot; valign=&quot;middle&quot;&gt;{ $B_TITLE }&lt;/th&gt;
++			&lt;/tr&gt;
++		
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; width=&quot;20%&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_TITLE }: &lt;/b&gt;&lt;/td&gt;
++		
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;title&quot; size=&quot;50&quot; maxlength=&quot;100&quot; value=&quot;{ $B_TITLE }&quot; type=&quot;text&quot;&gt;&lt;!-- IF { $B_DELETE_LINK } --&gt; &lt;br/&gt; &lt;a href=&quot;{ $B_DELETE_LINK }&quot;&gt;{ $L_DELETE_THIS }&lt;/a&gt; &lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_ACTIVE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input name=&quot;active&quot; value=&quot;2&quot; &lt;!-- IF { $B_ACTIVE } --&gt; checked=&quot;checked&quot; &lt;!-- ENDIF --&gt; type=&quot;radio&quot;&gt;{ $L_YES }&nbsp;&nbsp;&lt;input name=&quot;active&quot; value=&quot;0&quot; &lt;!-- IF !{ $B_ACTIVE } --&gt; checked=&quot;checked&quot; &lt;!-- ENDIF --&gt; type=&quot;radio&quot;&gt;{ $L_NO }&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_STARTS }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; &gt;
++					&lt;input class=&quot;post&quot; id=&quot;starts&quot; name=&quot;starts&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_STARTS }&quot; type=&quot;text&quot;&gt;
++					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot; id=&quot;starts_trigger&quot;/&gt;
++				&lt;/td&gt;
++				&lt;td class=&quot;row1&quot; align=&quot;center&quot; rowspan=&quot;2&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;Current Server Time:&lt;br/&gt;{ $B_CURRENT_TIME }: &lt;/b&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_EXPIRES }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot;&gt;
++					&lt;input class=&quot;post&quot; id=&quot;expires&quot; name=&quot;expires&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_EXPIRES }&quot; type=&quot;text&quot; /&gt;
++					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot;  id=&quot;expires_trigger&quot; /&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; valign=&quot;top&quot; &gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_MESSAGE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5px&quot;&gt;&lt;/div&gt;
++				&lt;textarea name=&quot;text&quot; id=&quot;text&quot; editor_enabled=&quot;true&quot; style=&quot;width:90%; height:400px;&quot; cols=&quot;63&quot; rows=&quot;15&quot;&gt;{ $B_TEXT }&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; valign=&quot;top&quot; &gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_INTRO_MESSAGE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5px&quot;&gt;&lt;/div&gt;
++				&lt;textarea name=&quot;intro&quot; id=&quot;intro&quot; editor_enabled=&quot;true&quot; style=&quot;width:90%; height:200px;&quot; cols=&quot;63&quot; rows=&quot;15&quot;&gt;{ $B_INTRO }&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; valign=&quot;top&quot; &gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_ADMIN_NOTES }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5px&quot;&gt;&lt;/div&gt;
++				&lt;textarea name=&quot;notes&quot; id=&quot;notes&quot; editor_enabled=&quot;false&quot; style=&quot;width:90%; height:150px;&quot; cols=&quot;63&quot; rows=&quot;15&quot;&gt;{ $B_NOTES }&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt;
++				&lt;td class=&quot;cat&quot; colspan=&quot;3&quot; align=&quot;center&quot; height=&quot;28&quot;&gt;
++					&lt;input type=&quot;hidden&quot; name=&quot;update&quot; value=&quot;{ $B_BID }&quot;&gt;
++					&lt;!-- &lt;input class=&quot;btnmain&quot; id=&quot;preview_fast&quot; value=&quot;{ $L_PREVIEW }&quot; type=&quot;button&quot; onclick=&quot;fast_preview(); return false;&quot;&gt; --&gt;
++					&lt;input class=&quot;btnmain&quot; name=&quot;submit&quot; value=&quot;Submit&quot; type=&quot;submit&quot;&gt;&nbsp;&nbsp;&lt;input class=&quot;btnlite&quot; value=&quot;Reset&quot; name=&quot;reset&quot; type=&quot;reset&quot;&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++		&lt;/tbody&gt;
++	&lt;/table&gt;
++&lt;/form&gt;
++
++{ $A_TABLE_CLOSE }
++
++&lt;script type=&quot;text/javascript&quot;&gt;
++
++function fast_preview()
++{
++	if(document.getElementById('preview_fast').value == '{ $L_PREVIEW }')
++	{
++		document.getElementById('preview_fast').value = 'Edit';
++		document.getElementById('message_preview').innerHTML = document.getElementById('content').value;
++		document.getElementById('message_preview').style.display = '';
++		document.getElementById('content').style.display = 'none';
++
++	}
++	else
++	{
++		document.getElementById('preview_fast').value = '{ $L_PREVIEW }';
++		document.getElementById('message_preview').innerHTML = '';
++		document.getElementById('message_preview').style.display = 'none';
++		document.getElementById('content').style.display = '';
++	}
++}
++
++  Calendar.setup(
++    {
++      inputField  : &quot;starts&quot;,         // ID of the input field
++      button      : &quot;starts_trigger&quot;       // ID of the button
++    }
++  );
++&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot;&gt;
++  Calendar.setup(
++    {
++      inputField  : &quot;expires&quot;,         // ID of the input field
++      button      : &quot;expires_trigger&quot;       // ID of the button
++    }
++  );
++&lt;/script&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Added: cms/branches/1.0alpha1/includes/templates/admin/articles/index.html
+===================================================================
+--- cms/branches/1.0alpha1/includes/templates/admin/articles/index.html	2005-09-09 01:19:33 UTC (rev 104)
++++ cms/branches/1.0alpha1/includes/templates/admin/articles/index.html	2005-09-09 01:31:49 UTC (rev 105)
+@@ -0,0 +1,110 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++{ $A_TABLE_OPEN }
++
++&lt;table class=&quot;tablebg&quot; border=&quot;0&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
++    &lt;tbody&gt;
++		&lt;tr&gt;
++			&lt;th align=&quot;center&quot; width=&quot;25%&quot;&gt;{$L_TITLE}&lt;/th&gt;
++			&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;{ $L_ORDER }&lt;/th&gt;
++			&lt;th align=&quot;center&quot;&gt;{ $L_STATUS }&lt;/th&gt;
++			&lt;th align=&quot;center&quot;&gt;{ $L_FUNCTIONS }&lt;/th&gt;
++		&lt;/tr&gt;
++    &lt;!-- IF isset({ $top_admin_messages }) --&gt;
++    	&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;8&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_TOP_MESSAGES }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- LOOP $top_admin_messages --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $top_admin_messages:EDIT_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $top_admin_messages:EDIT_LINK }&quot; title=&quot;{ $L_EDIT }&quot;&gt;{ $top_admin_messages:TITLE }&lt;/a&gt;&lt;br /&gt;
++				&lt;!-- IF { $top_admin_messages:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $top_admin_messages:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $top_admin_messages:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $top_admin_messages:EXPIRES }&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
++				&lt;!-- IF { $top_admin_messages:ORDER_UP } --&gt;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_UP }&quot;&gt;&lt;img src=&quot;images/1uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_TOP }&quot;&gt;&lt;img src=&quot;images/2uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++				&lt;!-- IF { $top_admin_messages:ORDER_DOWN } --&gt;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_DOWN }&quot;&gt;&lt;img src=&quot;images/1downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_BOTTOM }&quot;&gt;&lt;img src=&quot;images/2downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;  onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $top_admin_messages:ACTIVE_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $top_admin_messages:ACTIVE_LINK }&quot;&gt;{ $top_admin_messages:CHANGE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++			&lt;!-- IF { $top_admin_messages:EDIT_LINK } --&gt;
++				&lt;a href=&quot;{ $top_admin_messages:EDIT_LINK }&quot;&gt;{ $L_EDIT }&lt;/a&gt; |
++			&lt;!-- ENDIF --&gt;
++			&lt;a href=&quot;{ $top_admin_messages:AUTH_LINK }&quot;&gt;{ $L_PERMISSIONS }&lt;/a&gt;
++			&lt;!-- IF { $top_admin_messages:DELETE_LINK } --&gt;
++				 | &lt;a href=&quot;{ $top_admin_messages:DELETE_LINK }&quot;&gt;{ $L_DELETE }&lt;/a&gt;
++			&lt;!-- ENDIF --&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- ENDLOOP $top_admin_messages --&gt;
++	&lt;!-- ENDIF --&gt;
++
++	&lt;!-- IF isset({ $bottom_admin_messages }) --&gt;
++    	&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;8&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_BOTTOM_MESSAGES }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- LOOP $bottom_admin_messages --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $bottom_admin_messages:EDIT_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:EDIT_LINK }&quot; title=&quot;{ $L_EDIT }&quot;&gt;{ $bottom_admin_messages:TITLE }&lt;/a&gt;&lt;br /&gt;
++				&lt;!-- IF { $bottom_admin_messages:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $bottom_admin_messages:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $bottom_admin_messages:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $bottom_admin_messages:EXPIRES }&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
++				&lt;!-- IF { $bottom_admin_messages:ORDER_UP } --&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_UP }&quot;&gt;&lt;img src=&quot;images/1uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_TOP }&quot;&gt;&lt;img src=&quot;images/2uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++				&lt;!-- IF { $bottom_admin_messages:ORDER_DOWN } --&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_DOWN }&quot;&gt;&lt;img src=&quot;images/1downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_BOTTOM }&quot;&gt;&lt;img src=&quot;images/2downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;  onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $bottom_admin_messages:ACTIVE_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:ACTIVE_LINK }&quot;&gt;{ $bottom_admin_messages:CHANGE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++			&lt;!-- IF { $bottom_admin_messages:EDIT_LINK } --&gt;
++			&lt;a href=&quot;{ $bottom_admin_messages:EDIT_LINK }&quot;&gt;{ $L_EDIT }&lt;/a&gt; |
++			&lt;!-- ENDIF --&gt;
++			&lt;a href=&quot;{ $bottom_admin_messages:AUTH_LINK }&quot;&gt;{ $L_PERMISSIONS }&lt;/a&gt;
++			&lt;!-- IF { $bottom_admin_messages:DELETE_LINK } --&gt;
++				| &lt;a href=&quot;{ $bottom_admin_messages:DELETE_LINK }&quot;&gt;{ $L_DELETE }&lt;/a&gt;
++			&lt;!-- ENDIF --&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- ENDLOOP $bottom_admin_messages --&gt;
++	&lt;!-- ENDIF --&gt;
++	 		  &lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;8&quot;&gt;
++				&lt;form action=&quot;{ $LINK_ADD }&quot; method=&quot;post&quot;&gt;&lt;input class=&quot;button&quot; value=&quot;{ $L_ADD_NEW }&quot; name=&quot;regular&quot; type=&quot;submit&quot; /&gt;&lt;/form&gt;
++			&lt;/td&gt;
++		  &lt;/tr&gt;
++  &lt;/tbody&gt;
++&lt;/table&gt;
++
++{ $A_TABLE_CLOSE }
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Added: cms/branches/1.0alpha1/modules/articles/admin/index.php
+===================================================================
+--- cms/branches/1.0alpha1/modules/articles/admin/index.php	2005-09-09 01:19:33 UTC (rev 104)
++++ cms/branches/1.0alpha1/modules/articles/admin/index.php	2005-09-09 01:31:49 UTC (rev 105)
+@@ -0,0 +1,396 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++if (VIPERAL !== 'Admin') 
++{
++	die;
++}
++
++if (!defined('ARTICLES_TABLE'))
++{
++	define('ARTICLES_TABLE', $prefix.'articles');
++}
++
++if (isset($_REQUEST['mode']))
++{
++	if ($id = get_variable('id', 'GET', false, 'int'))
++	{
++		switch ($_REQUEST['mode'])
++		{
++			case 'change':
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_status FROM ' . ARTICLES_TABLE . ' WHERE articles_id = '.$id);
++				$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++			
++				if (!$article)
++				{
++					trigger_error('articles_NOT_FOUND');
++				}
++				
++				$status = ($article['articles_status'] == STATUS_ACTIVE) ? STATUS_DISABLED : STATUS_ACTIVE;
++				$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . &quot; SET articles_status = $status WHERE articles_id = $id&quot;);
++			break;
++			
++			case 'delete':
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_id='.$id);
++				$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++			
++				if (!$article)
++				{
++					trigger_error('articles_NOT_FOUND');
++				}
++			
++				if (display_confirmation())
++				{
++					$_CLASS['core_db']-&gt;query('DELETE from ' . ARTICLES_TABLE . ' where articles_id = '.$id);
++					$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order-1 WHERE articles_order &gt; ' . $article['articles_order']);
++				}
++			break;
++
++			case 'auth':
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_auth FROM ' . ARTICLES_TABLE . ' WHERE articles_id = '.$id);
++				$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++				
++				if (!$article)
++				{
++					trigger_error('articles_NOT_FOUND');
++				}
++				
++				$article['articles_auth'] = ($article['articles_auth']) ? unserialize($article['articles_auth']) : '';
++				
++				$_CLASS['core_display']-&gt;display_header();
++
++				$auth = $_CLASS['core_auth']-&gt;generate_auth_options($article['articles_auth']);
++
++				if ($auth !== false)
++				{
++					if (is_null($auth))
++					{
++						$article['articles_auth'] = '';
++						$auth = 'null';
++					}
++					else
++					{
++						$article['articles_auth'] = $auth;
++						$auth = &quot;'&quot;.$_CLASS['core_db']-&gt;escape(serialize($auth)).&quot;'&quot;;
++					}
++			
++					$_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . &quot; SET articles_auth = $auth WHERE articles_id = $id&quot;);
++				}
++
++				$_CLASS['core_display']-&gt;display_footer();
++			break;
++
++			case 'order':
++				$option = get_variable('option', 'GET', false);
++			
++				if (!$option || !in_array($option, array('down', 'up', 'bottom', 'top')))
++				{
++					break;
++				}
++
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_type, articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_id= ' . $id);
++				$articles = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++			
++				if (!$articles)
++				{
++					trigger_error('ARTICLE_NOT_FOUND');
++				}
++
++				settype($articles['articles_order'], 'integer');
++
++				switch ($option)
++				{
++					case 'down':
++						$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_type='.$articles['articles_type']);
++						list($max_order) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++						$_CLASS['core_db']-&gt;free_result($result);
++			
++						if ($articles['articles_order'] &lt; $max_order)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order-1 WHERE articles_type = '.$articles['articles_type'].' AND articles_order='.($articles['articles_order'] + 1));
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = '.($articles['articles_order'] + 1).' WHERE articles_id ='. $id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++			
++					case 'bottom':
++						$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_type='.$articles['articles_type']);
++						list($max_order) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++						$_CLASS['core_db']-&gt;free_result($result);
++			
++						if ($articles['articles_order'] &lt; $max_order)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order-1 WHERE articles_type='.$articles['articles_type'].' AND articles_order &gt; '.$articles['articles_order']);
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = '.$max_order.' WHERE articles_id = '.$id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++			
++					case 'up':
++						if ($articles['articles_order'] &amp;&amp; $articles['articles_order'] != 1)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order+1 WHERE articles_type='.$articles['articles_type'].' AND articles_order = '.($articles['articles_order'] - 1));
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order='.($articles['articles_order'] -1 ).' WHERE articles_id ='. $id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++			
++					case 'top':
++
++						if ($articles['articles_order'] != 1)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order+1 WHERE articles_type='.$articles['articles_type'].' AND articles_order &lt; '.$articles['articles_order']);
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = 1 WHERE articles_id = '.$id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++				}
++			break;
++
++			case 'edit':
++				articles_edit($id);
++			break;
++		}
++	}
++
++	switch ($_REQUEST['mode'])
++	{
++		case 'add':
++			articles_edit(false);
++		break;
++		   
++		case 'save':
++			articles_save($id);
++		break;
++	}
++}
++
++// temp
++$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE);
++list($count) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++$_CLASS['core_db']-&gt;free_result($result);
++
++$result = $_CLASS['core_db']-&gt;query('SELECT articles_id, articles_title, articles_starts, articles_order, articles_expires, articles_status
++										FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC');
++
++while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++{
++	$_CLASS['core_template']-&gt;assign_vars_array('top_admin_messages', array(
++		'ACTIVE'		=&gt; ($row['articles_status']) ? true : false,
++		'CHANGE'		=&gt; ($row['articles_status']) ? $_CLASS['core_user']-&gt;lang['DEACTIVATE'] : $_CLASS['core_user']-&gt;lang['ACTIVATE'],
++
++		'AUTH_LINK'		=&gt; generate_link('articles&amp;mode=auth&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'ACTIVE_LINK'	=&gt; generate_link('articles&amp;mode=change&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'VIEW_LINK' 	=&gt; generate_link('articles&amp;mode=show&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'EDIT_LINK'		=&gt; generate_link('articles&amp;mode=edit&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'DELETE_LINK' 	=&gt; generate_link('articles&amp;mode=delete&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++
++		'EXPIRES'		=&gt; ($row['articles_expires']) ? $_CLASS['core_user']-&gt;format_date($row['articles_expires']) : false,
++		'STARTS'		=&gt; ($row['articles_starts'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['articles_starts']) : false,
++		'TITLE'			=&gt; $row['articles_title'],
++
++		'ORDER_DOWN' 		=&gt; ($row['articles_order'] &lt; $count),
++		'ORDER_UP'			=&gt; ($row['articles_order'] &gt; 1),
++
++		'LINK_ORDER_UP' 	=&gt; generate_link('articles&amp;mode=order&amp;option=up&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'LINK_ORDER_TOP' 	=&gt; generate_link('articles&amp;mode=order&amp;option=top&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'LINK_ORDER_DOWN'	=&gt; generate_link('articles&amp;mode=order&amp;option=down&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'LINK_ORDER_BOTTOM'	=&gt; generate_link('articles&amp;mode=order&amp;option=bottom&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++	));
++}
++
++$_CLASS['core_template']-&gt;assign_array(array(
++	'LINK_ADD'			=&gt; generate_link('articles&amp;mode=add', array('admin' =&gt; true))
++));
++
++$_CLASS['core_db']-&gt;free_result($result);
++
++$_CLASS['core_display']-&gt;display(false, 'admin/articles/index.html');
++
++script_close();
++
++function articles_edit($id = false, $article = false, $error = false)
++{
++    global $_CLASS;
++
++	if ($id)
++	{
++		$result = $_CLASS['core_db']-&gt;query('SELECT * FROM ' . ARTICLES_TABLE . ' WHERE articles_id = ' . $id);
++		$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++		
++		if (!$article)
++		{
++			redirect(generate_link('articles', array('admin' =&gt; true)));
++		}
++		
++		if (isset($_POST['submit']))
++		{
++			// need to re-validate data with the db type
++			articles_get_data($articles_post, $error);
++			$article = array_merge($article, $articles_post);
++		}
++
++		unset($articles_post);
++	}
++	
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'B_TITLE'			=&gt; $article['articles_title'],
++		'B_TEXT'			=&gt; $article['articles_text'],
++		'B_INTRO'			=&gt; $article['articles_intro'],
++		'B_NOTES'			=&gt; $article['articles_notes'],
++
++		'B_ACTIVE'			=&gt; $article['articles_status'],
++		'B_EXPIRES'			=&gt; is_numeric($article['articles_expires']) ? $_CLASS['core_user']-&gt;format_date($article['articles_expires'], 'M d, Y h:i a') : $article['articles_expires'],
++		'B_ERROR'			=&gt; $error,
++		'B_STARTS'			=&gt; is_numeric($article['articles_starts']) ? $_CLASS['core_user']-&gt;format_date($article['articles_starts'], 'M d, Y h:i a') : $article['articles_starts'],
++		'B_DELETE_LINK'		=&gt; ($id) ? generate_link('articles&amp;mode=delete&amp;id='.$id, array('admin' =&gt; true)) : false,
++		'B_ACTION'			=&gt; generate_link('articles&amp;mode=save'.(($id) ? '&amp;id='.$id : ''), array('admin' =&gt; true)),
++		'B_CURRENT_TIME'=&gt; $_CLASS['core_user']-&gt;format_date($_CLASS['core_user']-&gt;time)
++	));
++	
++	$_CLASS['core_template']-&gt;display('admin/articles/edit.html');
++}
++
++function articles_get_data(&amp;$data, &amp;$error)
++{
++	global $_CLASS;
++	
++	$error = '';
++	$data = array();
++
++	if (!isset($_POST['submit']))
++	{
++		return;
++	}
++
++	$data['articles_title'] = get_variable('title', 'POST', '');
++	$data['articles_text'] = get_variable('text', 'POST', '');
++
++	foreach ($data as $field =&gt; $value)
++	{
++		if (!$value)
++		{
++			$error .= $_CLASS['core_user']-&gt;get_lang('ERROR_'.$field).'&lt;br /&gt;';
++		}
++	}
++
++	$data['articles_intro'] = get_variable('intro', 'POST', '');
++	$data['articles_notes'] = get_variable('notes', 'POST', '');
++
++	$data['articles_status']	= (get_variable('active', 'POST', STATUS_DISABLED, 'int') === STATUS_DISABLED) ? STATUS_DISABLED : STATUS_ACTIVE;
++	$data['articles_expires']	= get_variable('expires', 'POST', 0);
++	$data['articles_starts']	= get_variable('starts', 'POST', '');
++
++	$start = $expires = '';
++
++	if ($data['articles_starts'])
++	{
++		$start = strtotime($data['articles_starts']);
++
++		if (!$start || $start == -1)
++		{
++			$error .= $_CLASS['core_user']-&gt;lang['ERROR_START_TIME'].'&lt;br /&gt;';
++		}
++	}
++
++	if ($data['articles_expires'])
++	{
++		$expires = strtotime($data['articles_expires']);
++
++		if (!$expires || $expires == -1)
++		{
++			$error .= $_CLASS['core_user']-&gt;lang['ERROR_END_TIME'].'&lt;br /&gt;';
++		}
++	}
++	
++	if (!$error)
++	{
++		$data['articles_starts'] = ($start) ? $_CLASS['core_user']-&gt;time_convert($start, 'gmt') : 0;
++		$data['articles_expires'] = ($expires) ? $_CLASS['core_user']-&gt;time_convert($expires, 'gmt') : 0;
++	}
++}
++
++function articles_save($id = false)
++{
++    global $_CLASS;
++    
++	if ($id)
++	{
++		$result = $_CLASS['core_db']-&gt;query('SELECT articles_id FROM ' . ARTICLES_TABLE . ' WHERE articles_id = '. $id);
++		$articles = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		if (!$articles)
++		{
++			redirect(generate_link('articles', array('admin' =&gt; true)));
++		}
++
++		// need to validate data with the db type
++		articles_get_data($data, $error);
++
++		if ($error)
++		{
++			return articles_edit($id, $data, $error);
++		}
++
++		$sql = 'UPDATE ' . ARTICLES_TABLE . ' SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $data) .'  WHERE articles_id = '.$id;
++
++		$_CLASS['core_db']-&gt;query($sql);
++	}
++	else
++	{
++		articles_get_data($data, $error);
++
++		if ($error)
++		{
++			return articles_edit(false, $data, $error);
++		}
++
++		$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE);
++		list($max_order) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		$data['articles_order'] = (int) $max_order + 1;
++		$data['articles_posted'] = (int) $_CLASS['core_user']-&gt;time;
++		$data['articles_type'] = 1;
++
++		$data['poster_id'] = $_CLASS['core_user']-&gt;data['user_id'];
++		$data['poster_ip'] = $_CLASS['core_user']-&gt;ip;
++		$data['poster_name'] = $_CLASS['core_user']-&gt;data['username'];
++
++		$_CLASS['core_db']-&gt;query('INSERT INTO ' . ARTICLES_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $data));
++	}
++
++	$_CLASS['core_display']-&gt;meta_refresh('3', generate_link('articles', array('admin' =&gt; true)));
++	trigger_error(sprintf($_CLASS['core_user']-&gt;lang['SAVED'], generate_link('articles', array('admin' =&gt; true))));	
++}
++
++?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000025.html">[Viperals-svncheckins] r104 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/admin/functions branches/1.0alpha1/includes branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates/admin/blocks branches/1.0alpha1/includes/templates/admin/messages branches/1.0alpha1/install branches/1.0alpha1/modules/articles trunk trunk/admin trunk/admin/functions trunk/includes trunk/includes/display trunk/includes/templates/admin trunk/includes/templates/admin/articles trunk/includes/templates/admin/blocks trunk/includes/templates/admin/messages trunk/includes/templates/admin/modules trunk/install trunk/modules/articles trunk/modules/articles/admin
+</A></li>
+	<LI>Next message: <A HREF="000027.html">[Viperals-svncheckins] r106 - in cms/trunk: includes/templates includes/templates/installer install
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

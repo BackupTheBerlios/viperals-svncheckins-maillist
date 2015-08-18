@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r154 - cms/trunk/includes/display
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r154%20-%20cms/trunk/includes/display&In-Reply-To=%3C200510010151.j911pCHV029236%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000073.html">
+   <LINK REL="Next"  HREF="000075.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r154 - cms/trunk/includes/display</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r154%20-%20cms/trunk/includes/display&In-Reply-To=%3C200510010151.j911pCHV029236%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r154 - cms/trunk/includes/display">viperal at berlios.de
+       </A><BR>
+    <I>Sat Oct  1 03:51:12 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000073.html">[Viperals-svncheckins] r153 - in cms/trunk: . admin images images/icons images/icons/misc images/icons/smilies images/modules images/modules/forums images/modules/forums/adm images/modules/forums/adm/images images/modules/forums/icons images/modules/forums/icons/misc images/modules/forums/icons/smile includes includes/forums includes/forums/admin install
+</A></li>
+        <LI>Next message: <A HREF="000075.html">[Viperals-svncheckins] r155 - in cms/branches/1.0alpha2: images images/icons images/icons/misc images/icons/smilies includes/display includes/forums includes/forums/admin install modules/Control_Panel/ucp
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-10-01 03:51:05 +0200 (Sat, 01 Oct 2005)
+New Revision: 154
+
+Modified:
+   cms/trunk/includes/display/display.php
+Log:
+
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-10-01 01:38:23 UTC (rev 153)
++++ cms/trunk/includes/display/display.php	2005-10-01 01:51:05 UTC (rev 154)
+@@ -161,7 +161,8 @@
+ 		if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $_CLASS['core_user']-&gt;data['user_new_privmsg'] &amp;&amp; $_CLASS['core_user']-&gt;user_data_get('popuppm'))
+ 		{
+ 			$this-&gt;header['js'][] = '&lt;script type=&quot;text/javascript&quot;&gt;window.open(\''. preg_replace('/&amp;/', '&amp;', generate_link('Control_Panel&amp;i=pm&amp;mode=popup', array('full' =&gt; true))).&quot;', '_phpbbprivmsg','height=135,resizable=yes,status=no,width=400');&lt;/script&gt;&quot;;
+-			$_CLASS['core_db']-&gt;sql_query('UPDATE ' . USERS_TABLE . ' SET user_new_privmsg = 0 WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id']);
++// need some other field
++			//$_CLASS['core_db']-&gt;sql_query('UPDATE ' . USERS_TABLE . ' SET user_new_privmsg = 0 WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id']);
+ 		}
+ 
+ 		$this-&gt;header['regular'][] = '&lt;meta name=&quot;generator&quot; content=&quot;Viperal CMS ( www.viperal.com ) Copyright(c) '.date('Y').'&quot; /&gt;';
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000073.html">[Viperals-svncheckins] r153 - in cms/trunk: . admin images images/icons images/icons/misc images/icons/smilies images/modules images/modules/forums images/modules/forums/adm images/modules/forums/adm/images images/modules/forums/icons images/modules/forums/icons/misc images/modules/forums/icons/smile includes includes/forums includes/forums/admin install
+</A></li>
+	<LI>Next message: <A HREF="000075.html">[Viperals-svncheckins] r155 - in cms/branches/1.0alpha2: images images/icons images/icons/misc images/icons/smilies includes/display includes/forums includes/forums/admin install modules/Control_Panel/ucp
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,3225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r178 - in cms/trunk: . blocks includes	includes/forums includes/forums/admin	includes/templates/admin/modules	includes/templates/modules/control_panel	includes/templates/modules/forums	includes/templates/modules/members_list javascript	javascript/forums modules/control_panel	modules/control_panel/modules modules/forums	modules/members_list modules/quick_message	themes/viperal/images/modules/forums
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2006-July/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r178%20-%20in%20cms/trunk%3A%20.%20blocks%20includes%0A%09includes/forums%20includes/forums/admin%0A%09includes/templates/admin/modules%0A%09includes/templates/modules/control_panel%0A%09includes/templates/modules/forums%0A%09includes/templates/modules/members_list%20javascript%0A%09javascript/forums%20modules/control_panel%0A%09modules/control_panel/modules%20modules/forums%0A%09modules/members_list%20modules/quick_message%0A%09themes/viperal/images/modules/forums&In-Reply-To=%3C200607251708.k6PH8jHO028228%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000096.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r178 - in cms/trunk: . blocks includes	includes/forums includes/forums/admin	includes/templates/admin/modules	includes/templates/modules/control_panel	includes/templates/modules/forums	includes/templates/modules/members_list javascript	javascript/forums modules/control_panel	modules/control_panel/modules modules/forums	modules/members_list modules/quick_message	themes/viperal/images/modules/forums</H1>
+    <B>viperal at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r178%20-%20in%20cms/trunk%3A%20.%20blocks%20includes%0A%09includes/forums%20includes/forums/admin%0A%09includes/templates/admin/modules%0A%09includes/templates/modules/control_panel%0A%09includes/templates/modules/forums%0A%09includes/templates/modules/members_list%20javascript%0A%09javascript/forums%20modules/control_panel%0A%09modules/control_panel/modules%20modules/forums%0A%09modules/members_list%20modules/quick_message%0A%09themes/viperal/images/modules/forums&In-Reply-To=%3C200607251708.k6PH8jHO028228%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r178 - in cms/trunk: . blocks includes	includes/forums includes/forums/admin	includes/templates/admin/modules	includes/templates/modules/control_panel	includes/templates/modules/forums	includes/templates/modules/members_list javascript	javascript/forums modules/control_panel	modules/control_panel/modules modules/forums	modules/members_list modules/quick_message	themes/viperal/images/modules/forums">viperal at mail.berlios.de
+       </A><BR>
+    <I>Tue Jul 25 19:08:45 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000096.html">[Viperals-svncheckins] r177 -	cms/trunk/themes/viperal/images/modules
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2006-07-25 19:08:28 +0200 (Tue, 25 Jul 2006)
+New Revision: 178
+
+Added:
+   cms/trunk/includes/templates/admin/modules/search.html
+Modified:
+   cms/trunk/blocks/block-Admin_Forums.php
+   cms/trunk/blocks/block-Control_Panel.php
+   cms/trunk/blocks/block-Quick_Message.php
+   cms/trunk/blocks/block-User.php
+   cms/trunk/feed.php
+   cms/trunk/includes/forums/admin/admin_attachments.php
+   cms/trunk/includes/forums/admin/admin_board.php
+   cms/trunk/includes/forums/admin/admin_forums.php
+   cms/trunk/includes/forums/admin/admin_permissions.php
+   cms/trunk/includes/forums/admin/links.php
+   cms/trunk/includes/forums/admin/main.php
+   cms/trunk/includes/forums/functions.php
+   cms/trunk/includes/forums/functions_admin.php
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/forums/functions_posting.php
+   cms/trunk/includes/functions.php
+   cms/trunk/includes/templates/modules/control_panel/ucp_agreement.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_attachments.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_calender_add.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_calender_day.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_calender_main.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_groups_membership.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_main_bookmarks.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_main_drafts.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_main_front.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_main_subscribed.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_pm_options.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewfolder.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewmessage.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_posting_body.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_prefs_personal.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_prefs_post.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_prefs_view.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_profile_avatar.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_profile_profile_info.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_profile_reg_details.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_profile_signature.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_register.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_remind.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_resend.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_zebra_foes.html
+   cms/trunk/includes/templates/modules/control_panel/ucp_zebra_friends.html
+   cms/trunk/includes/templates/modules/forums/confirm_body.html
+   cms/trunk/includes/templates/modules/forums/faq_body.html
+   cms/trunk/includes/templates/modules/forums/index_body.html
+   cms/trunk/includes/templates/modules/forums/mcp_footer.html
+   cms/trunk/includes/templates/modules/forums/mcp_forum.html
+   cms/trunk/includes/templates/modules/forums/mcp_front.html
+   cms/trunk/includes/templates/modules/forums/mcp_header.html
+   cms/trunk/includes/templates/modules/forums/mcp_message.html
+   cms/trunk/includes/templates/modules/forums/mcp_move.html
+   cms/trunk/includes/templates/modules/forums/mcp_post.html
+   cms/trunk/includes/templates/modules/forums/mcp_topic.html
+   cms/trunk/includes/templates/modules/forums/posting_body.html
+   cms/trunk/includes/templates/modules/forums/posting_smilies.html
+   cms/trunk/includes/templates/modules/forums/report_body.html
+   cms/trunk/includes/templates/modules/forums/search_body.html
+   cms/trunk/includes/templates/modules/forums/search_results.html
+   cms/trunk/includes/templates/modules/forums/simple_header.html
+   cms/trunk/includes/templates/modules/forums/viewforum_body.html
+   cms/trunk/includes/templates/modules/forums/viewforum_subforum.html
+   cms/trunk/includes/templates/modules/forums/viewtopic_body.html
+   cms/trunk/includes/templates/modules/members_list/memberlist_body.html
+   cms/trunk/includes/templates/modules/members_list/memberlist_forum_moderators.html
+   cms/trunk/includes/templates/modules/members_list/memberlist_view.html
+   cms/trunk/javascript/forums/forum_view.js
+   cms/trunk/javascript/quick_messages.js
+   cms/trunk/modules/control_panel/index.php
+   cms/trunk/modules/control_panel/modules/ucp_pm.php
+   cms/trunk/modules/control_panel/modules/ucp_prefs.php
+   cms/trunk/modules/forums/ajax.php
+   cms/trunk/modules/forums/faq.php
+   cms/trunk/modules/forums/main.php
+   cms/trunk/modules/forums/posting.php
+   cms/trunk/modules/forums/viewforum.php
+   cms/trunk/modules/forums/viewtopic.php
+   cms/trunk/modules/members_list/index.php
+   cms/trunk/modules/quick_message/ajax.php
+   cms/trunk/modules/quick_message/index.php
+   cms/trunk/themes/viperal/images/modules/forums/index.php
+Log:
+
+
+Modified: cms/trunk/blocks/block-Admin_Forums.php
+===================================================================
+--- cms/trunk/blocks/block-Admin_Forums.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/blocks/block-Admin_Forums.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -28,10 +28,10 @@
+ 				&lt;th class=&quot;forummenu&quot; height=&quot;25&quot;&gt;&#0187; '.$_CLASS['core_user']-&gt;lang['RETURN_TO'].'&lt;/th&gt;
+ 			&lt;/tr&gt;
+ 			&lt;tr&gt;
+-				&lt;td class=&quot;row1&quot;&gt;&lt;a class=&quot;genmed&quot; href=&quot;'.generate_link('Forums', array('admin' =&gt; true)).'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['FORUM_INDEX'].'&lt;/a&gt;&lt;/td&gt;
++				&lt;td class=&quot;row1&quot;&gt;&lt;a class=&quot;genmed&quot; href=&quot;'.generate_link('forums', array('admin' =&gt; true)).'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['FORUM_INDEX'].'&lt;/a&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+ 			&lt;tr&gt;
+-				&lt;td class=&quot;row1&quot;&gt;&lt;a class=&quot;genmed&quot; href=&quot;'.generate_link('Forums').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['FORUM_INDEX'].'&lt;/a&gt;&lt;/td&gt;
++				&lt;td class=&quot;row1&quot;&gt;&lt;a class=&quot;genmed&quot; href=&quot;'.generate_link('forums', array('admin' =&gt; true)).'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['FORUM_INDEX'].'&lt;/a&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;';
+ 
+ 
+
+Modified: cms/trunk/blocks/block-Control_Panel.php
+===================================================================
+--- cms/trunk/blocks/block-Control_Panel.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/blocks/block-Control_Panel.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -34,6 +34,6 @@
+ 	return;
+ }
+ 
+-$this-&gt;content = $_CLASS['core_template']-&gt;display('modules/Control_Panel/ucp_sideblock.html', true);
++$this-&gt;content = $_CLASS['core_template']-&gt;display('modules/control_panel/ucp_sideblock.html', true);
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/blocks/block-Quick_Message.php
+===================================================================
+--- cms/trunk/blocks/block-Quick_Message.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/blocks/block-Quick_Message.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -35,7 +35,7 @@
+ }
+ */
+ 
+-require_once($site_file_root.'modules/Quick_Message/functions.php');
++require_once($site_file_root.'modules/quick_message/functions.php');
+ 
+ $this-&gt;content = '&lt;div id=&quot;qm_block&quot;&gt;'.qm_block_content().'&lt;/div&gt;';
+ 
+
+Modified: cms/trunk/blocks/block-User.php
+===================================================================
+--- cms/trunk/blocks/block-User.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/blocks/block-User.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -54,7 +54,7 @@
+ 	}
+ 	
+ 	$this-&gt;content .= '&lt;br /&gt;'.$_CLASS['core_user']-&gt;lang['WELCOME'].'&lt;br /&gt;' . $_CLASS['core_user']-&gt;data['username'].'&lt;br /&gt;&lt;hr /&gt;&lt;/div&gt;&lt;b&gt;Your Info&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+-	&lt;div style=&quot;margin-left: 12px;&quot;&gt;&lt;a href=&quot;'.generate_link('control_panel&amp;i=2').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['PRIVATE_MESSAGE'].'&lt;/a&gt;&lt;hr /&gt;'.sprintf($_CLASS['core_user']-&gt;lang['NEW_PMS'], $_CLASS['core_user']-&gt;data['user_new_privmsg']) . '&lt;br /&gt;
++	&lt;div style=&quot;margin-left: 12px;&quot;&gt;&lt;a href=&quot;'.generate_link('control_panel&amp;i=pm').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['PRIVATE_MESSAGE'].'&lt;/a&gt;&lt;hr /&gt;'.sprintf($_CLASS['core_user']-&gt;lang['NEW_PMS'], $_CLASS['core_user']-&gt;data['user_new_privmsg']) . '&lt;br /&gt;
+ 	'.sprintf($_CLASS['core_user']-&gt;lang['UNREAD_PM'], $_CLASS['core_user']-&gt;data['user_unread_privmsg']) . '&lt;br /&gt;&lt;br /&gt;
+ 	&lt;a href=&quot;'.generate_link('control_panel').'&quot;&gt;Control Panel&lt;/a&gt;&lt;br /&gt;
+ 	&lt;a href=&quot;'.generate_link('control_panel&amp;mode=logout').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['LOGOUT'].'&lt;/a&gt;&lt;br /&gt;&lt;/div&gt;';
+
+Modified: cms/trunk/feed.php
+===================================================================
+--- cms/trunk/feed.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/feed.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -23,7 +23,7 @@
+ 
+ define('VIPERAL', 'FEED');
+ 
+-error_reporting(0);
++//error_reporting(0);
+ 
+ /* require(SITE_FILE_ROOT.'core.php'); */
+ require_once 'core.php';
+
+Modified: cms/trunk/includes/forums/admin/admin_attachments.php
+===================================================================
+--- cms/trunk/includes/forums/admin/admin_attachments.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/admin/admin_attachments.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -22,7 +22,7 @@
+ 
+ require($site_file_root.'includes/forums/functions_posting.php');
+ 
+-$_CLASS['core_user']-&gt;add_lang(array('posting', 'viewtopic'), 'Forums');
++$_CLASS['core_user']-&gt;add_lang(array('posting', 'viewtopic'), 'forums');
+ 
+ $mode = request_var('mode', '');
+ $submit = (isset($_POST['submit'])) ? true : false;
+
+Modified: cms/trunk/includes/forums/admin/admin_board.php
+===================================================================
+--- cms/trunk/includes/forums/admin/admin_board.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/admin/admin_board.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -166,7 +166,7 @@
+ 
+ if (isset($display_vars['lang']))
+ {
+-	$_CLASS['core_user']-&gt;add_lang($display_vars['lang'], 'Forums');
++	$_CLASS['core_user']-&gt;add_lang($display_vars['lang'], 'forums');
+ }
+ 
+ $new = $config;
+
+Modified: cms/trunk/includes/forums/admin/admin_forums.php
+===================================================================
+--- cms/trunk/includes/forums/admin/admin_forums.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/admin/admin_forums.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -146,7 +146,7 @@
+ 
+ 			// Redirect to permissions
+ 			$message = ($mode === 'add') ? $_CLASS['core_user']-&gt;lang['FORUM_CREATED'] : $_CLASS['core_user']-&gt;lang['FORUM_UPDATED'];
+-			$message .= '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['REDIRECT_ACL'], '&lt;a href=&quot;'.generate_link('Forums&amp;file=admin_permissions&amp;mode=forum&amp;submit_usergroups=true&amp;ug_type=forum&amp;action=usergroups&amp;f[forum][]=' . $forum_data['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;', '&lt;/a&gt;');
++			$message .= '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['REDIRECT_ACL'], '&lt;a href=&quot;'.generate_link('forums&amp;file=admin_permissions&amp;mode=forum&amp;submit_usergroups=true&amp;ug_type=forum&amp;action=usergroups&amp;f[forum][]=' . $forum_data['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;', '&lt;/a&gt;');
+ 			$show_prev_info = ($mode == 'edit') ? true : false;
+ 
+ 			trigger_error($message);
+@@ -296,12 +296,12 @@
+ 		$forum_link_track_yes = ($forum_flags &amp; 1) ? ' checked=&quot;checked&quot;' : '';
+ 		$forum_link_track_no = (!($forum_flags &amp; 1)) ? ' checked=&quot;checked&quot;' : '';
+ 
+-		$navigation = '&lt;a href=&quot;'.generate_link('Forums&amp;file=admin_forums', array('admin' =&gt; true)) . '&quot;&gt;' . $_CLASS['core_user']-&gt;lang['FORUM_INDEX'] . '&lt;/a&gt;';
++		$navigation = '&lt;a href=&quot;'.generate_link('forums&amp;file=admin_forums', array('admin' =&gt; true)) . '&quot;&gt;' . $_CLASS['core_user']-&gt;lang['FORUM_INDEX'] . '&lt;/a&gt;';
+ 
+ 		$forums_nav = get_forum_branch($forum_id, 'parents', 'descending');
+ 		foreach ($forums_nav as $row)
+ 		{
+-			$navigation .= ($row['forum_id'] == $forum_id) ? ' -&gt; ' . $row['forum_name'] : ' -&gt; &lt;a href=&quot;'.generate_link('Forums&amp;file=admin_forums&amp;parent_id=' . $row['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;' . $row['forum_name'] . '&lt;/a&gt;';
++			$navigation .= ($row['forum_id'] == $forum_id) ? ' -&gt; ' . $row['forum_name'] : ' -&gt; &lt;a href=&quot;'.generate_link('forums&amp;file=admin_forums&amp;parent_id=' . $row['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;' . $row['forum_name'] . '&lt;/a&gt;';
+ 		}
+ 
+ 		adm_page_header($l_title);
+@@ -314,7 +314,7 @@
+ 
+ &lt;p&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['FORUM_EDIT_EXPLAIN'] ?&gt;&lt;/p&gt;
+ 
+-&lt;form method=&quot;post&quot; name=&quot;edit&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_forums&amp;mode='.$mode . (($forum_id) ? &quot;&amp;f=$forum_id&quot; : ''), array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++&lt;form method=&quot;post&quot; name=&quot;edit&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_forums&amp;mode='.$mode . (($forum_id) ? &quot;&amp;f=$forum_id&quot; : ''), array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;nav&quot;&gt;&lt;?php echo $navigation ?&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+@@ -560,7 +560,7 @@
+ 
+ &lt;p&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['FORUM_DELETE_EXPLAIN'] ?&gt;&lt;/p&gt;
+ 
+-&lt;form action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_forums', array('admin' =&gt; true)) ?&gt;&amp;mode=delete&amp;f=&lt;?php echo $forum_id ?&gt;&quot; method=&quot;post&quot;&gt;&lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++&lt;form action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_forums', array('admin' =&gt; true)) ?&gt;&amp;mode=delete&amp;f=&lt;?php echo $forum_id ?&gt;&quot; method=&quot;post&quot;&gt;&lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;th colspan=&quot;2&quot;&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['FORUM_DELETE'] ?&gt;&lt;/th&gt;
+ 	&lt;/tr&gt;
+@@ -762,7 +762,7 @@
+ }
+ else
+ {
+-	$navigation = '&lt;a href=&quot;'.generate_link('Forums&amp;file=admin_forums', array('admin' =&gt; true)) . '&quot;&gt;' . $_CLASS['core_user']-&gt;lang['FORUM_INDEX'] . '&lt;/a&gt;';
++	$navigation = '&lt;a href=&quot;'.generate_link('forums&amp;file=admin_forums', array('admin' =&gt; true)) . '&quot;&gt;' . $_CLASS['core_user']-&gt;lang['FORUM_INDEX'] . '&lt;/a&gt;';
+ 
+ 	$forums_nav = get_forum_branch($parent_id, 'parents', 'descending');
+ 	foreach ($forums_nav as $row)
+@@ -773,7 +773,7 @@
+ 		}
+ 		else
+ 		{
+-			$navigation .= ' -&gt; &lt;a href=&quot;'.generate_link('Forums&amp;file=admin_forums&amp;parent_id=' . $row['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;' . $row['forum_name'] . '&lt;/a&gt;';
++			$navigation .= ' -&gt; &lt;a href=&quot;'.generate_link('forums&amp;file=admin_forums&amp;parent_id=' . $row['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;' . $row['forum_name'] . '&lt;/a&gt;';
+ 		}
+ 	}
+ }
+@@ -795,7 +795,7 @@
+ 	echo '&lt;br /&gt;&lt;div class=&quot;gen&quot; align=&quot;center&quot;&gt;&lt;b&gt;' . $_CLASS['core_user']-&gt;lang['FORUM_RESYNCED'] . '&lt;/b&gt;&lt;/div&gt;';
+ }
+ 
+-?&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_forums&amp;parent_id='.$parent_id, array('admin' =&gt; true)) ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++?&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_forums&amp;parent_id='.$parent_id, array('admin' =&gt; true)) ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;nav&quot;&gt;&lt;?php echo $navigation ?&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+@@ -834,10 +834,10 @@
+ 		}
+ 	}
+ 
+-	$forum_title = ($forum_type != FORUM_LINK) ? '&lt;a href=&quot;'.generate_link('Forums&amp;file=admin_forums&amp;parent_id=' . $row['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;' : '';
++	$forum_title = ($forum_type != FORUM_LINK) ? '&lt;a href=&quot;'.generate_link('forums&amp;file=admin_forums&amp;parent_id=' . $row['forum_id'], array('admin' =&gt; true)) . '&quot;&gt;' : '';
+ 	$forum_title .= $row['forum_name'];
+ 	$forum_title .= ($forum_type != FORUM_LINK) ? '&lt;/a&gt;' : '';
+-	$url = &quot;Forums&amp;file=admin_forums&amp;parent_id=$parent_id&amp;f=&quot; . $row['forum_id'];
++	$url = &quot;forums&amp;file=admin_forums&amp;parent_id=$parent_id&amp;f=&quot; . $row['forum_id'];
+ 
+ ?&gt;
+ 	&lt;tr&gt;
+@@ -892,7 +892,7 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;&lt;/form&gt;
+ 
+-&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_forums', array('admin' =&gt; true)) ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot; border=&quot;0&quot;&gt;
++&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_forums', array('admin' =&gt; true)) ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot; border=&quot;0&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td align=&quot;right&quot;&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['SELECT_FORUM']; ?&gt;: &lt;select name=&quot;parent_id&quot; onchange=&quot;if(this.options[this.selectedIndex].value != -1){ this.form.submit(); }&quot;&gt;&lt;?php echo $forum_box; ?&gt;&lt;/select&gt; &lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; value=&quot;&lt;?php echo $_CLASS['core_user']-&gt;lang['GO']; ?&gt;&quot; /&gt;&lt;input type=&quot;hidden&quot; name=&quot;sid&quot; value=&quot;&lt;?php echo $_CLASS['core_user']-&gt;session_id; ?&gt;&quot; /&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+@@ -1252,7 +1252,7 @@
+ 
+ 	if ($action_subforums == 'delete')
+ 	{
+-		$log_action_forums = 'FORUMS';
++		$log_action_forums = 'forums';
+ 
+ 		$forum_ids = array($forum_id);
+ 		$rows = get_forum_branch($forum_id, 'children', 'descending', FALSE);
+
+Modified: cms/trunk/includes/forums/admin/admin_permissions.php
+===================================================================
+--- cms/trunk/includes/forums/admin/admin_permissions.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/admin/admin_permissions.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -223,7 +223,7 @@
+ 			}
+ 
+ 			// Logging ... first grab user or groupnames ...
+-			$sql = ($ug_type == 'group') ? 'SELECT group_name as name, group_type FROM ' . GROUPS_TABLE . ' WHERE group_id' : 'SELECT username as name FROM ' . USERS_TABLE . ' WHERE user_id';
++			$sql = ($ug_type == 'group') ? 'SELECT group_name as name, group_type FROM ' . CORE_GROUPS_TABLE . ' WHERE group_id' : 'SELECT username as name FROM ' . CORE_USERS_TABLE . ' WHERE user_id';
+ 			$sql .=  ' IN (' . implode(', ', array_map('intval', $ug_data)) . ')';
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+@@ -299,7 +299,7 @@
+ 		}
+ 
+ 		// Logging ... first grab user or groupnames ...
+-		$sql = ($ug_type == 'group') ? 'SELECT group_name as name, group_type FROM ' . GROUPS_TABLE . ' WHERE group_id' : 'SELECT username as name FROM ' . USERS_TABLE . ' WHERE user_id';
++		$sql = ($ug_type == 'group') ? 'SELECT group_name as name, group_type FROM ' . CORE_GROUPS_TABLE . ' WHERE group_id' : 'SELECT username as name FROM ' . CORE_USERS_TABLE . ' WHERE user_id';
+ 		$sql .=  ' IN (' . implode(', ', array_map('intval', $ug_data)) . ')';
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+@@ -421,7 +421,7 @@
+ 
+ &lt;p&gt;&lt;?php echo $l_title_explain ?&gt;&lt;/p&gt;
+ 
+-&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ &lt;?php
+ 
+ 	// Mode specific markup
+@@ -475,7 +475,7 @@
+ 		&lt;td class=&quot;row1&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;&nbsp;&lt;select style=&quot;width:280px&quot; name=&quot;ug_data[]&quot; multiple=&quot;true&quot; size=&quot;7&quot;&gt;&lt;?php 
+ 
+ 			$sql = &quot;SELECT group_id, group_name, group_type   
+-				FROM &quot; . GROUPS_TABLE . &quot; 
++				FROM &quot; . CORE_GROUPS_TABLE . &quot; 
+ 				ORDER BY group_type DESC&quot;;
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+@@ -523,7 +523,7 @@
+ 
+ &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++		&lt;td&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 			&lt;tr&gt;
+ 				&lt;th&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['MANAGE_USERS']; ?&gt;&lt;/th&gt;
+ 			&lt;/tr&gt;
+@@ -531,7 +531,7 @@
+ 				&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;&lt;select style=&quot;width:280px&quot; name=&quot;ug_data[]&quot; multiple=&quot;multiple&quot; size=&quot;5&quot;&gt;&lt;?php
+ 			
+ 	$sql = &quot;SELECT u.user_id, u.username
+-		FROM &quot; . USERS_TABLE . &quot; u, &quot; . FORUMS_ACL_TABLE . &quot; a, &quot; . FORUMS_ACL_OPTIONS_TABLE . &quot; o
++		FROM &quot; . CORE_USERS_TABLE . &quot; u, &quot; . FORUMS_ACL_TABLE . &quot; a, &quot; . FORUMS_ACL_OPTIONS_TABLE . &quot; o
+ 		WHERE o.auth_option LIKE '&quot; . $sql_option_mode . &quot;_%'
+ 			AND a.auth_option_id = o.auth_option_id
+ 			AND a.forum_id IN ($sql_forum_id)
+@@ -553,7 +553,7 @@
+ 			&lt;/tr&gt;
+ 		&lt;/table&gt;&lt;/form&gt;&lt;/td&gt;
+ 
+-		&lt;td align=&quot;center&quot;&gt;&lt;form method=&quot;post&quot; name=&quot;admingroups&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++		&lt;td align=&quot;center&quot;&gt;&lt;form method=&quot;post&quot; name=&quot;admingroups&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 		&lt;tr&gt;
+ 			&lt;th&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['MANAGE_GROUPS']; ?&gt;&lt;/th&gt;
+ 		&lt;/tr&gt;
+@@ -561,7 +561,7 @@
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;&lt;select style=&quot;width:280px&quot; name=&quot;ug_data[]&quot; multiple=&quot;multiple&quot; size=&quot;5&quot;&gt;&lt;?php 
+ 	
+ 	$sql = &quot;SELECT DISTINCT g.group_id, g.group_name, g.group_type 
+-		FROM &quot; . GROUPS_TABLE . &quot; g, &quot; . FORUMS_ACL_TABLE . &quot; a, &quot; . FORUMS_ACL_OPTIONS_TABLE . &quot; o
++		FROM &quot; . CORE_GROUPS_TABLE . &quot; g, &quot; . FORUMS_ACL_TABLE . &quot; a, &quot; . FORUMS_ACL_OPTIONS_TABLE . &quot; o
+ 		WHERE o.auth_option LIKE '&quot; . $sql_option_mode . &quot;_%'
+ 			AND a.forum_id IN ($sql_forum_id)
+ 			AND a.auth_option_id = o.auth_option_id
+@@ -586,7 +586,7 @@
+ 	&lt;/tr&gt;
+ 	&lt;tr&gt;
+ 
+-		&lt;td&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++		&lt;td&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 			&lt;tr&gt;
+ 				&lt;th&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['ADD_USERS']; ?&gt;&lt;/th&gt;
+ 			&lt;/tr&gt;
+@@ -598,7 +598,7 @@
+ 			&lt;/tr&gt;
+ 		&lt;/table&gt;&lt;/form&gt;&lt;/td&gt;
+ 
+-		&lt;td&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++		&lt;td&gt;&lt;form method=&quot;post&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_permissions&amp;mode='.$mode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table width=&quot;100%&quot; class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 			&lt;tr&gt;
+ 				&lt;th&gt;&lt;?php echo $_CLASS['core_user']-&gt;lang['ADD_GROUPS']; ?&gt;&lt;/th&gt;
+ 			&lt;/tr&gt;
+@@ -606,7 +606,7 @@
+ 				&lt;td class=&quot;row1&quot; style=&quot;height: 100%&quot; align=&quot;center&quot;&gt;&lt;select style=&quot;width:280px&quot; name=&quot;ug_data[]&quot; multiple=&quot;multiple&quot;  size=&quot;5&quot;&gt;&lt;?php 
+ 			
+ 	$sql = &quot;SELECT group_id, group_name, group_type 
+-		FROM &quot; . GROUPS_TABLE . &quot;
++		FROM &quot; . CORE_GROUPS_TABLE . &quot;
+ 		ORDER BY group_type DESC, group_name&quot;;
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+@@ -686,7 +686,7 @@
+ 		case 'user':
+ 			$l_no_error = $_CLASS['core_user']-&gt;lang['NO_USER'];
+ 			$sql = 'SELECT user_id AS id, username AS name 
+-				FROM ' . USERS_TABLE . ' 
++				FROM ' . CORE_USERS_TABLE . ' 
+ 				WHERE ';
+ 			$sql .= ($submit == 'add_options') ? &quot; username IN ('&quot; . implode(&quot;', '&quot;, $_CLASS['core_db']-&gt;escape_array(array_unique(explode(&quot;\n&quot;, modify_lines($ug_data[0], &quot;\n&quot;))))) . &quot;')&quot; : ' user_id ' . ((is_array($ug_data)) ? 'IN (' . implode(', ', array_map('intval', $ug_data)) . ')' : '= ' . (int) $ug_data);
+ 		break;
+@@ -694,7 +694,7 @@
+ 		case 'group':
+ 			$l_no_error = $_CLASS['core_user']-&gt;lang['NO_GROUP'];
+ 			$sql = 'SELECT group_id AS id, group_name AS name, group_type  
+-				FROM ' . GROUPS_TABLE . '
++				FROM ' . CORE_GROUPS_TABLE . '
+ 				WHERE group_id';
+ 			$sql .= (is_array($ug_data)) ? ' IN (' . implode(', ', array_map('intval', $ug_data)) . ')' : ' = ' . (int) $ug_data;
+ 		break;
+@@ -1018,7 +1018,7 @@
+ 
+ ?&gt;
+ 
+-&lt;form method=&quot;post&quot; name=&quot;acl&quot; action=&quot;&lt;?php echo generate_link('Forums&amp;file=admin_permissions&amp;mode='.$mode.'&amp;submode='.$submode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table cellspacing=&quot;2&quot; cellpadding=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++&lt;form method=&quot;post&quot; name=&quot;acl&quot; action=&quot;&lt;?php echo generate_link('forums&amp;file=admin_permissions&amp;mode='.$mode.'&amp;submode='.$submode, array('admin' =&gt; true)); ?&gt;&quot;&gt;&lt;table cellspacing=&quot;2&quot; cellpadding=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ &lt;?php
+ 
+ 	// This is the main listing of options
+
+Modified: cms/trunk/includes/forums/admin/links.php
+===================================================================
+--- cms/trunk/includes/forums/admin/links.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/admin/links.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -7,44 +7,44 @@
+ //Need to be in the admin menu look into making a new one or using this one :-)
+ /*if ($_CLASS['auth']-&gt;acl_get('a_ban'))
+ {
+-	$module['USER']['BAN_USERS'] = generate_link('Forums&amp;file=admin_ban'..'&amp;mode=user');
+-	$module['USER']['BAN_EMAILS'] = generate_link('Forums&amp;file=admin_ban'..'&amp;mode=email');
+-	$module['USER']['BAN_IPS'] = generate_link('Forums&amp;file=admin_ban'..'&amp;mode=ip');
++	$module['USER']['BAN_USERS'] = generate_link('forums&amp;file=admin_ban'..'&amp;mode=user');
++	$module['USER']['BAN_EMAILS'] = generate_link('forums&amp;file=admin_ban'..'&amp;mode=email');
++	$module['USER']['BAN_IPS'] = generate_link('forums&amp;file=admin_ban'..'&amp;mode=ip');
+ }*/
+ 
+-$module['LOG']['ADMIN_LOGS']			 =  ($_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('Forums&amp;file=admin_viewlogs&amp;mode=admin', array('admin' =&gt; true)) : false;
+-$module['LOG']['MOD_LOGS']				 = ($_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('Forums&amp;file=admin_viewlogs&amp;mode=mod', array('admin' =&gt; true)) : false;
+-$module['LOG']['CRITICAL_LOGS']			 = ($_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('Forums&amp;file=admin_viewlogs&amp;mode=critical', array('admin' =&gt; true)) : false;
++$module['LOG']['ADMIN_LOGS']			 =  ($_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('forums&amp;file=admin_viewlogs&amp;mode=admin', array('admin' =&gt; true)) : false;
++$module['LOG']['MOD_LOGS']				 = ($_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('forums&amp;file=admin_viewlogs&amp;mode=mod', array('admin' =&gt; true)) : false;
++$module['LOG']['CRITICAL_LOGS']			 = ($_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('forums&amp;file=admin_viewlogs&amp;mode=critical', array('admin' =&gt; true)) : false;
+ 	
+-$module['DB']['SEARCH_INDEX'] 				= ($_CLASS['auth']-&gt;acl_get('a_search')) ? generate_link('Forums&amp;file=admin_search', array('admin' =&gt; true)) : false;
++$module['DB']['SEARCH_INDEX'] 				= ($_CLASS['auth']-&gt;acl_get('a_search')) ? generate_link('forums&amp;file=admin_search', array('admin' =&gt; true)) : false;
+ 
+-$module['USER']['RANKS']					= ($_CLASS['auth']-&gt;acl_get('a_ranks')) ? generate_link('Forums&amp;file=admin_ranks', array('admin' =&gt; true)) : '';
+-$module['USER']['DISALLOW']					= ($_CLASS['auth']-&gt;acl_get('a_names')) ? generate_link('Forums&amp;file=admin_disallow', array('admin' =&gt; true)) : '';
++$module['USER']['RANKS']					= ($_CLASS['auth']-&gt;acl_get('a_ranks')) ? generate_link('forums&amp;file=admin_ranks', array('admin' =&gt; true)) : '';
++$module['USER']['DISALLOW']					= ($_CLASS['auth']-&gt;acl_get('a_names')) ? generate_link('forums&amp;file=admin_disallow', array('admin' =&gt; true)) : '';
+ 
+-$module['FORUM']['MANAGE']					= ($_CLASS['auth']-&gt;acl_gets('a_forum', 'a_forumadd', 'a_forumdel')) ? generate_link('Forums&amp;file=admin_forums', array('admin' =&gt; true)) : false;
+-$module['FORUM']['PRUNE']   				= ($_CLASS['auth']-&gt;acl_get('a_prune')) ? generate_link('Forums&amp;file=admin_prune&amp;mode=forums', array('admin' =&gt; true)) : false;
++$module['FORUM']['MANAGE']					= ($_CLASS['auth']-&gt;acl_gets('a_forum', 'a_forumadd', 'a_forumdel')) ? generate_link('forums&amp;file=admin_forums', array('admin' =&gt; true)) : false;
++$module['FORUM']['PRUNE']   				= ($_CLASS['auth']-&gt;acl_get('a_prune')) ? generate_link('forums&amp;file=admin_prune&amp;mode=forums', array('admin' =&gt; true)) : false;
+ 
+-$module['PERM']['PERMISSIONS']				= ($_CLASS['auth']-&gt;acl_get('a_auth')) ? generate_link('Forums&amp;file=admin_permissions&amp;mode=forum', array('admin' =&gt; true)) : '';
+-$module['PERM']['MODERATORS'] 				= ($_CLASS['auth']-&gt;acl_get('a_authmods')) ? generate_link('Forums&amp;file=admin_permissions&amp;mode=mod', array('admin' =&gt; true)) : '';
+-$module['PERM']['SUPER_MODERATORS']			= ($_CLASS['auth']-&gt;acl_get('a_authmods')) ? generate_link('Forums&amp;file=admin_permissions&amp;mode=supermod', array('admin' =&gt; true)) : '';
+-$module['PERM']['ADMINISTRATORS']			= ($_CLASS['auth']-&gt;acl_get('a_authadmins')) ? generate_link('Forums&amp;file=admin_permissions&amp;mode=admin', array('admin' =&gt; true)) : '';
+-$module['PERM']['USER_PERMS']				= ($_CLASS['auth']-&gt;acl_get('a_authusers')) ? generate_link('Forums&amp;file=admin_permissions&amp;mode=user', array('admin' =&gt; true)) : '';
+-$module['PERM']['GROUP_PERMS']				= ($_CLASS['auth']-&gt;acl_get('a_authgroups')) ? generate_link('Forums&amp;file=admin_permissions&amp;mode=group', array('admin' =&gt; true)) : '';
++$module['PERM']['PERMISSIONS']				= ($_CLASS['auth']-&gt;acl_get('a_auth')) ? generate_link('forums&amp;file=admin_permissions&amp;mode=forum', array('admin' =&gt; true)) : '';
++$module['PERM']['MODERATORS'] 				= ($_CLASS['auth']-&gt;acl_get('a_authmods')) ? generate_link('forums&amp;file=admin_permissions&amp;mode=mod', array('admin' =&gt; true)) : '';
++$module['PERM']['SUPER_MODERATORS']			= ($_CLASS['auth']-&gt;acl_get('a_authmods')) ? generate_link('forums&amp;file=admin_permissions&amp;mode=supermod', array('admin' =&gt; true)) : '';
++$module['PERM']['ADMINISTRATORS']			= ($_CLASS['auth']-&gt;acl_get('a_authadmins')) ? generate_link('forums&amp;file=admin_permissions&amp;mode=admin', array('admin' =&gt; true)) : '';
++$module['PERM']['USER_PERMS']				= ($_CLASS['auth']-&gt;acl_get('a_authusers')) ? generate_link('forums&amp;file=admin_permissions&amp;mode=user', array('admin' =&gt; true)) : '';
++$module['PERM']['GROUP_PERMS']				= ($_CLASS['auth']-&gt;acl_get('a_authgroups')) ? generate_link('forums&amp;file=admin_permissions&amp;mode=group', array('admin' =&gt; true)) : '';
+ 
+-$module['GENERAL']['AVATAR_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_board')) ? generate_link('Forums&amp;file=admin_board&amp;mode=avatar', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['BOARD_DEFAULTS']		= ($_CLASS['auth']-&gt;acl_get('a_defaults')) ? generate_link('Forums&amp;file=admin_board&amp;mode=default', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['BOARD_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_board')) ? generate_link('Forums&amp;file=admin_board&amp;mode=setting', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['EMAIL_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('Forums&amp;file=admin_board&amp;mode=email', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['LOAD_SETTINGS']			= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('Forums&amp;file=admin_board&amp;mode=load', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['SERVER_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('Forums&amp;file=admin_board&amp;mode=server', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['MESSAGE_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_defaults')) ? generate_link('Forums&amp;file=admin_board&amp;mode=message', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['ATTACHMENT_SETTINGS'] 	= ($_CLASS['auth']-&gt;acl_get('a_attach')) ? generate_link('Forums&amp;file=admin_attachments&amp;mode=attach', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['IM'] 					= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('Forums&amp;file=admin_jabber', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['PHP_INFO'] 				= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('Forums&amp;file=admin_phpinfo', array('admin' =&gt; true)) : '';
+-$module['GENERAL']['MASS_EMAIL']			= ($_CLASS['auth']-&gt;acl_get('a_email')) ? generate_link('Forums&amp;file=admin_email', array('admin' =&gt; true)) : '';
++$module['GENERAL']['AVATAR_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_board')) ? generate_link('forums&amp;file=admin_board&amp;mode=avatar', array('admin' =&gt; true)) : '';
++$module['GENERAL']['BOARD_DEFAULTS']		= ($_CLASS['auth']-&gt;acl_get('a_defaults')) ? generate_link('forums&amp;file=admin_board&amp;mode=default', array('admin' =&gt; true)) : '';
++$module['GENERAL']['BOARD_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_board')) ? generate_link('forums&amp;file=admin_board&amp;mode=setting', array('admin' =&gt; true)) : '';
++$module['GENERAL']['EMAIL_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('forums&amp;file=admin_board&amp;mode=email', array('admin' =&gt; true)) : '';
++$module['GENERAL']['LOAD_SETTINGS']			= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('forums&amp;file=admin_board&amp;mode=load', array('admin' =&gt; true)) : '';
++$module['GENERAL']['SERVER_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('forums&amp;file=admin_board&amp;mode=server', array('admin' =&gt; true)) : '';
++$module['GENERAL']['MESSAGE_SETTINGS']		= ($_CLASS['auth']-&gt;acl_get('a_defaults')) ? generate_link('forums&amp;file=admin_board&amp;mode=message', array('admin' =&gt; true)) : '';
++$module['GENERAL']['ATTACHMENT_SETTINGS'] 	= ($_CLASS['auth']-&gt;acl_get('a_attach')) ? generate_link('forums&amp;file=admin_attachments&amp;mode=attach', array('admin' =&gt; true)) : '';
++$module['GENERAL']['IM'] 					= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('forums&amp;file=admin_jabber', array('admin' =&gt; true)) : '';
++$module['GENERAL']['PHP_INFO'] 				= ($_CLASS['auth']-&gt;acl_get('a_server')) ? generate_link('forums&amp;file=admin_phpinfo', array('admin' =&gt; true)) : '';
++$module['GENERAL']['MASS_EMAIL']			= ($_CLASS['auth']-&gt;acl_get('a_email')) ? generate_link('forums&amp;file=admin_email', array('admin' =&gt; true)) : '';
+ 
+-$module['POST']['ATTACHMENTS'] 				= ($_CLASS['auth']-&gt;acl_get('a_attach')) ? generate_link('Forums&amp;file=admin_attachments&amp;mode=ext_groups', array('admin' =&gt; true)) : '';
+-$module['POST']['BBCODES']					= ($_CLASS['auth']-&gt;acl_get('a_bbcode')) ? generate_link('Forums&amp;file=admin_bbcodes', array('admin' =&gt; true)) : '';
+-$module['POST']['ICONS']					= ($_CLASS['auth']-&gt;acl_get('a_icons')) ? generate_link('Forums&amp;file=admin_icons&amp;mode=icons', array('admin' =&gt; true)) : '';
++$module['POST']['ATTACHMENTS'] 				= ($_CLASS['auth']-&gt;acl_get('a_attach')) ? generate_link('forums&amp;file=admin_attachments&amp;mode=ext_groups', array('admin' =&gt; true)) : '';
++$module['POST']['BBCODES']					= ($_CLASS['auth']-&gt;acl_get('a_bbcode')) ? generate_link('forums&amp;file=admin_bbcodes', array('admin' =&gt; true)) : '';
++$module['POST']['ICONS']					= ($_CLASS['auth']-&gt;acl_get('a_icons')) ? generate_link('forums&amp;file=admin_icons&amp;mode=icons', array('admin' =&gt; true)) : '';
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/admin/main.php
+===================================================================
+--- cms/trunk/includes/forums/admin/main.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/admin/main.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -113,12 +113,12 @@
+ // Get forum statistics
+ $total_posts = $config['num_posts'];
+ $total_topics = $config['num_topics'];
+-$total_users = $config['num_users'];
++$total_users = $_CORE_CONFIG['user']['total_users'];
+ $total_files = $config['num_files'];
+ 
+-$start_date = $_CLASS['core_user']-&gt;format_date($config['board_startdate']);
++$start_date = $_CLASS['core_user']-&gt;format_date($config['board_start_date']);
+ 
+-$boarddays = (gmtime() - $config['board_startdate']) / 86400;
++$boarddays = (gmtime() - $config['board_start_date']) / 86400;
+ 
+ $posts_per_day = sprintf('%.2f', $total_posts / $boarddays);
+ $topics_per_day = sprintf('%.2f', $total_topics / $boarddays);
+
+Modified: cms/trunk/includes/forums/functions.php
+===================================================================
+--- cms/trunk/includes/forums/functions.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/functions.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -27,7 +27,7 @@
+ $config_error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;';
+ $config_error .= 'Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB3&lt;/center&gt;';
+ 
+-global $config;
++global $_CLASS, $config;
+ 
+ if (is_null($config = $_CLASS['core_cache']-&gt;get('config')))
+ {
+@@ -333,14 +333,14 @@
+ // User authorisation levels output
+ function gen_forum_auth_level($mode, $forum_id)
+ {
+-	global $_CLASS;
++	global $_CLASS, $config;
+ 
+ 	$rules = array(
+ 		($_CLASS['forums_auth']-&gt;acl_get('f_post', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_POST_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_POST_CANNOT'],
+ 		($_CLASS['forums_auth']-&gt;acl_get('f_reply', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_REPLY_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_REPLY_CANNOT'],
+ 		($_CLASS['forums_auth']-&gt;acl_gets(array('f_edit', 'm_edit'), $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_EDIT_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_EDIT_CANNOT'],
+ 		($_CLASS['forums_auth']-&gt;acl_gets(array('f_delete', 'm_delete'), $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_DELETE_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_DELETE_CANNOT'],
+-		($_CLASS['forums_auth']-&gt;acl_get('f_attach', $forum_id) &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('u_attach', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_ATTACH_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_ATTACH_CANNOT']
++		($config['allow_attachments'] &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_attach', $forum_id) &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('u_attach', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_ATTACH_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_ATTACH_CANNOT']
+ 	);
+ 
+ 	foreach ($rules as $rule)
+@@ -976,7 +976,7 @@
+ 
+ 	page_header();
+ 
+-	$_CLASS['core_template']-&gt;display('modules/Forums/login_forum.html');
++	$_CLASS['core_template']-&gt;display('modules/forums/login_forum.html');
+ 
+ 	script_close();
+ }
+@@ -1103,12 +1103,12 @@
+ 	// Generate logged in/logged out status
+ 	if ($_CLASS['core_user']-&gt;is_user)
+ 	{
+-		$u_login_logout = generate_link('Control_Panel&amp;mode=logout');
++		$u_login_logout = generate_link('control_panel&amp;mode=logout');
+ 		$l_login_logout = sprintf($_CLASS['core_user']-&gt;lang['LOGOUT_USER'], $_CLASS['core_user']-&gt;data['username']);
+ 	}
+ 	elseif (!$_CLASS['core_user']-&gt;is_bot)
+ 	{
+-		$u_login_logout = generate_link('Control_Panel&amp;mode=login');
++		$u_login_logout = generate_link('control_panel&amp;mode=login');
+ 		$l_login_logout = $_CLASS['core_user']-&gt;lang['LOGIN'];
+ 	}
+ 
+@@ -1282,23 +1282,23 @@
+ 		'L_REGISTER' 			=&gt; $_CLASS['core_user']-&gt;lang['REGISTER'],
+ 		'L_INDEX' 				=&gt; $_CLASS['core_user']-&gt;lang['FORUM_INDEX'], 
+ 		'L_ONLINE_EXPLAIN'		=&gt; $l_online_time, 
+-		'U_PRIVATEMSGS'			=&gt; generate_link('Control_Panel&amp;i=pm&amp;mode=' . (($_CLASS['core_user']-&gt;data['user_new_privmsg'] || $l_privmsgs_text_unread) ? 'unread' : 'view_messages')),
+-		'U_RETURN_INBOX'		=&gt; generate_link(&quot;Control_Panel&amp;i=pm&amp;folder=inbox&quot;),
+-		'U_MEMBERLIST' 			=&gt; generate_link('Members_List'),
+-		'U_VIEWONLINE' 			=&gt; generate_link('View_Online'),
+-		'U_MEMBERSLIST'			=&gt; generate_link('Members_List'),
++		'U_PRIVATEMSGS'			=&gt; generate_link('control_panel&amp;i=pm&amp;mode=' . (($_CLASS['core_user']-&gt;data['user_new_privmsg'] || $l_privmsgs_text_unread) ? 'unread' : 'view_messages')),
++		'U_RETURN_INBOX'		=&gt; generate_link(&quot;control_panel&amp;i=pm&amp;folder=inbox&quot;),
++		'U_MEMBERLIST' 			=&gt; generate_link('members_list'),
++		'U_VIEWONLINE' 			=&gt; generate_link('view_online'),
++		'U_MEMBERSLIST'			=&gt; generate_link('members_list'),
+ 		'U_LOGIN_LOGOUT'		=&gt; $u_login_logout,
+-		'U_INDEX' 				=&gt; generate_link('Forums'),
+-		'U_SEARCH' 				=&gt; generate_link('Forums&amp;file=search'),
+-		'U_REGISTER' 			=&gt; generate_link('Control_Panel&amp;mode=register'),
+-		'U_PROFILE' 			=&gt; generate_link('Control_Panel'),
+-		'U_MODCP' 				=&gt; generate_link('Forums&amp;file=mcp'),
+-		'U_FAQ' 				=&gt; generate_link('Forums&amp;file=faq'),
+-		'U_SEARCH_SELF'			=&gt; generate_link('Forums&amp;file=search&amp;search_id=egosearch'),
+-		'U_SEARCH_NEW' 			=&gt; generate_link('Forums&amp;file=search&amp;search_id=newposts'),
+-		'U_SEARCH_UNANSWERED'	=&gt; generate_link('Forums&amp;file=search&amp;search_id=unanswered'),
+-		'U_SEARCH_ACTIVE_TOPICS'=&gt; generate_link('Forums&amp;file=search&amp;search_id=active_topics'),
+-		'U_DELETE_COOKIES'		=&gt; generate_link('Control_Panel&amp;mode=delete_cookies'),
++		'U_INDEX' 				=&gt; generate_link('forums'),
++		'U_SEARCH' 				=&gt; generate_link('forums&amp;file=search'),
++		'U_REGISTER' 			=&gt; generate_link('control_panel&amp;mode=register'),
++		'U_PROFILE' 			=&gt; generate_link('control_panel'),
++		'U_MODCP' 				=&gt; generate_link('forums&amp;file=mcp'),
++		'U_FAQ' 				=&gt; generate_link('forums&amp;file=faq'),
++		'U_SEARCH_SELF'			=&gt; generate_link('forums&amp;file=search&amp;search_id=egosearch'),
++		'U_SEARCH_NEW' 			=&gt; generate_link('forums&amp;file=search&amp;search_id=newposts'),
++		'U_SEARCH_UNANSWERED'	=&gt; generate_link('forums&amp;file=search&amp;search_id=unanswered'),
++		'U_SEARCH_ACTIVE_TOPICS'=&gt; generate_link('forums&amp;file=search&amp;search_id=active_topics'),
++		'U_DELETE_COOKIES'		=&gt; generate_link('p&amp;mode=delete_cookies'),
+ 
+ 		'S_USER_LOGGED_IN' 		=&gt; ($_CLASS['core_user']-&gt;data['user_id'] != ANONYMOUS) ? true : false,
+ 		'S_REGISTERED_USER'		=&gt; $_CLASS['core_user']-&gt;is_user,
+
+Modified: cms/trunk/includes/forums/functions_admin.php
+===================================================================
+--- cms/trunk/includes/forums/functions_admin.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/functions_admin.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1106,7 +1106,7 @@
+ 			if (!empty($post_ids))
+ 			{
+ 				$sql = 'SELECT p.post_id, p.poster_id, p.post_time, p.post_username, u.username
+-					FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . ' u
++					FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . ' u
+ 					WHERE p.post_id IN (' . implode(', ', $post_ids) . ')
+ 						AND p.poster_id = u.user_id';
+ 				$result = $_CLASS['core_db']-&gt;query($sql);
+@@ -1272,7 +1272,7 @@
+ 			}
+ 
+ 			$sql = 'SELECT p.post_id, p.topic_id, p.post_approved, p.poster_id, p.post_username, p.post_time, u.username
+-				FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . ' u
++				FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . ' u
+ 				WHERE p.post_id IN (' . implode(',', $post_ids) . ')
+ 					AND u.user_id = p.poster_id';
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+@@ -1617,7 +1617,7 @@
+ 	$user_id_sql = '';
+ 
+ 	$sql = 'SELECT a.forum_id, u.user_id, u.username
+-		FROM  ' . FORUMS_ACL_OPTIONS_TABLE . '  o, ' . FORUMS_ACL_TABLE . ' a,  ' . USERS_TABLE . &quot;  u
++		FROM  ' . FORUMS_ACL_OPTIONS_TABLE . '  o, ' . FORUMS_ACL_TABLE . ' a,  ' . CORE_USERS_TABLE . &quot;  u
+ 		WHERE o.auth_option = 'm_'
+ 			AND a.auth_option_id = o.auth_option_id
+ 			AND a.auth_setting = &quot; . ACL_YES . '
+@@ -1632,7 +1632,7 @@
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$sql = 'SELECT a.forum_id, g.group_name, g.group_id
+-		FROM  ' . FORUMS_ACL_OPTIONS_TABLE . '  o, ' . FORUMS_ACL_TABLE . ' a,  ' . GROUPS_TABLE . &quot;  g
++		FROM  ' . FORUMS_ACL_OPTIONS_TABLE . '  o, ' . FORUMS_ACL_TABLE . ' a,  ' . CORE_GROUPS_TABLE . &quot;  g
+ 		WHERE o.auth_option = 'm_'
+ 			AND a.auth_option_id = o.auth_option_id
+ 			AND a.auth_setting = &quot; . ACL_YES . '
+@@ -1768,7 +1768,7 @@
+ 	}
+ 
+ 	$sql = &quot;SELECT l.*, u.username
+-		FROM &quot; . FORUMS_LOG_TABLE . &quot; l, &quot; . USERS_TABLE . &quot; u
++		FROM &quot; . FORUMS_LOG_TABLE . &quot; l, &quot; . CORE_USERS_TABLE . &quot; u
+ 		WHERE l.log_type = $log_type
+ 			AND u.user_id = l.user_id
+ 			&quot; . (($limit_days) ? &quot;AND l.log_time &gt;= $limit_days&quot; : '') . &quot;
+@@ -2224,7 +2224,7 @@
+ 	if (!empty($last_post_ids))
+ 	{
+ 		$sql = 'SELECT p.' . $type . '_id, p.post_id, p.post_time, p.poster_id, p.post_username, u.user_id, u.username
+-			FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . ' u
++			FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . ' u
+ 			WHERE p.poster_id = u.user_id
+ 				AND p.post_id IN (' . implode(', ', $last_post_ids) . ')';
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/functions_display.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -32,7 +32,7 @@
+ // 
+ // -------------------------------------------------------------
+ 
+-function display_forums($root_data = '', $display_moderators = true)
++function display_forums($root_data = '', $display_moderators = true, $return_moderators = false)
+ {
+ 	global $config, $_CLASS, $_CORE_CONFIG;
+ 
+@@ -104,9 +104,7 @@
+ 			continue;
+ 		}
+ 
+-		$forum_id = $row['forum_id'];
+-
+-		if (!$_CLASS['auth']-&gt;acl_get('f_list', $forum_id))
++		if (!$_CLASS['auth']-&gt;acl_get('f_list', $row['forum_id']))
+ 		{
+ 			// if the user does not have permissions to list this forum, skip everything until next branch
+ 			$right_id = $row['right_id'];
+@@ -114,33 +112,37 @@
+ 		}
+ 
+ 		// Display active topics from this forum?
+-		if ($show_active &amp;&amp; $row['forum_type'] == FORUM_POST &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_read', $forum_id) &amp;&amp; ($row['forum_flags'] &amp; 16))
++		if ($show_active &amp;&amp; $row['forum_type'] == FORUM_POST &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_read', $row['forum_id']) &amp;&amp; ($row['forum_flags'] &amp; 16))
+ 		{
+-			$active_forum_ary['forum_id'][]		= $forum_id;
++			$active_forum_ary['forum_id'][]		= $row['forum_id'];
+ 			$active_forum_ary['enable_icons'][] = $row['enable_icons'];
+-			$active_forum_ary['forum_topics']	+= ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
++			$active_forum_ary['forum_topics']	+= ($_CLASS['auth']-&gt;acl_get('m_approve', $row['forum_id'])) ? $row['forum_topics_real'] : $row['forum_topics'];
+ 			$active_forum_ary['forum_posts']	+= $row['forum_posts'];
+ 		}
+ 
+ 		if ($row['parent_id'] == $root_data['forum_id'] || $row['parent_id'] == $branch_root_id)
+ 		{
++			if ($row['forum_type'] != FORUM_CAT)
++			{
++				$forum_ids_moderator[] = $row['forum_id'];
++			}
++
+ 			// Direct child
+-			$parent_id = $forum_id;
+-			$forum_rows[$forum_id] = $row;
+-			$forum_ids[] = $forum_id;
++			$parent_id = $row['forum_id'];
++			$forum_rows[$row['forum_id']] = $row;
+ 
+ 			if (!$row['parent_id'] &amp;&amp; $row['forum_type'] == FORUM_CAT &amp;&amp; $row['parent_id'] == $root_data['forum_id'])
+ 			{
+-				$branch_root_id = $forum_id;
++				$branch_root_id = $row['forum_id'];
+ 			}
+ 			$forum_rows[$parent_id]['forum_id_last_post'] = $row['forum_id'];
+ 		}
+ 		elseif ($row['forum_type'] != FORUM_CAT)
+ 		{
+-			$subforums[$parent_id]['display'] = ($row['display_on_index']) ? true : false;;
+-			$subforums[$parent_id]['name'][$forum_id] = $row['forum_name'];
++			$subforums[$parent_id][$row['forum_id']]['display'] = ($row['display_on_index']) ? true : false;
++			$subforums[$parent_id][$row['forum_id']]['name'] = $row['forum_name'];
+ 
+-			$forum_rows[$parent_id]['forum_topics'] += ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
++			$forum_rows[$parent_id]['forum_topics'] += ($_CLASS['auth']-&gt;acl_get('m_approve', $row['forum_id'])) ? $row['forum_topics_real'] : $row['forum_topics'];
+ 			
+ 			// Do not list redirects in LINK Forums as Posts.
+ 			if ($row['forum_type'] != FORUM_LINK)
+@@ -154,17 +156,17 @@
+ 				$forum_rows[$parent_id]['forum_last_post_time'] = $row['forum_last_post_time'];
+ 				$forum_rows[$parent_id]['forum_last_poster_id'] = $row['forum_last_poster_id'];
+ 				$forum_rows[$parent_id]['forum_last_poster_name'] = $row['forum_last_poster_name'];
+-				$forum_rows[$parent_id]['forum_id_last_post'] = $forum_id;
++				$forum_rows[$parent_id]['forum_id_last_post'] = $row['forum_id'];
+ 			}
+ 			else
+ 			{
+-				$forum_rows[$parent_id]['forum_id_last_post'] = $forum_id;
++				$forum_rows[$parent_id]['forum_id_last_post'] = $row['forum_id'];
+ 			}
+ 		}
+ 
+ 		if (!$_CLASS['core_user']-&gt;is_user || !$config['load_db_lastread'])
+ 		{
+-			$forum_id36 = base_convert($forum_id, 10, 36);
++			$forum_id36 = base_convert($row['forum_id'], 10, 36);
+ 			$row['mark_time'] = isset($tracking_topics[$forum_id36][0]) ? (int) base_convert($tracking_topics[$forum_id36][0], 36, 10) : 0;
+ 		}
+ 
+@@ -191,38 +193,31 @@
+ 	// Grab moderators ... if necessary
+ 	if ($display_moderators)
+ 	{
+-		$forum_moderators = get_moderators($forum_ids);
++		if ($return_moderators)
++		{
++			$forum_ids_moderator[] = $root_data['forum_id'];
++		}
++		$forum_moderators = get_moderators($forum_ids_moderator);
+ 	}
+ 
+ 	// Loop through the forums
+-	$root_id = $root_data['forum_id'];
+-
+ 	foreach ($forum_rows as $row)
+ 	{
+-		if ($row['parent_id'] == $root_id &amp;&amp; !$row['parent_id'])
++		// Empty category
++		if ($row['parent_id'] == $root_data['forum_id'] &amp;&amp; $row['forum_type'] == FORUM_CAT)
+ 		{
+-			if ($row['forum_type'] == FORUM_CAT)
+-			{
+-				$hold = $row;
+-				continue;
+-			}
+-			else
+-			{
+-				unset($hold);
+-			}
+-		}
+-		else if (!empty($hold))
+-		{
+ 			$_CLASS['core_template']-&gt;assign_vars_array('forumrow', array(
+-				'S_IS_CAT'			=&gt;	TRUE,
+-				'FORUM_ID'			=&gt;	$hold['forum_id'],
+-				'FORUM_NAME'		=&gt;	$hold['forum_name'],
+-				'FORUM_DESC'		=&gt;	$hold['forum_desc'],
+-				'U_VIEWFORUM'		=&gt;	generate_link('Forums&amp;file=viewforum&amp;f=' . $hold['forum_id']))
++				'S_IS_CAT'			=&gt;	true,
++				'FORUM_ID'			=&gt;	$row['forum_id'],
++				'FORUM_NAME'		=&gt;	$row['forum_name'],
++				'FORUM_DESC'		=&gt;	$row['forum_desc'],
++				'U_VIEWFORUM'		=&gt;	generate_link('forums&amp;file=viewforum&amp;f=' . $row['forum_id']))
+ 			);
+-			unset($hold);
++			
++			continue;
+ 		}
+ 
++
+ 		$visible_forums++;
+ 		$forum_id = $row['forum_id'];
+ 
+@@ -231,22 +226,23 @@
+ 		// Generate list of subforums if we need to
+ 		if (isset($subforums[$forum_id]))
+ 		{
+-			if ($subforums[$forum_id]['display'])
++			foreach ($subforums[$forum_id] as $subforum_id =&gt; $subforum_row)
+ 			{
+ 				$links = array();
+ 
+-				foreach ($subforums[$forum_id]['name'] as $subforum_id =&gt; $subforum_name)
++				if ($subforum_row['display'] &amp;&amp; $subforum_row['name'])
+ 				{
+-					if (!empty($subforum_name))
+-					{
+-						$links[] = '&lt;a href=&quot;' .generate_link('Forums&amp;file=viewforum&amp;f='.$subforum_id).'&quot;&gt;' . $subforum_name . '&lt;/a&gt;';
+-					}
++					$links[] = '&lt;a href=&quot;' .generate_link('forums&amp;file=viewforum&amp;f='.$subforum_id).'&quot;&gt;' .  $subforum_row['name'] . '&lt;/a&gt;';
+ 				}
++				else
++				{
++					unset($subforums[$forum_id][$subforum_id]);
++				}
+ 
+ 				if (!empty($links))
+ 				{
+ 					$subforums_list = implode(', ', $links);
+-					$l_subforums = (count($subforums[$forum_id]) == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] . ': ' : $_CLASS['core_user']-&gt;lang['SUBFORUMS'] . ': ';
++					$l_subforums = (count($subforums[$forum_id]) === 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] . ': ' : $_CLASS['core_user']-&gt;lang['SUBFORUMS'] . ': ';
+ 				}
+ 
+ 				unset($links);
+@@ -260,11 +256,11 @@
+ 			{
+ 				case FORUM_POST:
+ 					$folder_image = (!empty($forum_unread[$forum_id])) ? 'forum_new' : 'forum';
+-					break;
++				break;
+ 
+ 				case FORUM_LINK:
+ 					$folder_image = 'forum_link';
+-					break;
++				break;
+ 			}
+ 		}
+ 
+@@ -289,7 +285,7 @@
+ 			$last_poster = ($row['forum_last_poster_name'] != '') ? $row['forum_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'];
+ 			$last_poster_url = ($row['forum_last_poster_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u='  . $row['forum_last_poster_id']);
+ 			
+-			$last_post_url = generate_link('Forums&amp;file=viewtopic&amp;f='.$row['forum_id_last_post'].'&amp;p='.$row['forum_last_post_id'].'#'.$row['forum_last_post_id'], false, false, false);
++			$last_post_url = generate_link('forums&amp;file=viewtopic&amp;f='.$row['forum_id_last_post'].'&amp;p='.$row['forum_last_post_id'].'#'.$row['forum_last_post_id'], false, false, false);
+ 		}
+ 		else
+ 		{
+@@ -335,13 +331,13 @@
+ 			
+ 			'U_LAST_POSTER'		=&gt; $last_poster_url, 
+ 			'U_LAST_POST'		=&gt; $last_post_url, 
+-			'U_VIEWFORUM'		=&gt; ($row['forum_type'] != FORUM_LINK || $row['forum_flags'] &amp; 1) ? generate_link('Forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : $row['forum_link'])
++			'U_VIEWFORUM'		=&gt; ($row['forum_type'] != FORUM_LINK || $row['forum_flags'] &amp; 1) ? generate_link('forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : $row['forum_link'])
+ 		);
+ 	}
+ 
+ 	$_CLASS['core_template']-&gt;assign_array(array(
+ 		'MODIFY_FORUM'		=&gt; $_CLASS['auth']-&gt;acl_get('a_forum'),
+-		'U_MARK_FORUMS'		=&gt; generate_link('Forums&amp;file=viewforum&amp;f=' . $root_data['forum_id'] . '&amp;mark=Forums'), 
++		'U_MARK_FORUMS'		=&gt; generate_link('forums&amp;file=viewforum&amp;f=' . $root_data['forum_id'] . '&amp;mark=Forums'), 
+ 		'S_HAS_SUBFORUM'	=&gt; ($visible_forums) ? true : false,
+ 		'L_SUBFORUM'		=&gt; ($visible_forums == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] : $_CLASS['core_user']-&gt;lang['SUBFORUMS']
+ 	));
+@@ -484,7 +480,7 @@
+ 					$data['category'] = 'THUMBNAIL';
+ 	
+ 					$data['image_src'] = $thumbnail_filename;
+-					$data['link'] = (!$force_physical) ? generate_link('Forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
++					$data['link'] = (!$force_physical) ? generate_link('forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
+ 				break;
+ 	
+ 				// Windows Media Streams
+@@ -509,7 +505,7 @@
+ 	
+ 				default:
+ 					$data['category'] = 'FILE';
+-					$data['link'] = (!$force_physical) ? generate_link('Forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
++					$data['link'] = (!$force_physical) ? generate_link('forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
+ 				break;
+ 			}
+ 			
+@@ -524,7 +520,7 @@
+ 		if ($parse)
+ 		{
+ 			$_CLASS['core_template']-&gt;assign_vars_array('attachments', $data);
+-			$datas[] = $_CLASS['core_template']-&gt;display('modules/Forums/attachments.html', true);
++			$datas[] = $_CLASS['core_template']-&gt;display('modules/forums/attachments.html', true);
+ 		}
+ 		else
+ 		{
+
+Modified: cms/trunk/includes/forums/functions_posting.php
+===================================================================
+--- cms/trunk/includes/forums/functions_posting.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/forums/functions_posting.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -111,7 +111,7 @@
+ 	if ((int) $row['last_post_id'])
+ 	{
+ 		$sql = 'SELECT p.post_id, p.poster_id, p.post_time, u.username, p.post_username
+-			FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . ' u
++			FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . ' u
+ 			WHERE p.poster_id = u.user_id
+ 				AND p.post_id = ' . $row['last_post_id'];
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+@@ -733,7 +733,7 @@
+ 
+ 	// Go ahead and pull all data for this topic
+ 	$sql = 'SELECT u.username, u.user_id, p.post_id, p.post_username, p.post_subject, p.post_text, p.enable_smilies, p.bbcode_uid, p.bbcode_bitfield, p.post_time
+-		FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . &quot; u
++		FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . &quot; u
+ 		WHERE p.topic_id = $topic_id
+ 			AND p.poster_id = u.user_id
+ 			&quot; . ((!$_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? 'AND p.post_approved = 1' : '') . '
+@@ -845,7 +845,7 @@
+ 
+ 	// Lets get all the users that are set to be notified
+ 	$sql = 'SELECT w.notify_type, w.forum_id, u.user_id, u.username, u.user_email, u.user_lang
+-		FROM '.FORUMS_WATCH_TABLE.' w, ' . USERS_TABLE . &quot; u
++		FROM '.FORUMS_WATCH_TABLE.' w, ' . CORE_USERS_TABLE . &quot; u
+ 		WHERE $where
+ 			AND w.notify_status = 0
+ 			AND u.user_status = &quot;. STATUS_ACTIVE . '
+
+Modified: cms/trunk/includes/functions.php
+===================================================================
+--- cms/trunk/includes/functions.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/functions.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -142,7 +142,7 @@
+ 
+ 	$load = 0;
+ 
+-	if (file_exists('/proc/loadavg'))
++	if (@file_exists('/proc/loadavg'))
+ 	{
+ 		if ($file = file_get_contents('/proc/loadavg'))
+ 		{
+
+Added: cms/trunk/includes/templates/admin/modules/search.html
+===================================================================
+--- cms/trunk/includes/templates/admin/modules/search.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/admin/modules/search.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -0,0 +1,39 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++{ $THEME_TABLE_OPEN }
++
++&lt;table class=&quot;tablebg&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
++    &lt;tbody&gt;
++		&lt;tr&gt;
++			&lt;th&gt;&lt;/th&gt;
++			&lt;th width=&quot;70%&quot; align=&quot;center&quot;&gt;&lt;b&gt;{ $L_TITLE }&lt;/b&gt;&lt;/th&gt;
++			&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;b&gt;{ $L_FUNCTIONS }&lt;/b&gt;&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;4&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOP $modules_search --&gt;
++		&lt;tr&gt;
++			&lt;td height=&quot;24&quot; class=&quot;row1&quot;&gt;
++				&lt;input name=&quot;mark_id[]&quot; value=&quot;9&quot; type=&quot;checkbox&quot;&gt;
++			&lt;/td&gt;
++			&lt;td height=&quot;24&quot; class=&quot;row1&quot;&gt;
++				{ $modules_search:TITLE }
++			&lt;/td&gt;
++			&lt;td align=&quot;center&quot; class=&quot;row2&quot; onmouseover=&quot;this.className='row1'&quot; onmouseout=&quot;this.className='row2'&quot; onclick=&quot;location.href='{ $modules_search:LINK_ADD }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $modules_search:LINK_ADD }&quot;&gt;{ $L_ADD_AND_DEACTIVE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td align=&quot;center&quot; class=&quot;row2&quot; onmouseover=&quot;this.className='row1'&quot; onmouseout=&quot;this.className='row2'&quot; onclick=&quot;location.href='{ $modules_search:LINK_INSTALL }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $modules_search:LINK_INSTALL }&quot;&gt;{ $L_ADD_AND_INSTALL }&lt;/a&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;4&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDLOOP --&gt;
++	&lt;/tbody&gt;
++&lt;/table&gt;
++
++{ $THEME_TABLE_CLOSE }
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_agreement.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_agreement.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_agreement.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&gt;
+ 
+@@ -28,6 +28,6 @@
+ &lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_attachments.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_attachments.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_attachments.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;!-- IF { $S_ATTACHMENT_ROWS } --&gt;
+ 
+@@ -74,4 +74,4 @@
+ &lt;!-- ENDIF --&gt;
+ &lt;br /&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_calender_add.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_calender_add.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_calender_add.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;style type=&quot;text/css&quot;&gt;@import url(javascript/jscalendar/skins/aqua/theme.css);&lt;/style&gt;
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/jscalendar/calendar.js&quot;&gt;&lt;/script&gt;
+@@ -129,6 +129,6 @@
+   );
+ &lt;/script&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_calender_day.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_calender_day.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_calender_day.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellpadding=&quot;5&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr class=&quot;row2&quot;&gt;
+@@ -79,6 +79,6 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_calender_main.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_calender_main.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_calender_main.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellpadding=&quot;5&quot; cellspacing=&quot;1px&quot;&gt;
+ 	&lt;tr class=&quot;row2&quot;&gt;
+@@ -49,6 +49,6 @@
+ 
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_groups_membership.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_groups_membership.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_groups_membership.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -66,4 +66,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_main_bookmarks.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_main_bookmarks.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_main_bookmarks.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+ 
+@@ -102,6 +102,6 @@
+ &lt;!-- IF !{ $S_BOOKMARKS } --&gt;&lt;div class=&quot;gensmall&quot; style=&quot;float: right; padding-top: 2px;&quot;&gt;&lt;b&gt;&lt;a href=&quot;javascript:marklist('ucp', true);&quot;&gt;{ $L_MARK_ALL }&lt;/a&gt; :: &lt;a  href=&quot;javascript:marklist('ucp', false);&quot;&gt;{ $L_UNMARK_ALL }&lt;/a&gt;&lt;/b&gt;&lt;/div&gt;&lt;!-- ENDIF --&gt;
+ &lt;br /&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_main_drafts.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_main_drafts.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_main_drafts.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+@@ -108,6 +108,6 @@
+ &lt;!-- ENDIF --&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_main_front.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_main_front.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_main_front.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+@@ -73,6 +73,6 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_main_subscribed.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_main_subscribed.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_main_subscribed.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+ &lt;!--
+@@ -101,6 +101,6 @@
+ 
+ &lt;div class=&quot;gensmall&quot; style=&quot;float: right; padding-top: 2px;&quot;&gt;&lt;b&gt;&lt;a href=&quot;javascript:marklist('ucp', true);&quot;&gt;{ $L_MARK_ALL }&lt;/a&gt; :: &lt;a  href=&quot;javascript:marklist('ucp', false);&quot;&gt;{ $L_UNMARK_ALL }&lt;/a&gt;&lt;/b&gt;&lt;/div&gt;
+ &lt;br/&gt;
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_pm_options.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_pm_options.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_pm_options.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;!-- IF { $ERROR_MESSAGE } || { $NOTIFICATION_MESSAGE } --&gt;
+ 	&lt;table border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; width=&quot;100%&quot;&gt;
+@@ -185,6 +185,6 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewfolder.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewfolder.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewfolder.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_pm_message_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_pm_message_header.html --&gt;
+ 
+ 	&lt;div style=&quot;padding: 2px;&quot;&gt;&lt;/div&gt;
+ 
+@@ -84,7 +84,7 @@
+ &lt;/table&gt;
+ 
+ &lt;div style=&quot;padding: 2px;&quot;&gt;&lt;/div&gt;
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_pm_message_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_pm_message_footer.html --&gt;
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewmessage.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewmessage.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_pm_viewmessage.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_pm_message_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_pm_message_header.html --&gt;
+ &lt;div style=&quot;padding: 2px;&quot;&gt;&lt;/div&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+@@ -145,11 +145,11 @@
+ 
+ &lt;div style=&quot;padding: 2px;&quot;&gt;&lt;/div&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_pm_message_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_pm_message_footer.html --&gt;
+ 
+ &lt;!-- IF { $S_DISPLAY_HISTORY } --&gt;
+ 	&lt;br clear=&quot;all&quot; /&gt;
+-	&lt;!-- INCLUDE modules/Control_Panel/ucp_pm_history.html --&gt;
++	&lt;!-- INCLUDE modules/control_panel/ucp_pm_history.html --&gt;
+ &lt;!-- ENDIF --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_posting_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_posting_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_posting_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+ &lt;!--
+ 
+@@ -292,4 +292,4 @@
+ &lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_prefs_personal.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_prefs_personal.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_prefs_personal.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -72,4 +72,4 @@
+ 		&lt;/tr&gt;
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_prefs_post.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_prefs_post.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_prefs_post.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -36,4 +36,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_prefs_view.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_prefs_view.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_prefs_view.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -72,4 +72,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_profile_avatar.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_profile_avatar.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_profile_avatar.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot; &lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -67,4 +67,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_profile_profile_info.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_profile_profile_info.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_profile_profile_info.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot; &lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -59,4 +59,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_profile_reg_details.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_profile_reg_details.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_profile_reg_details.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -46,4 +46,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_profile_signature.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_profile_signature.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_profile_signature.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+ &lt;!--
+@@ -174,4 +174,4 @@
+ 		&lt;/tr&gt;
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_register.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_register.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_register.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
+ &lt;!--
+@@ -84,6 +84,6 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_remind.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_remind.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_remind.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form action=&quot;{ $S_PROFILE_ACTION }&quot; method=&quot;post&quot;&gt;
+ 
+@@ -26,6 +26,6 @@
+ 
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_resend.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_resend.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_resend.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form action=&quot;{ $S_PROFILE_ACTION }&quot; method=&quot;post&quot;&gt;
+ 
+@@ -25,6 +25,6 @@
+ &lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_zebra_foes.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_zebra_foes.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_zebra_foes.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -27,4 +27,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/control_panel/ucp_zebra_friends.html
+===================================================================
+--- cms/trunk/includes/templates/modules/control_panel/ucp_zebra_friends.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/control_panel/ucp_zebra_friends.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_header.html --&gt;
++&lt;!-- INCLUDE modules/control_panel/ucp_header.html --&gt;
+ 
+ &lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -27,4 +27,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/control_panel/ucp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/confirm_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/confirm_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/confirm_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,8 +1,8 @@
+-{ $A_TABLE_OPEN }
++{ $THEME_TABLE_OPEN }
+ &lt;div align=&quot;center&quot;&gt;&lt;b&gt;{ $MESSAGE_TITLE } &lt;/b&gt;&lt;/div&gt;
+ 
+-{ $A_TABLE_CLOSE }
+-{ $A_TABLE_OPEN }
++{ $THEME_TABLE_CLOSE }
++{ $THEME_TABLE_OPEN }
+ 
+ &lt;form name=&quot;confirm&quot; action=&quot;{ $S_CONFIRM_ACTION }&quot; method=&quot;post&quot;&gt;
+ 	&lt;table width=&quot;100%&quot;&gt;
+@@ -12,4 +12,4 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-{ $A_TABLE_CLOSE }
+\ No newline at end of file
++{ $THEME_TABLE_CLOSE }
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/faq_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/faq_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/faq_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,8 +1,8 @@
+ &lt;!-- IF { $DISPLAY_STYLESHEET_LINK } --&gt;
+-&lt;!-- INCLUDE modules/Forums/simple_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/simple_header.html --&gt;
+ &lt;!-- ELSE --&gt;
+ &lt;!-- DISPLAY_HEADER --&gt;
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ &lt;!-- ENDIF --&gt;
+ 
+ &lt;a name=&quot;Top&quot;&gt;&lt;/a&gt;
+@@ -73,7 +73,7 @@
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+ 
+
+Modified: cms/trunk/includes/templates/modules/forums/index_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/index_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/index_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,7 +1,9 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
++
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/forums/forum_view.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/message.js&quot;&gt;&lt;/script&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
+ 	&lt;tr&gt;
+@@ -184,6 +186,6 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_footer.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_footer.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_footer.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -27,4 +27,4 @@
+ 
+ 	&lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_forum.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_forum.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_forum.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
+ 
+ &lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $S_MCP_ACTION }&quot;&gt;&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+@@ -65,6 +65,6 @@
+ &lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_front.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_front.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_front.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
+ 
+ &lt;!-- IF { $S_SHOW_UNAPPROVED } --&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -103,6 +103,6 @@
+ &lt;br clear=&quot;all&quot; /&gt;
+ &lt;!-- ENDIF --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_header.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_header.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_header.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; defer=&quot;defer&quot;&gt;
+ &lt;!--
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_message.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_message.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_message.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Forums/mcp_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 	&lt;tr&gt;
+@@ -11,4 +11,4 @@
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_move.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_move.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_move.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
+ 
+ &lt;form name=&quot;confirm&quot; action=&quot;{ $CONFIRM_ACTION }&quot; method=&quot;post&quot;&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -24,6 +24,6 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 	
+-&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_post.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_post.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_post.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
+ 
+ &lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_APPROVE_ACTION }&quot;&gt;
+ &lt;tr&gt;
+@@ -188,6 +188,6 @@
+ 	&lt;!-- ENDIF --&gt;
+ &lt;!-- ENDIF --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_topic.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_topic.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/mcp_topic.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
+ 
+ &lt;form name=&quot;mcp&quot; method=&quot;post&quot; action=&quot;{ $S_MCP_ACTION }&quot;&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -138,6 +138,6 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/posting_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/posting_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/posting_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+ &lt;!--
+@@ -117,8 +117,8 @@
+ &lt;!-- ENDIF --&gt;
+ 
+ 
+-&lt;!-- IF { $S_POST_REVIEW } --&gt;&lt;!-- INCLUDE modules/Forums/posting_review.html --&gt;&lt;!-- ENDIF --&gt;
+-&lt;!-- IF { $S_DISPLAY_PREVIEW } --&gt;&lt;!-- INCLUDE modules/Forums/posting_preview.html --&gt;&lt;!-- ENDIF --&gt;
++&lt;!-- IF { $S_POST_REVIEW } --&gt;&lt;!-- INCLUDE modules/forums/posting_review.html --&gt;&lt;!-- ENDIF --&gt;
++&lt;!-- IF { $S_DISPLAY_PREVIEW } --&gt;&lt;!-- INCLUDE modules/forums/posting_preview.html --&gt;&lt;!-- ENDIF --&gt;
+ 
+ 
+ &lt;!-- IF { $S_UNGLOBALISE } --&gt;
+@@ -338,8 +338,8 @@
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDIF --&gt;
+ 	
+-	&lt;!-- IF { $S_SHOW_ATTACH_BOX } --&gt;&lt;!-- INCLUDE modules/Forums/posting_attach_body.html --&gt;&lt;!-- ENDIF --&gt;
+-	&lt;!-- IF { $S_SHOW_POLL_BOX } --&gt;&lt;!-- INCLUDE modules/Forums/posting_poll_body.html --&gt;&lt;!-- ELSEIF { $S_POLL_DELETE } --&gt;
++	&lt;!-- IF { $S_SHOW_ATTACH_BOX } --&gt;&lt;!-- INCLUDE modules/forums/posting_attach_body.html --&gt;&lt;!-- ENDIF --&gt;
++	&lt;!-- IF { $S_SHOW_POLL_BOX } --&gt;&lt;!-- INCLUDE modules/forums/posting_poll_body.html --&gt;&lt;!-- ELSEIF { $S_POLL_DELETE } --&gt;
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;&lt;b&gt;{ $L_POLL_DELETE }:&lt;/b&gt;&lt;/span&gt;&lt;/td&gt;
+ 			&lt;td class=&quot;row2&quot;&gt;&lt;input type=&quot;checkbox&quot; name=&quot;poll_delete&quot; /&gt;&lt;/td&gt;
+@@ -352,7 +352,7 @@
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- IF { $S_DISPLAY_REVIEW } --&gt;&lt;!-- INCLUDE modules/Forums/posting_topic_review.html --&gt;&lt;!-- ENDIF --&gt;
++&lt;!-- IF { $S_DISPLAY_REVIEW } --&gt;&lt;!-- INCLUDE modules/forums/posting_topic_review.html --&gt;&lt;!-- ENDIF --&gt;
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;row1&quot;&gt;&lt;div class=&quot;nav&quot; style=&quot;float:left&quot;&gt;&lt;a href=&quot;{ $U_INDEX }&quot;&gt;{ $L_INDEX }&lt;/a&gt;&lt;!-- LOOP $navlinks --&gt; &#187; &lt;a href=&quot;{ $navlinks:U_VIEW_FORUM }&quot;&gt;{ $navlinks:FORUM_NAME }&lt;/a&gt;&lt;!-- ENDLOOP --&gt;&lt;/div&gt;&lt;div class=&quot;gensmall&quot; style=&quot;float:right&quot;&gt;{ $S_TIMEZONE }&lt;/div&gt;&lt;/td&gt;
+@@ -377,11 +377,11 @@
+ 
+ &lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td align=&quot;right&quot;&gt;&lt;!-- INCLUDE modules/Forums/jumpbox.html --&gt;&lt;/td&gt;
++		&lt;td align=&quot;right&quot;&gt;&lt;!-- INCLUDE modules/forums/jumpbox.html --&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ &lt;!-- ENDIF --&gt;
+ 	
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/posting_smilies.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/posting_smilies.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/posting_smilies.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Forums/simple_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/simple_header.html --&gt;
+ 
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+ &lt;!--
+@@ -39,4 +39,4 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/simple_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/forums/simple_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/report_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/report_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/report_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,4 @@
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ &lt;form method=&quot;post&quot; action=&quot;{ $S_REPORT_ACTION }&quot; name=&quot;report&quot;&gt;
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -29,4 +29,4 @@
+ &lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/search_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/search_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/search_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ &lt;form method=&quot;post&quot; action=&quot;{ $S_SEARCH_ACTION }&quot;&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -82,12 +82,12 @@
+ &lt;br clear=&quot;all&quot; /&gt;
+ &lt;!-- IF { $S_DISPLAY_JUMPBOX } --&gt;
+ &lt;div style=&quot;float:right&quot;&gt;
+-&lt;!-- INCLUDE modules/Forums/jumpbox.html --&gt;
++&lt;!-- INCLUDE modules/forums/jumpbox.html --&gt;
+ &lt;/div&gt;
+ &lt;!-- ENDIF --&gt;
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/search_results.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/search_results.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/search_results.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ &lt;form method=&quot;post&quot; action=&quot;{ $S_SEARCH_ACTION }&quot;&gt;
+ 
+@@ -130,8 +130,8 @@
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;div style=&quot;float:right&quot;&gt;&lt;!-- IF { $S_DISPLAY_JUMPBOX } --&gt;&lt;!-- INCLUDE modules/Forums/jumpbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/div&gt;
++&lt;div style=&quot;float:right&quot;&gt;&lt;!-- IF { $S_DISPLAY_JUMPBOX } --&gt;&lt;!-- INCLUDE modules/forums/jumpbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/div&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/simple_header.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/simple_header.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/simple_header.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,7 +1,7 @@
+ &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+ &lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset={ $SITE_CHARSET }&quot; /&gt;
+ &lt;head&gt;
+-&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
++&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $THEME_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
+ &lt;/head&gt;
+ &lt;html&gt;
+ &lt;body&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/viewforum_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/viewforum_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/viewforum_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,7 +1,9 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
++
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/forums/forum_view.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/message.js&quot;&gt;&lt;/script&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ &lt;!-- IF { $S_FORUM_RULES } --&gt;
+ &lt;div class=&quot;forumrules&quot;&gt;
+@@ -323,11 +325,11 @@
+ 
+ &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td&gt;&lt;!-- IF { $S_DISPLAY_SEARCHBOX } --&gt;&lt;!-- INCLUDE modules/Forums/searchbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+-		&lt;td align=&quot;right&quot;&gt;&lt;!-- IF { $S_DISPLAY_JUMPBOX } --&gt;&lt;!-- INCLUDE modules/Forums/jumpbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++		&lt;td&gt;&lt;!-- IF { $S_DISPLAY_SEARCHBOX } --&gt;&lt;!-- INCLUDE modules/forums/searchbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++		&lt;td align=&quot;right&quot;&gt;&lt;!-- IF { $S_DISPLAY_JUMPBOX } --&gt;&lt;!-- INCLUDE modules/forums/jumpbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/viewforum_subforum.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/viewforum_subforum.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/viewforum_subforum.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,4 +1,5 @@
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/forums/forum_view.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/message.js&quot;&gt;&lt;/script&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+
+Modified: cms/trunk/includes/templates/modules/forums/viewtopic_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/viewtopic_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/forums/viewtopic_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
+ 	&lt;!-- IF { $S_FORUM_RULES } --&gt;
+ 	&lt;div class=&quot;forumrules&quot;&gt;
+@@ -334,11 +334,11 @@
+ 
+ 	&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot;&gt;
+ 		&lt;tr&gt;
+-			&lt;td&gt;&lt;!-- IF { $S_DISPLAY_SEARCHBOX } --&gt;&lt;!-- INCLUDE modules/Forums/searchbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+-			&lt;td align=&quot;right&quot;&gt;&lt;!-- IF { $S_DISPLAY_JUMPBOX } --&gt;&lt;!-- INCLUDE modules/Forums/jumpbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;td&gt;&lt;!-- IF { $S_DISPLAY_SEARCHBOX } --&gt;&lt;!-- INCLUDE modules/forums/searchbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;td align=&quot;right&quot;&gt;&lt;!-- IF { $S_DISPLAY_JUMPBOX } --&gt;&lt;!-- INCLUDE modules/forums/jumpbox.html --&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 	&lt;/table&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/overall_footer.html --&gt;
++&lt;!-- INCLUDE modules/forums/overall_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/members_list/memberlist_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/members_list/memberlist_body.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/members_list/memberlist_body.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,8 +1,8 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Members_List/memberlist_header.html --&gt;
++&lt;!-- INCLUDE modules/members_list/memberlist_header.html --&gt;
+ 
+-&lt;!-- IF { $S_SEARCH_USER } --&gt;&lt;!-- INCLUDE modules/Members_List/memberlist_search.html --&gt;&lt;!-- ENDIF --&gt;
++&lt;!-- IF { $S_SEARCH_USER } --&gt;&lt;!-- INCLUDE modules/members_list/memberlist_search.html --&gt;&lt;!-- ENDIF --&gt;
+ 
+ &lt;!-- IF { $S_SHOW_GROUP } --&gt;
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -132,6 +132,6 @@
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- INCLUDE modules/Members_List/memberlist_footer.html --&gt;
++&lt;!-- INCLUDE modules/members_list/memberlist_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/members_list/memberlist_forum_moderators.html
+===================================================================
+--- cms/trunk/includes/templates/modules/members_list/memberlist_forum_moderators.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/members_list/memberlist_forum_moderators.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Members_List/memberlist_header.html --&gt;
++&lt;!-- INCLUDE modules/members_list/memberlist_header.html --&gt;
+ 
+ &lt;form method=&quot;post&quot; action=&quot;{ $S_MODE_ACTION }&quot;&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -40,6 +40,6 @@
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+-&lt;!-- INCLUDE modules/Members_List/memberlist_footer.html --&gt;
++&lt;!-- INCLUDE modules/members_list/memberlist_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/members_list/memberlist_view.html
+===================================================================
+--- cms/trunk/includes/templates/modules/members_list/memberlist_view.html	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/includes/templates/modules/members_list/memberlist_view.html	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,6 +1,6 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;!-- INCLUDE modules/Members_List/memberlist_header.html --&gt;
++&lt;!-- INCLUDE modules/members_list/memberlist_header.html --&gt;
+ 
+ &lt;form method=&quot;post&quot; action=&quot;{ $S_PROFILE_ACTION }&quot;&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -167,6 +167,6 @@
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+-&lt;!-- INCLUDE modules/Members_List/memberlist_footer.html --&gt;
++&lt;!-- INCLUDE modules/members_list/memberlist_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/javascript/forums/forum_view.js
+===================================================================
+--- cms/trunk/javascript/forums/forum_view.js	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/javascript/forums/forum_view.js	2006-07-25 17:08:28 UTC (rev 178)
+@@ -29,15 +29,21 @@
+ 	{
+ 		if (ajax.state_ready() &amp;&amp; ajax.responseText())
+ 		{
++			var title = document.getElementById(mode + '_name_' + id);
++
+ 			if (ajax.responseText() == 'unlock')
+ 			{ 
+ 				var new_status = 0;
+ 				var status = document.getElementById(mode +'_unlocked_status');
++
++				system_message_init('forums', '&lt;b&gt;' + title.innerHTML + ' unlocked&lt;/b&gt;');
+ 			}
+ 			else
+ 			{
+ 				var new_status = 1;
+ 				var status = document.getElementById(mode +'_locked_status');
++
++				system_message_init('forums', '&lt;b&gt;' + title.innerHTML + ' locked&lt;/b&gt;');
+ 			}
+ 
+ 			area.innerHTML = status.innerHTML;
+@@ -50,7 +56,7 @@
+ 
+ 	ajax.onreadystatechange(onreadystatechange);
+ 
+-	ajax.send('ajax.php?mod=Forums', '&amp;mode=' + mode + '_lock_unlock&amp;lock=' + lock + '&amp;id=' + id);
++	ajax.send('ajax.php?mod=forums', '&amp;mode=' + mode + '_lock_unlock&amp;lock=' + lock + '&amp;id=' + id);
+ }
+ 
+ function tite_edit_init(id, mode)
+@@ -99,20 +105,31 @@
+ 			case 13:
+ 			{
+ 				ajax = new core_ajax();
++	
+ 
++
+ 				var onreadystatechange = function()
+ 				{
++					if (input.value == title.innerHTML)
++					{
++						tite_edit_remove(id, mode);
++				
++						return;
++					}
++
+ 					if (ajax.state_ready() &amp;&amp; ajax.responseText())
+ 					{
+ 						title.innerHTML = ajax.responseText();
++						
++						system_message_init('forums', '&lt;b&gt;Name Changed&lt;/b&gt; &lt;br /&gt;&lt;br /&gt;&lt;b&gt;From:&lt;/b&gt; ' + input.value + '&lt;br /&gt;&lt;b&gt;To:&lt;/b&gt; ' + title.innerHTML);
+ 					}
+ 				}
+-				
++
+ 				ajax.onreadystatechange(onreadystatechange);
+ 
+ 				var input = document.getElementById(mode + '_input_' + id);
+ 
+-				ajax.send('ajax.php?mod=Forums', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
++				ajax.send('ajax.php?mod=forums', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
+ 
+ 				tite_edit_remove(id, mode);
+ 			}
+@@ -172,6 +189,8 @@
+ 		if (ajax.state_ready() &amp;&amp; ajax.responseText())
+ 		{
+ 			title.innerHTML = ajax.responseText();
++
++			system_message_init('forums', '&lt;b&gt;Name Changed&lt;/b&gt; &lt;br /&gt;&lt;br /&gt;&lt;b&gt;From:&lt;/b&gt; ' + input.value + '&lt;br /&gt;&lt;b&gt;To:&lt;/b&gt; ' + title.innerHTML);
+ 		}
+ 	}
+ 	
+@@ -179,7 +198,7 @@
+ 
+ 	var input = document.getElementById(mode + '_input_' + id);
+ 
+-	ajax.send('ajax.php?mod=Forums', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
++	ajax.send('ajax.php?mod=forums', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
+ 
+ 	tite_edit_remove(id, mode);
+ }
+\ No newline at end of file
+
+Modified: cms/trunk/javascript/quick_messages.js
+===================================================================
+--- cms/trunk/javascript/quick_messages.js	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/javascript/quick_messages.js	2006-07-25 17:08:28 UTC (rev 178)
+@@ -20,6 +20,8 @@
+ 			area.innerHTML = ajax.responseText();
+ 
+ 			message.value = '';
++
++			system_message_init('quickmessage', 'Quick Message Posted');
+ 		}
+ 	}
+ 
+@@ -28,7 +30,6 @@
+ 	poster_name = (poster_name) ? 'poster_name=' + poster_name.value : '';
+ 
+ 	ajax.send('ajax.php?mod=quick_message&amp;mode=ajax_add', poster_name + '&amp;message=' + message.value);
+-	system_message_init('quickmessage', 'Quick Message Posted');
+ 
+ 	return false;
+ }
+@@ -43,12 +44,12 @@
+ 		{
+ 			var area = document.getElementById('qm_block');
+ 			area.innerHTML = ajax.responseText();
++			
++			system_message_init('quickmessage', 'Quick Message Refresh Complete');
+ 		}
+ 	}
+ 
+ 	ajax.onreadystatechange(onreadystatechange);
+ 
+ 	ajax.send('ajax.php?mod=quick_message&amp;mode=ajax_refresh', null);
+-
+-	system_message_init('quickmessage', 'Quick Message Refresh Complete');
+ }
+\ No newline at end of file
+
+Modified: cms/trunk/modules/control_panel/index.php
+===================================================================
+--- cms/trunk/modules/control_panel/index.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/control_panel/index.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -60,7 +60,7 @@
+ 			$module_info = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 		}
+ 
+-		if (!$this-&gt;module || !$module_info || !file_exists(SITE_FILE_ROOT.'modules/Control_Panel/modules/ucp_' . $this-&gt;module . '.php'))
++		if (!$this-&gt;module || !$module_info || !file_exists(SITE_FILE_ROOT.'modules/control_panel/modules/ucp_' . $this-&gt;module . '.php'))
+ 		{
+ 			$this-&gt;module = 'main';
+ 			$this-&gt;mode = ($this-&gt;module) ? false : $this-&gt;mode;
+
+Modified: cms/trunk/modules/control_panel/modules/ucp_pm.php
+===================================================================
+--- cms/trunk/modules/control_panel/modules/ucp_pm.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/control_panel/modules/ucp_pm.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -60,7 +60,7 @@
+ 
+ // This is loaded 2x with drafts
+ $_CLASS['core_user']-&gt;add_lang();
+-$_CLASS['core_user']-&gt;add_lang('posting', 'Forums');
++$_CLASS['core_user']-&gt;add_lang('posting', 'forums');
+ 
+ $_CLASS['core_template']-&gt;assign('S_PRIVMSGS', true);
+ 
+
+Modified: cms/trunk/modules/control_panel/modules/ucp_prefs.php
+===================================================================
+--- cms/trunk/modules/control_panel/modules/ucp_prefs.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/control_panel/modules/ucp_prefs.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -309,7 +309,7 @@
+ 			'DISABLE_CENSORS_YES'	=&gt; $wordcensor_yes, 
+ 			'DISABLE_CENSORS_NO'	=&gt; $wordcensor_no,
+ 
+-			'S_CHANGE_CENSORS'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('u_chgcensors'), 
++			'S_CHANGE_CENSORS'		=&gt; true, 
+ 
+ 			'S_TOPIC_SORT_DAYS'		=&gt; $s_limit_topic_days,
+ 			'S_TOPIC_SORT_KEY'		=&gt; $s_sort_topic_key,
+
+Modified: cms/trunk/modules/forums/ajax.php
+===================================================================
+--- cms/trunk/modules/forums/ajax.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/forums/ajax.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -28,7 +28,7 @@
+ 
+ header('Content-Type: text/html');
+ 
+-require_once(SITE_FILE_ROOT.'includes/forums/functions.php');
++require_once SITE_FILE_ROOT.'includes/forums/functions.php';
+ load_class(SITE_FILE_ROOT.'includes/forums/auth.php', 'forums_auth');
+ 
+ $_CLASS['forums_auth']-&gt;acl($_CLASS['core_user']-&gt;data);
+
+Modified: cms/trunk/modules/forums/faq.php
+===================================================================
+--- cms/trunk/modules/forums/faq.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/forums/faq.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -28,21 +28,21 @@
+ 
+ if (isset($_REQUEST['mode']) &amp;&amp; $_REQUEST['mode'] == 'bbcode')
+ {
+-	$_CLASS['core_user']-&gt;add_lang('help_bbcode','Forums');
++	$_CLASS['core_user']-&gt;add_lang('help_bbcode','forums');
+ 	$l_title = $_CLASS['core_user']-&gt;get_lang('BBCODE_GUIDE');
+ 	$link = '&amp;mode=bbcode';
+ 	$mode = 'bbcode';
+ }
+ else
+ {
+-	$_CLASS['core_user']-&gt;add_lang('help_faq','Forums');
++	$_CLASS['core_user']-&gt;add_lang('help_faq','forums');
+ 	$l_title = $_CLASS['core_user']-&gt;get_lang('FAQ');
+ 	$link = $mode = '';
+ }
+ 
+ $_CLASS['core_template']-&gt;assign_array(array(
+ 	'L_FAQ_TITLE'	=&gt; $l_title,
+-	'S_BACK_TO_TOP'	=&gt; generate_link('Forums&amp;file=faq'.$link.'#Top')
++	'S_BACK_TO_TOP'	=&gt; generate_link('forums&amp;file=faq'.$link.'#Top')
+ ));
+ 
+ $id = 0;
+@@ -83,7 +83,7 @@
+ 
+ 		$faq_row_link[] = array(
+ 			'FAQ_LINK' 			=&gt; $_CLASS['core_user']-&gt;lang['help'][$i][0],
+-			'U_FAQ_LINK'		=&gt; generate_link('Forums&amp;file=faq'.$link.'#' . $id)
++			'U_FAQ_LINK'		=&gt; generate_link('forums&amp;file=faq'.$link.'#' . $id)
+ 		);
+ 	}
+ }
+@@ -105,6 +105,6 @@
+ 
+ page_header();
+ 
+-$_CLASS['core_template']-&gt;display('modules/Forums/faq_body.html');
++$_CLASS['core_template']-&gt;display('modules/forums/faq_body.html');
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/forums/main.php
+===================================================================
+--- cms/trunk/modules/forums/main.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/forums/main.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -53,7 +53,7 @@
+ $legend = array();
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ {
+-	$legend[] .= '&lt;a style=&quot;color:#' . $row['group_colour'] . '&quot; href=&quot;'.generate_link('Members_List&amp;mode=group&amp;g=' . $row['group_id']) . '&quot;&gt;' . (isset($_CLASS['core_user']-&gt;lang['G_' . $row['group_name']]) ? $_CLASS['core_user']-&gt;lang['G_' . $row['group_name']] : $row['group_name']) . '&lt;/a&gt;';
++	$legend[] .= '&lt;a style=&quot;color:#' . $row['group_colour'] . '&quot; href=&quot;'.generate_link('members_list&amp;mode=group&amp;g=' . $row['group_id']) . '&quot;&gt;' . (isset($_CLASS['core_user']-&gt;lang['G_' . $row['group_name']]) ? $_CLASS['core_user']-&gt;lang['G_' . $row['group_name']] : $row['group_name']) . '&lt;/a&gt;';
+ }
+ $_CLASS['core_db']-&gt;free_result($result);
+ 
+@@ -63,19 +63,18 @@
+ $birthday_list = '';
+ if ($config['load_birthdays'])
+ {
+-	$now = getdate();
+-	$now = explode(':', gmdate('j:m'));
+-
++	$now = explode(':', gmdate('d:m'));
++
+ 	$sql = 'SELECT user_id, username, user_colour, user_birthday 
+ 		FROM ' . CORE_USERS_TABLE . &quot; 
+-		WHERE user_birthday LIKE '&quot; . sprintf('%2d-%2d-', $now[0], $now[1]) . &quot;%'
++		WHERE user_birthday LIKE '&quot; . $_CLASS['core_db']-&gt;escape(&quot;{$now[0]}-{$now[1]}-&quot;) . &quot;%'
+ 			AND user_type = &quot;.USER_NORMAL;
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$user_colour = ($row['user_colour']) ? ' style=&quot;color:#' . $row['user_colour'] .'&quot;' : '';
+-		$birthday_list .= (($birthday_list != '') ? ', ' : '') . '&lt;a' . $user_colour . ' href=&quot;' . generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']) . '&quot;&gt;' . $row['username'] . '&lt;/a&gt;';
++		$birthday_list .= (($birthday_list != '') ? ', ' : '') . '&lt;a' . $user_colour . ' href=&quot;' . generate_link('members_list&amp;mode=viewprofile&amp;u=' . $row['user_id']) . '&quot;&gt;' . $row['username'] . '&lt;/a&gt;';
+ 		
+ 		if ($age = (int) substr($row['user_birthday'], -4))
+ 		{
+@@ -104,17 +103,17 @@
+ 	'FORUM_NEW_IMG'		=&gt;	$_CLASS['core_user']-&gt;img('forum_new', 'NEW_POSTS'),
+ 	'FORUM_LOCKED_IMG'	=&gt;	$_CLASS['core_user']-&gt;img('forum_locked', 'NO_NEW_POSTS_LOCKED'),
+ 
+-	'S_LOGIN_ACTION'			=&gt; generate_link('Control_Panel&amp;mode=login'), 
++	'S_LOGIN_ACTION'			=&gt; generate_link('control_panel&amp;mode=login'), 
+ 	'S_DISPLAY_BIRTHDAY_LIST'	=&gt; ($config['load_birthdays']), 
+ 
+-	'U_MARK_FORUMS'	=&gt; generate_link('Forums&amp;mark=forums')
++	'U_MARK_FORUMS'	=&gt; generate_link('forums&amp;mark=forums')
+ ));
+ unset($birthday_list, $legend);
+ 
+ page_header();
+ 
+-$_CLASS['core_display']-&gt;footer .= $_CLASS['core_template']-&gt;display('modules/Forums/menus.html', true);
++$_CLASS['core_display']-&gt;footer .= $_CLASS['core_template']-&gt;display('modules/forums/menus.html', true);
+ 
+-$_CLASS['core_display']-&gt;display(false, 'modules/Forums/index_body.html');
++$_CLASS['core_display']-&gt;display(false, 'modules/forums/index_body.html');
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/forums/posting.php
+===================================================================
+--- cms/trunk/modules/forums/posting.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/forums/posting.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -61,7 +61,7 @@
+ // Was cancel pressed? If so then redirect to the appropriate page
+ if ($_CLASS['core_user']-&gt;is_bot || isset($_POST['cancel']))
+ {
+-	$redirect = ($post_id) ? &quot;Forums&amp;file=viewtopic&amp;p=$post_id#$post_id&quot; : (($topic_id) ? 'Forums&amp;file=viewtopic&amp;t='.$topic_id : (($forum_id) ? 'Forums&amp;file=viewforum&amp;f='.$forum_id : 'Forums'));
++	$redirect = ($post_id) ? &quot;forums&amp;file=viewtopic&amp;p=$post_id#$post_id&quot; : (($topic_id) ? 'Forums&amp;file=viewtopic&amp;t='.$topic_id : (($forum_id) ? 'Forums&amp;file=viewforum&amp;f='.$forum_id : 'Forums'));
+ 	redirect(generate_link($redirect,  array('full' =&gt; true)));
+ }
+ 
+@@ -99,7 +99,7 @@
+ 		}
+ 
+ 		$sql = 'SELECT f.*, t.*, p.*, u.username, u.user_sig, u.user_sig_bbcode_uid, u.user_sig_bbcode_bitfield
+-			FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . ' u , ' . FORUMS_TOPICS_TABLE . ' t
++			FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . ' u , ' . FORUMS_TOPICS_TABLE . ' t
+ 			LEFT JOIN ' . FORUMS_FORUMS_TABLE . &quot; f ON (f.forum_id = t.forum_id)
+ 			WHERE p.post_id = $post_id
+ 				AND t.topic_id = p.topic_id
+@@ -426,7 +426,7 @@
+ 		SET ' . implode(', ', update_last_post_information('forum', $forum_id)) . &quot;
+ 		WHERE forum_id = $forum_id&quot;);
+ 
+-	$_CLASS['core_db']-&gt;query('UPDATE ' . USERS_TABLE . &quot;
++	$_CLASS['core_db']-&gt;query('UPDATE ' . CORE_USERS_TABLE . &quot;
+ 		SET user_last_post_time = $current_time
+ 		WHERE user_id = &quot; . $_CLASS['core_user']-&gt;data['user_id']);
+ 
+@@ -1054,7 +1054,7 @@
+ $lock_post_checked	= isset($post_lock) ? $post_lock : $posting_data['post_edit_locked'];
+ 
+ // Page title &amp; action URL, include session_id for security purpose
+-$s_action = &quot;Forums&amp;file=posting&amp;mode=$mode&amp;f=$forum_id&quot;;
++$s_action = &quot;forums&amp;file=posting&amp;mode=$mode&amp;f=$forum_id&quot;;
+ $s_action .= ($topic_id) ? &quot;&amp;t=$topic_id&quot; : '';
+ $s_action .= ($post_id) ? &quot;&amp;p=$post_id&quot; : '';
+ $s_action = generate_link($s_action);
+@@ -1207,9 +1207,9 @@
+ 	}
+ }
+ 
+-make_jumpbox(generate_link('Forums&amp;file=viewforum'));
++make_jumpbox(generate_link('forums&amp;file=viewforum'));
+ 
+-$_CLASS['core_template']-&gt;display('modules/Forums/posting_body.html');
++$_CLASS['core_template']-&gt;display('modules/forums/posting_body.html');
+ 
+ // ---------
+ // FUNCTIONS
+@@ -1264,7 +1264,7 @@
+ 
+ 		case 'delete_first_post':
+ 			$sql = 'SELECT p.post_id, p.poster_id, p.post_username, u.username 
+-				FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . &quot; u
++				FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . &quot; u
+ 				WHERE p.topic_id = $topic_id 
+ 					AND p.poster_id = u.user_id 
+ 				ORDER BY p.post_time ASC&quot;;
+@@ -1336,12 +1336,12 @@
+ 		break;
+ 	}
+ 				
+-	$sql_data[USERS_TABLE] = ($_CLASS['auth']-&gt;acl_get('f_postcount', $forum_id)) ? 'user_posts = user_posts - 1' : '';
++	$sql_data[CORE_USERS_TABLE] = ($_CLASS['auth']-&gt;acl_get('f_postcount', $forum_id)) ? 'user_posts = user_posts - 1' : '';
+ 	set_config('num_posts', $config['num_posts'] - 1, true);
+ 
+ 	$_CLASS['core_db']-&gt;transaction();
+ 
+-	$where_sql = array(FORUMS_FORUMS_TABLE =&gt; &quot;forum_id = $forum_id&quot;, FORUMS_TOPICS_TABLE =&gt; &quot;topic_id = $topic_id&quot;, USERS_TABLE =&gt; 'user_id = ' . $data['poster_id']);
++	$where_sql = array(FORUMS_FORUMS_TABLE =&gt; &quot;forum_id = $forum_id&quot;, FORUMS_TOPICS_TABLE =&gt; &quot;topic_id = $topic_id&quot;, CORE_USERS_TABLE =&gt; 'user_id = ' . $data['poster_id']);
+ 
+ 	foreach ($sql_data as $table =&gt; $update_sql)
+ 	{
+@@ -1507,7 +1507,7 @@
+ 				);
+ 			}
+ 
+-			$sql_data[USERS_TABLE]['stat'][] = &quot;user_last_post_time = $current_time&quot; . (($_CLASS['auth']-&gt;acl_get('f_postcount', $data['forum_id'])) ? ', user_posts = user_posts + 1' : '');
++			$sql_data[CORE_USERS_TABLE]['stat'][] = &quot;user_last_post_time = $current_time&quot; . (($_CLASS['auth']-&gt;acl_get('f_postcount', $data['forum_id'])) ? ', user_posts = user_posts + 1' : '');
+ 
+ 			if ($topic_type != POST_GLOBAL)
+ 			{
+@@ -1521,7 +1521,7 @@
+ 
+ 		case 'reply':
+ 			$sql_data[FORUMS_TOPICS_TABLE]['stat'][] = 'topic_replies_real = topic_replies_real + 1, topic_bumped = 0, topic_bumper = 0' . ((!$_CLASS['auth']-&gt;acl_get('f_moderate', $data['forum_id']) || $_CLASS['auth']-&gt;acl_get('m_approve')) ? ', topic_replies = topic_replies + 1' : '');
+-			$sql_data[USERS_TABLE]['stat'][] = &quot;user_last_post_time = $current_time&quot; . (($_CLASS['auth']-&gt;acl_get('f_postcount', $data['forum_id'])) ? ', user_posts = user_posts + 1' : '');
++			$sql_data[CORE_USERS_TABLE]['stat'][] = &quot;user_last_post_time = $current_time&quot; . (($_CLASS['auth']-&gt;acl_get('f_postcount', $data['forum_id'])) ? ', user_posts = user_posts + 1' : '');
+ 			
+ 			if ((!$_CLASS['auth']-&gt;acl_get('f_moderate', $data['forum_id']) || $_CLASS['auth']-&gt;acl_get('m_approve')) &amp;&amp; $topic_type != POST_GLOBAL)
+ 			{
+@@ -1820,7 +1820,7 @@
+ 	// Update forum stats
+ 	$_CLASS['core_db']-&gt;transaction();
+ 
+-	$where_sql = array(FORUMS_POSTS_TABLE =&gt; 'post_id = ' . $data['post_id'], FORUMS_TOPICS_TABLE =&gt; 'topic_id = ' . $data['topic_id'], FORUMS_FORUMS_TABLE =&gt; 'forum_id = ' . $data['forum_id'], USERS_TABLE =&gt; 'user_id = ' . $_CLASS['core_user']-&gt;data['user_id']);
++	$where_sql = array(FORUMS_POSTS_TABLE =&gt; 'post_id = ' . $data['post_id'], FORUMS_TOPICS_TABLE =&gt; 'topic_id = ' . $data['topic_id'], FORUMS_FORUMS_TABLE =&gt; 'forum_id = ' . $data['forum_id'], CORE_USERS_TABLE =&gt; 'user_id = ' . $_CLASS['core_user']-&gt;data['user_id']);
+ 
+ 	foreach ($sql_data as $table =&gt; $update_ary)
+ 	{
+
+Modified: cms/trunk/modules/forums/viewforum.php
+===================================================================
+--- cms/trunk/modules/forums/viewforum.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/forums/viewforum.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -121,6 +121,13 @@
+ 	login_box(array('explain' =&gt; $_CLASS['core_user']-&gt;lang['LOGIN_NOTIFY_FORUM']));
+ }
+ 
++// Forum is passworded ... check whether access has been granted to this
++// user this session, if not show login box
++if ($forum_data['forum_password'])
++{
++	login_forum_box($forum_data);
++}
++
+ // Are we a forum link, then redirect
+ if ($forum_data['forum_link'])
+ {
+@@ -139,13 +146,8 @@
+ // Add Images
+ $_CLASS['core_user']-&gt;add_img();
+ 
+-// Forum is passworded ... check whether access has been granted to this
+-// user this session, if not show login box
+-if ($forum_data['forum_password'])
+-{
+-	login_forum_box($forum_data);
+-}
+ 
++
+ // Build navigation links
+ generate_forum_nav($forum_data);
+ 
+@@ -164,7 +166,8 @@
+ 	$_CLASS['core_template']-&gt;assign('S_HAS_SUBFORUM', false);
+ }
+ 
+-if ($forum_data['forum_type'] != FORUM_POST &amp;&amp; !($forum_data['forum_flags'] &amp; 16))
++// Not postable forum or showing active topics?
++if (!($forum_data['forum_type'] == FORUM_POST || (($forum_data['forum_flags'] &amp; 16) &amp;&amp; $forum_data['forum_type'] == FORUM_CAT)))
+ {
+ 	$_CLASS['core_template']-&gt;assign_array(array(
+ 		'S_IS_POSTABLE'			=&gt; false,
+@@ -175,9 +178,9 @@
+ 
+ 	page_header();
+ 	
+-	make_jumpbox(generate_link('Forums&amp;file=viewforum'), $forum_id);
++	make_jumpbox(generate_link('forums&amp;file=viewforum'), $forum_id);
+ 	
+-	$_CLASS['core_template']-&gt;display('modules/Forums/viewforum_body.html');
++	$_CLASS['core_template']-&gt;display('modules/forums/viewforum_body.html');
+ }
+ 
+ $moderators = get_moderators($forum_id);
+@@ -187,7 +190,7 @@
+ {
+ 	markread('forum', $forum_id);
+ 	
+-	$_CLASS['core_display']-&gt;meta_refresh(3, generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id));
++	$_CLASS['core_display']-&gt;meta_refresh(3, generate_link('forums&amp;file=viewforum&amp;f='.$forum_id));
+ 
+ 	$message = $_CLASS['core_user']-&gt;lang['TOPICS_MARKED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;' . generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id) . '&quot;&gt;', '&lt;/a&gt; ');
+ 	trigger_error($message);
+@@ -250,17 +253,18 @@
+ 	$sql = 'SELECT COUNT(topic_id) AS num_topics
+ 		FROM ' . FORUMS_TOPICS_TABLE . &quot;
+ 		WHERE forum_id = $forum_id
+-			AND topic_type &lt;&gt; &quot; . POST_ANNOUNCE . &quot; 
++			AND topic_type NOT IN (&quot; . POST_ANNOUNCE . ', ' . POST_GLOBAL . &quot;)
+ 			AND topic_last_post_time &gt;= $min_post_time
+ 		&quot; . (($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND topic_approved = 1');
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
++	$topics_count = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? (int) $row['num_topics'] : 0;
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	if (isset($_POST['sort']))
+ 	{
+ 		$start = 0;
+ 	}
+ 
+-	$topics_count = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['num_topics'] : 0;
+ 	$sql_limit_time = &quot;AND t.topic_last_post_time &gt;= $min_post_time&quot;;
+ }
+ else
+@@ -279,13 +283,15 @@
+ 
+ // Basic pagewide vars
+ $post_alt = ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;lang['FORUM_LOCKED'] : $_CLASS['core_user']-&gt;lang['POST_NEW_TOPIC'];
+-$pagination = generate_pagination(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&quot;, $topics_count, $config['topics_per_page'], $start);
++$pagination = generate_pagination(&quot;forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&quot;, $topics_count, $config['topics_per_page'], $start);
+ 
++$s_display_active = ($forum_data['forum_type'] == FORUM_CAT &amp;&amp; ($forum_data['forum_flags'] &amp; 16)) ? true : false;
++
+ $_CLASS['core_template']-&gt;assign_array(array(
+ 	'PAGINATION'		=&gt; $pagination['formated'],
+ 	'PAGINATION_ARRAY'	=&gt; $pagination['array'],
+ 	'PAGE_NUMBER'		=&gt; on_page($topics_count, $config['topics_per_page'], $start),
+-	'TOTAL_TOPICS'		=&gt; ($forum_data['forum_flags'] &amp; 16) ? false : (($topics_count == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPIC'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPICS'], $topics_count)),
++	'TOTAL_TOPICS'		=&gt; ($s_display_active) ? false : (($topics_count == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPIC'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPICS'], $topics_count)),
+ 	'MODERATORS'		=&gt; empty($moderators[$forum_id]) ? '' : implode(', ', $moderators[$forum_id]),
+ 
+ 	'POST_IMG' 			=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;img('btn_locked', $post_alt) : $_CLASS['core_user']-&gt;img('btn_post', $post_alt),
+@@ -312,24 +318,25 @@
+ 	'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', 'TOPIC_REPORTED'),
+ 	'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', 'TOPIC_UNAPPROVED'),
+ 	'GOTO_PAGE_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_post', 'GOTO_PAGE'),
++
+ 	'L_NO_TOPICS' 			=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;lang['POST_FORUM_LOCKED'] : $_CLASS['core_user']-&gt;lang['NO_TOPICS'],
+ 
+ 	'S_IS_POSTABLE'			=&gt; ($forum_data['forum_type'] == FORUM_POST) ? true : false,
+-	'S_DISPLAY_ACTIVE'		=&gt; ($forum_data['forum_type'] == FORUM_CAT &amp;&amp; $forum_data['forum_flags'] &amp; 16) ? true : false, 
++	'S_DISPLAY_ACTIVE'		=&gt; $s_display_active, 
+ 	'S_SELECT_SORT_DIR'		=&gt; $s_sort_dir,
+ 	'S_SELECT_SORT_KEY'		=&gt; $s_sort_key,
+ 	'S_SELECT_SORT_DAYS'	=&gt; $s_limit_days,
+-	'S_TOPIC_ICONS'			=&gt; ($forum_data['forum_type'] == FORUM_CAT &amp;&amp; $forum_data['forum_flags'] &amp; 16) ? max($active_forum_ary['enable_icons']) : (($forum_data['enable_icons']) ? true : false), 
++	'S_TOPIC_ICONS'			=&gt; ($s_display_active) ? max($active_forum_ary['enable_icons']) : (($forum_data['enable_icons']) ? true : false), 
+ 	'S_WATCH_FORUM_LINK'	=&gt; $s_watching_forum['link'],
+ 	'S_WATCH_FORUM_TITLE'	=&gt; $s_watching_forum['title'],
+-	'S_FORUM_ACTION' 		=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;start=$start&quot;),
++	'S_FORUM_ACTION' 		=&gt; generate_link(&quot;forums&amp;file=viewforum&amp;f=$forum_id&amp;start=$start&quot;),
+ 	'S_DISPLAY_SEARCHBOX'	=&gt; ($_CLASS['auth']-&gt;acl_get('f_search', $forum_id)) ? true : false, 
+-	'S_SEARCHBOX_ACTION'	=&gt; generate_link('Forums&amp;file=search&amp;search_forum[]='.$forum_id), 
++	'S_SEARCHBOX_ACTION'	=&gt; generate_link('forums&amp;file=search&amp;search_forum[]='.$forum_id), 
+ 
+-	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link(&quot;Forums&amp;file=mcp&amp;f=$forum_id&amp;mode=forum_view&quot;) : '', 
+-	'U_POST_NEW_TOPIC'	=&gt; generate_link('Forums&amp;file=posting&amp;mode=post&amp;f='.$forum_id), 
+-	'U_VIEW_FORUM'		=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&amp;start=$start&quot;), 
+-	'U_MARK_TOPICS' 	=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;mark=topics&quot;))
++	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link(&quot;forums&amp;file=mcp&amp;f=$forum_id&amp;mode=forum_view&quot;) : '', 
++	'U_POST_NEW_TOPIC'	=&gt; generate_link('forums&amp;file=posting&amp;mode=post&amp;f='.$forum_id), 
++	'U_VIEW_FORUM'		=&gt; generate_link(&quot;forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&amp;start=$start&quot;), 
++	'U_MARK_TOPICS' 	=&gt; generate_link(&quot;forums&amp;file=viewforum&amp;f=$forum_id&amp;mark=topics&quot;))
+ );
+ 
+ // Grab icons
+@@ -484,12 +491,12 @@
+ 	//	$status = topic_status($row, $replies, $mark_time, $unread_topic, $folder_img, $folder_alt, $topic_type);
+ 		topic_status($row, $replies, $mark_time, $unread_topic, $folder_img, $folder_alt, $topic_type);
+ 
+-		$newest_post_img = ($unread_topic) ? '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=unread#unread&quot;) . '&quot;&gt;' . $_CLASS['core_user']-&gt;img('icon_post_newest', 'VIEW_NEWEST_POST') . '&lt;/a&gt; ' : '';
++		$newest_post_img = ($unread_topic) ? '&lt;a href=&quot;' . generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=unread#unread&quot;) . '&quot;&gt;' . $_CLASS['core_user']-&gt;img('icon_post_newest', 'VIEW_NEWEST_POST') . '&lt;/a&gt; ' : '';
+ 
+ 		// Generate all the URIs ...
+-		$view_topic_url = 'Forums&amp;file=viewtopic&amp;t='.$topic_id;
++		$view_topic_url = 'forums&amp;file=viewtopic&amp;t='.$topic_id;
+ 
+-		$pagination = generate_pagination('Forums&amp;file=viewtopic&amp;&amp;t='.$topic_id, $replies, $config['posts_per_page']);
++		$pagination = generate_pagination('forums&amp;file=viewtopic&amp;&amp;t='.$topic_id, $replies, $config['posts_per_page']);
+ 
+ 		// Send vars to template
+ 		$_CLASS['core_template']-&gt;assign_vars_array('topicrow', array(
+@@ -497,7 +504,7 @@
+ 			'TOPIC_ID' 			=&gt; $topic_id,
+ 
+ 			'AUTHOR' 			=&gt; ($row['topic_poster'] == ANONYMOUS) ? (($row['topic_first_poster_name']) ? $row['topic_first_poster_name'] : $_CLASS['core_user']-&gt;get_lang('GUEST')) : $row['topic_first_poster_name'],
+-			'LINK_AUTHOR' 		=&gt; ($row['topic_poster'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['topic_poster']),
++			'LINK_AUTHOR' 		=&gt; ($row['topic_poster'] == ANONYMOUS) ? '' : generate_link('members_list&amp;mode=viewprofile&amp;u=' . $row['topic_poster']),
+ 
+ 			'FIRST_POST_TIME' 	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_time']),
+ 			'LAST_POST_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']),
+@@ -532,11 +539,11 @@
+ 			'S_TOPIC_UNAPPROVED'	=&gt; (!$row['topic_approved'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)),
+ 
+ 			'U_LAST_POST'       =&gt; generate_link($view_topic_url . '&amp;p=' . $row['topic_last_post_id'] . '#' . $row['topic_last_post_id']),	
+-			'U_LAST_POST_AUTHOR'=&gt; ($row['topic_last_poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']) : '',
++			'U_LAST_POST_AUTHOR'=&gt; ($row['topic_last_poster_id']) ? generate_link('members_list&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']) : '',
+ 			'U_VIEW_TOPIC'		=&gt; generate_link($view_topic_url),
+ 
+-			'U_MCP_REPORT'		=&gt; generate_link('Forums&amp;file=mcp&amp;mode=reports&amp;t='.$topic_id),
+-			'U_MCP_QUEUE'       =&gt; generate_link('Forums&amp;file=mcp&amp;i=queue&amp;mode=approve_details&amp;t='.$topic_id),
++			'U_MCP_REPORT'		=&gt; generate_link('forums&amp;file=mcp&amp;mode=reports&amp;t='.$topic_id),
++			'U_MCP_QUEUE'       =&gt; generate_link('forums&amp;file=mcp&amp;i=queue&amp;mode=approve_details&amp;t='.$topic_id),
+ 
+ 			'S_TOPIC_TYPE_SWITCH'=&gt; ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test)
+ 		);
+@@ -558,10 +565,10 @@
+ 
+ page_header();
+ 
+-make_jumpbox(generate_link('Forums&amp;file=viewforum'), $forum_id);
++make_jumpbox(generate_link('forums&amp;file=viewforum'), $forum_id);
+ 
+-$_CLASS['core_display']-&gt;footer .= $_CLASS['core_template']-&gt;display('modules/Forums/menus.html', true);
++$_CLASS['core_display']-&gt;footer .= $_CLASS['core_template']-&gt;display('modules/forums/menus.html', true);
+ 
+-$_CLASS['core_display']-&gt;display(false, 'modules/Forums/viewforum_body.html');
++$_CLASS['core_display']-&gt;display(false, 'modules/forums/viewforum_body.html');
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/forums/viewtopic.php
+===================================================================
+--- cms/trunk/modules/forums/viewtopic.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/forums/viewtopic.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -325,7 +325,7 @@
+ 	{
+ 		if (trim($word))
+ 		{
+-			$highlight_match .= (($highlight_match != '') ? '|' : '') . str_replace('\*', '\w*?', preg_quote(urlencode($word), '#'));
++			$highlight_match .= (($highlight_match != '') ? '|' : '') . str_replace('*', '\w*?', preg_quote($word, '#'));
+ 		}
+ 	}
+ 
+@@ -333,7 +333,7 @@
+ }
+ 
+ // General Viewtopic URL for return links
+-$viewtopic_url = &quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;start=$start&amp;$u_sort_param&quot; . (($highlight_match) ? &quot;&amp;hilit=$highlight&quot; : '');
++$viewtopic_url = &quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;start=$start&amp;$u_sort_param&quot; . (($highlight_match) ? &quot;&amp;hilit=$highlight&quot; : '');
+ 
+ // Grab ranks
+ $ranks = obtain_ranks();
+@@ -408,7 +408,7 @@
+ 	{
+ 		if (empty($voted_id) || !empty($voted_id) &gt; $poll_max_options)
+ 		{
+-			$_CLASS['core_display']-&gt;meta_refresh(5, generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&quot;));
++			$_CLASS['core_display']-&gt;meta_refresh(5, generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&quot;));
+ 
+ 			$message = empty($voted_id) ? 'NO_VOTE_OPTION' : 'TOO_MANY_VOTE_OPTIONS';
+ 			$message = $_CLASS['core_user']-&gt;lang[$message] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&quot;).'&quot;&gt;', '&lt;/a&gt;');
+@@ -468,7 +468,7 @@
+ 			//, topic_last_post_time = ' . time() . &quot; -- for bumping topics with new votes, ignore for now
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 
+-		$_CLASS['core_display']-&gt;meta_refresh(5, generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&quot;));
++		$_CLASS['core_display']-&gt;meta_refresh(5, generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&quot;));
+ 
+ 		$message = $_CLASS['core_user']-&gt;lang['VOTE_SUBMITTED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&quot;).'&quot;&gt;', '&lt;/a&gt;');
+ 		trigger_error($message);
+@@ -726,13 +726,13 @@
+ 				'avatar'				=&gt; '',
+ 				'online'				=&gt; false,
+ 
+-				'profile'		=&gt; generate_link(&quot;Members_List&amp;mode=viewprofile&amp;u=$poster_id&quot;),
++				'profile'		=&gt; generate_link(&quot;members_list&amp;mode=viewprofile&amp;u=$poster_id&quot;),
+ 				'www'			=&gt; $row['user_website'],
+-				'aim'			=&gt; ($row['user_aim']) ? generate_link('Members_List&amp;mode=contact&amp;action=aim&amp;u='.$poster_id) : '',
+-				'msn'			=&gt; ($row['user_msnm']) ? generate_link('Members_List&amp;mode=contact&amp;action=msnm&amp;u='.$poster_id) : '',
++				'aim'			=&gt; ($row['user_aim']) ? generate_link('members_list&amp;mode=contact&amp;action=aim&amp;u='.$poster_id) : '',
++				'msn'			=&gt; ($row['user_msnm']) ? generate_link('members_list&amp;mode=contact&amp;action=msnm&amp;u='.$poster_id) : '',
+ 				'yim'			=&gt; ($row['user_yim']) ? '<A HREF="http://edit.yahoo.com/config/send_webmesg?.target=">http://edit.yahoo.com/config/send_webmesg?.target=</A>' . $row['user_yim'] . '&amp;.src=pg' : '',
+-				'jabber'		=&gt; ($row['user_jabber']) ? generate_link('Members_List&amp;mode=contact&amp;action=jabber&amp;u='.$poster_id) : '',
+-				'search'		=&gt; ($_CLASS['auth']-&gt;acl_get('u_search')) ? generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($row['username']) .'&amp;showresults=posts') : '',
++				'jabber'		=&gt; ($row['user_jabber']) ? generate_link('members_list&amp;mode=contact&amp;action=jabber&amp;u='.$poster_id) : '',
++				'search'		=&gt; ($_CLASS['auth']-&gt;acl_get('u_search')) ? generate_link('forums&amp;file=search&amp;search_author=' . urlencode($row['username']) .'&amp;showresults=posts') : '',
+ 				'username'		=&gt; ($row['user_colour']) ? '&lt;span style=&quot;color:#' . $row['user_colour'] . '&quot;&gt;' . $poster . '&lt;/span&gt;' : $poster
+ 			);
+ 
+@@ -764,8 +764,7 @@
+ 				$user_cache[$poster_id]['rank_image'] = '';
+ 				
+ 				/*
+-				We do this on posting no need to un-needed stuff
+-
++				Well we kind of do need this
+ 				if (isset($ranks['normal']) &amp;&amp; !empty($ranks['normal']))
+ 				{
+ 					foreach ($ranks['normal'] as $rank)
+@@ -793,7 +792,7 @@
+ 
+ 			if (!empty($row['user_icq']))
+ 			{
+-				$user_cache[$poster_id]['icq'] =  generate_link('Members_List&amp;mode=contact&amp;action=icq&amp;u='.$poster_id);
++				$user_cache[$poster_id]['icq'] =  generate_link('members_list&amp;mode=contact&amp;action=icq&amp;u='.$poster_id);
+ 				$user_cache[$poster_id]['icq_status_img'] = '&lt;img src=&quot;<A HREF="http://web.icq.com/whitepages/online?icq=">http://web.icq.com/whitepages/online?icq=</A>' . $row['user_icq'] . '&amp;img=5&quot; width=&quot;18&quot; height=&quot;18&quot; border=&quot;0&quot; /&gt;';
+ 			}
+ 			else
+@@ -1135,7 +1134,7 @@
+ $topic_mod .= ($_CLASS['auth']-&gt;acl_get('f_announce', $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_GLOBAL) ? '&lt;option value=&quot;make_global&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_GLOBAL'] . '&lt;/option&gt;' : '';
+ $topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? '&lt;option value=&quot;viewlogs&quot;&gt;' . $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_LOGS'] . '&lt;/option&gt;' : '';
+ 
+-$pagination = generate_pagination(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;$u_sort_param&quot; . (($highlight_match) ? &quot;&amp;hilit=$highlight&quot; : ''), $total_posts, $config['posts_per_page'], $start);
++$pagination = generate_pagination(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;$u_sort_param&quot; . (($highlight_match) ? &quot;&amp;hilit=$highlight&quot; : ''), $total_posts, $config['posts_per_page'], $start);
+ $topic_data['topic_title'] = censor_text($topic_data['topic_title']);
+ 
+ // Send vars to template
+@@ -1149,7 +1148,7 @@
+ 	'PAGINATION_ARRAY'	=&gt; $pagination['array'],
+ 	'PAGE_NUMBER' 		=&gt; on_page($total_posts, $config['posts_per_page'], $start),
+ 	'TOTAL_POSTS'		=&gt; ($total_posts == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POST'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POSTS'], $total_posts), 
+-	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link(&quot;Forums&amp;file=mcp&amp;mode=topic_view&amp;t=$topic_id&amp;start=$start&amp;$u_sort_param&quot;, false, false) : '',
++	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link(&quot;forums&amp;file=mcp&amp;mode=topic_view&amp;t=$topic_id&amp;start=$start&amp;$u_sort_param&quot;, false, false) : '',
+ 
+ 	'MODERATORS'	=&gt; (isset($forum_moderators[$forum_id]) &amp;&amp; !empty($forum_moderators[$forum_id])) ? implode(', ', $forum_moderators[$forum_id]) : '',
+ 
+@@ -1176,19 +1175,19 @@
+ 	'S_SELECT_SORT_DIR' 	=&gt; $s_sort_dir,
+ 	'S_SELECT_SORT_KEY' 	=&gt; $s_sort_key,
+ 	'S_SELECT_SORT_DAYS' 	=&gt; $s_limit_days,
+-	'S_TOPIC_ACTION' 		=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;start=$start&quot;),
++	'S_TOPIC_ACTION' 		=&gt; generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;start=$start&quot;),
+ 	'S_TOPIC_MOD' 			=&gt; ($topic_mod) ? '&lt;select name=&quot;mode&quot;&gt;' . $topic_mod . '&lt;/select&gt;' : '',
+-	'S_MOD_ACTION' 			=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;t=$topic_id&amp;quickmod=1&quot;, false, false), 
++	'S_MOD_ACTION' 			=&gt; generate_link(&quot;forums&amp;file=mcp&amp;t=$topic_id&amp;quickmod=1&quot;, false, false), 
+ 
+ 	'S_DISPLAY_SEARCHBOX'	=&gt; ($_CLASS['auth']-&gt;acl_get('f_search', $forum_id)) ? true : false, 
+-	'S_SEARCHBOX_ACTION'	=&gt; generate_link('Forums&amp;file=search&amp;search_forum[]='.$forum_id), 
++	'S_SEARCHBOX_ACTION'	=&gt; generate_link('forums&amp;file=search&amp;search_forum[]='.$forum_id), 
+ 
+-	'U_TOPIC'				=&gt; ($view == 'print') ? generate_link('Forums&amp;file=viewtopic&amp;t='.$topic_id, array('full' =&gt; true)) : generate_link('Forums&amp;file=viewtopic&amp;t='.$topic_id),
+-	'U_VIEW_UNREAD_POST'	=&gt; ($first_unread_makred) ? generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id#unread&quot;) : false,
++	'U_TOPIC'				=&gt; ($view == 'print') ? generate_link('forums&amp;file=viewtopic&amp;t='.$topic_id, array('full' =&gt; true)) : generate_link('Forums&amp;file=viewtopic&amp;t='.$topic_id),
++	'U_VIEW_UNREAD_POST'	=&gt; ($first_unread_makred) ? generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id#unread&quot;) : false,
+ 	'U_VIEW_TOPIC' 			=&gt; generate_link($viewtopic_url),
+-	'U_VIEW_FORUM' 			=&gt; generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id),
+-	'U_VIEW_OLDER_TOPIC'	=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=previous&quot;),
+-	'U_VIEW_NEWER_TOPIC'	=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=next&quot;),
++	'U_VIEW_FORUM' 			=&gt; generate_link('forums&amp;file=viewforum&amp;f='.$forum_id),
++	'U_VIEW_OLDER_TOPIC'	=&gt; generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=previous&quot;),
++	'U_VIEW_NEWER_TOPIC'	=&gt; generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=next&quot;),
+ 	'U_PRINT_TOPIC'			=&gt; ($_CLASS['auth']-&gt;acl_get('f_print', $forum_id)) ? generate_link($viewtopic_url . '&amp;view=print') : '',
+ 	'U_EMAIL_TOPIC'			=&gt; ($_CLASS['auth']-&gt;acl_get('f_email', $forum_id) &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Members_List&amp;mode=email&amp;t='.$topic_id) : '', 
+ 
+@@ -1199,8 +1198,8 @@
+ 	'U_BOOKMARK_TOPIC'		=&gt; ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['allow_bookmarks']) ? generate_link($viewtopic_url . '&amp;bookmark=1') : '',
+ 	'L_BOOKMARK_TOPIC'		=&gt; ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['allow_bookmarks'] &amp;&amp; $topic_data['bookmarked']) ? $_CLASS['core_user']-&gt;lang['BOOKMARK_TOPIC_REMOVE'] : $_CLASS['core_user']-&gt;lang['BOOKMARK_TOPIC'],
+ 	
+-	'U_POST_NEW_TOPIC' 		=&gt; generate_link('Forums&amp;file=posting&amp;mode=post&amp;f='.$forum_id),
+-	'U_POST_REPLY_TOPIC' 	=&gt; generate_link(&quot;Forums&amp;file=posting&amp;mode=reply&amp;t=$topic_id&quot;),
++	'U_POST_NEW_TOPIC' 		=&gt; generate_link('forums&amp;file=posting&amp;mode=post&amp;f='.$forum_id),
++	'U_POST_REPLY_TOPIC' 	=&gt; generate_link(&quot;forums&amp;file=posting&amp;mode=reply&amp;t=$topic_id&quot;),
+ 	'U_BUMP_TOPIC'			=&gt; bump_topic_allowed($forum_id, $topic_data['topic_bumped'], $topic_data['topic_last_post_time'], $topic_data['topic_poster'], $topic_data['topic_last_poster_id']) ? generate_link(&quot;Forums&amp;file=posting&amp;mode=bump&amp;t=$topic_id&quot;) : '')
+ );
+ 
+@@ -1308,14 +1307,14 @@
+ 
+ if ($view == 'print')
+ {
+-	$_CLASS['core_display']-&gt;display(false, 'modules/Forums/viewtopic_print.html');
++	$_CLASS['core_display']-&gt;display(false, 'modules/forums/viewtopic_print.html');
+ }
+ 
+ page_header();
+ 
+-make_jumpbox(generate_link('Forums&amp;file=viewforum'), $forum_id);
++make_jumpbox(generate_link('forums&amp;file=viewforum'), $forum_id);
+ 
+-$_CLASS['core_display']-&gt;display(array($_CLASS['core_user']-&gt;get_lang('VIEWING_TOPIC'), $topic_data['topic_title']), 'modules/Forums/viewtopic_body.html');
++$_CLASS['core_display']-&gt;display(array($_CLASS['core_user']-&gt;get_lang('VIEWING_TOPIC'), $topic_data['topic_title']), 'modules/forums/viewtopic_body.html');
+ 
+ //Move if we can
+ function topic_last_read($topic_id, $forum_id)
+
+Modified: cms/trunk/modules/members_list/index.php
+===================================================================
+--- cms/trunk/modules/members_list/index.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/members_list/index.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -31,7 +31,7 @@
+ 
+ $_CLASS['core_user']-&gt;user_setup();
+ $_CLASS['core_user']-&gt;add_lang();
+-$_CLASS['core_user']-&gt;add_img(false, 'Forums');
++$_CLASS['core_user']-&gt;add_img(false, 'forums');
+ 
+ $_CLASS['core_template']-&gt;assign_array(array(
+ 	'S_SEARCH_USER'	=&gt; false,
+@@ -715,21 +715,21 @@
+ 		{
+ 			$field	= get_variable('field', 'REQUEST', 'username');
+ 
+-			$username	= request_var('username', '');
+-			$email		= request_var('email', '');
+-			$icq		= request_var('icq', '');
+-			$aim		= request_var('aim', '');
+-			$yahoo		= request_var('yahoo', '');
+-			$msn		= request_var('msn', '');
+-			$jabber		= request_var('jabber', '');
++			$username	= get_variable('username', 'REQUEST', '');
++			$email		= get_variable('email', 'REQUEST', '');
++			$icq		= get_variable('icq', 'REQUEST', '');
++			$aim		= get_variable('aim', 'REQUEST', '');
++			$yahoo		= get_variable('yahoo', 'REQUEST', '');
++			$msn		= get_variable('msn', 'REQUEST', '');
++			$jabber		= get_variable('jabber', 'REQUEST', '');
+ 
+-			$joined_select	= request_var('joined_select', 'lt');
+-			$active_select	= request_var('active_select', 'lt');
+-			$count_select	= request_var('count_select', 'eq');
+-			$joined			= explode('-', request_var('joined', ''));
+-			$active			= explode('-', request_var('active', ''));
+-			$count			= (request_var('count', '')) ? request_var('count', 0) : '';
+-			$ipdomain		= request_var('ip', '');
++			$joined_select	= get_variable('joined_select', 'REQUEST', 'lt');
++			$active_select	= get_variable('active_select', 'REQUEST', 'lt');
++			$count_select	= get_variable('count_select', 'REQUEST', 'eq');
++			$joined			= explode('-', get_variable('joined', 'REQUEST', ''));
++			$active			= explode('-', get_variable('active', 'REQUEST', ''));
++			$count			= (get_variable('count', 'REQUEST', '')) ? get_variable('count', 'REQUEST', 0) : '';
++			$ipdomain		= get_variable('ip', 'REQUEST', '');
+ 
+ 			$find_key_match = array('lt' =&gt; '&lt;', 'gt' =&gt; '&gt;', 'eq' =&gt; '=');
+ 
+
+Modified: cms/trunk/modules/quick_message/ajax.php
+===================================================================
+--- cms/trunk/modules/quick_message/ajax.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/quick_message/ajax.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -41,7 +41,7 @@
+ switch ($mode)
+ {
+ 	case 'ajax_refresh':
+-		require_once(SITE_FILE_ROOT.'modules/Quick_Message/functions.php');
++		require_once SITE_FILE_ROOT.'modules/quick_message/functions.php';
+ 
+ 		echo qm_block_content();
+ 
+@@ -69,7 +69,7 @@
+ 		}
+ 
+ 	// use limit
+-		$result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) as count FROM '.QUICK_MESSAGE_TABLE.&quot; WHERE message_text='&quot;.$_CLASS['core_db']-&gt;escape($message).&quot;' AND message_time &gt;= &quot;.($_CLASS['core_user']-&gt;time - $_CORE_CONFIG['quick_message']['last_post_check']));
++		$result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) as count FROM '. QUICK_MESSAGE_TABLE . &quot; WHERE message_text='&quot;.$_CLASS['core_db']-&gt;escape($message).&quot;' AND message_time &gt;= &quot;.($_CLASS['core_user']-&gt;time - $_CORE_CONFIG['quick_message']['last_post_check']));
+ 		$count = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 		$_CLASS['core_db']-&gt;free_result($result);
+ 
+@@ -112,7 +112,7 @@
+ 					die;
+ 				}
+ 
+-				require(SITE_FILE_ROOT.'includes/functions_user.php');
++				require_once SITE_FILE_ROOT.'includes/functions_user.php';
+ 				$status = validate_username($user_name);
+ 
+ 				if ($status !== true)
+@@ -132,7 +132,7 @@
+ 
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 
+-		require_once(SITE_FILE_ROOT.'modules/Quick_Message/functions.php');
++		require_once SITE_FILE_ROOT.'modules/quick_message/functions.php';
+ 
+ 		echo qm_block_content();
+ 
+
+Modified: cms/trunk/modules/quick_message/index.php
+===================================================================
+--- cms/trunk/modules/quick_message/index.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/modules/quick_message/index.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -105,7 +105,7 @@
+ 						trigger_error('LONG_NAME');
+ 					}
+ 	
+-					require(SITE_FILE_ROOT.'includes/functions_user.php');
++					require_once SITE_FILE_ROOT.'includes/functions_user.php';
+ 					$status = validate_username($user_name);
+ 
+ 					if ($status !== true)
+@@ -182,7 +182,7 @@
+ $limit = 20;
+ 
+ //$sql = 'SELECT s.*, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height FROM '.$prefix.'quick_message s LEFT JOIN ' . USERS_TABLE . ' u  ON (u.user_id = s.user_id) ORDER BY time DESC';
+-$result = $_CLASS['core_db']-&gt;query_limit('SELECT * FROM '.QUICK_MESSAGE_TABLE.' ORDER BY message_time DESC', $limit, $start);
++$result = $_CLASS['core_db']-&gt;query_limit('SELECT * FROM ' . QUICK_MESSAGE_TABLE . ' ORDER BY message_time DESC', $limit, $start);
+ $row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 
+ if (!$row)
+@@ -193,7 +193,7 @@
+ 		'Q_TOTAL_MESSAGES'		=&gt; false
+ 	));
+ 
+-	$_CLASS['core_display']-&gt;display(false, 'modules/Quick_Message/index.html');
++	$_CLASS['core_display']-&gt;display(false, 'modules/quick_message/index.html');
+ }
+ 
+ $delete_link = '';
+@@ -202,7 +202,7 @@
+ {
+ 	if (($row['poster_id'] &amp;&amp; $row['poster_id'] == $_CLASS['core_user']-&gt;data['user_id']) || (!$row['poster_id'] &amp;&amp; $row['poster_ip'] == $_CLASS['core_user']-&gt;ip))
+ 	{
+-		$delete_link = generate_link('Quick_Message&amp;mode=delete&amp;id='.$row['message_id']);
++		$delete_link = generate_link('quick_message&amp;mode=delete&amp;id='.$row['message_id']);
+ 	}
+ }
+ 
+@@ -211,7 +211,7 @@
+ 	if ($row['poster_name'])
+ 	{
+ 		$user_name = htmlentities($row['poster_name'], ENT_QUOTES, 'UTF-8');
+-		$userlink = ($row['poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['poster_id']) : false;
++		$userlink = ($row['poster_id']) ? generate_link('members_list&amp;mode=viewprofile&amp;u=' . $row['poster_id']) : false;
+ 	}
+ 	else
+ 	{
+@@ -251,18 +251,18 @@
+ 		'MESSAGE'		=&gt; modify_lines(htmlentities($row['message_text'], ENT_QUOTES, 'UTF-8'), '&lt;br /&gt;'),
+ 		'TIME'			=&gt; $_CLASS['core_user']-&gt;format_date($row['message_time']),
+ 		'POSTER_AVATAR' =&gt; $avatar,
+-		'U_PROFILE' 	=&gt; ($row['poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['poster_id']) : false,
++		'U_PROFILE' 	=&gt; ($row['poster_id']) ? generate_link('members_list&amp;mode=viewprofile&amp;u='.$row['poster_id']) : false,
+ 	));
+ 	
+ 	$delete_link = '';
+ }
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
+ 
+-$result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) AS total from '.QUICK_MESSAGE_TABLE);
++$result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) AS total from '. QUICK_MESSAGE_TABLE);
+ $row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ $_CLASS['core_db']-&gt;free_result($result);	
+ 
+-$pagination = generate_pagination('Quick_Message', $row['total'], $limit, $start);
++$pagination = generate_pagination('quick_message', $row['total'], $limit, $start);
+ 
+ $_CLASS['core_template']-&gt;assign_array(array(
+ 	'Q_MESSAGE_PAGINATION'			=&gt; $pagination['formated'],
+@@ -271,6 +271,6 @@
+ 	'Q_MESSAGE_TOTAL_MESSAGES'		=&gt; $row['total']
+ ));
+ 
+-$_CLASS['core_display']-&gt;display(false, 'modules/Quick_Message/index.html');
++$_CLASS['core_display']-&gt;display(false, 'modules/quick_message/index.html');
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/themes/viperal/images/modules/forums/index.php
+===================================================================
+--- cms/trunk/themes/viperal/images/modules/forums/index.php	2006-07-25 17:05:43 UTC (rev 177)
++++ cms/trunk/themes/viperal/images/modules/forums/index.php	2006-07-25 17:08:28 UTC (rev 178)
+@@ -1,77 +1,77 @@
+ &lt;?php
+ $this-&gt;img = array(
+ 	'bbcode_bitfield' =&gt; '6913',
+-    'btn_post' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_post.gif*27*97',
+-    'btn_post_pm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_post_pm.gif*27*97',
+-    'btn_reply' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_reply.gif*27*97',
+-    'btn_reply_pm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_reply_pm.gif*20*90',
+-    'btn_locked' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_locked.gif*27*97',
+-    'btn_profile' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_profile.gif*20*72',
+-    'btn_pm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_pm.gif*20*72',
+-    'btn_delete' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_delete.gif*20*20',
+-    'btn_info' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_info.gif*20*20',
+-    'btn_quote' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_quote.gif*20*90',
+-    'btn_search' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_search.gif*20*72',
+-    'btn_edit' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_edit.gif*20*90',
+-    'btn_report' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_report.gif*20*20',
+-    'btn_email' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_email.gif*20*72',
+-    'btn_www' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_www.gif*20*72',
+-    'btn_icq' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_icq.gif*20*72',
+-    'btn_aim' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_aim.gif*20*72',
+-    'btn_yim' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_yim.gif*20*72',
+-    'btn_msnm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_msnm.gif*20*72',
+-    'btn_jabber' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_jabber.gif*20*72',
+-    'btn_online' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_online.gif*20*72',
+-    'btn_offline' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_offline.gif*20*72',
++    'btn_post' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_post.gif*27*97',
++    'btn_post_pm' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_post_pm.gif*27*97',
++    'btn_reply' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_reply.gif*27*97',
++    'btn_reply_pm' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_reply_pm.gif*20*90',
++    'btn_locked' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_locked.gif*27*97',
++    'btn_profile' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_profile.gif*20*72',
++    'btn_pm' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_pm.gif*20*72',
++    'btn_delete' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_delete.gif*20*20',
++    'btn_info' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_info.gif*20*20',
++    'btn_quote' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_quote.gif*20*90',
++    'btn_search' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_search.gif*20*72',
++    'btn_edit' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_edit.gif*20*90',
++    'btn_report' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_report.gif*20*20',
++    'btn_email' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_email.gif*20*72',
++    'btn_www' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_www.gif*20*72',
++    'btn_icq' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_icq.gif*20*72',
++    'btn_aim' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_aim.gif*20*72',
++    'btn_yim' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_yim.gif*20*72',
++    'btn_msnm' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_msnm.gif*20*72',
++    'btn_jabber' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_jabber.gif*20*72',
++    'btn_online' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_online.gif*20*72',
++    'btn_offline' =&gt; 'themes/viperal/template/modules/forums/images/{LANG}/btn_offline.gif*20*72',
+     'btn_friend' =&gt; '',
+     'btn_foe' =&gt; '',
+-    'icon_unapproved' =&gt; 'themes/viperal/template/modules/Forums/images/icon_unapproved.gif*18*19',
+-    'icon_reported' =&gt; 'themes/viperal/template/modules/Forums/images/icon_reported.gif*18*19',
+-    'icon_attach' =&gt; 'themes/viperal/template/modules/Forums/images/icon_attach.gif*18*14',
+-    'icon_post' =&gt; 'themes/viperal/template/modules/Forums/images/icon_minipost.gif*9*12',
+-    'icon_post_new' =&gt; 'themes/viperal/template/modules/Forums/images/icon_minipost_new.gif*9*12',
+-    'icon_post_latest' =&gt; 'themes/viperal/template/modules/Forums/images/icon_latest_reply.gif*9*18',
+-    'icon_post_newest' =&gt; 'themes/viperal/template/modules/Forums/images/icon_newest_reply.gif*9*18',
+-    'forum' =&gt; 'themes/viperal/template/modules/Forums/images/folder_big.gif*25*46',
+-    'forum_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_big.gif*25*46',
+-    'forum_locked' =&gt; 'themes/viperal/template/modules/Forums/images/folder_locked_big.gif*25*46',
+-    'forum_link' =&gt; 'themes/viperal/template/modules/Forums/images/folder_link_big.gif*25*46',
+-    'sub_forum' =&gt; 'themes/viperal/template/modules/Forums/images/subfolder_big.gif*25*46',
+-    'sub_forum_new' =&gt; 'themes/viperal/template/modules/Forums/images/subfolder_new_big.gif*25*46',
+-    'folder' =&gt; 'themes/viperal/template/modules/Forums/images/folder.gif*18*19',
+-    'folder_moved' =&gt; 'themes/viperal/template/modules/Forums/images/folder_moved.gif*18*19',
+-    'folder_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_posted.gif*18*19',
+-    'folder_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new.gif*18*19',
+-    'folder_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_posted.gif*18*19',
+-    'folder_hot' =&gt; 'themes/viperal/template/modules/Forums/images/folder_hot.gif*18*19',
+-    'folder_hot_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_hot_posted.gif*18*19',
+-    'folder_hot_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_hot.gif*18*19',
+-    'folder_hot_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_hot_posted.gif*18*19',
+-    'folder_locked' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock.gif*18*19',
+-    'folder_locked_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock_posted.gif*18*19',
+-    'folder_locked_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock_new.gif*18*19',
+-    'folder_locked_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock_new_posted.gif*18*19',
+-    'folder_sticky' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky.gif*18*19',
+-    'folder_sticky_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky_posted.gif*18*19',
+-    'folder_sticky_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky_new.gif*18*19',
+-    'folder_sticky_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky_new_posted.gif*18*19',
+-    'folder_announce' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce.gif*18*19',
+-    'folder_announce_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce_posted.gif*18*19',
+-    'folder_announce_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce_new.gif*18*19',
+-    'folder_announce_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce_new_posted.gif*18*19',
++    'icon_unapproved' =&gt; 'themes/viperal/template/modules/forums/images/icon_unapproved.gif*18*19',
++    'icon_reported' =&gt; 'themes/viperal/template/modules/forums/images/icon_reported.gif*18*19',
++    'icon_attach' =&gt; 'themes/viperal/template/modules/forums/images/icon_attach.gif*18*14',
++    'icon_post' =&gt; 'themes/viperal/template/modules/forums/images/icon_minipost.gif*9*12',
++    'icon_post_new' =&gt; 'themes/viperal/template/modules/forums/images/icon_minipost_new.gif*9*12',
++    'icon_post_latest' =&gt; 'themes/viperal/template/modules/forums/images/icon_latest_reply.gif*9*18',
++    'icon_post_newest' =&gt; 'themes/viperal/template/modules/forums/images/icon_newest_reply.gif*9*18',
++    'forum' =&gt; 'themes/viperal/template/modules/forums/images/folder_big.gif*25*46',
++    'forum_new' =&gt; 'themes/viperal/template/modules/forums/images/folder_new_big.gif*25*46',
++    'forum_locked' =&gt; 'themes/viperal/template/modules/forums/images/folder_locked_big.gif*25*46',
++    'forum_link' =&gt; 'themes/viperal/template/modules/forums/images/folder_link_big.gif*25*46',
++    'sub_forum' =&gt; 'themes/viperal/template/modules/forums/images/subfolder_big.gif*25*46',
++    'sub_forum_new' =&gt; 'themes/viperal/template/modules/forums/images/subfolder_new_big.gif*25*46',
++    'folder' =&gt; 'themes/viperal/template/modules/forums/images/folder.gif*18*19',
++    'folder_moved' =&gt; 'themes/viperal/template/modules/forums/images/folder_moved.gif*18*19',
++    'folder_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_posted.gif*18*19',
++    'folder_new' =&gt; 'themes/viperal/template/modules/forums/images/folder_new.gif*18*19',
++    'folder_new_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_new_posted.gif*18*19',
++    'folder_hot' =&gt; 'themes/viperal/template/modules/forums/images/folder_hot.gif*18*19',
++    'folder_hot_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_hot_posted.gif*18*19',
++    'folder_hot_new' =&gt; 'themes/viperal/template/modules/forums/images/folder_new_hot.gif*18*19',
++    'folder_hot_new_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_new_hot_posted.gif*18*19',
++    'folder_locked' =&gt; 'themes/viperal/template/modules/forums/images/folder_lock.gif*18*19',
++    'folder_locked_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_lock_posted.gif*18*19',
++    'folder_locked_new' =&gt; 'themes/viperal/template/modules/forums/images/folder_lock_new.gif*18*19',
++    'folder_locked_new_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_lock_new_posted.gif*18*19',
++    'folder_sticky' =&gt; 'themes/viperal/template/modules/forums/images/folder_sticky.gif*18*19',
++    'folder_sticky_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_sticky_posted.gif*18*19',
++    'folder_sticky_new' =&gt; 'themes/viperal/template/modules/forums/images/folder_sticky_new.gif*18*19',
++    'folder_sticky_new_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_sticky_new_posted.gif*18*19',
++    'folder_announce' =&gt; 'themes/viperal/template/modules/forums/images/folder_announce.gif*18*19',
++    'folder_announce_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_announce_posted.gif*18*19',
++    'folder_announce_new' =&gt; 'themes/viperal/template/modules/forums/images/folder_announce_new.gif*18*19',
++    'folder_announce_new_posted' =&gt; 'themes/viperal/template/modules/forums/images/folder_announce_new_posted.gif*18*19',
+     'folder_global' =&gt; '',
+     'folder_global_posted' =&gt; '',
+     'folder_global_new' =&gt; '',
+     'folder_global_new_posted' =&gt; '',
+-    'poll_left'		=&gt; 'themes/viperal/template/modules/Forums/images/vote_lcap.gif*12*4',
+-    'poll_center'	=&gt; 'themes/viperal/template/modules/Forums/images/voting_bar.gif*12*4',
+-    'poll_right'	=&gt; 'themes/viperal/template/modules/Forums/images/vote_rcap.gif*12*4',
+-    'attach_progress_bar' =&gt; 'themes/viperal/template/modules/Forums/images/progress_bar.gif*16*280',
++    'poll_left'		=&gt; 'themes/viperal/template/modules/forums/images/vote_lcap.gif*12*4',
++    'poll_center'	=&gt; 'themes/viperal/template/modules/forums/images/voting_bar.gif*12*4',
++    'poll_right'	=&gt; 'themes/viperal/template/modules/forums/images/vote_rcap.gif*12*4',
++    'attach_progress_bar' =&gt; 'themes/viperal/template/modules/forums/images/progress_bar.gif*16*280',
+     'karma_left' =&gt; '',
+-    'karma_center' =&gt; 'themes/viperal/template/modules/Forums/images/karma/karma{SUFFIX}.gif*6*69',
++    'karma_center' =&gt; 'themes/viperal/template/modules/forums/images/karma/karma{SUFFIX}.gif*6*69',
+     'karma_right' =&gt; '',
+     'pagination_sep' =&gt; ', ',
+-    'image_register' =&gt; 'themes/viperal/template/modules/Forums/images/icon_mini_register.gif',
++    'image_register' =&gt; 'themes/viperal/template/modules/forums/images/icon_mini_register.gif',
+     'user_icon1' =&gt; '',
+     'user_icon2' =&gt; '',
+     'user_icon3' =&gt; '',
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000096.html">[Viperals-svncheckins] r177 -	cms/trunk/themes/viperal/images/modules
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,817 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r95 - in trunk: blocks includes includes/db includes/display install modules/Quick_Message
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r95%20-%20in%20trunk%3A%20blocks%20includes%20includes/db%20includes/display%20install%20modules/Quick_Message&In-Reply-To=%3C200508311426.j7VEQRqq028178%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000017.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r95 - in trunk: blocks includes includes/db includes/display install modules/Quick_Message</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r95%20-%20in%20trunk%3A%20blocks%20includes%20includes/db%20includes/display%20install%20modules/Quick_Message&In-Reply-To=%3C200508311426.j7VEQRqq028178%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r95 - in trunk: blocks includes includes/db includes/display install modules/Quick_Message">viperal at berlios.de
+       </A><BR>
+    <I>Wed Aug 31 16:26:27 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000017.html">[Viperals-svncheckins] r94 - in trunk: blocks includes includes/db includes/forums install javascript modules/Forums
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#18">[ date ]</a>
+              <a href="thread.html#18">[ thread ]</a>
+              <a href="subject.html#18">[ subject ]</a>
+              <a href="author.html#18">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-08-31 16:26:25 +0200 (Wed, 31 Aug 2005)
+New Revision: 95
+
+Modified:
+   trunk/blocks/block-Quick_Message.php
+   trunk/includes/db/postgres.php
+   trunk/includes/display/display.php
+   trunk/includes/session.php
+   trunk/install/build_data.php
+   trunk/install/build_tables.php
+   trunk/modules/Quick_Message/index.php
+Log:
+
+
+Modified: trunk/blocks/block-Quick_Message.php
+===================================================================
+--- trunk/blocks/block-Quick_Message.php	2005-08-30 17:36:52 UTC (rev 94)
++++ trunk/blocks/block-Quick_Message.php	2005-08-31 14:26:25 UTC (rev 95)
+@@ -39,8 +39,12 @@
+ 
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ {
+-	$words_array = explode(' ',html_entity_decode($row['message_text'], ENT_QUOTES, 'UTF-8'));
+-	//$words_array = explode(' ',html_entity_decode($row['message_text'], ENT_QUOTES));
++	/*
++		php 4 doesn't support mb html_entity_decode :-(
++		Make a core function for this
++	*/
++	//$words_array = explode(' ',html_entity_decode($row['message_text'], ENT_QUOTES, 'UTF-8'));
++	$words_array = explode(' ', $row['message_text']);
+ 
+ 	$row['message_text'] = '';
+ 
+@@ -64,6 +68,8 @@
+ 	
+ 	if ($row['poster_name'])
+ 	{
++		$row['poster_name'] = htmlentities($row['poster_name'], ENT_QUOTES, 'UTF-8');
++
+ 		if ($row['poster_id']) 
+ 		{
+ 			$this-&gt;content .= '&lt;a href=&quot;'.generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['poster_id']).'&quot;&gt;&lt;b&gt;' . $row['poster_name'] . ': &lt;/b&gt;&lt;/a&gt;';
+
+Modified: trunk/includes/db/postgres.php
+===================================================================
+--- trunk/includes/db/postgres.php	2005-08-30 17:36:52 UTC (rev 94)
++++ trunk/includes/db/postgres.php	2005-08-31 14:26:25 UTC (rev 95)
+@@ -28,7 +28,7 @@
+ 
+ 	var $last_result;
+ 	var $return_on_error;
+-	var $in_transaction;
++	var $in_transaction = false;
+ 
+ 	var $queries_time = 0;
+ 	var $num_queries = 0;
+@@ -80,7 +80,7 @@
+ 
+ 		if ($this-&gt;link_identifier)
+ 		{
+-			pg_set_client_encoding($this-&gt;link_identifier, 'UNICODE');
++			//pg_set_client_encoding($this-&gt;link_identifier, 'UNICODE');
+ 			//pg_set_client_encoding($this-&gt;link_identifier, 'UTF8');  pg8.1 unicode still works tho
+ 
+ 			//pg_query($this-&gt;link_identifier, &quot;SET CLIENT_ENCODING TO 'value'&quot;); SET NAMES 'value'
+@@ -123,7 +123,7 @@
+ 					break;
+ 				}
+ 
+-				$result = @pg_query($this-&gt;db_connect_id, 'BEGIN');
++				$result = pg_query($this-&gt;link_identifier, 'START TRANSACTION');
+ 				$this-&gt;in_transaction = true;
+ 			break;
+ 
+@@ -134,11 +134,11 @@
+ 					break;
+ 				}
+ 
+-				$result = @pg_query($this-&gt;db_connect_id, 'COMMIT');
++				$result = pg_query($this-&gt;link_identifier, 'COMMIT');
+ 				
+ 				if (!$result &amp;&amp; $auto_rollback)
+ 				{
+-					@pg_query($this-&gt;db_connect_id, 'ROLLBACK');
++					pg_query($this-&gt;link_identifier, 'ROLLBACK');
+ 				}
+ 				
+ 				$this-&gt;in_transaction = false;
+@@ -150,7 +150,7 @@
+ 					break;
+ 				}
+ 
+-				$result = @pg_query($this-&gt;db_connect_id, 'ROLLBACK');
++				$result = pg_query($this-&gt;link_identifier, 'ROLLBACK');
+ 				$this-&gt;in_transaction = false;
+ 			break;
+ 		}
+@@ -533,7 +533,7 @@
+ 
+ 				$fields = implode(&quot;, \n&quot;, $this-&gt;_fields);
+ 
+-				if ($this-&gt;_indexs['primary'])
++				if (isset($this-&gt;_indexs['primary']))
+ 				{
+ 					$fields .= &quot;, \n&quot;.$this-&gt;_indexs['primary'];
+ 					unset($this-&gt;_indexs['primary']);
+@@ -550,7 +550,10 @@
+ 					return $table;
+ 				}
+ 
+-				$this-&gt;sql_query($table);
++				if (!$this-&gt;sql_query($table))
++				{
++				echo $table.'&lt;br/&gt;';
++				}
+ 
+ 			case 'cancel':
+ 				$this-&gt;_table_name = $this-&gt;_table_oid = false;
+@@ -608,7 +611,7 @@
+ 	function add_table_index($field, $type  = 'index', $index_name = false)
+ 	{
+ 		$index_name = $this-&gt;_table_name.'_'.(($index_name) ? $index_name : $field) ;
+-		$field = is_array($field) ? implode('` , `', $field) : $field;
++		$field = is_array($field) ? implode(', ', $field) : $field;
+ 
+ 		switch ($type)
+ 		{
+
+Modified: trunk/includes/display/display.php
+===================================================================
+--- trunk/includes/display/display.php	2005-08-30 17:36:52 UTC (rev 94)
++++ trunk/includes/display/display.php	2005-08-31 14:26:25 UTC (rev 95)
+@@ -291,7 +291,7 @@
+ 	{
+ 		global $_CLASS;
+ 
+-		$this-&gt;header['meta'] .= '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $time . ';url=' . (($url) ? $url : generate_link(array('full' =&gt; true))) . '&quot;&gt;';
++		$this-&gt;header['meta'] .= '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $time . ';url=' . (($url) ? $url : generate_link(false, array('full' =&gt; true))) . '&quot;&gt;';
+ 	}
+ }
+ 
+
+Modified: trunk/includes/session.php
+===================================================================
+--- trunk/includes/session.php	2005-08-30 17:36:52 UTC (rev 94)
++++ trunk/includes/session.php	2005-08-31 14:26:25 UTC (rev 95)
+@@ -180,6 +180,7 @@
+ 			'session_page'		=&gt; (string) $this-&gt;page, // need to be added back
+ 			'session_url'		=&gt; (string) $this-&gt;url,
+ 			'session_ip'		=&gt; (string) $this-&gt;ip,
++			'session_last_visit'=&gt; (int) $this-&gt;data['session_last_visit'],
+ 			'session_user_type'	=&gt; (int) $this-&gt;data['user_type'],
+ 			'session_admin'		=&gt; (int) $this-&gt;data['session_admin'],
+ 			'session_auth'		=&gt; (int) serialize($_CLASS['core_auth']-&gt;auth_dump()),
+@@ -265,7 +266,7 @@
+ 			$sql = 'UPDATE ' . SESSIONS_AUTOLOGIN_TABLE . '	SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $data_array) . &quot;
+ 						WHERE user_id = $user_id
+ 						AND auto_login_code = '&quot; . $_CLASS['core_db']-&gt;escape($code) . &quot;'&quot;;
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			// need to update both the code and the user_id,
+ 			// since user_id cookie has an expiry time
+@@ -316,36 +317,64 @@
+ 
+ 	function gc($time)
+ 	{
+-// Move to cron		
++// Move to cron
++		if (!is_numeric($time))
++		{
++			return;
++		}
++
+ 		global $_CORE_CONFIG, $_CLASS;
+ 
+-/*
+-		// keep the next query less demanding
++		$_CLASS['core_db']-&gt;transaction();
++
++		// Remove all expired guess sessions
+ 		$sql = 'DELETE FROM ' . SESSIONS_TABLE . '
+ 			WHERE session_user_id = ' . ANONYMOUS . '
+ 			AND session_time &lt; ' . ($time - $_CORE_CONFIG['server']['session_length']);
+ 		$_CLASS['core_db']-&gt;query($sql);
+-*/
+-		$_CLASS['core_db']-&gt;transaction();
+ 
+-		$sql = 'UPDATE ' . USERS_TABLE. ' u, ' . SESSIONS_TABLE . ' s
+-					SET u.user_last_visit = s.session_time
+-					WHERE s.session_time &lt; ' . ($time - (int) $_CORE_CONFIG['server']['session_length']) . '
+-						AND s.session_user_id &lt;&gt; ' . ANONYMOUS .'
+-						AND u.user_id = s.session_user_id';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++// see if other database supports UPDATE sELECT
++		switch ($_CLASS['core_db']-&gt;db_layer)
++		{
++			//Oracle8 suporrts this also, I believe
++			case 'mysql':
++			case 'mysqli':
++				$sql = 'UPDATE ' . USERS_TABLE. ' u, ' . SESSIONS_TABLE . ' s
++							SET u.user_last_visit = s.session_time
++								WHERE s.session_time &lt; ' . ($time - (int) $_CORE_CONFIG['server']['session_length']) . '
++								AND u.user_id = s.session_user_id';
++				$_CLASS['core_db']-&gt;query($sql);
++			break;
+ 
++			default:
++				$sql = 'SELECT session_user_id, MAX(session_time) AS session_time
++							FROM ' . SESSIONS_TABLE . '
++								WHERE session_time &lt; ' . ($time - $_CORE_CONFIG['server']['session_length']) . '
++								GROUP BY session_user_id';
++				$result = $_CLASS['core_db']-&gt;query($sql);
++				
++				// Should be fast with the transaction
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++				{
++					$sql = 'UPDATE ' . USERS_TABLE . '
++							SET user_last_visit = ' . $row['session_time'] . '
++								WHERE user_id = ' . $row['session_user_id'];
++					$_CLASS['core_db']-&gt;query($sql);
++				}
++			break;
++		}
++
++		$sql = 'DELETE FROM ' . SESSIONS_TABLE . '
++				WHERE session_time &lt; ' . ($time - (int) $_CORE_CONFIG['server']['session_length']);
++			$_CLASS['core_db']-&gt;query($sql);
++
+ 		$sql = 'DELETE FROM ' . SESSIONS_AUTOLOGIN_TABLE . '
+ 					WHERE auto_login_time &lt; ' . ($time - 2592000);
+ 		$_CLASS['core_db']-&gt;query($sql);
++		
++		$_CLASS['core_db']-&gt;transaction('commit');
+ 
+-		$sql = 'DELETE FROM ' . SESSIONS_TABLE . '
+-					WHERE session_time &lt; ' . ($time - (int) $_CORE_CONFIG['server']['session_length']);
+-		$_CLASS['core_db']-&gt;query($sql);
+-		
+ 		$_CLASS['core_db']-&gt;optimize_tables(SESSIONS_TABLE);
+-		
+-		$_CLASS['core_db']-&gt;transaction('commit');
+ 	}
+ 
+ 	function session_data_get($name, $default = false)
+
+Modified: trunk/install/build_data.php
+===================================================================
+--- trunk/install/build_data.php	2005-08-30 17:36:52 UTC (rev 94)
++++ trunk/install/build_data.php	2005-08-31 14:26:25 UTC (rev 95)
+@@ -22,6 +22,7 @@
+ */
+ 
+ $install_prefix = 'test_';
++$time = gmtime();
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;admins (admin_section, user_id, admin_status) VALUES ('_all_', 2, 2)&quot;);
+ 
+@@ -86,13 +87,13 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('server', 'site_path', '', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('server', 'site_port', '', 1)&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_avatar, group_description) VALUES (1, 'GUESTS', 1, 2, '', 0, '', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_avatar, group_description) VALUES (2, 'REGISTERED', 1, 2, '', 0, '', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_avatar, group_description) VALUES (3, 'REGISTERED_COPPA', 1, 2, '', 0, '', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_avatar, group_description) VALUES (4, 'ADMINISTRATORS', 1, 2, 'AA0000', 1, '', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_avatar, group_description) VALUES (5, 'BOTS', 1, 2, '9E8DA7', 1, '', '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_description) VALUES (1, 'GUESTS', 1, 2, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_description) VALUES (2, 'REGISTERED', 1, 2, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_description) VALUES (3, 'REGISTERED_COPPA', 1, 2, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_description) VALUES (4, 'ADMINISTRATORS', 1, 2, 'AA0000', 1, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_description) VALUES (5, 'BOTS', 1, 2, '9E8DA7', 1, '')&quot;);
+ // To be seperated
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_avatar, group_description) VALUES (6, 'SUPER_MODERATORS', 1, 2, '00AA00', 0, '', '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups (group_id, group_name, group_type, group_status, group_colour, group_legend, group_description) VALUES (6, 'SUPER_MODERATORS', 1, 2, '00AA00', 0, '')&quot;);
+ 
+ 
+ //Admin
+@@ -100,14 +101,14 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (4, 2, 10)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (6, 2, 10)&quot;);
+ // Anonymous
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (1, 1, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (1, 1, 2)&quot;);
+ // Bots
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 3, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 4, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 5, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 6, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 7, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 8, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 3, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 4, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 5, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 6, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 7, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;groups_members (group_id, user_id, member_status) VALUES (5, 8, 2)&quot;);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('blocks', 0, 2,'')&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('groups', 0, 2, '')&quot;);
+@@ -129,38 +130,38 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Submit_News', 1, 2, 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Quick_Message', 1, 2, 1)&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':D', 'grin.png', 'Very Happy', 19, 19, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':)', 'smile.png', 'Smile', 19, 19, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':(', 'sad.png', 'Sad', 19, 19, 3)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':o', 'surprised.png', 'Surprised', 19, 19, 4)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':eek:', 'surprised.png', 'Surprised', 19, 19, 4)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES ('8O', 'eek.png', 'Shocked', 19, 19, 5)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':?', 'confused.png', 'Confused', 19, 19, 6)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES ('8)', 'cool.png', 'Cool', 19, 19, 7)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':lol:', 'laugh.png', 'Laughing', 19, 19, 8)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':x', 'mad.png', 'Mad', 19, 19, 9)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':P', 'icon_razz.gif', 'Razz', 19, 19, 10)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':oops:', 'embarrassed.png', 'Embarassed', 19, 19, 11)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':cry:', 'cry.png', 'Crying or Very sad', 19, 19, 12)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':evil:', 'evil.png', 'Evil or Very Mad', 19, 19, 13)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':twisted:', 'twisted.png', 'Twisted Evil', 19, 19, 14)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':roll:', 'rolleyes.png', 'Rolling Eyes', 19, 19, 19)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (';)', 'wink.png', 'Wink', 19, 19, 16)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':!:', 'exclaim.png', 'Exclamation', 19, 19, 17)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':?:', 'question.png', 'Question', 19, 19, 18)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':idea:', 'idea.png', 'Idea', 19, 19, 19)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':arrow:', 'arrow.png', 'Arrow', 19, 19, 20)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':|', 'neutral.png', 'Neutral', 19, 19, 21)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order) VALUES (':mrgreen:', 'mrgreen.png', 'Mr. Green', 19, 19, 22)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':D', 'grin.png', 'Very Happy', 19, 19, 1, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':)', 'smile.png', 'Smile', 19, 19, 2, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':(', 'sad.png', 'Sad', 19, 19, 3, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':o', 'surprised.png', 'Surprised', 19, 19, 4, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':eek:', 'surprised.png', 'Surprised', 19, 19, 4, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES ('8O', 'eek.png', 'Shocked', 19, 19, 5, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':?', 'confused.png', 'Confused', 19, 19, 6, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES ('8)', 'cool.png', 'Cool', 19, 19, 7, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':lol:', 'laugh.png', 'Laughing', 19, 19, 8, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':x', 'mad.png', 'Mad', 19, 19, 9, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':P', 'icon_razz.gif', 'Razz', 19, 19, 10, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':oops:', 'embarrassed.png', 'Embarassed', 19, 19, 11, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':cry:', 'cry.png', 'Crying or Very sad', 19, 19, 12, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':evil:', 'evil.png', 'Evil or Very Mad', 19, 19, 13, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':twisted:', 'twisted.png', 'Twisted Evil', 19, 19, 14, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':roll:', 'rolleyes.png', 'Rolling Eyes', 19, 19, 19, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (';)', 'wink.png', 'Wink', 19, 19, 16, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':!:', 'exclaim.png', 'Exclamation', 19, 19, 17, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':?:', 'question.png', 'Question', 19, 19, 18, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':idea:', 'idea.png', 'Idea', 19, 19, 19, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':arrow:', 'arrow.png', 'Arrow', 19, 19, 20, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':|', 'neutral.png', 'Neutral', 19, 19, 21, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':mrgreen:', 'mrgreen.png', 'Mr. Green', 19, 19, 22, 0)&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username) VALUES (1, 0, 2, 1, 'Anonymous')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_colour) VALUES (2, 1, 2, 4, 'Admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_ip, user_agent, user_colour) VALUES (3, 2, 2, 5, 'Googlebot', '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_ip, user_agent, user_colour) VALUES (4, 2, 2, 5, 'MSN', '65.54.188.', 'msnbot/', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_ip, user_agent, user_colour) VALUES (5, 2, 2, 5, 'Yahoo', '66.196.90.1', 'Yahoo! Slurp', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_ip, user_agent, user_colour) VALUES (6, 2, 2, 5, 'Alexa', '66.28.250.,209.237.238.', 'ia_archiver', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_ip, user_agent, user_colour) VALUES (7, 2, 2, 5, 'NaverBot', '218.145.25.,61.78.61.,61.78.61.', 'NaverBot-', '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_ip, user_agent, user_colour) VALUES (8, 2, 2, 5, 'Jetbot', '64.71.144.', 'Jetbot/', '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (1, 0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (2, 1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', '', 1, 1, 1, 1, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (3, 2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', '', 1, 0, 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (4, 2, 2, 5, 'MSN', '', '', '', $time, '65.54.188.', 'msnbot/', '', 1, 0, 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (5, 2, 2, 5, 'Yahoo', '', '', '', $time, '66.196.90.1', 'Yahoo! Slurp', '', 1, 0, 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (6, 2, 2, 5, 'Alexa', '', '', '', $time, '66.28.250.,209.237.238.', 'ia_archiver', '', 1, 0, 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (7, 2, 2, 5, 'NaverBot', '', '', '', $time, '218.145.25.,61.78.61.,61.78.61.', 'NaverBot-', '', 1, 0, 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email) VALUES (8, 2, 2, 5, 'Jetbot', '', '', '', $time, '64.71.144.', 'Jetbot/', '', 1, 0, 0, 0, 0)&quot;);
+ 
+ // Forums
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_', 1)&quot;);
+@@ -168,7 +169,7 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_read', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_post', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_reply', 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_quote', 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_quote', 1)&quot;);f_bbcode
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_edit', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_user_lock', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_delete', 1)&quot;);
+@@ -182,7 +183,7 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_download', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_icons', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_html', 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_bbsmiley_code', 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_bbcode', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_smilies', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_img', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_flash', 1)&quot;);
+
+Modified: trunk/install/build_tables.php
+===================================================================
+--- trunk/install/build_tables.php	2005-08-30 17:36:52 UTC (rev 94)
++++ trunk/install/build_tables.php	2005-08-31 14:26:25 UTC (rev 95)
+@@ -43,8 +43,8 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('admin_status', array('max' =&gt; 10));
+ $_CLASS['core_db']-&gt;add_table_field_text('admin_options', 60000, true);
+ 
+-$_CLASS['core_db']-&gt;add_table_index('member_user_id');
+-$_CLASS['core_db']-&gt;add_table_index('member_group_id');
++$_CLASS['core_db']-&gt;add_table_index('user_id');
++$_CLASS['core_db']-&gt;add_table_index('group_id');
+ $_CLASS['core_db']-&gt;add_table_index('admin_status');
+ 
+ $_CLASS['core_db']-&gt;table_create('commit');
+@@ -97,27 +97,27 @@
+ 
+ $_CLASS['core_db']-&gt;table_create('start', $install_prefix.'groups');
+ 
++// this section needs updating, with null fields
+ $_CLASS['core_db']-&gt;add_table_field_int('group_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('group_name', 50);
+ $_CLASS['core_db']-&gt;add_table_field_int('group_type', array('max' =&gt; 10));
+ $_CLASS['core_db']-&gt;add_table_field_int('group_status', array('max' =&gt; 10));
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('group_rank', array('max' =&gt; 2000));
+-$_CLASS['core_db']-&gt;add_table_field_char('group_colour', 6);
+-$_CLASS['core_db']-&gt;add_table_field_char('group_avatar', 100);
+-$_CLASS['core_db']-&gt;add_table_field_int('group_avatar_type', array('max' =&gt; 200));
+-$_CLASS['core_db']-&gt;add_table_field_int('group_avatar_width', array('max' =&gt; 200));
+-$_CLASS['core_db']-&gt;add_table_field_int('group_avatar_height', array('max' =&gt; 200));
++$_CLASS['core_db']-&gt;add_table_field_int('group_rank', array('max' =&gt; 2000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('group_colour', 6, true);
++$_CLASS['core_db']-&gt;add_table_field_char('group_avatar', 100, true);
++$_CLASS['core_db']-&gt;add_table_field_int('group_avatar_type', array('max' =&gt; 200, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('group_avatar_width', array('max' =&gt; 200, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('group_avatar_height', array('max' =&gt; 200, 'null' =&gt; true));
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('group_sig_chars', array('max' =&gt; 160000));
+-$_CLASS['core_db']-&gt;add_table_field_int('group_receive_pm', array('max' =&gt; 10));
+-$_CLASS['core_db']-&gt;add_table_field_int('group_message_limit', array('max' =&gt; 10000));
++$_CLASS['core_db']-&gt;add_table_field_int('group_sig_chars', array('max' =&gt; 160000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('group_receive_pm', array('max' =&gt; 10, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('group_message_limit', array('max' =&gt; 10000, 'null' =&gt; true));
+ 
+ $_CLASS['core_db']-&gt;add_table_field_char('group_description', 255);
+-$_CLASS['core_db']-&gt;add_table_field_int('group_display', array('max' =&gt; 10));
++$_CLASS['core_db']-&gt;add_table_field_int('group_display', array('max' =&gt; 10, 'null' =&gt; true)); // temp null
+ $_CLASS['core_db']-&gt;add_table_field_int('group_legend', array('max' =&gt; 10));
+ 
+-
+ $_CLASS['core_db']-&gt;add_table_index('group_id', 'primary');
+ $_CLASS['core_db']-&gt;add_table_index('group_display');
+ $_CLASS['core_db']-&gt;add_table_index('group_legend');
+@@ -237,13 +237,13 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('user_status', array('max' =&gt; 10));
+ $_CLASS['core_db']-&gt;add_table_field_int('user_group', array('max' =&gt; 16000000));
+ $_CLASS['core_db']-&gt;add_table_field_char('user_ip', 255);
+-$_CLASS['core_db']-&gt;add_table_field_char('user_agent', 255, null);
++$_CLASS['core_db']-&gt;add_table_field_char('user_agent', 255, true);
+ $_CLASS['core_db']-&gt;add_table_field_char('user_birthday', 10, true);
+ $_CLASS['core_db']-&gt;add_table_field_text('user_data', 6000, true);
+ 
+-$_CLASS['core_db']-&gt;add_table_field_char('user_act_key', 10, null);
+-$_CLASS['core_db']-&gt;add_table_field_char('user_new_password', 40);
+-$_CLASS['core_db']-&gt;add_table_field_char('user_new_password_encoding', 10);
++$_CLASS['core_db']-&gt;add_table_field_char('user_act_key', 10, true);
++$_CLASS['core_db']-&gt;add_table_field_char('user_new_password', 40, true);
++$_CLASS['core_db']-&gt;add_table_field_char('user_new_password_encoding', 10, true);
+ 
+ field_unix_time('user_reg_date');
+ field_unix_time('user_last_visit', true);
+@@ -259,7 +259,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('user_allow_viewemail', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('user_allow_massemail', array('max' =&gt; 1));
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('user_new_privmsg', array('max' =&gt; 1));
++$_CLASS['core_db']-&gt;add_table_field_int('user_new_privmsg', array('max' =&gt; 1, 'null' =&gt; true));
+ 
+ $_CLASS['core_db']-&gt;add_table_field_text('user_sig', 60000, true);
+ $_CLASS['core_db']-&gt;add_table_field_char('user_from', 100, true);
+@@ -279,31 +279,31 @@
+ //$_CLASS['core_db']-&gt;add_table_field_int('user_attachsig', 0, 1, 1);
+ ///
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('user_notify', array('max' =&gt; 1));
++$_CLASS['core_db']-&gt;add_table_field_int('user_notify', array('max' =&gt; 1, 'null' =&gt; true));
+ //$_CLASS['core_db']-&gt;add_table_field_int('user_notify_pm', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_int('user_notify_type', array('max' =&gt; 10));
++$_CLASS['core_db']-&gt;add_table_field_int('user_notify_type', array('max' =&gt; 10, 'null' =&gt; true));
+ 
+ $_CLASS['core_db']-&gt;add_table_field_int('user_allow_pm', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('user_allow_email', array('max' =&gt; 1));
+ 
+-$_CLASS['core_db']-&gt;add_table_field_char('user_sig_bbcode_uid', 5);
+-$_CLASS['core_db']-&gt;add_table_field_int('user_sig_bbcode_bitfield', array('max' =&gt; 1600));
++$_CLASS['core_db']-&gt;add_table_field_char('user_sig_bbcode_uid', 5, true);
++$_CLASS['core_db']-&gt;add_table_field_int('user_sig_bbcode_bitfield', array('max' =&gt; 1600, 'null' =&gt; true));
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('user_topic_show_days', array('max' =&gt; 200));
+-$_CLASS['core_db']-&gt;add_table_field_char('user_topic_sortby_type', 1);
+-$_CLASS['core_db']-&gt;add_table_field_char('user_topic_sortby_dir', 1);
++$_CLASS['core_db']-&gt;add_table_field_int('user_topic_show_days', array('max' =&gt; 200, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('user_topic_sortby_type', 1, true);
++$_CLASS['core_db']-&gt;add_table_field_char('user_topic_sortby_dir', 1, true);
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('user_post_show_days', array('max' =&gt; 200));
+-$_CLASS['core_db']-&gt;add_table_field_char('user_post_sortby_type', 1);
+-$_CLASS['core_db']-&gt;add_table_field_char('user_post_sortby_dir', 1);
++$_CLASS['core_db']-&gt;add_table_field_int('user_post_show_days', array('max' =&gt; 200, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('user_post_sortby_type', 1, true);
++$_CLASS['core_db']-&gt;add_table_field_char('user_post_sortby_dir', 1, true);
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('user_posts', array('max' =&gt; 16000000));
+-field_unix_time('user_last_post_time');
++$_CLASS['core_db']-&gt;add_table_field_int('user_posts', array('max' =&gt; 16000000, 'null' =&gt; true));
++field_unix_time('user_last_post_time', true);
+ 
+-$_CLASS['core_db']-&gt;add_table_field_text('user_permissions', 60000); // phpBBs rename user_forums_permissions
++$_CLASS['core_db']-&gt;add_table_field_text('user_permissions', 60000, true); // phpBBs rename user_forums_permissions
+ 
+ // these can be null I think
+-$_CLASS['core_db']-&gt;add_table_field_char('user_avatar', 200, null);
++$_CLASS['core_db']-&gt;add_table_field_char('user_avatar', 200, true);
+ $_CLASS['core_db']-&gt;add_table_field_int('user_avatar_type', array('max' =&gt; 10, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_int('user_avatar_width', array('max' =&gt; 100, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_int('user_avatar_height', array('max' =&gt; 100, 'null' =&gt; true));
+@@ -353,9 +353,9 @@
+ */
+ $_CLASS['core_db']-&gt;table_create('start', $install_prefix.'forums_auth');
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('user_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('group_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_id', array('max' =&gt; 16000000));
++$_CLASS['core_db']-&gt;add_table_field_int('user_id', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('group_id', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('forum_id', array('max' =&gt; 16000000, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_int('auth_option_id', array('max' =&gt; 2000));
+ $_CLASS['core_db']-&gt;add_table_field_int('auth_setting', array('max' =&gt; 1));
+ 
+@@ -372,8 +372,9 @@
+ 
+ $_CLASS['core_db']-&gt;add_table_field_int('auth_option_id', array('max' =&gt; 2000, 'auto_increment' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('auth_option', 20);
+-$_CLASS['core_db']-&gt;add_table_field_int('is_global', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_int('is_local', array('max' =&gt; 1));
++// These 2 are useless, change to type
++$_CLASS['core_db']-&gt;add_table_field_int('is_global', array('max' =&gt; 1, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('is_local', array('max' =&gt; 1, 'null' =&gt; true));
+ 
+ $_CLASS['core_db']-&gt;add_table_index('auth_option_id', 'primary');
+ $_CLASS['core_db']-&gt;add_table_index('auth_option', 'unique');
+@@ -502,30 +503,30 @@
+ $_CLASS['core_db']-&gt;add_table_field_text('forum_parents', 20000);
+ $_CLASS['core_db']-&gt;add_table_field_char('forum_name', 150);
+ $_CLASS['core_db']-&gt;add_table_field_text('forum_desc', 20000);
+-$_CLASS['core_db']-&gt;add_table_field_text('forum_rules', 20000);
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_rules_link', 200);
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_rules_flags', 50);
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_rules_bbcode_bitfield', array('max' =&gt; 1000000000));
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_rules_bbcode_uid', 5);
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_link', 200);
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_password', 40);
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_password_encoding', 10);
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_image', 200);
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_topics_per_page', array('max' =&gt; 200));
++$_CLASS['core_db']-&gt;add_table_field_text('forum_rules', 20000, true);
++$_CLASS['core_db']-&gt;add_table_field_char('forum_rules_link', 200, true);
++$_CLASS['core_db']-&gt;add_table_field_char('forum_rules_flags', 50, true);
++$_CLASS['core_db']-&gt;add_table_field_int('forum_rules_bbcode_bitfield', array('max' =&gt; 1000000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('forum_rules_bbcode_uid', 5, true);
++$_CLASS['core_db']-&gt;add_table_field_char('forum_link', 200, true);
++$_CLASS['core_db']-&gt;add_table_field_char('forum_password', 40, true);
++$_CLASS['core_db']-&gt;add_table_field_char('forum_password_encoding', 10, true);
++$_CLASS['core_db']-&gt;add_table_field_char('forum_image', 200, true);
++$_CLASS['core_db']-&gt;add_table_field_int('forum_topics_per_page', array('max' =&gt; 200, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_int('forum_type', array('max' =&gt; 10));
+ $_CLASS['core_db']-&gt;add_table_field_int('forum_status', array('max' =&gt; 10));
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_posts', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_topics', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_topics_real', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_last_post_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_last_poster_id', array('max' =&gt; 16000000));
+-field_unix_time('forum_last_post_time');
+-$_CLASS['core_db']-&gt;add_table_field_char('forum_last_poster_name', 50);
++$_CLASS['core_db']-&gt;add_table_field_int('forum_posts', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('forum_topics', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('forum_topics_real', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('forum_last_post_id', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('forum_last_poster_id', array('max' =&gt; 16000000, 'null' =&gt; true));
++field_unix_time('forum_last_post_time', true);
++$_CLASS['core_db']-&gt;add_table_field_char('forum_last_poster_name', 50, true);
+ $_CLASS['core_db']-&gt;add_table_field_int('forum_flags', array('max' =&gt; 200));
+ $_CLASS['core_db']-&gt;add_table_field_int('display_on_index', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('enable_indexing', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('enable_icons', array('max' =&gt; 1));
+-field_unix_time('prune_next');
++field_unix_time('prune_next', true);
+ 
+ //////
+ 
+@@ -558,9 +559,9 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('enable_html', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('enable_smilies', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('enable_sig', array('max' =&gt; 1));
+-field_unix_time('post_edit_time');
+-$_CLASS['core_db']-&gt;add_table_field_int('post_edit_count', array('max' =&gt; 20000));
+-$_CLASS['core_db']-&gt;add_table_field_int('post_attachment', array('max' =&gt; 1));
++field_unix_time('post_edit_time', true);
++$_CLASS['core_db']-&gt;add_table_field_int('post_edit_count', array('max' =&gt; 20000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('post_attachment', array('max' =&gt; 1, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('post_subject', 50);
+ $_CLASS['core_db']-&gt;add_table_field_text('post_text', 10000000);
+ $_CLASS['core_db']-&gt;add_table_field_char('bbcode_uid', 10);
+@@ -568,11 +569,10 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('icon_id', array('max' =&gt; 200));
+ $_CLASS['core_db']-&gt;add_table_field_int('enable_magic_url', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('post_approved', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_char('post_edit_reason', 255);
+-$_CLASS['core_db']-&gt;add_table_field_int('post_edit_user', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('post_edit_locked', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_int('post_reported', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_char('post_encoding', 10, 'utf-8'); // to be removed
++$_CLASS['core_db']-&gt;add_table_field_char('post_edit_reason', 255, true);
++$_CLASS['core_db']-&gt;add_table_field_int('post_edit_user', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('post_edit_locked', array('max' =&gt; 1, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('post_reported', array('max' =&gt; 1, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('post_checksum', 32);
+ 
+ $_CLASS['core_db']-&gt;add_table_index('post_id', 'primary');
+@@ -594,12 +594,15 @@
+ $_CLASS['core_db']-&gt;add_table_field_char('topic_title', 50);
+ $_CLASS['core_db']-&gt;add_table_field_int('topic_poster', array('max' =&gt; 16000000));
+ field_unix_time('topic_time');
+-$_CLASS['core_db']-&gt;add_table_field_int('topic_views', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('topic_replies', array('max' =&gt; 16000000));  
++$_CLASS['core_db']-&gt;add_table_field_int('topic_views', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('topic_replies', array('max' =&gt; 16000000, 'null' =&gt; true));  
+ $_CLASS['core_db']-&gt;add_table_field_int('topic_status', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('topic_type', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_int('topic_last_post_id', array('max' =&gt; 16000000));
++
++// we should set this on topic creation
++$_CLASS['core_db']-&gt;add_table_field_int('topic_last_post_id', array('max' =&gt; 16000000, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_int('topic_first_post_id', array('max' =&gt; 16000000));
++
+ $_CLASS['core_db']-&gt;add_table_field_int('topic_moved_id', array('max' =&gt; 16000000));
+ $_CLASS['core_db']-&gt;add_table_field_int('icon_id', array('max' =&gt; 200));
+ 
+@@ -607,22 +610,22 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('topic_approved', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_int('topic_reported', array('max' =&gt; 1)); 
+ field_unix_time('topic_time_limit');
+-$_CLASS['core_db']-&gt;add_table_field_int('topic_replies_real', array('max' =&gt; 16000000));
++$_CLASS['core_db']-&gt;add_table_field_int('topic_replies_real', array('max' =&gt; 16000000, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('topic_first_poster_name', 50);
+-$_CLASS['core_db']-&gt;add_table_field_int('topic_last_poster_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_char('topic_last_poster_name', 50);
+-field_unix_time('topic_last_post_time');
+-field_unix_time('topic_last_view_time');
++$_CLASS['core_db']-&gt;add_table_field_int('topic_last_poster_id', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('topic_last_poster_name', 50, true);
++field_unix_time('topic_last_post_time', true);
++field_unix_time('topic_last_view_time', true);
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('topic_bumped', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_int('topic_bumper', array('max' =&gt; 16000000));
++$_CLASS['core_db']-&gt;add_table_field_int('topic_bumped', array('max' =&gt; 1, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('topic_bumper', array('max' =&gt; 16000000, 'null' =&gt; true));
+   
+-$_CLASS['core_db']-&gt;add_table_field_char('poll_title', 100);
+-field_unix_time('poll_start');
+-field_unix_time('poll_length'); 
+-$_CLASS['core_db']-&gt;add_table_field_int('poll_max_options', array('max' =&gt; 200));
+-field_unix_time('poll_last_vote');
+-$_CLASS['core_db']-&gt;add_table_field_int('poll_vote_change', array('max' =&gt; 1));
++$_CLASS['core_db']-&gt;add_table_field_char('poll_title', 100, true);
++field_unix_time('poll_start', true);
++field_unix_time('poll_length', true); 
++$_CLASS['core_db']-&gt;add_table_field_int('poll_max_options', array('max' =&gt; 200, 'null' =&gt; true));
++field_unix_time('poll_last_vote', true);
++$_CLASS['core_db']-&gt;add_table_field_int('poll_vote_change', array('max' =&gt; 1, 'null' =&gt; true));
+ 
+ $_CLASS['core_db']-&gt;add_table_index('topic_id', 'primary');
+ $_CLASS['core_db']-&gt;add_table_index('forum_id');
+@@ -776,9 +779,11 @@
+ 
+ $_CLASS['core_db']-&gt;add_table_field_int('user_id', array('max' =&gt; 16000000));
+ $_CLASS['core_db']-&gt;add_table_field_int('zebra_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('friend', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_int('foe', array('max' =&gt; 1));
+ 
++// conbine these 2
++$_CLASS['core_db']-&gt;add_table_field_int('friend', array('max' =&gt; 1, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('foe', array('max' =&gt; 1, 'null' =&gt; true));
++
+ $_CLASS['core_db']-&gt;add_table_index('user_id');
+ $_CLASS['core_db']-&gt;add_table_index('zebra_id');
+ 
+
+Modified: trunk/modules/Quick_Message/index.php
+===================================================================
+--- trunk/modules/Quick_Message/index.php	2005-08-30 17:36:52 UTC (rev 94)
++++ trunk/modules/Quick_Message/index.php	2005-08-31 14:26:25 UTC (rev 95)
+@@ -39,7 +39,7 @@
+ 	case 'add':
+ 		if (empty($_POST['submit']) || $_CLASS['core_user']-&gt;is_bot)
+ 		{
+-			url_redirect(generate_link($_CLASS['core_user']-&gt;data['session_url']), false);
++			redirect(generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)));
+ 		}
+ 
+ 		$message = trim(get_variable('message', 'POST', false));
+@@ -56,8 +56,6 @@
+ 			trigger_error('LONG_MESSAGE');
+ 		}
+ 
+-		$message = htmlentities($message, ENT_QUOTES, 'UTF-8');
+-
+ 	// use limit
+ 		$result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) as count FROM '.QUICK_MESSAGE_TABLE.&quot; WHERE message_text='&quot;.$_CLASS['core_db']-&gt;escape($message).&quot;' AND message_time &gt;= &quot;.($_CLASS['core_user']-&gt;time - $_CORE_CONFIG['quick_message']['last_post_check']));
+ 		$count = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+@@ -111,8 +109,6 @@
+ 			}
+ 		}
+ 
+-		$user_name = htmlentities($user_name, ENT_QUOTES, 'UTF-8');
+-
+ 		$sql = 'INSERT INTO '.QUICK_MESSAGE_TABLE.' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
+ 			'poster_name'	=&gt; (string) $user_name,
+ 			'poster_id'		=&gt; (int) $user_id,
+@@ -123,7 +119,7 @@
+ 
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 
+-		redirect(generate_link($_CLASS['core_user']-&gt;data['session_url']), false);
++		redirect(generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)));
+ 	break;
+ 
+ 	case 'delete':
+@@ -167,7 +163,7 @@
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		//trigger_error('MESSAGE_DELETED');
+-		redirect(generate_link($_CLASS['core_user']-&gt;data['session_url']), false);
++		redirect(generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)));
+ 	break;
+ }
+ 
+@@ -204,7 +200,7 @@
+ {
+ 	if ($row['poster_name'])
+ 	{
+-		$user_name = $row['poster_name'];
++		$user_name = htmlentities($row['poster_name'], ENT_QUOTES, 'UTF-8');;
+ 		$userlink = ($row['poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['poster_id']) : false;
+ 	}
+ 	else
+@@ -242,7 +238,7 @@
+ 		'USER_NAME'		=&gt; $user_name,
+ 		'USER_LINK'		=&gt; $userlink,
+ 		'DELETE_LINK'	=&gt; $delete_link,
+-		'MESSAGE'		=&gt; modify_lines($row['message_text'], '&lt;br /&gt;'),
++		'MESSAGE'		=&gt; modify_lines(htmlentities($row['message_text'], ENT_QUOTES, 'UTF-8'), '&lt;br /&gt;'),
+ 		'TIME'			=&gt; $_CLASS['core_user']-&gt;format_date($row['message_time']),
+ 		'POSTER_AVATAR' =&gt; $avatar,
+ 		'U_PROFILE' 	=&gt; ($row['poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['poster_id']) : false,
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000017.html">[Viperals-svncheckins] r94 - in trunk: blocks includes includes/db includes/forums install javascript modules/Forums
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#18">[ date ]</a>
+              <a href="thread.html#18">[ thread ]</a>
+              <a href="subject.html#18">[ subject ]</a>
+              <a href="author.html#18">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

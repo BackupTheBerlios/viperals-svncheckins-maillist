@@ -1,0 +1,1515 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r130 - in cms/trunk: . includes includes/cache includes/display includes/templates includes/templates/en includes/templates/en/email includes/templates/en/email/contact includes/templates/modules/Contact javascript language/en
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r130%20-%20in%20cms/trunk%3A%20.%20includes%20includes/cache%20includes/display%20includes/templates%20includes/templates/en%20includes/templates/en/email%20includes/templates/en/email/contact%20includes/templates/modules/Contact%20javascript%20language/en&In-Reply-To=%3C200509171614.j8HGEu8u028473%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000050.html">
+   <LINK REL="Next"  HREF="000052.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r130 - in cms/trunk: . includes includes/cache includes/display includes/templates includes/templates/en includes/templates/en/email includes/templates/en/email/contact includes/templates/modules/Contact javascript language/en</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r130%20-%20in%20cms/trunk%3A%20.%20includes%20includes/cache%20includes/display%20includes/templates%20includes/templates/en%20includes/templates/en/email%20includes/templates/en/email/contact%20includes/templates/modules/Contact%20javascript%20language/en&In-Reply-To=%3C200509171614.j8HGEu8u028473%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r130 - in cms/trunk: . includes includes/cache includes/display includes/templates includes/templates/en includes/templates/en/email includes/templates/en/email/contact includes/templates/modules/Contact javascript language/en">viperal at berlios.de
+       </A><BR>
+    <I>Sat Sep 17 18:14:56 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000050.html">[Viperals-svncheckins] r129 - in cms/trunk/themes/viperal/template/modules: . articles
+</A></li>
+        <LI>Next message: <A HREF="000052.html">[Viperals-svncheckins] r131 - in cms/trunk: blocks includes includes/auth includes/display includes/forums includes/templates/en/email includes/templates/en/email/contact includes/templates/en/email/core includes/templates/en/email/forums includes/templates/modules/Forums install modules/Control_Panel/ucp modules/Forums themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#51">[ date ]</a>
+              <a href="thread.html#51">[ thread ]</a>
+              <a href="subject.html#51">[ subject ]</a>
+              <a href="author.html#51">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-17 18:14:54 +0200 (Sat, 17 Sep 2005)
+New Revision: 130
+
+Added:
+   cms/trunk/includes/templates/en/
+   cms/trunk/includes/templates/en/email/
+   cms/trunk/includes/templates/en/email/contact/
+   cms/trunk/includes/templates/en/email/contact/index.html
+Removed:
+   cms/trunk/includes/templates/modules/Contact/email/
+   cms/trunk/language/en/admin/
+Modified:
+   cms/trunk/admin.php
+   cms/trunk/ajax.php
+   cms/trunk/core.php
+   cms/trunk/error.php
+   cms/trunk/feed.php
+   cms/trunk/includes/cache/cache_file.php
+   cms/trunk/includes/display/blocks.php
+   cms/trunk/includes/display/display.php
+   cms/trunk/includes/display/template.php
+   cms/trunk/includes/functions.php
+   cms/trunk/includes/functions_user.php
+   cms/trunk/includes/handler.php
+   cms/trunk/includes/mailer.php
+   cms/trunk/includes/session.php
+   cms/trunk/includes/system.php
+   cms/trunk/includes/templates/login_admin.html
+   cms/trunk/includes/templates/login_body_full.html
+   cms/trunk/includes/templates/message.html
+   cms/trunk/includes/user.php
+   cms/trunk/index.php
+   cms/trunk/installer.php
+   cms/trunk/javascript/quick_messages.js
+Log:
+start changin $site_file_root to a define.
+Other fixes
+
+Modified: cms/trunk/admin.php
+===================================================================
+--- cms/trunk/admin.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/admin.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -15,13 +15,10 @@
+ define('VIPERAL', 'Admin');
+ //define('NEED_SID', true);
+ 
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '';
++require('core.php');
+ 
+-require($site_file_root.'core.php');
+-
+ $_CLASS['core_user']-&gt;user_setup(null);
+-$_CLASS['core_display']-&gt;load_theme('viperal_admin', $site_file_root.'themes_admin/viperal_admin');
++$_CLASS['core_display']-&gt;load_theme('viperal_admin', SITE_FILE_ROOT.'themes_admin/viperal_admin');
+ 
+ $_CLASS['core_user']-&gt;add_lang('admin/common.php');
+ 
+@@ -62,17 +59,17 @@
+ if (!$mod || !$_CORE_MODULE)
+ {
+ 	$_CORE_MODULE = array('module_title' =&gt; '', 'module_name' =&gt; '');
+-	$file_path = $site_file_root.'admin/index.php';
++	$file_path = SITE_FILE_ROOT.'admin/index.php';
+ }
+ else
+ {
+-	if (file_exists($site_file_root.'admin/'.$_CORE_MODULE['module_name'].'.php'))
++	if (file_exists(SITE_FILE_ROOT.'admin/'.$_CORE_MODULE['module_name'].'.php'))
+ 	{
+-		$file_path = $site_file_root.'admin/'.$_CORE_MODULE['module_name'].'.php';
++		$file_path = SITE_FILE_ROOT.'admin/'.$_CORE_MODULE['module_name'].'.php';
+ 	}
+ 	else
+ 	{
+-		$file_path = (file_exists($site_file_root.'modules/'.$_CORE_MODULE['module_name'].'/admin/index.php')) ? $site_file_root.'modules/'.$_CORE_MODULE['module_name'].'/admin/index.php' : false;
++		$file_path = (file_exists(SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/admin/index.php')) ? SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/admin/index.php' : false;
+ 	}
+ }
+ 
+@@ -92,7 +89,7 @@
+ $_CORE_MODULE['module_title'] = $_CLASS['core_user']-&gt;lang['ADMIN'].' &gt; '.$_CORE_MODULE['module_title'];
+ $_CORE_MODULE['module_sides'] = BLOCK_ALL;
+ 	
+-require($site_file_root.'admin/menu.php');
++require(SITE_FILE_ROOT.'admin/menu.php');
+ 
+ $main_menu = build_menu($menu);
+ 
+@@ -105,7 +102,7 @@
+ ));
+ 
+ 
+-//load_class($site_file_root.'includes/core_editor.php', 'core_editor');
++//load_class(SITE_FILE_ROOT.'includes/core_editor.php', 'core_editor');
+ //$_CLASS['core_editor']-&gt;setup();
+ require($file_path);
+     
+
+Modified: cms/trunk/ajax.php
+===================================================================
+--- cms/trunk/ajax.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/ajax.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -19,11 +19,9 @@
+ 	die;
+ }
+ 
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '';
++//require(SITE_FILE_ROOT.'core.php');
++require('core.php');
+ 
+-require($site_file_root.'core.php');
+-
+ $mod = get_variable('mod', 'REQUEST', false);
+ 
+ if (!$mod)
+@@ -32,22 +30,6 @@
+ }
+ else
+ {
+-	/*
+-	if ($mod === 'system')
+-	{
+-		include_once($site_file_root.'includes/system.php');
+-
+-		$mode = get_variable('mode', 'REQUEST', false);
+-		if (!$mode || !function_exists($mode))
+-		{
+-			script_close(false);
+-		}
+-
+-		$mode();
+-		script_close(false);
+-	}
+-	*/
+-
+ 	$sql = 'SELECT * FROM '.CORE_MODULES_TABLE.'
+ 				WHERE module_type = ' . MODULE_NORMAL . &quot;
+ 				AND module_name = '&quot; . $_CLASS['core_db']-&gt;escape($mod) . &quot;'&quot;;
+@@ -68,7 +50,7 @@
+ 	$_CORE_MODULE = $_CLASS['core_display']-&gt;get_module();
+ }
+ 
+-$path = $site_file_root.'modules/'.$_CORE_MODULE['module_name'].'/ajax.php';
++$path = SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/ajax.php';
+ $_CLASS['core_user']-&gt;page = $_CORE_MODULE['module_name'];
+ 
+ require_once($path);
+
+Modified: cms/trunk/core.php
+===================================================================
+--- cms/trunk/core.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/core.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -26,6 +26,7 @@
+     die;
+ }
+ 
++//ini_set('display_errors', 1);
+ set_magic_quotes_runtime(0);
+ 
+ //Error reporting tyoe
+@@ -44,15 +45,17 @@
+ 	}
+ }
+ 
+-//change $site_file_root to a defined
+-if (!$site_file_root)
++if (!defined('SITE_FILE_ROOT'))
+ {
+-	$site_file_root = str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/';
++	define('SITE_FILE_ROOT', str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/');
+ }
+ 
++// TEMP
++$site_file_root = SITE_FILE_ROOT;
++
+ if (!extension_loaded('mbstring'))
+ {
+-	require_once($site_file_root.'includes/compatiblity/mbstring.php');
++	require_once(SITE_FILE_ROOT.'includes/compatiblity/mbstring.php');
+ }
+ 
+ mb_internal_encoding('UTF-8');
+@@ -73,10 +76,10 @@
+ 	}
+ }
+ 
+-require_once($site_file_root.'includes/display/template.php');
+-require_once($site_file_root.'includes/functions.php');
+-require_once($site_file_root.'includes/handler.php');
+-require_once($site_file_root.'config.php');
++require_once(SITE_FILE_ROOT.'includes/display/template.php');
++require_once(SITE_FILE_ROOT.'includes/functions.php');
++require_once(SITE_FILE_ROOT.'includes/handler.php');
++require_once(SITE_FILE_ROOT.'config.php');
+ 
+ // Load basic classes
+ load_class(false, 'core_template');
+@@ -98,10 +101,10 @@
+ 	trigger_error('503:&lt;p style=&quot;text-align:center&quot;&gt;Site isn\'t Installed&lt;br/&gt;&lt;a href=&quot;installer.php&quot;&gt;Click here to install&lt;/a&gt;&lt;/p&gt;', E_USER_ERROR);
+ }
+ 
+-require_once($site_file_root.'includes/tables.php');
+-require_once($site_file_root.'includes/db/'.$site_db['type'].'.php');
+-require_once($site_file_root.'includes/cache/cache.php');
+-require_once($site_file_root.'includes/cache/cache_' . $acm_type . '.php');
++require_once(SITE_FILE_ROOT.'includes/tables.php');
++require_once(SITE_FILE_ROOT.'includes/db/'.$site_db['type'].'.php');
++require_once(SITE_FILE_ROOT.'includes/cache/cache.php');
++require_once(SITE_FILE_ROOT.'includes/cache/cache_' . $acm_type . '.php');
+ 
+ load_class(false, 'core_cache', 'cache_'.$acm_type);
+ load_class(false, 'core_db', 'db_'.$site_db['type']);
+@@ -171,6 +174,7 @@
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ }
+ 
++$_CORE_CONFIG['email']['site_mail'] = '<A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>';
+ $_CLASS['core_db']-&gt;report_error(true);
+ unset($config_error);
+ 
+@@ -192,12 +196,12 @@
+ }
+ 
+ // Load user based classes, and display options
+-require($site_file_root.'includes/session.php');
+-require($site_file_root.'includes/user.php');
+-require($site_file_root.'includes/auth/auth.php');
+-require($site_file_root.'includes/auth/auth_db.php');
+-require($site_file_root.'includes/display/blocks.php');
+-require($site_file_root.'includes/display/display.php');
++require(SITE_FILE_ROOT.'includes/session.php');
++require(SITE_FILE_ROOT.'includes/user.php');
++require(SITE_FILE_ROOT.'includes/auth/auth.php');
++require(SITE_FILE_ROOT.'includes/auth/auth_db.php');
++require(SITE_FILE_ROOT.'includes/display/blocks.php');
++require(SITE_FILE_ROOT.'includes/display/display.php');
+ 
+ load_class(false, 'core_display');
+ load_class(false, 'core_blocks');
+
+Modified: cms/trunk/error.php
+===================================================================
+--- cms/trunk/error.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/error.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -1,17 +1,26 @@
+ &lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
+ define('VIPERAL', 'CMS');
+ 
+ error_reporting(0);
+@@ -21,8 +30,8 @@
+ 	ob_start('ob_gzhandler');
+ }
+ 
+-//echo str_replace('\\','/', getenv('DOCUMENT_ROOT')); die;
+-$site_file_root = '';
++define('SITE_FILE_ROOT', str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/');
++
+ $lang = 'en';
+ 
+ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+@@ -31,14 +40,14 @@
+ 	foreach ($accept_lang_array as $accept_lang)
+ 	{
+ 		$accept_lang = substr($accept_lang, 0, 2);
+-		if (file_exists($site_file_root.'language/' . $accept_lang . '/error.php'))
++		if (file_exists(SITE_FILE_ROOT.'language/' . $accept_lang . '/error.php'))
+ 		{
+ 			$lang = $accept_lang;
+ 			break;
+ 		}
+ 		
+ 		$accept_lang = substr($accept_lang, 0, 2) . '_' . strtoupper(substr($accept_lang, 3, 2));
+-		if (file_exists($site_file_root.'language/' . $accept_lang . '/error.php'))
++		if (file_exists(SITE_FILE_ROOT.'language/' . $accept_lang . '/error.php'))
+ 		{
+ 			$lang = $accept_lang;
+ 			break;
+@@ -46,8 +55,8 @@
+ 	}
+ }
+ 
+-require($site_file_root.'language/' . $lang . '/error.php');
+-require($site_file_root.'includes/display/template.php');
++require(SITE_FILE_ROOT.'language/' . $lang . '/error.php');
++require(SITE_FILE_ROOT.'includes/display/template.php');
+ 
+ $_CLASS['core_template'] =&amp; new core_template();
+ 
+
+Modified: cms/trunk/feed.php
+===================================================================
+--- cms/trunk/feed.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/feed.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -23,20 +23,26 @@
+ 
+ define('VIPERAL', 'FEED');
+ 
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '';
++error_reporting(0);
+ 
+-require($site_file_root.'core.php');
++//require(SITE_FILE_ROOT.'core.php');
++require('core.php');
+ 
+-//error_reporting(0);
+ header('Content-Type: text/xml');
+ 
+ if (!defined('ARTICLES_TABLE'))
+ {
+-	define('ARTICLES_TABLE', $table_prefix.'articles');
++	define('ARTICLES_TABLE', $prefix.'articles');
+ }
+ 
+-$result = $_CLASS['core_db']-&gt;query_limit('SELECT articles_id, articles_title, articles_intro, articles_text, articles_posted, articles_starts, poster_name FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC', 10);
++if (isset($_GET['mode']) &amp;&amp; $_GET['mode'] == 'cms')
++{
++	$result = $_CLASS['core_db']-&gt;query_limit('SELECT articles_id, articles_title, articles_intro, articles_text, articles_posted, articles_starts, poster_name FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC', 3);
++}
++else
++{
++	$result = $_CLASS['core_db']-&gt;query_limit('SELECT articles_id, articles_title, articles_intro, articles_text, articles_posted, articles_starts, poster_name FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC', 10);
++}
+ 
+ $last_post_time = 0;
+ 
+
+Modified: cms/trunk/includes/cache/cache_file.php
+===================================================================
+--- cms/trunk/includes/cache/cache_file.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/cache/cache_file.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -26,10 +26,8 @@
+ 
+ 	function cache_file()
+ 	{
+-		global $site_file_root;
++		$this-&gt;cache_dir = SITE_FILE_ROOT.'cache/';
+ 
+-		$this-&gt;cache_dir = $site_file_root.'cache/';
+-
+ 		if (!is_writable($this-&gt;cache_dir))
+ 		{
+ 			//error here
+
+Modified: cms/trunk/includes/display/blocks.php
+===================================================================
+--- cms/trunk/includes/display/blocks.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/display/blocks.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -144,9 +144,12 @@
+ 		global $_CLASS;
+ 
+ 		$this-&gt;content = '';
++		$count = count($this-&gt;blocks_array[$position]);
++		
++		for ($i = 0; $i &lt; $count; $i++)
++		{
++			$this-&gt;block =&amp; $this-&gt;blocks_array[$position][$i];
+ 
+-		foreach($this-&gt;blocks_array[$position] as $this-&gt;block)
+-		{
+ 			if ($this-&gt;block['block_auth'] &amp;&amp; !$_CLASS['core_auth']-&gt;auth($this-&gt;block['block_auth']) &amp;&amp; !$_CLASS['core_auth']-&gt;admin_power('blocks'))
+ 			{
+ 				continue;
+@@ -217,15 +220,15 @@
+ 	*/
+ 	function block_file()
+ 	{
+-		global $_CLASS, $site_file_root;
++		global $_CLASS;
+ 
+-		if ($this-&gt;block['block_file'] &amp;&amp; file_exists($site_file_root.'blocks/'.$this-&gt;block['block_file']))
++		if ($this-&gt;block['block_file'] &amp;&amp; file_exists(SITE_FILE_ROOT.'blocks/'.$this-&gt;block['block_file']))
+ 		{
+ 			$this-&gt;info = false;
+ 
+ 			//$_CLASS['core_error_handler']-&gt;debug_start($this-&gt;block['block_title']);
+ 
+-			include($site_file_root.'blocks/'.$this-&gt;block['block_file']);
++			include(SITE_FILE_ROOT.'blocks/'.$this-&gt;block['block_file']);
+ 
+ 			//$_CLASS['core_error_handler']-&gt;debug_stop($this-&gt;block['block_title']);
+ 
+@@ -330,7 +333,7 @@
+ 
+ 	function block_feed()
+ 	{
+-		global $site_file_root, $_CLASS;
++		global $_CLASS;
+ // think about disabling the block automatically if there's url problems
+ // update core_rss file
+ 		if ($this-&gt;block['block_content'] &amp;&amp; (!$this-&gt;block['block_rss_expires'] || $this-&gt;block['block_rss_expires'] &gt; (int) $_CLASS['core_user']-&gt;time))
+@@ -349,9 +352,9 @@
+ 			return;
+ 		}
+ 
+-		if ($this-&gt;block['block_file'] &amp;&amp; file_exists($site_file_root.'blocks/rss/'.$this-&gt;block['block_file']))
++		if ($this-&gt;block['block_file'] &amp;&amp; file_exists(SITE_FILE_ROOT.'blocks/rss/'.$this-&gt;block['block_file']))
+ 		{
+-			include($site_file_root.'blocks/rss/'.$this-&gt;block['block_file']);
++			include(SITE_FILE_ROOT.'blocks/rss/'.$this-&gt;block['block_file']);
+ 			
+ 			if (!$this-&gt;content)
+ 			{
+@@ -360,7 +363,7 @@
+ 		}
+ 		else
+ 		{
+-			load_class($site_file_root.'includes/core_rss.php', 'core_rss');
++			load_class(SITE_FILE_ROOT.'includes/core_rss.php', 'core_rss');
+ 			$_CLASS['core_rss']-&gt;setup(false, array('title', 'link'));
+ 				
+ 			if (!$_CLASS['core_rss']-&gt;get_rss($this-&gt;block['block_rss_url']))
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/display/display.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -38,9 +38,9 @@
+ 	*/
+ 	function add_module($module, $homepage = true)
+ 	{
+-		global $_CLASS, $site_file_root;
++		global $_CLASS;
+ 
+-		if (!$module || !file_exists($site_file_root.'modules/'.$module['module_name'].'/index.php'))
++		if (!$module || !file_exists(SITE_FILE_ROOT.'modules/'.$module['module_name'].'/index.php'))
+ 		{
+ 			return '404:_PAGE_NOT_FOUND';
+ 		}
+@@ -218,9 +218,7 @@
+ 
+ 		if ($_CORE_MODULE = $this-&gt;get_module())
+ 		{
+-			global $site_file_root;
+-
+-			require($site_file_root.'modules/'.$_CORE_MODULE['module_name'].'/index.php');
++			require(SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/index.php');
+ 		}
+ 
+ 		$this-&gt;displayed['footer'] = true;
+
+Modified: cms/trunk/includes/display/template.php
+===================================================================
+--- cms/trunk/includes/display/template.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/display/template.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -41,8 +41,7 @@
+ 
+     function core_template()
+     {
+-		global $site_file_root;
+-		$this-&gt;cache_dir = $site_file_root.'cache/template/';
++		$this-&gt;cache_dir = SITE_FILE_ROOT.'cache/template/';
+     }
+     
+     /*
+@@ -160,23 +159,56 @@
+     */
+ 	function generate_dirs($name)
+ 	{
+-		global $_CLASS, $site_file_root;
++		global $_CLASS;
+ 
+ 		$set = false;
++		$lang = array();
+ 
+-		if (!empty($_CLASS['core_display']-&gt;theme_path) &amp;&amp; file_exists($_CLASS['core_display']-&gt;theme_path.'/template/'.$name))
++		$lang[] = 'en';
++		
++		if (isset($_CLASS['core_user']) &amp;&amp; $_CLASS['core_user']-&gt;lang_name !== 'en')
+ 		{
+-			$this-&gt;template_dir = $_CLASS['core_display']-&gt;theme_path.'/template/';
+-			$this-&gt;theme_themplate = true;
+-			$set = true;
++			$lang[] = $this-&gt;lang_name;
+ 		}
+-		elseif (file_exists($site_file_root.'includes/templates/'.$name))
++
++		$count = count($lang);
++
++		for ($i = 0; $i &lt; $count; $i++)
+ 		{
+-			$this-&gt;template_dir = $site_file_root.'includes/templates/';
+-			$this-&gt;theme_themplate = false;
+-			$set = true;
++			if (!empty($_CLASS['core_display']-&gt;theme_path) &amp;&amp; file_exists($_CLASS['core_display']-&gt;theme_path.&quot;/template/{$lang[$i]}/$name&quot;))
++			{
++				$this-&gt;template_dir = $_CLASS['core_display']-&gt;theme_path.&quot;/template/{$lang[$i]}/&quot;;
++				$this-&gt;cache_prefix = &quot;{$_CLASS['core_display']-&gt;theme_name}#{$lang[$i]}#&quot;;
++				$set = true;
++
++				break;
++			}
++			elseif (file_exists(SITE_FILE_ROOT.&quot;includes/templates/{$lang[$i]}/$name&quot;))
++			{
++				$this-&gt;template_dir = SITE_FILE_ROOT.&quot;includes/templates/{$lang[$i]}/&quot;;
++				$this-&gt;cache_prefix = &quot;core#{$lang[$i]}#&quot;;
++				$set = true;
++				
++				break;
++			}
+ 		}
+-		
++	
++		if (!$set)
++		{
++			if (!empty($_CLASS['core_display']-&gt;theme_path) &amp;&amp; file_exists($_CLASS['core_display']-&gt;theme_path.'/template/'.$name))
++			{
++				$this-&gt;template_dir = $_CLASS['core_display']-&gt;theme_path.'/template/';
++				$this-&gt;cache_prefix = $_CLASS['core_display']-&gt;theme_name.'#';
++				$set = true;
++			}
++			elseif (file_exists(SITE_FILE_ROOT.'includes/templates/'.$name))
++			{
++				$this-&gt;template_dir = SITE_FILE_ROOT.'includes/templates/';
++				$this-&gt;cache_prefix = &quot;core#&quot;;
++				$set = true;
++			}
++		}
++
+ 		return $set;
+ 	}
+ 
+@@ -186,7 +218,7 @@
+ 
+ 		$file_name = str_replace(array('.', '/'), '#', $name);
+ 
+-		return ($this-&gt;theme_themplate ? $_CLASS['core_display']-&gt;theme_name.'#' : '') . &quot;$file_name.php&quot;;
++		return $this-&gt;cache_prefix.&quot;$file_name.php&quot;;
+ 	}
+ 
+     function is_compiled($name)
+@@ -410,7 +442,7 @@
+ 	{
+ 		global $_CLASS;
+ 
+-		return $_CLASS['core_user']-&gt;get_lang($lang);
++		return isset($_CLASS['core_user']) ? $_CLASS['core_user']-&gt;get_lang($lang) : $lang;
+ 	}
+ 
+ 	function _parse_content($code)
+@@ -432,7 +464,7 @@
+ 				continue;
+ 			}
+ 			
+-			$values[1][$loop] = '&lt;?php echo '.$parse.'; ?&gt;';
++			$values[1][$loop] = &quot;&lt;?php echo $parse; ?&gt; &quot;;
+ 		}
+ 	
+ 		return str_replace($values[0], $values[1], $code);
+
+Modified: cms/trunk/includes/functions.php
+===================================================================
+--- cms/trunk/includes/functions.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/functions.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -195,13 +195,7 @@
+ 
+ function check_theme($theme)
+ {
+-	global $site_file_root;
+-
+-	if (file_exists($site_file_root.'themes/'.$theme.'/index.php'))
+-	{
+-		return true;
+-	}
+-	return false;
++	return file_exists(SITE_FILE_ROOT.'themes/'.$theme.'/index.php');
+ }
+ 
+ function display_confirmation($message = '', $hidden = '', $image = false)
+@@ -575,14 +569,14 @@
+ 
+ function script_close($save = true)
+ {
+-	global $_CORE_CONFIG, $site_file_root, $_CLASS;
++	global $_CORE_CONFIG, $_CLASS;
+ 
+ 	if (!empty($_CLASS['core_user']))
+ 	{
+ 		// phpbb 2.1.2 only remove.
+-		if (file_exists($site_file_root.'cache/queue.php'))
++		if (file_exists(SITE_FILE_ROOT.'cache/queue.php'))
+ 		{
+-			require_once($site_file_root.'includes/forums/functions_messenger.php');
++			require_once(SITE_FILE_ROOT.'includes/forums/functions_messenger.php');
+ 			$queue = new queue();
+ 			$queue-&gt;process();
+ 		}
+@@ -718,7 +712,7 @@
+ 
+ function select_theme($default = false)
+ {
+-	global $site_file_root, $_CLASS;
++	global $_CLASS;
+ 
+ 	if (!$default)
+ 	{
+@@ -726,13 +720,13 @@
+ 	}
+ 
+ 	$theme_array = array();
+-	$handle = opendir($site_file_root.'themes');
++	$handle = opendir(SITE_FILE_ROOT.'themes');
+ 	
+ 	while ($file = readdir($handle))
+ 	{
+ 		if (!mb_strpos($file, '.'))
+ 		{
+-			if (file_exists($site_file_root.&quot;themes/$file/index.php&quot;))
++			if (file_exists(SITE_FILE_ROOT.&quot;themes/$file/index.php&quot;))
+ 			{
+ 				$theme_array[] = array('file' =&gt; $file, 'template'=&gt; true);
+ 			}
+
+Modified: cms/trunk/includes/functions_user.php
+===================================================================
+--- cms/trunk/includes/functions_user.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/functions_user.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -662,7 +662,7 @@
+ 	}
+ 
+ 	return false;
+- }
++}
+ 
+ function avatar_remote($data, &amp;$error)
+ {
+@@ -705,10 +705,10 @@
+ 
+ function avatar_upload($data, &amp;$error)
+ {
+-	global $site_file_root, $config, $_CLASS;
++	global $config, $_CLASS;
+ 
+ 	// Init upload class
+-	include_once($site_file_root.'includes/forums/functions_upload.php');
++	include_once(SITE_FILE_ROOT.'includes/forums/functions_upload.php');
+ 	
+ 	$upload = new fileupload('AVATAR_', array('jpg', 'jpeg', 'gif', 'png'), $config['avatar_filesize'], $config['avatar_min_width'], $config['avatar_min_height'], $config['avatar_max_width'], $config['avatar_max_height']);
+ 							
+
+Modified: cms/trunk/includes/handler.php
+===================================================================
+--- cms/trunk/includes/handler.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/handler.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -143,7 +143,7 @@
+ 
+ 	function error_handler($errtype, $error, $errfile, $errline)
+ 	{
+-		global $_CLASS, $site_file_root, $_CORE_CONFIG;
++		global $_CLASS, $_CORE_CONFIG;
+ 
+ 		if ($this-&gt;report != ERROR_NONE)
+ 		{
+@@ -152,7 +152,7 @@
+ 			//damn windows
+ 			$errfile = str_replace('\\','/', $errfile);
+ 			// Remove the root paths, site files, along with document root
+-			$errfile = str_replace($site_file_root, '', str_replace($_SERVER['DOCUMENT_ROOT'],'', $errfile));
++			$errfile = str_replace(SITE_FILE_ROOT, '', str_replace($_SERVER['DOCUMENT_ROOT'],'', $errfile));
+ 		}
+ 
+ 		switch ($errtype)
+
+Modified: cms/trunk/includes/mailer.php
+===================================================================
+--- cms/trunk/includes/mailer.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/mailer.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -95,7 +95,6 @@
+ 		foreach ($address as $array)
+ 		{
+ 			$array['name'] = trim($array['name']);
+-//&quot;=?UTF-8?B?VmlwZXJhbA==?=&quot;
+ 			$formatted[] = ($array['name'] &amp;&amp; $this-&gt;named_addresses) ?  '&quot;' . mail_encode($array['name'], $this-&gt;encoding) . '&quot; &lt;' . $array['address'] . '&gt;' : $array['address'];
+ 		}
+ 		return implode(', ', $formatted);
+@@ -121,7 +120,6 @@
+ 
+ 		if (!$from)
+ 		{
+-			// modify_lines ?
+ 			$from = '&lt;' . $_CORE_CONFIG['email']['site_mail'] . '&gt;';
+ 		}
+ 
+@@ -179,13 +177,12 @@
+ 		{
+ 			$headers[] = 'Content-Type: text/plain; charset='.$this-&gt;encoding;
+ 			$headers[] = 'Content-Transfer-Encoding: 8bit';
+-			$message = &quot;\n&quot;.strip_tags(preg_replace('#&lt;br */?&gt;#i', &quot;\n&quot;, modify_lines($this-&gt;message))).&quot;\n&quot;;
++			$message = &quot;\n&quot;.$this-&gt;message.&quot;\n&quot;;
+ 		}
+ 
+ 		if ($_CORE_CONFIG['email']['smtp'])
+ 		{
+ 			$smtp = new smtp_mailer;
+-
+ 			if ($connect = $smtp-&gt;connect($_CORE_CONFIG['email']['smtp_host'], $_CORE_CONFIG['email']['smtp_port']))
+ 			{
+ 				$login = $smtp-&gt;login($_CORE_CONFIG['email']['smtp_username'], $_CORE_CONFIG['email']['smtp_password']);
+@@ -217,12 +214,16 @@
+ 
+ 			if (!$result)
+ 			{
++				$this-&gt;error = 'Mail Send failed';
++
+ 				return false;
+ 			}
+ 			
+ 			return true;
+ 		}
+ 
++		$this-&gt;error = 'Mail Function not found';
++
+ 		return false;
+ 	}
+ }
+@@ -286,7 +287,6 @@
+ 	// If login fails we disconnect, may do it differently later on
+ 	function login($user, $password)
+ 	{
+-		$user = ''; $password='';
+ 		if (!$this-&gt;connection)
+ 		{
+ 			$this-&gt;error = 'No connection';
+@@ -370,7 +370,7 @@
+ 		foreach ($this-&gt;recipients as $email)
+ 		{
+ 			$name = false;
+-			
++
+ 			if (is_array($email))
+ 			{
+ 				$name = $email['name'];
+
+Modified: cms/trunk/includes/session.php
+===================================================================
+--- cms/trunk/includes/session.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/session.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -40,13 +40,9 @@
+ 		$session_id = get_variable($_CORE_CONFIG['server']['cookie_name'] . '_sid', 'COOKIE');
+ 		$session_id_url = get_variable('sid', 'GET');
+ 
+-		if ($session_id_url)
++		if ($session_id_url &amp;&amp; (!$session_id || $session_id !== $session_id_url))
+ 		{
+-			// session id in url &gt; cookie
+-			if (!$session_id || $session_id !== $session_id_url)
+-			{
+-				$session_id = $session_id_url;
+-			}
++			$session_id = $session_id_url;
+ 		}
+ 		elseif (!defined('NEED_SID'))
+ 		{
+
+Modified: cms/trunk/includes/system.php
+===================================================================
+--- cms/trunk/includes/system.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/system.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -23,7 +23,7 @@
+ 
+ function confirmation_image($code = false, $size = false)
+ {
+-	global $_CLASS, $site_file_root;
++	global $_CLASS;
+ 
+ 	if (!$code &amp;&amp; !($code = $_CLASS['core_user']-&gt;session_data_get('confirmation_code')))
+ 	{
+@@ -44,8 +44,9 @@
+ 	{
+ 		$image_width = 5;
+ 		$image_height = 0;
+-		//$font = $site_file_root.'includes/fonts/angltrr.ttf';
+-		$font = $site_file_root.'includes/fonts/tomnr.ttf';
++		
++		//$font = SITE_FILE_ROOT.'includes/fonts/angltrr.ttf';
++		$font = SITE_FILE_ROOT.'includes/fonts/tomnr.ttf';
+ 
+ 		$count = strlen($code);
+ 		for ($loop = 0; $loop &lt; $count; $loop++)
+@@ -104,7 +105,7 @@
+ 		return;
+ 	}
+ 
+-	$font = imageloadfont($site_file_root.'includes/fonts/tomnr.gdf');
++	$font = imageloadfont(SITE_FILE_ROOT.'includes/fonts/tomnr.gdf');
+ 
+ 	// needs work
+ 	if (!$font)
+@@ -201,7 +202,7 @@
+ 	}
+ 	else
+ 	{
+-		include_once($site_file_root.'includes/functions_user.php');
++		include_once(SITE_FILE_ROOT.'includes/functions_user.php');
+ 		user_activate($user_id);
+ 
+ 		set_core_config('user', 'newest_user_id', $row['user_id'], false);
+
+Added: cms/trunk/includes/templates/en/email/contact/index.html
+===================================================================
+--- cms/trunk/includes/templates/en/email/contact/index.html	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/templates/en/email/contact/index.html	2005-09-17 16:14:54 UTC (rev 130)
+@@ -0,0 +1,6 @@
++{ $MESSAGE }
++
++Sent From:	{ $SENT_FROM }
++Name:		{ $SENDER_NAME }
++email:		{ $SENDER_EMAIL }
++Sender Ip:	{ $SENDER_IP }
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/login_admin.html
+===================================================================
+--- cms/trunk/includes/templates/login_admin.html	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/templates/login_admin.html	2005-09-17 16:14:54 UTC (rev 130)
+@@ -126,11 +126,11 @@
+ 					&lt;td align=&quot;center&quot; class=&quot;row2&quot;&gt;{ $U_CONFIRM_IMAGE }&lt;/td&gt;
+ 				&lt;/tr&gt;
+ 				&lt;tr&gt;
+-					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;confirm_code&quot; size=&quot;10&quot; maxlength=&quot;6&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;confirm_code&quot; size=&quot;10&quot; maxlength=&quot;6&quot; type=&quot;text&quot; tabindex=&quot;3&quot; /&gt;&lt;/td&gt;
+ 				&lt;/tr&gt;
+ 				&lt;!-- ENDIF --&gt;
+ 				&lt;tr&gt; 
+-					&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{$S_HIDDEN_FIELDS}&lt;input type=&quot;submit&quot; name=&quot;login&quot; class=&quot;button&quot; value=&quot;{$L_LOGIN}&quot; tabindex=&quot;3&quot; /&gt;&lt;/td&gt;
++					&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{$S_HIDDEN_FIELDS}&lt;input type=&quot;submit&quot; name=&quot;login&quot; class=&quot;button&quot; value=&quot;{$L_LOGIN}&quot; tabindex=&quot;4&quot; /&gt;&lt;/td&gt;
+ 				&lt;/tr&gt;
+ 			&lt;/table&gt;
+ 		&lt;/form&gt;
+
+Modified: cms/trunk/includes/templates/login_body_full.html
+===================================================================
+--- cms/trunk/includes/templates/login_body_full.html	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/templates/login_body_full.html	2005-09-17 16:14:54 UTC (rev 130)
+@@ -1,13 +1,13 @@
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+-&lt;head&gt;
+-&lt;title&gt;Viperal: Login&lt;/title&gt;
+-&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+-&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
+-
+-&lt;style type=&quot;text/css&quot;&gt;
+-&lt;!--
+-body
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Login&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
++&lt;style type=&quot;text/css&quot;&gt;
++&lt;!--
++body
+ {
+     font-family: Verdana, Helvetica, sans-serif;
+     font-size: 10px;
+@@ -19,38 +19,38 @@
+ 
+ .error { color: red; }
+ 
+-#container
+-{
+-	position: absolute;
+-	top: 50%;
+-	left: 0px;
+-	width: 100%;
+-	margin-top: &lt;!-- IF { $U_CONFIRM_IMAGE } --&gt;-160px&lt;!-- ELSE --&gt;-100px&lt;!-- ENDIF --&gt;;
++#container
++{
++	position: absolute;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: &lt;!-- IF { $U_CONFIRM_IMAGE } --&gt;-160px&lt;!-- ELSE --&gt;-100px&lt;!-- ENDIF --&gt;;
+ }
+-
+-#wrapper
+-{
+-	position: relative;
+-	text-align: left;
+-	width: 300px;
+-	margin: 0px auto;
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 300px;
++	margin: 0px auto;
+ }
+ 
+ .spacer
+ {
+ 	background-color: #ECECEC;
+-}
+-
++}
++
+ .button
+ {
+ 	background-color: #DCE1E5;
+ 	border: 1px solid #ccc;
+ 	color: black;
+-}
++}
+ 
+ th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
+ .tablebg { background-color: #A9B8C2; }
+-
++
+ .row1 { background-color: #ECECEC; padding: 4px; }
+ .row2 { background-color: #DCE1E5; padding: 4px; }
+ .row3 { background-color: #C0C8D0; padding: 4px; }
+@@ -63,78 +63,78 @@
+ form { margin: 0px; padding: 0px; border: 0px; }
+ input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
+ select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
+-.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
+ 
+---&gt;
+-&lt;/style&gt;
+-
+-&lt;body&gt;
+-
+-&lt;div id=&quot;container&quot;&gt;
+-	&lt;div id=&quot;wrapper&quot;&gt;
+-		&lt;form action=&quot;{$S_LOGIN_ACTION}&quot; method=&quot;post&quot;&gt;
+-			&lt;table align=&quot;center&quot; class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+-				&lt;tr&gt; 
+-					&lt;th align=&quot;center&quot;&gt;Login Info&lt;/th&gt;
+-				&lt;/tr&gt;
+-				&lt;!-- IF { $LOGIN_EXPLAIN } --&gt;
+-				&lt;tr&gt;
+-					&lt;td class=&quot;row1&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $LOGIN_EXPLAIN }&lt;/td&gt;
+-				&lt;/tr&gt;
+-				&lt;!-- ENDIF --&gt;
+-				&lt;tr&gt; 
+-					&lt;td class=&quot;row2&quot;&gt;
+-					&lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+-						&lt;!-- IF { $LOGIN_ERROR } --&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;gensmall&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;error&quot;&gt;{$LOGIN_ERROR}&lt;/span&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-						&lt;tr&gt; 
+-							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_USERNAME}:&lt;/b&gt;&lt;/td&gt;
+-							&lt;td&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; size=&quot;25&quot; maxlength=&quot;40&quot; value=&quot;{$USERNAME}&quot; tabindex=&quot;1&quot; /&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{$U_REGISTER}&quot;&gt;{$L_REGISTER}&lt;/a&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt; 
+-							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_PASSWORD}:&lt;/b&gt;&lt;/td&gt;
+-							&lt;td&gt;
+-								&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; maxlength=&quot;25&quot; tabindex=&quot;2&quot; /&gt;
+-								&lt;!-- IF { $U_SEND_PASSWORD } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_SEND_PASSWORD }&quot;&gt;{ $L_FORGOT_PASS }&lt;/a&gt;&lt;!-- ENDIF --&gt;
+-								&lt;!-- IF { $U_RESEND_ACTIVATION } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_RESEND_ACTIVATION }&quot;&gt;{ $L_RESEND_ACTIVATION }&lt;/a&gt;&lt;!-- ENDIF --&gt;
+-							 &lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- IF { $S_DISPLAY_FULL_LOGIN } --&gt;
+-						&lt;tr&gt; 
+-							&lt;td&gt;&nbsp;&lt;/td&gt;
+-							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;autologin&quot; tabindex=&quot;4&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_LOG_ME_IN}&lt;/span&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td&gt;&nbsp;&lt;/td&gt;
+-							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;viewonline&quot; tabindex=&quot;5&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_HIDE_ME}&lt;/span&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-					&lt;/table&gt;
+-					&lt;/td&gt;
+-				&lt;/tr&gt;
+-				&lt;!-- IF { $U_CONFIRM_IMAGE } --&gt;
+-				&lt;tr&gt; 
+-					&lt;th  align=&quot;center&quot;&gt;{ $L_CONFIRMATION_CODE }&lt;/th&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt; 
+-					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;Enter the code exactly as you see it in the image&lt;br/&gt;&lt;b&gt;This is case sensitive&lt;/b&gt;&lt;/span&gt;&lt;/td&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td align=&quot;center&quot; class=&quot;row2&quot;&gt;{ $U_CONFIRM_IMAGE }&lt;/td&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;confirm_code&quot; size=&quot;10&quot; maxlength=&quot;6&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-				&lt;/tr&gt;
+-				&lt;!-- ENDIF --&gt;
+-				&lt;tr&gt; 
+-					&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{$S_HIDDEN_FIELDS}&lt;input type=&quot;submit&quot; name=&quot;login&quot; class=&quot;button&quot; value=&quot;{$L_LOGIN}&quot; tabindex=&quot;3&quot; /&gt;&lt;/td&gt;
+-				&lt;/tr&gt;
+-			&lt;/table&gt;
+-		&lt;/form&gt;
+-	&lt;/div&gt;
+-&lt;/div&gt;
+-
++--&gt;
++&lt;/style&gt;
++
++&lt;body&gt;
++
++&lt;div id=&quot;container&quot;&gt;
++	&lt;div id=&quot;wrapper&quot;&gt;
++		&lt;form action=&quot;{$S_LOGIN_ACTION}&quot; method=&quot;post&quot;&gt;
++			&lt;table align=&quot;center&quot; class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++				&lt;tr&gt; 
++					&lt;th align=&quot;center&quot;&gt;Login Info&lt;/th&gt;
++				&lt;/tr&gt;
++				&lt;!-- IF { $LOGIN_EXPLAIN } --&gt;
++				&lt;tr&gt;
++					&lt;td class=&quot;row1&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $LOGIN_EXPLAIN }&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;!-- ENDIF --&gt;
++				&lt;tr&gt; 
++					&lt;td class=&quot;row2&quot;&gt;
++					&lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++						&lt;!-- IF { $LOGIN_ERROR } --&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;gensmall&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;error&quot;&gt;{$LOGIN_ERROR}&lt;/span&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt; 
++							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_USERNAME}:&lt;/b&gt;&lt;/td&gt;
++							&lt;td&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; size=&quot;25&quot; maxlength=&quot;40&quot; value=&quot;{$USERNAME}&quot; tabindex=&quot;1&quot; /&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{$U_REGISTER}&quot;&gt;{$L_REGISTER}&lt;/a&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt; 
++							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_PASSWORD}:&lt;/b&gt;&lt;/td&gt;
++							&lt;td&gt;
++								&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; maxlength=&quot;25&quot; tabindex=&quot;2&quot; /&gt;
++								&lt;!-- IF { $U_SEND_PASSWORD } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_SEND_PASSWORD }&quot;&gt;{ $L_FORGOT_PASS }&lt;/a&gt;&lt;!-- ENDIF --&gt;
++								&lt;!-- IF { $U_RESEND_ACTIVATION } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_RESEND_ACTIVATION }&quot;&gt;{ $L_RESEND_ACTIVATION }&lt;/a&gt;&lt;!-- ENDIF --&gt;
++							 &lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF { $S_DISPLAY_FULL_LOGIN } --&gt;
++						&lt;tr&gt; 
++							&lt;td&gt;&nbsp;&lt;/td&gt;
++							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;autologin&quot; tabindex=&quot;4&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_LOG_ME_IN}&lt;/span&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td&gt;&nbsp;&lt;/td&gt;
++							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;viewonline&quot; tabindex=&quot;5&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_HIDE_ME}&lt;/span&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++					&lt;/table&gt;
++					&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;!-- IF { $U_CONFIRM_IMAGE } --&gt;
++				&lt;tr&gt; 
++					&lt;th  align=&quot;center&quot;&gt;{ $L_CONFIRMATION_CODE }&lt;/th&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt; 
++					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;Enter the code exactly as you see it in the image&lt;br/&gt;&lt;b&gt;This is case sensitive&lt;/b&gt;&lt;/span&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot; class=&quot;row2&quot;&gt;{ $U_CONFIRM_IMAGE }&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;confirm_code&quot; size=&quot;10&quot; maxlength=&quot;6&quot; type=&quot;text&quot; tabindex=&quot;3&quot; /&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;!-- ENDIF --&gt;
++				&lt;tr&gt; 
++					&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{$S_HIDDEN_FIELDS}&lt;input type=&quot;submit&quot; name=&quot;login&quot; class=&quot;button&quot; value=&quot;{$L_LOGIN}&quot; tabindex=&quot;4&quot; /&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++			&lt;/table&gt;
++		&lt;/form&gt;
++	&lt;/div&gt;
++&lt;/div&gt;
++
+ &lt;/body&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/message.html
+===================================================================
+--- cms/trunk/includes/templates/message.html	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/templates/message.html	2005-09-17 16:14:54 UTC (rev 130)
+@@ -2,10 +2,12 @@
+ 
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td align=&quot;center&quot;  class=&quot;row1&quot;&gt;
++		&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;
+ 			{ $MESSAGE_TEXT }
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
++
++&lt;br clear=&quot;all&quot; /&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/user.php
+===================================================================
+--- cms/trunk/includes/user.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/includes/user.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -187,11 +187,18 @@
+ 		$this-&gt;data['session_time'] = $this-&gt;data['session_admin'] = 0;
+ 
+ 		$this-&gt;sid_link = $this-&gt;is_user = $this-&gt;is_bot = $this-&gt;is_admin = false;
++
++		if (isset($_CLASS['core_auth']))
++		{
++			unset($_CLASS['core_auth']);
++		}
++
++		load_class(false, 'core_auth', 'auth_db');
+ 	}
+ 
+ 	function user_setup($theme = false)
+ 	{
+-		global $_CLASS, $_CORE_CONFIG, $site_file_root;
++		global $_CLASS, $_CORE_CONFIG;
+ 
+ 		if ($this-&gt;user_setup)
+ 		{
+@@ -250,13 +257,13 @@
+ 				}
+ 			}
+ 
+-			$path = $site_file_root.'themes/'.$theme;
++			$path = SITE_FILE_ROOT.'themes/'.$theme;
+ 			
+ 			$_CLASS['core_display']-&gt;load_theme($theme, $path);
+ 		}
+ 
+ 		$this-&gt;lang_name = $_CORE_CONFIG['global']['default_lang'];
+-		$this-&gt;lang_path = $site_file_root.'language/' . $this-&gt;lang_name . '/';
++		$this-&gt;lang_path = SITE_FILE_ROOT.'language/' . $this-&gt;lang_name . '/';
+ 
+ 		$this-&gt;time_format = ($this-&gt;data['user_time_format']) ? $this-&gt;data['user_time_format'] : $_CORE_CONFIG['global']['default_dateformat'];
+ 		$this-&gt;timezone = ($this-&gt;data['user_timezone']) ? $this-&gt;data['user_timezone'] : $_CORE_CONFIG['global']['default_timezone'];
+@@ -266,8 +273,6 @@
+ 
+ 	function add_img($img_file = false, $module = false, $lang = false)
+ 	{
+-		global $site_file_root;
+-
+ 		$img_file = ($img_file) ? &quot;$img_file.php&quot; : 'index.php';
+ 
+ 		if (!$img_file || !ereg('/', $img_file))
+@@ -283,7 +288,7 @@
+ 			}
+ 			else
+ 			{
+-				include($site_file_root.'modules/'.$module.&quot;/images/$img_file&quot;);
++				include(SITE_FILE_ROOT.'modules/'.$module.&quot;/images/$img_file&quot;);
+ 			}
+ 		}
+ 		else
+@@ -324,7 +329,6 @@
+ 		
+ 	function add_lang($lang_file = false, $module = false)
+ 	{
+-		global $site_file_root;
+ //Need a check for if the lang file exsists
+ 	
+ 		//print_r(debug_backtrace());
+@@ -343,7 +347,7 @@
+ 		{
+ 			if (mb_strpos($lang_file, '/') !== false)
+ 			{
+-				include($site_file_root.&quot;language/$this-&gt;lang_name/$lang_file&quot;);
++				include(SITE_FILE_ROOT.&quot;language/$this-&gt;lang_name/$lang_file&quot;);
+ 
+ 				return;
+ 			}
+@@ -359,12 +363,12 @@
+ 		{
+ 			global $_CORE_MODULE;
+ 			
+-			include($site_file_root.'modules/'.$_CORE_MODULE['module_name'].&quot;/language/$this-&gt;lang_name/$lang_file&quot;);
++			include(SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].&quot;/language/$this-&gt;lang_name/$lang_file&quot;);
+ 
+ 			return;
+ 		}
+ 		
+-		include($site_file_root.&quot;modules/$module/language/$this-&gt;lang_name/$lang_file&quot;);		
++		include(SITE_FILE_ROOT.&quot;modules/$module/language/$this-&gt;lang_name/$lang_file&quot;);		
+ 	}
+ 
+ 	function user_data_get($name, $default = false)
+
+Modified: cms/trunk/index.php
+===================================================================
+--- cms/trunk/index.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/index.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -1,24 +1,32 @@
+ &lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
+ define('VIPERAL', 'CMS');
+-//print_r($_GET);
+ 
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '';
++error_reporting(E_ALL);
+ 
+-require($site_file_root.'core.php');
++//require(SITE_FILE_ROOT.'core.php');
++require('core.php');
+ 
+ $mod = get_variable('mod', 'REQUEST', false);
+ 
+@@ -26,9 +34,10 @@
+ {
+ 	// Set as homepage 
+ 	$_CLASS['core_display']-&gt;homepage = true;
+-	//$_CORE_CONFIG['index_page'];
+-	$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.CORE_MODULES_TABLE.&quot; WHERE module_name IN ( 'Contact' )&quot;);
++	$_CORE_CONFIG['global']['index_page'] = 'articles';
+ 
++	$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.CORE_MODULES_TABLE.&quot; WHERE module_name = '{$_CORE_CONFIG['global']['index_page']}'&quot;);
++
+ 	While ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$_CLASS['core_display']-&gt;add_module($row);
+@@ -43,6 +52,7 @@
+ 
+ 		$_CLASS['core_user']-&gt;user_setup();
+ 		$_CLASS['core_display']-&gt;display_header();
++
+ 		// Hey admin we don't have a modules set
+ 		if ($_CLASS['core_auth']-&gt;admin_auth('modules'))
+ 		{
+@@ -54,17 +64,20 @@
+ }
+ else
+ {
+-	if ($mod == 'system')
++	if ($mod === 'system')
+ 	{
+-		include_once($site_file_root.'includes/system.php');
++		require_once(SITE_FILE_ROOT.'includes/system.php');
+ 
+ 		$mode = get_variable('mode', 'REQUEST', false);
++
+ 		if (!$mode || !function_exists($mode))
+ 		{
++			header(&quot;HTTP/1.0 503 Service Unavailable&quot;);
+ 			script_close(false);
+ 		}
+ 
+ 		$mode();
++
+ 		script_close(false);
+ 	}
+ 
+@@ -87,7 +100,7 @@
+ 	$_CORE_MODULE = $_CLASS['core_display']-&gt;get_module();
+ }
+ 
+-$path = $site_file_root.'modules/'.$_CORE_MODULE['module_name'].'/index.php';
++$path = SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/index.php';
+ $_CLASS['core_user']-&gt;page = $_CORE_MODULE['module_name'];
+ 
+ require_once($path);
+
+Modified: cms/trunk/installer.php
+===================================================================
+--- cms/trunk/installer.php	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/installer.php	2005-09-17 16:14:54 UTC (rev 130)
+@@ -24,12 +24,11 @@
+ 
+ error_reporting(E_ALL);
+ 
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '';
++define('SITE_FILE_ROOT', str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/');
+ 
+ if (!extension_loaded('mbstring'))
+ {
+-	require_once($site_file_root.'includes/compatiblity/mbstring.php');
++	require_once(SITE_FILE_ROOT.'includes/compatiblity/mbstring.php');
+ }
+ 
+ set_magic_quotes_runtime(0);
+@@ -46,8 +45,8 @@
+ 	}
+ }
+ 
+-require_once($site_file_root.'includes/functions.php');
+-require_once($site_file_root.'includes/display/template.php');
++require_once(SITE_FILE_ROOT.'includes/functions.php');
++require_once(SITE_FILE_ROOT.'includes/display/template.php');
+ 
+ load_class(false, 'core_template');
+ 
+@@ -107,9 +106,9 @@
+ 
+ if ($stage === 4)
+ {
+-	if (file_exists($site_file_root.'config.php'))
++	if (file_exists(SITE_FILE_ROOT.'config.php'))
+ 	{
+-		require_once($site_file_root.'config.php');
++		require_once(SITE_FILE_ROOT.'config.php');
+ 	}
+ 
+ 	$site_name		= get_variable('site_name', 'POST');
+@@ -154,7 +153,7 @@
+ 
+ 	if (isset($site_db))
+ 	{
+-		load_class($site_file_root.'includes/db/'.$site_db['type'].'.php', 'core_db', 'db_'.$site_db['type']);
++		load_class(SITE_FILE_ROOT.'includes/db/'.$site_db['type'].'.php', 'core_db', 'db_'.$site_db['type']);
+ 
+ 		$_CLASS['core_db']-&gt;connect($site_db);
+ 		$config_content = '';
+@@ -167,9 +166,9 @@
+ 
+ 	if (empty($error))
+ 	{
+-		require_once($site_file_root.'includes/tables.php');
+-		require_once($site_file_root.'includes/cache/cache.php');
+-		require_once($site_file_root.'includes/cache/cache_' . $acm_type . '.php');
++		require_once(SITE_FILE_ROOT.'includes/tables.php');
++		require_once(SITE_FILE_ROOT.'includes/cache/cache.php');
++		require_once(SITE_FILE_ROOT.'includes/cache/cache_' . $acm_type . '.php');
+ 
+ 		load_class(false, 'core_cache', 'cache_'.$acm_type);
+ 
+@@ -229,7 +228,7 @@
+ {
+ 	if ($db_layer &amp;&amp; in_array($db_layer, array_keys($database_array)))
+ 	{
+-		load_class($site_file_root.'includes/db/'.$db_layer.'.php', 'core_db', 'db_'.$db_layer);
++		load_class(SITE_FILE_ROOT.'includes/db/'.$db_layer.'.php', 'core_db', 'db_'.$db_layer);
+ 
+ 		$site_db = array();
+ 		$site_db['type']		= $db_layer;
+@@ -319,7 +318,7 @@
+ 		$user_prefix	= get_variable('user_prefix', 'POST');
+ 		$table_prefix	= get_variable('table_prefix', 'POST');
+ 		
+-		require_once($site_file_root.'includes/tables.php');
++		require_once(SITE_FILE_ROOT.'includes/tables.php');
+ 	
+ 		$sql = 'SELECT * FROM ' . CORE_CONFIG_TABLE;
+ 		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+@@ -338,11 +337,11 @@
+ 	else
+ 	{
+ 		$_CLASS['core_db']-&gt;transaction();
+-		require($site_file_root.'install/build_tables.php');
++		require(SITE_FILE_ROOT.'install/build_tables.php');
+ 		$_CLASS['core_db']-&gt;transaction('commit');
+ 	
+ 		$_CLASS['core_db']-&gt;transaction();
+-		require($site_file_root.'install/build_data.php');
++		require(SITE_FILE_ROOT.'install/build_data.php');
+ 		$_CLASS['core_db']-&gt;transaction('commit');
+ 		
+ 		$_CLASS['core_db']-&gt;optimize_tables();
+@@ -384,7 +383,7 @@
+ 			$config_data .= &quot;if (!defined('ADMIN_PAGE'))\n{\n\tdefine('ADMIN_PAGE', 'admin.php');\n}\n\n&quot;;
+ 			$config_data .= '?&gt;';
+ 
+-			if (file_put_contents($site_file_root.'config.php', $config_data))
++			if (file_put_contents(SITE_FILE_ROOT.'config.php', $config_data))
+ 			{
+ 				$config_data = false;
+ 			}
+
+Modified: cms/trunk/javascript/quick_messages.js
+===================================================================
+--- cms/trunk/javascript/quick_messages.js	2005-09-16 19:56:44 UTC (rev 129)
++++ cms/trunk/javascript/quick_messages.js	2005-09-17 16:14:54 UTC (rev 130)
+@@ -27,7 +27,7 @@
+ 
+ 	poster_name = (poster_name) ? 'poster_name=' + poster_name.value : '';
+ 
+-	ajax.send('index.php?mod=Quick_Message&amp;mode=ajax_add', poster_name + '&amp;message=' + message.value);
++	ajax.send('ajax.php?mod=Quick_Message&amp;mode=ajax_add', poster_name + '&amp;message=' + message.value);
+ 
+ 	return false;
+ }
+@@ -47,5 +47,5 @@
+ 
+ 	ajax.onreadystatechange(onreadystatechange);
+ 
+-	ajax.send('index.php?mod=Quick_Message&amp;mode=ajax_refresh', null);
++	ajax.send('ajax.php?mod=Quick_Message&amp;mode=ajax_refresh', null);
+ }
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000050.html">[Viperals-svncheckins] r129 - in cms/trunk/themes/viperal/template/modules: . articles
+</A></li>
+	<LI>Next message: <A HREF="000052.html">[Viperals-svncheckins] r131 - in cms/trunk: blocks includes includes/auth includes/display includes/forums includes/templates/en/email includes/templates/en/email/contact includes/templates/en/email/core includes/templates/en/email/forums includes/templates/modules/Forums install modules/Control_Panel/ucp modules/Forums themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#51">[ date ]</a>
+              <a href="thread.html#51">[ thread ]</a>
+              <a href="subject.html#51">[ subject ]</a>
+              <a href="author.html#51">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

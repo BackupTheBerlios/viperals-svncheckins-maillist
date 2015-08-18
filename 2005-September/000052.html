@@ -1,0 +1,1181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r131 - in cms/trunk: blocks includes includes/auth includes/display includes/forums includes/templates/en/email includes/templates/en/email/contact includes/templates/en/email/core includes/templates/en/email/forums includes/templates/modules/Forums install modules/Control_Panel/ucp modules/Forums themes_admin/viperal_admin/template
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r131%20-%20in%20cms/trunk%3A%20blocks%20includes%20includes/auth%20includes/display%20includes/forums%20includes/templates/en/email%20includes/templates/en/email/contact%20includes/templates/en/email/core%20includes/templates/en/email/forums%20includes/templates/modules/Forums%20install%20modules/Control_Panel/ucp%20modules/Forums%20themes_admin/viperal_admin/template&In-Reply-To=%3C200509181758.j8IHwdV9021917%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000051.html">
+   <LINK REL="Next"  HREF="000053.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r131 - in cms/trunk: blocks includes includes/auth includes/display includes/forums includes/templates/en/email includes/templates/en/email/contact includes/templates/en/email/core includes/templates/en/email/forums includes/templates/modules/Forums install modules/Control_Panel/ucp modules/Forums themes_admin/viperal_admin/template</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r131%20-%20in%20cms/trunk%3A%20blocks%20includes%20includes/auth%20includes/display%20includes/forums%20includes/templates/en/email%20includes/templates/en/email/contact%20includes/templates/en/email/core%20includes/templates/en/email/forums%20includes/templates/modules/Forums%20install%20modules/Control_Panel/ucp%20modules/Forums%20themes_admin/viperal_admin/template&In-Reply-To=%3C200509181758.j8IHwdV9021917%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r131 - in cms/trunk: blocks includes includes/auth includes/display includes/forums includes/templates/en/email includes/templates/en/email/contact includes/templates/en/email/core includes/templates/en/email/forums includes/templates/modules/Forums install modules/Control_Panel/ucp modules/Forums themes_admin/viperal_admin/template">viperal at berlios.de
+       </A><BR>
+    <I>Sun Sep 18 19:58:39 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000051.html">[Viperals-svncheckins] r130 - in cms/trunk: . includes includes/cache includes/display includes/templates includes/templates/en includes/templates/en/email includes/templates/en/email/contact includes/templates/modules/Contact javascript language/en
+</A></li>
+        <LI>Next message: <A HREF="000053.html">[Viperals-svncheckins] r132 - in cms/trunk: . blocks includes/forums includes/forums/mcp includes/templates/modules/Forums modules/Control_Panel/ucp modules/Forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-18 19:58:38 +0200 (Sun, 18 Sep 2005)
+New Revision: 131
+
+Added:
+   cms/trunk/includes/templates/en/email/contact/index.txt
+   cms/trunk/includes/templates/en/email/core/
+   cms/trunk/includes/templates/en/email/core/activation_active.txt
+   cms/trunk/includes/templates/en/email/core/activation_admin_inactive.txt
+   cms/trunk/includes/templates/en/email/core/activation_coppa_inactive.txt
+   cms/trunk/includes/templates/en/email/core/activation_inactive.txt
+   cms/trunk/includes/templates/en/email/forums/
+   cms/trunk/includes/templates/en/email/forums/notify_forum.txt
+   cms/trunk/includes/templates/en/email/forums/notify_newtopic.txt
+   cms/trunk/includes/templates/en/email/forums/notify_topic.txt
+Removed:
+   cms/trunk/includes/templates/en/email/contact/index.html
+Modified:
+   cms/trunk/blocks/block-Admin_Forums.php
+   cms/trunk/includes/auth/auth.php
+   cms/trunk/includes/display/template.php
+   cms/trunk/includes/forums/auth.php
+   cms/trunk/includes/forums/functions.php
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/forums/functions_posting.php
+   cms/trunk/includes/forums/functions_upload.php
+   cms/trunk/includes/system.php
+   cms/trunk/includes/tables.php
+   cms/trunk/includes/templates/modules/Forums/viewtopic_body.html
+   cms/trunk/install/build_data.php
+   cms/trunk/install/build_tables.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_register.php
+   cms/trunk/modules/Forums/posting.php
+   cms/trunk/modules/Forums/viewforum.php
+   cms/trunk/modules/Forums/viewtopic.php
+   cms/trunk/themes_admin/viperal_admin/template/header.html
+Log:
+Added email templates for registration and topic post notification.
+Almost complete topic attachments display
+Other forums related fixes
+
+Modified: cms/trunk/blocks/block-Admin_Forums.php
+===================================================================
+--- cms/trunk/blocks/block-Admin_Forums.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/blocks/block-Admin_Forums.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -18,7 +18,7 @@
+ 
+ global $_CLASS;
+ 
+-require($site_file_root.'includes/forums/admin/links.php');
++require(SITE_FILE_ROOT.'includes/forums/admin/links.php');
+ 
+ $this-&gt;content .= '
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot;&gt;
+
+Modified: cms/trunk/includes/auth/auth.php
+===================================================================
+--- cms/trunk/includes/auth/auth.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/auth/auth.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -44,15 +44,16 @@
+ 					FROM ' . USERS_TABLE . &quot; WHERE username = '&quot; . $_CLASS['core_db']-&gt;escape($user_name) . &quot;'&quot;;
+ 
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+-		$status = false;
+ 	
+ 		if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+-			if (encode_password($user_password, $row['user_password_encoding']) == $row['user_password'])
++			if (encode_password($user_password, $row['user_password_encoding']) === $row['user_password'])
+ 			{
+-				if ($row['user_status'] != STATUS_ACTIVE)
++				settype($row['user_status'], 'int');
++
++				if ($row['user_status'] !== STATUS_ACTIVE)
+ 				{
+-					$status =  ($row['user_status'] == STATUS_DISABLED) ? 'ACTIVE_ERROR' : 'UNACTIVATED_ERROR';
++					return ($row['user_status'] === STATUS_DISABLED) ? 'ACTIVE_ERROR' : 'UNACTIVATED_ERROR';
+ 				}
+ 
+ 				return (int) $row['user_id'];
+@@ -60,8 +61,8 @@
+ 		}
+ 
+ 		$_CLASS['core_db']-&gt;free_result($result);
+-		
+-		return $status;
++
++		return false;
+ 	}
+ 
+ 	function admin_auth()
+
+Modified: cms/trunk/includes/display/template.php
+===================================================================
+--- cms/trunk/includes/display/template.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/display/template.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -464,7 +464,7 @@
+ 				continue;
+ 			}
+ 			
+-			$values[1][$loop] = &quot;&lt;?php echo $parse; ?&gt; &quot;;
++			$values[1][$loop] = &quot;&lt;?php echo $parse; ?&gt;&quot;;
+ 		}
+ 	
+ 		return str_replace($values[0], $values[1], $code);
+
+Modified: cms/trunk/includes/forums/auth.php
+===================================================================
+--- cms/trunk/includes/forums/auth.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/forums/auth.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -157,7 +157,7 @@
+ 		else
+ 		{
+ 			$acl |= $this-&gt;acl_get($opts, $f);
+-		}		
++		}
+ 
+ 		return $acl;
+ 	}
+
+Modified: cms/trunk/includes/forums/functions.php
+===================================================================
+--- cms/trunk/includes/forums/functions.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/forums/functions.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -184,7 +184,7 @@
+ // Create forum rules for given forum 
+ function generate_forum_rules(&amp;$forum_data)
+ {
+-	global $_CLASS, $site_file_root;
++	global $_CLASS;
+ 	
+ 	if (!$forum_data['forum_rules'] &amp;&amp; !$forum_data['forum_rules_link'])
+ 	{
+@@ -194,7 +194,7 @@
+ 
+ 	if ($forum_data['forum_rules'])
+ 	{
+-		require_once($site_file_root.'includes/forums/bbcode.php');
++		require_once(SITE_FILE_ROOT.'includes/forums/bbcode.php');
+ 		$bbcode = new bbcode($forum_data['forum_rules_bbcode_bitfield']);
+ 		
+ 		$bbcode-&gt;bbcode_second_pass($forum_data['forum_rules'], $forum_data['forum_rules_bbcode_uid']);
+@@ -337,8 +337,8 @@
+ 	$rules = array(
+ 		($_CLASS['auth']-&gt;acl_get('f_post', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_POST_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_POST_CANNOT'],
+ 		($_CLASS['auth']-&gt;acl_get('f_reply', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_REPLY_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_REPLY_CANNOT'],
+-		($_CLASS['auth']-&gt;acl_gets('f_edit', 'm_edit', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_EDIT_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_EDIT_CANNOT'],
+-		($_CLASS['auth']-&gt;acl_gets('f_delete', 'm_delete', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_DELETE_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_DELETE_CANNOT'],
++		($_CLASS['auth']-&gt;acl_gets(array('f_edit', 'm_edit'), $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_EDIT_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_EDIT_CANNOT'],
++		($_CLASS['auth']-&gt;acl_gets(array('f_delete', 'm_delete'), $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_DELETE_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_DELETE_CANNOT'],
+ 		($_CLASS['auth']-&gt;acl_get('f_attach', $forum_id) &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_attach', $forum_id)) ? $_CLASS['core_user']-&gt;lang['RULES_ATTACH_CAN'] : $_CLASS['core_user']-&gt;lang['RULES_ATTACH_CANNOT']
+ 	);
+ 
+@@ -545,9 +545,9 @@
+ 				$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_WATCH_TABLE . ' '.$_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_array));
+ 			}
+ 
+-			//$_CLASS['core_display']-&gt;meta_refresh(3, generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;));
+-			//$message = $_CLASS['core_user']-&gt;lang['ARE_WATCHING_' . strtoupper($mode)] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_' . strtoupper($mode)], '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;) . '&quot;&gt;', '&lt;/a&gt;');
+-			//trigger_error($message);
++			$_CLASS['core_display']-&gt;meta_refresh(3, generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;));
++			$message = $_CLASS['core_user']-&gt;lang['ARE_WATCHING_' . strtoupper($mode)] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_' . strtoupper($mode)], '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;) . '&quot;&gt;', '&lt;/a&gt;');
++			trigger_error($message);
+ 		}
+ 	}
+ 	else
+@@ -573,9 +573,9 @@
+ 				$_CLASS['core_db']-&gt;query($sql);
+ 			}
+ 
+-			//$_CLASS['core_display']-&gt;meta_refresh(3, generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;));
+-			//$message = $_CLASS['core_user']-&gt;lang['NOT_WATCHING_' . strtoupper($mode)] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_' . strtoupper($mode)], '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;) . '&quot;&gt;', '&lt;/a&gt;');
+-			//trigger_error($message);
++			$_CLASS['core_display']-&gt;meta_refresh(3, generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;));
++			$message = $_CLASS['core_user']-&gt;lang['NOT_WATCHING_' . strtoupper($mode)] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_' . strtoupper($mode)], '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=view$mode&amp;$url&amp;start=$start&quot;) . '&quot;&gt;', '&lt;/a&gt;');
++			trigger_error($message);
+ 		}
+ 		else
+ 		{
+@@ -875,7 +875,7 @@
+ 	{
+ 		// The rule is to only allow those extensions defined. ;)
+ 		$sql = 'SELECT e.extension, g.*
+-			FROM ' . EXTENSIONS_TABLE . ' e, ' . EXTENSION_GROUPS_TABLE . ' g
++			FROM ' . FORUMS_EXTENSIONS_TABLE . ' e, ' . FORUMS_EXTENSION_GROUPS_TABLE . ' g
+ 			WHERE e.group_id = g.group_id
+ 				AND g.allow_group = 1';
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+@@ -904,7 +904,7 @@
+ 
+ 		$_CLASS['core_cache']-&gt;put('extensions', $extensions);
+ 	}
+-	
++
+ 	if ($forum_id !== false)
+ 	{
+ 		$return = array();
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/forums/functions_display.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -435,8 +435,7 @@
+ {
+ 	global $config, $_CLASS;
+ 
+-	$return_tpl = array();
+-
++	$datas = array();
+ 	$extensions = obtain_attach_extensions();
+ 
+ 	foreach ($attachment_data as $attachment)
+@@ -449,7 +448,7 @@
+ 		$data['lang_size'] = ($attachment['filesize'] &gt;= 1048576) ? round((round($attachment['filesize'] / 1048576 * 100) / 100), 2) .$_CLASS['core_user']-&gt;lang['MB'] : (($attachment['filesize'] &gt;= 1024) ? round((round($attachment['filesize'] / 1024 * 100) / 100), 2)  . $_CLASS['core_user']-&gt;lang['KB']: $attachment['filesize'] . $_CLASS['core_user']-&gt;lang['BYTES']);
+ 		$data['lang_views'] = (!$attachment['download_count']) ? $_CLASS['core_user']-&gt;lang['DOWNLOAD_NONE'] : (($attachment['download_count'] == 1) ? sprintf($_CLASS['core_user']-&gt;lang['DOWNLOAD_COUNT'], $attachment['download_count']) : sprintf($_CLASS['core_user']-&gt;lang['DOWNLOAD_COUNTS'], $attachment['download_count']));
+ 
+-		$data['icon'] = ($extensions[$attachment['extension']]['upload_icon']) ? $config['upload_icons_path'] . '/' . trim($extensions[$attachment['extension']]['upload_icon']) : false;
++		$data['icon'] = (isset($extensions[$attachment['extension']]['upload_icon']) &amp;&amp; $extensions[$attachment['extension']]['upload_icon']) ? $config['upload_icons_path'] . '/' . trim($extensions[$attachment['extension']]['upload_icon']) : false;
+ 		$data['name'] = basename($attachment['real_filename']);
+ 		$data['comment'] = str_replace(&quot;\n&quot;, '&lt;br /&gt;', censor_text($attachment['comment']));
+ 
+@@ -459,8 +458,6 @@
+ 		{
+ 			$data['category'] = 'DENIED';
+ 			$data['lang'] = sprintf($_CLASS['core_user']-&gt;get_lang('EXTENSION_DISABLED_AFTER_POSTING'), $attachment['extension']);
+-
+-			continue;
+ 		}
+ 		else
+ 		{
+
+Modified: cms/trunk/includes/forums/functions_posting.php
+===================================================================
+--- cms/trunk/includes/forums/functions_posting.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/forums/functions_posting.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -813,31 +813,36 @@
+ {
+ 	global $config, $_CORE_CONFIG, $_CLASS, $site_file_root;
+ 
+-return;
++	$titles = array(
++		'notify_topic'		=&gt; 'Topic Reply Notification - '. $topic_title,
++		'notify_newtopic'	=&gt; 'New Topic Notification - '. $topic_title,
++		'notify_forum'		=&gt; 'Forum Post Notification - '. $forum_name,
++	);
+ 
+ 	if ($mode == 'reply' || $mode == 'quote')
+ 	{
++		$topic_title = $subject;
++
+ 		$notify_type = 'topic';
+-		$template = 'topic_notify'; //forum_notify
++		$template = 'notify_topic'; //forum_notify
+ 		$where = &quot;(w.forum_id = $forum_id OR w.topic_id = $topic_id)&quot;;
+ 	}
+ 	else
+ 	{
++		$topic_title = $topic_title;
++
+ 		$notify_type = 'forum';
+-		$template = 'newtopic_notify';
++		$template = 'notify_newtopic';
+ 		$where = 'w.forum_id = '.$forum_id;
+ 	}
+ 
+-	$topic_title = ($topic_notification) ? $topic_title : $subject;
+ 	$topic_title = censor_text($topic_title);
+-
+ 	$holding = array();
+ 
+ // Add use of notification type
+ 
+ 	// Lets get all the users that are set to be notified
+-	// $sql = 'SELECT w.notify_type, u.user_id, u.username, u.user_email, u.user_lang, u.user_notify_type, u.user_jabber 
+-	$sql = 'SELECT w.notify_type, u.user_id, u.username, u.user_email, u.user_lang
++	$sql = 'SELECT w.notify_type, w.forum_id, u.user_id, u.username, u.user_email, u.user_lang
+ 		FROM '.FORUMS_WATCH_TABLE.' w, ' . USERS_TABLE . &quot; u
+ 		WHERE $where
+ 			AND w.notify_status = 0
+@@ -845,7 +850,7 @@
+ 			AND u.user_id = w.user_id';
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-	while ($user = $_CLASS['core_db']-&gt;fetch_user_assoc($result))
++	while ($user = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$ignore_array[$user['user_id']] = $user['user_id'];
+ 
+@@ -873,11 +878,13 @@
+ 	// Now we remove the users that aren't allowed to read the forum
+ 	$acl_list = $_CLASS['auth']-&gt;acl_get_list(array_keys($ignore_array), 'f_read', $forum_id);
+ 
+-	foreach($forum_ary[$forum_id]['f_read'] as $user_id)
++	if (!empty($acl_list))
+ 	{
+-		unset($ignore_array[$user_id]);
++		foreach ($acl_list[$forum_id]['f_read'] as $user_id)
++		{
++			unset($ignore_array[$user_id]);
++		}
+ 	}
+-
+ 	$processed = $delete_array = $update_array = array();
+ 
+ 	foreach ($holding as $user)
+@@ -925,11 +932,10 @@
+ 		$count = count($user_list);
+ 		for ($i = 0; $i &lt; $count; $i++)
+ 		{
+-			$mailer-&gt;to($user_list[$i]['user_id'], $user_list[$i]['username']);
++			$mailer-&gt;to($user_list[$i]['user_email'], $user_list[$i]['username']);
+ 		}
+ 
+-// this has to change
+-		$mailer-&gt;subject($_CLASS['core_user']-&gt;get_lang('FORUM_NOTIFICATION'));
++		$mailer-&gt;subject($titles[$template]);
+ 
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'EMAIL_SIG'		=&gt; $email_sig,
+@@ -937,17 +943,19 @@
+ 			'TOPIC_TITLE'	=&gt; $topic_title,  
+ 			'FORUM_NAME'	=&gt; $forum_name,
+ 
+-			'U_FORUM'				=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;f=$forum_id&amp;e=0&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
+-			'U_TOPIC'				=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;e=0&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
+-			'U_NEWEST_POST'			=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;p=$post_id&amp;e=$post_id&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
+-			'U_STOP_WATCHING_TOPIC' =&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;unwatch=topic&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
+-			'U_STOP_WATCHING_FORUM' =&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;unwatch=forum&quot;, array('sid' =&gt; false, 'full' =&gt; true)), 
++			'U_FORUM'				=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;e=0&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
++			'U_TOPIC'				=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;e=0&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
++			'U_NEWEST_POST'			=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;p=$post_id&amp;e=$post_id&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
++			'U_STOP_WATCHING_TOPIC' =&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;unwatch=topic&quot;, array('sid' =&gt; false, 'full' =&gt; true)),
++			'U_STOP_WATCHING_FORUM' =&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;unwatch=forum&quot;, array('sid' =&gt; false, 'full' =&gt; true)), 
+ 		));
++		
++		$mailer-&gt;message = trim($_CLASS['core_template']-&gt;display(&quot;email/forums/$template.txt&quot;, true));
+ 
+-		//$mailer-&gt;message = trim($_CLASS['core_template']-&gt;display('fdsgfd'.$template, true));
+-		//$mailer-&gt;send();
+-		
+-		unset($mailer);
++		if (!$mailer-&gt;send())
++		{
++			//echo $mailer-&gt;error;
++		}
+ 	}
+ 
+ 	$_CLASS['core_db']-&gt;transaction();
+@@ -968,7 +976,7 @@
+ 				AND user_id IN (&quot; . implode(', ', $update_array['forum']) . &quot;)&quot;);
+ 	}
+ 
+-	$_CLASS['core_db']-&gt;sql_transaction('commit');
++	$_CLASS['core_db']-&gt;transaction('commit');
+ }
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/functions_upload.php
+===================================================================
+--- cms/trunk/includes/forums/functions_upload.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/forums/functions_upload.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -62,7 +62,8 @@
+ 			$this-&gt;mimetype = 'application/octetstream';
+ 		}
+ 		
+-		$this-&gt;extension = array_pop(explode('.', strtolower($this-&gt;realname)));
++		$this-&gt;extension = explode('.', strtolower($this-&gt;realname));
++		$this-&gt;extension = array_pop($this-&gt;extension);
+ 
+ 		// Try to get real filesize from temporary folder (not always working) ;)
+ 		$this-&gt;filesize = (@filesize($this-&gt;filename)) ? @filesize($this-&gt;filename) : $this-&gt;filesize;
+@@ -102,7 +103,8 @@
+ 
+ 			case 'unique':
+ 			default:
+-				$this-&gt;realname = $prefix . md5(unique_id()) . '.' . $this-&gt;extension;
++				$this-&gt;realname = $prefix . md5(uniqid(mt_rand(), true)) . '.' . $this-&gt;extension;
++			break;
+ 		}
+ 	}
+ 
+@@ -631,7 +633,7 @@
+ 
+ 	function valid_extension(&amp;$file)
+ 	{
+-		return (in_array($file-&gt;get('extension'), $this-&gt;allowed_extensions)) ? true : false;
++		return in_array($file-&gt;get('extension'), $this-&gt;allowed_extensions);
+ 	}
+ 
+ 	function valid_dimensions(&amp;$file)
+
+Modified: cms/trunk/includes/system.php
+===================================================================
+--- cms/trunk/includes/system.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/system.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -155,34 +155,36 @@
+ 
+ function activate()
+ {
+-	global $_CLASS;
++	global $_CLASS, $_CORE_CONFIG;
+ 
+-	$user_id = get_variable('user_id', 'GET', 0, 'integer');
++	$user_id = get_variable('user_id', 'GET', false, 'integer');
+ 	$key = get_variable('key', 'GET', false);
+ 
+ 	if (!$user_id || !$key)
+ 	{
+ 		trigger_error('CANT_ACTIVATED');
+ 	}
+-	
++
+ 	$sql = 'SELECT username, user_status, user_group, user_new_password, user_new_password_encoding, user_act_key
+ 		FROM ' . USERS_TABLE . &quot; WHERE user_id = $user_id AND user_type = &quot;.USER_NORMAL;
+ 
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-	$row = $_CLASS['core_db']-&gt;sql_fetchrow($result);
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	if (!$row)
+ 	{
+ 		trigger_error('NO_USER');
+ 	}
+-	
+-	if ($row['user_status'] != USER_UNACTIVATED &amp;&amp; !$row['user_new_password'])
++
++	settype($row['user_status'], 'int');
++
++	if ($row['user_status'] !== STATUS_PENDING &amp;&amp; !$row['user_new_password'])
+ 	{
+-		trigger_error(($row['user_status'] == USER_ACTIVE) ? 'ALREADY_ACTIVATED' : 'CANT_ACTIVATED');
++		trigger_error(($row['user_status'] === STATUS_ACTIVE) ? 'ALREADY_ACTIVATED' : 'CANT_ACTIVATED');
+ 	}
+ 
+-	if ($row['user_act_key'] != $key)
++	if ($row['user_act_key'] !== $key)
+ 	{
+ 		trigger_error('WRONG_ACTIVATION_KEY');
+ 	}
+@@ -193,26 +195,30 @@
+ 		'user_new_password_encoding'=&gt; null
+ 	);
+ 
+-	if ($row['user_status'] != USER_UNACTIVATED)
++	if ($row['user_status'] === STATUS_PENDING)
+ 	{
+-		$sql_ary += array(
+-			'user_password'				=&gt; $row['user_new_password'],
+-			'user_password_encoding'	=&gt; $row['user_new_password_encoding'],
+-		);
+-	}
+-	else
+-	{
+ 		include_once(SITE_FILE_ROOT.'includes/functions_user.php');
+ 		user_activate($user_id);
+ 
+ 		set_core_config('user', 'newest_user_id', $row['user_id'], false);
+ 		set_core_config('user', 'newest_username', $row['username'], false);
++		set_core_config('user', 'total_users', $_CORE_CONFIG['user']['total_users'] + 1, false);
+ 	}
++	else
++	{
++		$sql_ary += array(
++			'user_password'				=&gt; $row['user_new_password'],
++			'user_password_encoding'	=&gt; $row['user_new_password_encoding'],
++		);
++	}
+ 
+ 	$sql = 'UPDATE ' . USERS_TABLE . ' SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $sql_ary) . '
+-		WHERE user_id = ' . $row['user_id'];
++		WHERE user_id = ' . $user_id;
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$message = ($row['user_status'] === STATUS_PENDING) ? $_CLASS['core_user']-&gt;get_lang('ACCOUNT_ACTIVE') : $_CLASS['core_user']-&gt;get_lang('PASSWORD_ACTIVATED');
++
++	trigger_error($message. '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;get_lang('RETURN_INDEX'),  '&lt;a href=&quot;'. generate_link() .'&quot;&gt;', '&lt;/a&gt;'));
+ }
+ 
+ function login()
+
+Modified: cms/trunk/includes/tables.php
+===================================================================
+--- cms/trunk/includes/tables.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/tables.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -202,8 +202,9 @@
+ define('FORUMS_WATCH_TABLE', $table_prefix.'forums_watch');
+ define('FORUMS_TRACK_TABLE', $table_prefix.'forums_tracking');
+ define('FORUMS_RANKS_TABLE', $table_prefix.'forums_ranks');
++define('FORUMS_EXTENSIONS_TABLE', $table_prefix.'forums_extensions');
++define('FORUMS_EXTENSION_GROUPS_TABLE', $table_prefix.'forums_extension_groups');
+ 
+-
+ define('ADMIN_AUTH_TABLE', $table_prefix.'admins');
+ 
+ define('BLOCKS_TABLE', $table_prefix.'blocks');
+@@ -220,8 +221,6 @@
+ define('SESSIONS_TABLE', $table_prefix.'sessions');
+ 
+ 
+-define('EXTENSIONS_TABLE', $table_prefix.'forums_extensions');
+-define('EXTENSION_GROUPS_TABLE', $table_prefix.'forums_extension_groups');
+ 
+ define('USERS_TABLE', $user_prefix.'users');
+ define('USERS_NOTES_TABLE', $table_prefix.'forums_users_notes');
+
+Deleted: cms/trunk/includes/templates/en/email/contact/index.html
+===================================================================
+--- cms/trunk/includes/templates/en/email/contact/index.html	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/contact/index.html	2005-09-18 17:58:38 UTC (rev 131)
+@@ -1,6 +0,0 @@
+-{ $MESSAGE }
+-
+-Sent From:	{ $SENT_FROM }
+-Name:		{ $SENDER_NAME }
+-email:		{ $SENDER_EMAIL }
+-Sender Ip:	{ $SENDER_IP }
+\ No newline at end of file
+
+Copied: cms/trunk/includes/templates/en/email/contact/index.txt (from rev 130, cms/trunk/includes/templates/en/email/contact/index.html)
+===================================================================
+--- cms/trunk/includes/templates/en/email/contact/index.html	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/contact/index.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,6 @@
++{ $MESSAGE } 
++
++Sent From:	{ $SENT_FROM } 
++Name:		{ $SENDER_NAME } 
++email:		{ $SENDER_EMAIL } 
++Sender Ip:	{ $SENDER_IP } 
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/en/email/core/activation_active.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/core/activation_active.txt	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/core/activation_active.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,14 @@
++{ $WELCOME_MSG } 
++
++Please keep this email for your records. Your account information is as follows:
++
++----------------------------
++Username: { $USERNAME } 
++Password: { $PASSWORD } 
++----------------------------
++
++Please do not forget your password as it has been encrypted in our database and we cannot retrieve it for you. However, should you forget your password you can request a new one which will be activated in the same way as this account.
++
++Thank you for registering.
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/en/email/core/activation_admin_inactive.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/core/activation_admin_inactive.txt	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/core/activation_admin_inactive.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,16 @@
++{ $WELCOME_MSG } 
++
++Please keep this email for your records. Your account information is as follows:
++
++----------------------------
++Username: { $USERNAME } 
++Password: { $PASSWORD } 
++----------------------------
++
++Your account is currently inactive, a site administrator will need to activate it before you can log in. You will receive another email when this has occured.
++
++Please do not forget your password as it has been encrypted in our database and we cannot retrieve it for you. However, should you forget your password you can request a new one which will be activated in the same way as this account.
++
++Thank you for registering.
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/en/email/core/activation_coppa_inactive.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/core/activation_coppa_inactive.txt	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/core/activation_coppa_inactive.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,50 @@
++{ $WELCOME_MSG } 
++
++In compliance with the COPPA act your account is currently inactive.
++
++Please print this message out and have your parent or guardian sign and date it. Then fax it to:
++
++{ $FAX_INFO } 
++
++OR mail it to:
++
++{ $MAIL_INFO } 
++
++------------------------------ CUT HERE ------------------------------
++Permission to Participate at { $SITENAME }
++
++Username: { $USERNAME } 
++Password: { $PASSWORD } 
++Email: { $EMAIL_ADDRESS } 
++
++ICQ Number: { $ICQ } 
++AIM Address: { $AIM } 
++MSN Messenger: { $MSN } 
++Yahoo Messenger: { $YIM } 
++Web Site: { $WEB_SITE } 
++From: { $FROM } 
++Occupation: { $OCC } 
++Interests: { $INTERESTS } 
++
++I HAVE REVIEWED THE INFORMATION PROVIDED BY MY CHILD AND HEREBY GRANT PERMISSION TO {SITENAME} TO STORE THIS INFORMATION. 
++I UNDERSTAND THIS INFORMATION CAN BE CHANGED AT ANY TIME BY ENTERING A PASSWORD. 
++I UNDERSTAND THAT I MAY REQUEST FOR THIS INFORMATION TO BE REMOVED FROM {SITENAME} AT ANY TIME.
++
++
++Parent or Guardian 
++(print your name here): _____________________
++
++(sign here): __________________ 
++
++Date: _______________
++
++------------------------------ CUT HERE ------------------------------
++
++
++Once the administrator has recived the above form via fax or regular mail your account will be activated.
++
++Please do not forget your password as it has been encrypted in our database and we cannot retrieve it for you. However, should you forget your password you can request a new one which will be activated in the same way as this account.
++
++Thank you for registering.
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/en/email/core/activation_inactive.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/core/activation_inactive.txt	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/core/activation_inactive.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,18 @@
++{ $WELCOME_MSG } 
++
++Please keep this email for your records. Your account information is as follows:
++
++----------------------------
++Username: { $USERNAME } 
++Password: { $PASSWORD } 
++----------------------------
++
++Your account is currently inactive. You cannot use it until you visit the following link:
++
++{ $U_ACTIVATE } 
++
++Please do not forget your password as it has been encrypted in our database and we cannot retrieve it for you. However, should you forget your password you can request a new one which will be activated in the same way as this account.
++
++Thank you for registering.
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/en/email/forums/notify_forum.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/forums/notify_forum.txt	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/forums/notify_forum.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,11 @@
++Hi,
++
++You are receiving this email because you are watching the forum, &quot;{ $FORUM_NAME }&quot; at { $SITENAME }. This forum has received a new reply to the topic &quot;{ $TOPIC_TITLE }&quot; since your last visit. You can use the following link to view this topic, no more notifications will be sent until you visit the topic.
++
++{ $U_NEWEST_POST } 
++
++If you no longer wish to watch this forum you can either click the &quot;Stop watching this forum link&quot; found at the bottom of the forum above, or by clicking the following link:
++
++{ $U_STOP_WATCHING_FORUM } 
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/en/email/forums/notify_newtopic.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/forums/notify_newtopic.txt	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/forums/notify_newtopic.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,11 @@
++hi,
++
++You are receiving this email because you are watching the forum, &quot;{ $FORUM_NAME }&quot; at { $SITENAME }. This forum has received a new topic since your last visit, &quot;{ $TOPIC_TITLE }&quot;. You can use the following link to view forum, no more notifications will be sent until you visit the forum.
++
++{ $U_FORUM } 
++
++If you no longer wish to watch this forum you can either click the &quot;Stop watching this forum link&quot; found at the bottom of the forum above, or by clicking the following link:
++
++{ $U_STOP_WATCHING_FORUM } 
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/en/email/forums/notify_topic.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/forums/notify_topic.txt	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/en/email/forums/notify_topic.txt	2005-09-18 17:58:38 UTC (rev 131)
+@@ -0,0 +1,15 @@
++Hi,
++
++You are receiving this email because you are watching the topic, &quot;{ $TOPIC_TITLE }&quot; at { $SITENAME }. This topic has received a reply since your last visit. You can use the following link to view the replies made, no more notifications will be sent until you visit the topic.
++
++If you want to view the newest post made since your last visit, click the following link:
++{ $U_NEWEST_POST } 
++
++If you want to view the topic, click the following link:
++{ $U_TOPIC } 
++
++If you no longer wish to watch this topic you can either click the &quot;Stop watching this topic link&quot; found at the bottom of the topic above, or by clicking the following link:
++
++{ $U_STOP_WATCHING_TOPIC } 
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/Forums/viewtopic_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewtopic_body.html	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/includes/templates/modules/Forums/viewtopic_body.html	2005-09-18 17:58:38 UTC (rev 131)
+@@ -173,9 +173,9 @@
+ 						&lt;br clear=&quot;all&quot; /&gt;
+ 						&lt;!-- ENDIF --&gt;
+ 
+-						&lt;div class=&quot;postbody&quot; style=&quot;min-height: 100px;&quot;&gt;{ $postrow:MESSAGE }&lt;/div&gt;
++						&lt;!-- IF { $postrow:ATTACHMENTS } --&gt;
++						&lt;div class=&quot;postbody&quot;&gt;{ $postrow:MESSAGE }&lt;/div&gt;
+ 
+-						&lt;!-- IF { $postrow:ATTACHMENTS } --&gt;
+ 						&lt;br clear=&quot;all&quot; /&gt;&lt;br /&gt;
+ 						
+ 						&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+@@ -184,10 +184,35 @@
+ 							&lt;/tr&gt;
+ 							&lt;!-- LOOP $postrow:ATTACHMENTS --&gt;
+ 							&lt;tr&gt;
+-								&lt;td class=&quot;row2&quot;&gt;{ $postrow:ATTACHMENTS:DISPLAY_ATTACHMENT }&lt;/td&gt;
++								&lt;td class=&quot;row2&quot;&gt;
++								&lt;!-- IF { $postrow:ATTACHMENTS:category } == 'DENIED' --&gt;
++									&lt;span class=&quot;postbody&quot;&gt;[ { $postrow:ATTACHMENTS:lang }]&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
++								&lt;!-- ELSEIF { $postrow:ATTACHMENTS:category } == 'IMAGE' --&gt;
++									&lt;!-- IF { $postrow:ATTACHMENTS:comment } --&gt;
++									&lt;span class=&quot;gensmall&quot;&gt;&lt;b&gt;{ $L_COMMENT }:&lt;/b&gt; { $postrow:ATTACHMENTS:comment }&lt;/span&gt;&lt;hr /&gt;
++									&lt;!-- ENDIF --&gt;&lt;img src=&quot;{ $postrow:ATTACHMENTS:image_src }&quot; alt=&quot;{ $postrow:ATTACHMENTS:name }&quot; /&gt;&lt;/span&gt;
++									&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;&lt;strong&gt;{ $postrow:ATTACHMENTS:name }&lt;/strong&gt;&lt;br/&gt; { $L_VIEWED } { $postrow:ATTACHMENTS:lang_views } &lt;/span&gt;
++								&lt;!-- ELSEIF { $postrow:ATTACHMENTS:category } == 'THUMBNAIL' --&gt;
++									&lt;!-- IF { $postrow:ATTACHMENTS:comment } --&gt;
++									&lt;span class=&quot;gensmall&quot;&gt;&lt;b&gt;{ $L_COMMENT }:&lt;/b&gt; { $postrow:ATTACHMENTS:comment }&lt;/span&gt;&lt;hr /&gt;
++									&lt;!-- ENDIF --&gt;		&lt;a href=&quot;{ $postrow:ATTACHMENTS:link }&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;{ $postrow:ATTACHMENTS:image_src }&quot; alt=&quot;{ $postrow:ATTACHMENTS:name }&quot; border=&quot;0&quot; /&gt;&lt;/a&gt;&lt;/span&gt;
++									&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;&lt;strong&gt;{ $postrow:ATTACHMENTS:name }&lt;/strong&gt;&lt;br/&gt; { $L_VIEWED } { $postrow:ATTACHMENTS:lang_views } &lt;/span&gt;
++								&lt;!-- ELSE --&gt;
++									&lt;!-- IF { $postrow:ATTACHMENTS:comment } --&gt;
++									&lt;span class=&quot;gensmall&quot;&gt;&lt;b&gt;{ $L_FILE_COMMENT }:&lt;/b&gt; { $postrow:ATTACHMENTS:comment }&lt;/span&gt;&lt;hr /&gt;
++									&lt;!-- ENDIF --&gt;
++									&lt;!-- IF { $postrow:ATTACHMENTS:icon } --&gt;&lt;img src=&quot;{ $postrow:ATTACHMENTS:icon }&quot; alt=&quot;&quot; border=&quot;0&quot; /&gt;&lt;!-- ENDIF --&gt; &lt;a href=&quot;{ $postrow:ATTACHMENTS:link }&quot; target=&quot;_blank&quot;&gt;{ $postrow:ATTACHMENTS:name }&lt;/a&gt;
++									&lt;span class=&quot;gensmall&quot;&gt;
++									&lt;br /&gt;{ $L_FILESIZE } { $postrow:ATTACHMENTS:lang_size }
++									&lt;br /&gt;{ $L_DOWNLOADED } { $postrow:ATTACHMENTS:lang_views }
++									&lt;/span&gt;
++								&lt;!-- ENDIF --&gt;
++								&lt;/td&gt;
+ 							&lt;/tr&gt;
+ 							&lt;!-- ENDLOOP --&gt;
+-						&lt;/table&gt;
++						&lt;/table&gt;
++						&lt;!-- ELSE --&gt;
++							&lt;div class=&quot;postbody&quot; style=&quot;min-height: 100px;&quot;&gt;{ $postrow:MESSAGE }&lt;/div&gt;
+ 						&lt;!-- ENDIF --&gt;
+ 
+ 						&lt;!-- IF { $postrow:S_DISPLAY_NOTICE } --&gt;
+
+Modified: cms/trunk/install/build_data.php
+===================================================================
+--- cms/trunk/install/build_data.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/install/build_data.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -38,7 +38,7 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'default_dateformat', 'D M d, Y g:i a', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'default_timezone', '-5', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'link_optimization', '1', 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'index_page', 'News', 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'index_page', 'contact', 1)&quot;);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('maintenance', 'active', '1', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('maintenance', 'start', '', 1)&quot;);
+@@ -462,4 +462,39 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_modules (module_type, module_title, module_filename, module_order, module_enabled, module_subs, module_acl) VALUES ('mcp', 'MAIN', 'main', 1, 1, 'front\r\nforum_view\r\ntopic_view\r\npost_details', 'acl_m_')&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_modules (module_type, module_title, module_filename, module_order, module_enabled, module_subs, module_acl) VALUES ('mcp', 'QUEUE', 'queue', 2, 1, 'unapproved_topics\r\nunapproved_posts\r\nreports', 'acl_m_approve')&quot;);
+ 
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extension_groups (group_name, cat_id, allow_group, download_mode, upload_icon, max_filesize, allowed_forums) VALUES ('Images', 1, 1, 1, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extension_groups (group_name, cat_id, allow_group, download_mode, upload_icon, max_filesize, allowed_forums) VALUES ('Archives', 0, 1, 1, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extension_groups (group_name, cat_id, allow_group, download_mode, upload_icon, max_filesize, allowed_forums) VALUES ('Plain Text', 0, 0, 1, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extension_groups (group_name, cat_id, allow_group, download_mode, upload_icon, max_filesize, allowed_forums) VALUES ('Documents', 0, 0, 1, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extension_groups (group_name, cat_id, allow_group, download_mode, upload_icon, max_filesize, allowed_forums) VALUES ('Real Media', 3, 0, 2, '', 0, '')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extension_groups (group_name, cat_id, allow_group, download_mode, upload_icon, max_filesize, allowed_forums) VALUES ('Windows Media', 2, 0, 1, '', 0, '')&quot;);
++
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (1, 'gif')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (1, 'png')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (1, 'jpeg')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (1, 'jpg')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (1, 'tif')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (1, 'tga')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (2, 'gtar')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (2, 'gz')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (2, 'tar')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (2, 'zip')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (2, 'rar')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (2, 'ace')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (3, 'txt')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (3, 'c')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (3, 'h')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (3, 'cpp')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (3, 'hpp')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (3, 'diz')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (4, 'xls')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (4, 'doc')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (4, 'dot')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (4, 'pdf')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (4, 'ai')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (4, 'ps')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (4, 'ppt')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (5, 'rm')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (6, 'wma')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_extensions (group_id, extension) VALUES (6, 'wmv')&quot;);
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/install/build_tables.php
+===================================================================
+--- cms/trunk/install/build_tables.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/install/build_tables.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -484,7 +484,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_char('upload_icon', 100);
+ $_CLASS['core_db']-&gt;add_table_field_int('max_filesize', array('max' =&gt; 16000000));
+ $_CLASS['core_db']-&gt;add_table_field_text('allowed_forums', 2000);
+-$_CLASS['core_db']-&gt;add_table_field_int('allow_in_pm', array('max' =&gt; 1));
++$_CLASS['core_db']-&gt;add_table_field_int('allow_in_pm', array('max' =&gt; 1, 'null' =&gt; true));
+ 
+ $_CLASS['core_db']-&gt;add_table_index('group_id', 'primary');
+ 
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_register.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_register.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_register.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -29,7 +29,7 @@
+ 		
+ 		$coppa		= isset($_REQUEST['coppa']) ? (int) $_REQUEST['coppa'] : null;
+ 		$submit		= isset($_POST['submit']);
+-
++$_CORE_CONFIG['user']['activation'] = USER_ACTIVATION_SELF;
+ 		if ($_CORE_CONFIG['user']['activation'] == USER_ACTIVATION_DISABLE
+ 			|| ($coppa || $_CORE_CONFIG['user']['activation'] == USER_ACTIVATION_SELF || $_CORE_CONFIG['user']['activation'] == USER_ACTIVATION_ADMIN)
+ 			&amp;&amp; !$_CORE_CONFIG['email']['email_enable'])
+@@ -142,50 +142,44 @@
+ 
+ 			if (empty($error))
+ 			{
+-				$password = encode_password($password, $_CORE_CONFIG['user']['password_encoding']);
++				$encode_password = encode_password($password, $_CORE_CONFIG['user']['password_encoding']);
+ 	
+-				if (!$password)
++				if (!$encode_password)
+ 				{
+ 					//do some admin contact thing here
+ 					die('Activation disabled: Passwaord encoding problem');
+ 				}
+-	
++
+ 				if ($coppa || $_CORE_CONFIG['user']['activation'] == USER_ACTIVATION_SELF || $_CORE_CONFIG['user']['activation'] == USER_ACTIVATION_ADMIN)
+ 				{
+-					if (!$_CORE_CONFIG['email']['email_enable'])
+-					{
+-						//do some admin contact thing here
+-						die('Activation disabled: Email Disabled');
+-					}
+-
+ 					$user_status = STATUS_PENDING;
+ 					$user_act_key = generate_string(10);
+ 
+ 					if ($coppa)
+ 					{
+-						$message = $_CLASS['core_user']-&gt;lang['ACCOUNT_COPPA'];
+-						$email_template = 'coppa_welcome_inactive';
++						$message = $_CLASS['core_user']-&gt;get_lang('ACCOUNT_COPPA');
++						$email_template = 'activation_coppa_inactive.txt';
+ 					}
+ 					elseif ($_CORE_CONFIG['user']['activation'] == USER_ACTIVATION_SELF)
+ 					{
+-						$message = $_CLASS['core_user']-&gt;lang['ACCOUNT_INACTIVE'];
+-						$email_template = 'user_welcome_inactive';
++						$message = $_CLASS['core_user']-&gt;get_lang('ACCOUNT_INACTIVE');
++						$email_template = 'activation_inactive.txt';
+ 					}
+ 					elseif ($_CORE_CONFIG['user']['activation'] == USER_ACTIVATION_ADMIN)
+ 					{
+-						$message = $_CLASS['core_user']-&gt;lang['ACCOUNT_INACTIVE_ADMIN'];
+-						$email_template = 'admin_welcome_inactive';
++						$message = $_CLASS['core_user']-&gt;get_lang('ACCOUNT_INACTIVE_ADMIN');
++						$email_template = 'activation_admin_inactive.txt';
+ 					}
+ 				}
+ 				else
+ 				{
+ 					$user_status = STATUS_ACTIVE;
+ 					$user_act_key = null;
+-
+-					$email_template = 'user_welcome';
+-					$message = $_CLASS['core_user']-&gt;lang['ACCOUNT_ADDED'];
++			
++					$email_template = 'activation_active.txt';
++					$message = $_CLASS['core_user']-&gt;get_lang('ACCOUNT_ADDED');
+ 				}
+-	
++
+ 				$data = array(
+ 					'username'		=&gt; (string) $username,
+ 					'user_email'	=&gt; (string) $email,
+@@ -194,7 +188,7 @@
+ 					'user_reg_date'	=&gt; (int) $_CLASS['core_user']-&gt;time,
+ 					'user_timezone'	=&gt; (string) $tz,
+ 
+-					'user_password'			=&gt; (string) $password,
++					'user_password'			=&gt; (string) $encode_password,
+ 					'user_password_encoding'=&gt; (string) $_CORE_CONFIG['user']['password_encoding'],
+ 
+ 					'user_lang'			=&gt; ($lang) ? (string) $lang : null,
+@@ -214,11 +208,11 @@
+ 				}
+ 
+ 				require_once($site_file_root.'includes/mailer.php');
+-		
++
+ 				$mailer = new core_mailer();
+ 
+ 				$mailer-&gt;to($email, $username);
+-				$mailer-&gt;subject($subject);
++				$mailer-&gt;subject('Welcome to ');
+ 
+ 				$_CLASS['core_template']-&gt;assign_array(array(
+ 					'SITENAME'		=&gt; $_CORE_CONFIG['global']['site_name'],
+@@ -226,7 +220,7 @@
+ 					'USERNAME'		=&gt; $username,
+ 					'PASSWORD'		=&gt; $password,
+ 					'EMAIL_SIG'		=&gt; '', //I like this
+-					'U_ACTIVATE'	=&gt; generate_link('system&amp;mode=activate&amp;user_id='.$data['user_id'].'&amp;key='.$user_act_key, array('sid' =&gt; false, 'full' =&gt; true))
++					'U_ACTIVATE'	=&gt; generate_link('system&amp;mode=activate&amp;user_id='.$data['user_id'].'&amp;key='.$user_act_key, array('sid' =&gt; false, 'full' =&gt; true))
+ 				));
+ 
+ 				if ($coppa)
+@@ -239,7 +233,7 @@
+ 					));
+ 				}
+ 
+-				$mailer-&gt;message = trim($_CLASS['core_template']-&gt;display('modules/Control_Panel/email/'.$email_template, true));
++				$mailer-&gt;message = trim($_CLASS['core_template']-&gt;display('email/core/'.$email_template, true));
+ 
+ 				$mailer-&gt;send();
+ 
+@@ -269,7 +263,7 @@
+ 
+ 				if ($attempts &gt; $_CORE_CONFIG['user']['max_reg_attempts'])
+ 				{
+-					trigger_error($_CLASS['core_user']-&gt;lang['TOO_MANY_REGISTERS']);
++					trigger_error('TOO_MANY_ATTEMPTS');
+ 				}
+ 
+ 				$_CLASS['core_user']-&gt;session_data_get('reg_attempts', ($attempts + 1));
+
+Modified: cms/trunk/modules/Forums/posting.php
+===================================================================
+--- cms/trunk/modules/Forums/posting.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/modules/Forums/posting.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -1097,7 +1097,7 @@
+ $s_hidden_fields = ($mode == 'reply' || $mode == 'quote') ? '&lt;input type=&quot;hidden&quot; name=&quot;topic_cur_post_id&quot; value=&quot;' . $topic_last_post_id . '&quot; /&gt;' : '';
+ $s_hidden_fields .= ($draft_id || isset($_REQUEST['draft_loaded'])) ? '&lt;input type=&quot;hidden&quot; name=&quot;draft_loaded&quot; value=&quot;' . ((isset($_REQUEST['draft_loaded'])) ? intval($_REQUEST['draft_loaded']) : $draft_id) . '&quot; /&gt;' : '';
+ 
+-$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off' || @ini_get('file_uploads') == '0' || !$config['allow_attachments'] || !$_CLASS['auth']-&gt;acl_gets('f_attach', 'u_attach', $forum_id)) ? '' : ' enctype=&quot;multipart/form-data&quot;';
++$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off' || @ini_get('file_uploads') == '0' || !$config['allow_attachments'] || !$_CLASS['auth']-&gt;acl_gets(array('f_attach', 'u_attach'), $forum_id)) ? '' : ' enctype=&quot;multipart/form-data&quot;';
+ 
+ // Start assigning vars for main posting page ...
+ $_CLASS['core_template']-&gt;assign_array(array(
+@@ -1182,8 +1182,7 @@
+ }
+ 
+ // Attachment entry
+-// Not using acl_gets here, because it is using OR logic
+-if ($_CLASS['auth']-&gt;acl_get('f_attach', $forum_id) &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_attach') &amp;&amp; $config['allow_attachments'] &amp;&amp; $form_enctype)
++if ($form_enctype)
+ {
+ 	posting_gen_attachment_entry($attachment_data, $filename_data);
+ }
+@@ -1731,6 +1730,7 @@
+ 					'poster_id'			=&gt; $poster_id,
+ 					'physical_filename'	=&gt; basename($attach_row['physical_filename']),
+ 					'real_filename'		=&gt; basename($attach_row['real_filename']),
++					'download_count'	=&gt; 0,
+ 					'comment'			=&gt; $attach_row['comment'],
+ 					'extension'			=&gt; $attach_row['extension'],
+ 					'mimetype'			=&gt; $attach_row['mimetype'],
+@@ -1748,7 +1748,7 @@
+ 			}
+ 		}
+ 
+-		if (sizeof($data['attachment_data']))
++		if (!empty($data['attachment_data']))
+ 		{
+ 			$sql = 'UPDATE ' . FORUMS_POSTS_TABLE . '
+ 				SET post_attachment = 1
+
+Modified: cms/trunk/modules/Forums/viewforum.php
+===================================================================
+--- cms/trunk/modules/Forums/viewforum.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/modules/Forums/viewforum.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -317,7 +317,7 @@
+ 	'S_DISPLAY_SEARCHBOX'	=&gt; ($_CLASS['auth']-&gt;acl_get('f_search', $forum_id)) ? true : false, 
+ 	'S_SEARCHBOX_ACTION'	=&gt; generate_link('Forums&amp;file=search&amp;search_forum[]='.$forum_id), 
+ 
+-	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_gets('m_', $forum_id)) ? generate_link(&quot;Forums&amp;file=mcp&amp;f=$forum_id&amp;mode=forum_view&quot;) : '', 
++	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link(&quot;Forums&amp;file=mcp&amp;f=$forum_id&amp;mode=forum_view&quot;) : '', 
+ 	'U_POST_NEW_TOPIC'	=&gt; generate_link('Forums&amp;file=posting&amp;mode=post&amp;f='.$forum_id), 
+ 	'U_VIEW_FORUM'		=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&amp;start=$start&quot;), 
+ 	'U_MARK_TOPICS' 	=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;mark=topics&quot;))
+@@ -501,13 +501,13 @@
+ 			'TOPIC_ICON_IMG'        =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
+ 			'TOPIC_ICON_IMG_WIDTH'  =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['width'] : '',
+ 			'TOPIC_ICON_IMG_HEIGHT' =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
+-			'ATTACH_ICON_IMG'       =&gt; ($_CLASS['auth']-&gt;acl_gets('f_download', 'u_download', $forum_id) &amp;&amp; $row['topic_attachment']) ? $_CLASS['core_user']-&gt;img('icon_attach', $_CLASS['core_user']-&gt;lang['TOTAL_ATTACHMENTS']) : '',
++			'ATTACH_ICON_IMG'       =&gt; ($_CLASS['auth']-&gt;acl_gets(array('f_download', 'u_download'), $forum_id) &amp;&amp; $row['topic_attachment']) ? $_CLASS['core_user']-&gt;img('icon_attach', $_CLASS['core_user']-&gt;lang['TOTAL_ATTACHMENTS']) : '',
+ 
+ 			'S_TOPIC_TYPE'			=&gt; $row['topic_type'], 
+ 			'S_UNREAD_TOPIC'		=&gt; $unread_topic,
+ 
+-			'S_TOPIC_REPORTED'		=&gt; (!empty($row['topic_reported']) &amp;&amp; $_CLASS['auth']-&gt;acl_gets('m_', $forum_id)) ? true : false,
+-			'S_TOPIC_UNAPPROVED'	=&gt; (!$row['topic_approved'] &amp;&amp; $_CLASS['auth']-&gt;acl_gets('m_approve', $forum_id)) ? true : false,
++			'S_TOPIC_REPORTED'		=&gt; (!empty($row['topic_reported']) &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? true : false,
++			'S_TOPIC_UNAPPROVED'	=&gt; (!$row['topic_approved'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? true : false,
+ 
+ 			'U_LAST_POST'       =&gt; generate_link($view_topic_url . $SID . '&amp;p=' . $row['topic_last_post_id'] . '#' . $row['topic_last_post_id'], false, false, false),	
+ 			'U_LAST_POST_AUTHOR'=&gt; ($_CLASS['core_user']-&gt;is_user &amp;&amp; $row['topic_last_poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']) : '',
+
+Modified: cms/trunk/modules/Forums/viewtopic.php
+===================================================================
+--- cms/trunk/modules/Forums/viewtopic.php	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/modules/Forums/viewtopic.php	2005-09-18 17:58:38 UTC (rev 131)
+@@ -831,7 +831,7 @@
+ // Pull attachment data
+ if (!empty($attach_list))
+ {
+-	if ($_CLASS['auth']-&gt;acl_gets('f_download', 'u_download', $forum_id))
++	if ($_CLASS['auth']-&gt;acl_gets(array('f_download', 'u_download'), $forum_id))
+ 	{
+ 		include($site_file_root.'includes/forums/functions_display.php');
+ 
+@@ -1052,10 +1052,7 @@
+ 	// Remove this foreach.
+ 	if (isset($attachments[$row['post_id']]) &amp;&amp; !empty($attachments[$row['post_id']]))
+ 	{
+-		foreach ($attachments[$row['post_id']] as $attachment)
+-		{
+-			$post_attachments[] = array('DISPLAY_ATTACHMENT'	=&gt; $attachment);
+-		}
++		$post_attachments = display_attachments($forum_id, $attachments[$row['post_id']], $null);
+ 	}
+ 
+ 	if ($unread = ($row['post_time'] &gt; $topic_last_read))
+@@ -1107,7 +1104,7 @@
+ 		'U_JABBER'			=&gt; $user_cache[$poster_id]['jabber'], 
+ 
+ 		'U_REPORT'			=&gt; generate_link('Forums&amp;file=report&amp;p=' . $row['post_id']),
+-		'U_MCP_REPORT'		=&gt; ($_CLASS['auth']-&gt;acl_gets('m_', 'a_', 'f_report', $forum_id)) ? generate_link('Forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id']) : '',
++		'U_MCP_REPORT'		=&gt; ($_CLASS['auth']-&gt;acl_gets(array('m_', 'a_', 'f_report'), $forum_id)) ? generate_link('Forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id']) : '',
+ 		'U_MCP_APPROVE'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? generate_link('Forums&amp;file=mcp&amp;i=queue&amp;mode=approve&amp;post_id_list[]=' . $row['post_id'], false, false) : '',
+ 		'U_MCP_DETAILS'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link('Forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id']) : '',
+ 		'U_MINI_POST'		=&gt; generate_link('Forums&amp;file=viewtopic&amp;p=' . $row['post_id']) . '#' . $row['post_id'],
+@@ -1116,10 +1113,10 @@
+ 		'POST_ID'           =&gt; $row['post_id'],
+ 		'S_IGNORE_POST' 	=&gt; false, 
+ 		
+-		'S_POST_UNAPPROVED'	=&gt; ($row['post_approved']) ? FALSE : TRUE,
++		'S_POST_UNAPPROVED'	=&gt; !$row['post_approved'],
+ 		'S_POST_REPORTED'	=&gt; ($row['post_reported'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? TRUE : FALSE,
+ 		'S_DISPLAY_NOTICE'	=&gt; ($display_notice &amp;&amp; $row['post_attachment']) ? true : false, 
+-		'S_FRIEND'			=&gt; ($row['friend']) ? true : false,
++		'S_FRIEND'			=&gt; $row['friend'],
+ 		'S_UNREAD_POST'		=&gt; $unread,
+ 		'S_FIRST_UNREAD'	=&gt; false,
+ 	);
+
+Modified: cms/trunk/themes_admin/viperal_admin/template/header.html
+===================================================================
+--- cms/trunk/themes_admin/viperal_admin/template/header.html	2005-09-17 16:14:54 UTC (rev 130)
++++ cms/trunk/themes_admin/viperal_admin/template/header.html	2005-09-18 17:58:38 UTC (rev 131)
+@@ -27,10 +27,10 @@
+ 
+ &lt;body&gt;
+ 
+-{ $HEADER_BODY }
++&lt;a name=&quot;Top&quot;&gt;&lt;/a&gt;
+ 
+-&lt;a name=&quot;Top&quot;&gt;&lt;/a&gt;
+-&lt;div style=&quot;position:fixed;top: -1px;left: -1px;z-index: 1;&quot;&gt;
++&lt;div style=&quot;position:fixed; top: -1px;left: -1px;z-index: 1;&quot;&gt;
++
+ &lt;table class=&quot;tablebg&quot; border=&quot;0&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td nowrap=&quot;nowrap&quot; class=&quot;row2&quot;&gt;&lt;a href=&quot;{ $LINK_HOME }&quot;&gt;{ $L_SITE_INDEX }&lt;/a&gt;&lt;/td&gt;
+@@ -39,6 +39,7 @@
+ 		&lt;td width=&quot;100%&quot; class=&quot;row2&quot;&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
++
+ &lt;/div&gt;
+ 
+ &lt;table class=&quot;tablebg&quot; border=&quot;0&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000051.html">[Viperals-svncheckins] r130 - in cms/trunk: . includes includes/cache includes/display includes/templates includes/templates/en includes/templates/en/email includes/templates/en/email/contact includes/templates/modules/Contact javascript language/en
+</A></li>
+	<LI>Next message: <A HREF="000053.html">[Viperals-svncheckins] r132 - in cms/trunk: . blocks includes/forums includes/forums/mcp includes/templates/modules/Forums modules/Control_Panel/ucp modules/Forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

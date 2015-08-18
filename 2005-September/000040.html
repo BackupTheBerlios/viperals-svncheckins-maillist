@@ -1,0 +1,1034 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r119 - in cms/trunk: . includes/templates/installer
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r119%20-%20in%20cms/trunk%3A%20.%20includes/templates/installer&In-Reply-To=%3C200509130344.j8D3ibIZ029563%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000039.html">
+   <LINK REL="Next"  HREF="000041.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r119 - in cms/trunk: . includes/templates/installer</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r119%20-%20in%20cms/trunk%3A%20.%20includes/templates/installer&In-Reply-To=%3C200509130344.j8D3ibIZ029563%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r119 - in cms/trunk: . includes/templates/installer">viperal at berlios.de
+       </A><BR>
+    <I>Tue Sep 13 05:44:37 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000039.html">[Viperals-svncheckins] r118 - in cms/trunk: . install
+</A></li>
+        <LI>Next message: <A HREF="000041.html">[Viperals-svncheckins] r120 - in cms/trunk: includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-13 05:44:11 +0200 (Tue, 13 Sep 2005)
+New Revision: 119
+
+Added:
+   cms/trunk/includes/templates/installer/stage3.html
+Modified:
+   cms/trunk/includes/templates/installer/stage1.html
+   cms/trunk/includes/templates/installer/stage2.html
+   cms/trunk/installer.php
+Log:
+
+
+Modified: cms/trunk/includes/templates/installer/stage1.html
+===================================================================
+--- cms/trunk/includes/templates/installer/stage1.html	2005-09-13 03:42:19 UTC (rev 118)
++++ cms/trunk/includes/templates/installer/stage1.html	2005-09-13 03:44:11 UTC (rev 119)
+@@ -1,13 +1,13 @@
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+-&lt;head&gt;
+-&lt;title&gt;Viperal: Agreement&lt;/title&gt;
+-&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+-&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
+-
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
+ &lt;style type=&quot;text/css&quot;&gt;
+-&lt;!--
+-body
++&lt;!--
++body
+ {
+     font-family: Verdana, Helvetica, sans-serif;
+     font-size: 10px;
+@@ -19,38 +19,38 @@
+ 
+ .error { color: red; }
+ 
+-#container
+-{
+-	position: absolute;
+-	top: 50%;
+-	left: 0px;
+-	width: 100%;
+-	margin-top: -130px;
++#container
++{
++	position: absolute;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: -200px;
+ }
+-
+-#wrapper
+-{
+-	position: relative;
+-	text-align: left;
+-	width: 500px;
+-	margin: 0px auto;
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
+ }
+ 
+ .spacer
+ {
+ 	background-color: #ECECEC;
+-}
+-
++}
++
+ .button
+ {
+ 	background-color: #DCE1E5;
+ 	border: 1px solid #ccc;
+ 	color: black;
+-}
++}
+ 
+ th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
+ .tablebg { background-color: #A9B8C2; }
+-
++
+ .row1 { background-color: #ECECEC; padding: 4px; }
+ .row2 { background-color: #DCE1E5; padding: 4px; }
+ .row3 { background-color: #C0C8D0; padding: 4px; }
+@@ -63,143 +63,85 @@
+ form { margin: 0px; padding: 0px; border: 0px; }
+ input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
+ select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
+-.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
+ 
+---&gt;
+-&lt;/style&gt;
+-&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
+-&lt;!--
+-var old_value = 'all';
+-
+-function change_option(name)
+-{
+-	var area = document.getElementById(name);
+-
+-	if (!area)
+-	{
+-		if (old_value == 'all')
+-		{
+-			return;
+-		}
+-		else
+-		{
+-			name = 'all'
+-			area = document.getElementById(name);
+-		}
+-	}
+-
+-	area.style.display = '';
+-
+-	var i = 1;
+-
+-	while (true)
+-	{
+-		area = document.getElementById(name + '_' + i);
+-
+-		if (!area)
+-		{
+-			break;
+-		}
+-
+-		area.style.display = '';
+-		i += 1;
+-	}
+-
+-	area = document.getElementById(old_value);
+-	area.style.display = 'none';
+-	
+-	var i = 1;
+-
+-	while (true)
+-	{
+-		area = document.getElementById(old_value + '_' + i);
+-
+-		if (!area)
+-		{
+-			break;
+-		}
+-
+-		area.style.display = 'none';
+-		i += 1;
+-	}
+-
+-	old_value = name;
+-}
+-
+-//--&gt;
+-&lt;/script&gt;
++--&gt;
++&lt;/style&gt;
++
+ &lt;body&gt;
+-	&lt;div id=&quot;container&quot;&gt;
+-		&lt;div id=&quot;wrapper&quot;&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
+ 			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+-				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+-					&lt;tbody&gt;
+-						&lt;tr&gt;
+-							&lt;th colspan=&quot;2&quot;&gt;Database Configuration&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- IF { $error } --&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database type: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;select id=&quot;layer&quot; name=&quot;layer&quot; onchange=&quot;change_option(this.value);&quot;&gt;{ $database_options }&lt;/select&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;sqlite&quot; style=&quot;display: none;&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;sqlite_pdo&quot; style=&quot;display: none;&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite_pdo&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server hostname: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;server&quot; value=&quot;{ $server }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_1&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;port&quot; value=&quot;{ $port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_2&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database name: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;database&quot; value=&quot;{ $database }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_3&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database username: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
+-					
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_4&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database password: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for tables: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;table_prefix&quot; value=&quot;{ $table_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for user table: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;user_prefix&quot; value=&quot;{ $user_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;2&quot; /&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
+-							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;test&quot; value=&quot;Test Connection&quot; type=&quot;submit&quot;&gt; &lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Start Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
+-						&lt;/tr&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;tr&gt;
++							&lt;th colspan=&quot;2&quot;&gt;PHP Version&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;b&gt;PHP Version: { $php_version }&lt;/b&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Version Supported: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $workable_Version } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_red.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Version higher than recommended: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $recommended_Version } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;th colspan=&quot;2&quot;&gt;PHP Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF { $error } --&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++							&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Safe Mode - OFF: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $safe_mode } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Magic Quotes GPC - OFF: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $magic_quotes_gpc } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Output Buffering - OFF: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $output_buffering } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Register Globals - OFF: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $register_globals } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;th colspan=&quot;2&quot;&gt;PHP Extensions&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;mbstring: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $mbstring } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;zlib: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $zlib } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;GD:&lt;br /&gt;{ $gd_version }&lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $gd } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF !{ $continue } --&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;You may not continue, please fix all problems listed in RED&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;2&quot; /&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
++							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; &lt;!-- IF !{ $continue } --&gt;disabled=&quot;disabled&quot;&lt;!-- ENDIF --&gt; name=&quot;continue&quot; value=&quot;Continue&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
++						&lt;/tr&gt;
+ 					&lt;/tbody&gt;
+-				&lt;/table&gt;
++				&lt;/table&gt;
+ 			&lt;/form&gt;
+-		&lt;/div&gt;
+-	&lt;/div&gt;
+-
+-&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
+-&lt;!--
+-	change_option(document.getElementById('layer').value);
+-//--&gt;
+-&lt;/script&gt;
+-
+-&lt;/body&gt;
+-
++		&lt;/div&gt;
++	&lt;/div&gt;
++&lt;/body&gt;
++
+ &lt;/html&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/installer/stage2.html
+===================================================================
+--- cms/trunk/includes/templates/installer/stage2.html	2005-09-13 03:42:19 UTC (rev 118)
++++ cms/trunk/includes/templates/installer/stage2.html	2005-09-13 03:44:11 UTC (rev 119)
+@@ -1,13 +1,13 @@
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+-&lt;head&gt;
+-&lt;title&gt;Viperal: Agreement&lt;/title&gt;
+-&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+-&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
+-
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
+ &lt;style type=&quot;text/css&quot;&gt;
+-&lt;!--
+-body
++&lt;!--
++body
+ {
+     font-family: Verdana, Helvetica, sans-serif;
+     font-size: 10px;
+@@ -19,38 +19,38 @@
+ 
+ .error { color: red; }
+ 
+-#container
+-{
+-	position: relative;
+-	top: 50%;
+-	left: 0px;
+-	width: 100%;
+-	margin-top: 0px;
++#container
++{
++	position: absolute;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: -130px;
+ }
+-
+-#wrapper
+-{
+-	position: relative;
+-	text-align: left;
+-	width: 500px;
+-	margin: 0px auto;
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
+ }
+ 
+ .spacer
+ {
+ 	background-color: #ECECEC;
+-}
+-
++}
++
+ .button
+ {
+ 	background-color: #DCE1E5;
+ 	border: 1px solid #ccc;
+ 	color: black;
+-}
++}
+ 
+ th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
+ .tablebg { background-color: #A9B8C2; }
+-
++
+ .row1 { background-color: #ECECEC; padding: 4px; }
+ .row2 { background-color: #DCE1E5; padding: 4px; }
+ .row3 { background-color: #C0C8D0; padding: 4px; }
+@@ -63,107 +63,143 @@
+ form { margin: 0px; padding: 0px; border: 0px; }
+ input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
+ select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
+-.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
+ 
+---&gt;
+-&lt;/style&gt;
+-
++--&gt;
++&lt;/style&gt;
++&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
++&lt;!--
++var old_value = 'all';
++
++function change_option(name)
++{
++	var area = document.getElementById(name);
++
++	if (!area)
++	{
++		if (old_value == 'all')
++		{
++			return;
++		}
++		else
++		{
++			name = 'all'
++			area = document.getElementById(name);
++		}
++	}
++
++	area.style.display = '';
++
++	var i = 1;
++
++	while (true)
++	{
++		area = document.getElementById(name + '_' + i);
++
++		if (!area)
++		{
++			break;
++		}
++
++		area.style.display = '';
++		i += 1;
++	}
++
++	area = document.getElementById(old_value);
++	area.style.display = 'none';
++	
++	var i = 1;
++
++	while (true)
++	{
++		area = document.getElementById(old_value + '_' + i);
++
++		if (!area)
++		{
++			break;
++		}
++
++		area.style.display = 'none';
++		i += 1;
++	}
++
++	old_value = name;
++}
++
++//--&gt;
++&lt;/script&gt;
+ &lt;body&gt;
+-	&lt;div id=&quot;container&quot;&gt;
+-		&lt;div id=&quot;wrapper&quot;&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
+ 			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+-				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+-					&lt;tbody&gt;
+-						&lt;!-- IF { $error } --&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Error&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Administrator Configuration&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Username: &lt;/b&gt;&lt;/td&gt;
+-					
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password ( Confirm ): &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password_confirm&quot; value=&quot;{ $password_confirm }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email&quot; value=&quot;{ $email }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address  ( Confirm ): &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email_confirm&quot; value=&quot;{ $email_confirm }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Site Configuration&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td align=&quot;center&quot; colspan=&quot;2&quot; class=&quot;row2&quot;&gt;Default Value are usually correct, please review&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Name: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_name&quot; value=&quot;{ $site_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Domain: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_domain&quot; value=&quot;{ $site_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site path: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_path&quot; value=&quot;{ $site_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_port&quot; value=&quot;{ $site_port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Domain: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_domain&quot; value=&quot;{ $cookie_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Path: &lt;/b&gt;&lt;/td&gt;
+-					
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_path&quot; value=&quot;{ $cookie_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Name: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_name&quot; value=&quot;{ $cookie_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- IF { $config_content } --&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Config.php Content&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;Copy the content below to your config.php file and upload to you site root&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;
+-							&lt;textarea name=&quot;config_content&quot; style=&quot;width: 100%&quot; rows=&quot;15&quot;&gt;{ $config_content }&lt;/textarea&gt;
+-							&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-						&lt;tr&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;3&quot; /&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
+-							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Finalize Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
+-						&lt;/tr&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;tr&gt;
++							&lt;th colspan=&quot;2&quot;&gt;Database Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF { $error } --&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database type: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;select id=&quot;layer&quot; name=&quot;layer&quot; onchange=&quot;change_option(this.value);&quot;&gt;{ $database_options }&lt;/select&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;sqlite&quot; style=&quot;display: none;&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;sqlite_pdo&quot; style=&quot;display: none;&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite_pdo&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server hostname: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;server&quot; value=&quot;{ $server }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_1&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;port&quot; value=&quot;{ $port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_2&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database name: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;database&quot; value=&quot;{ $database }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_3&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database username: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
++					
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_4&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database password: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for tables: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;table_prefix&quot; value=&quot;{ $table_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for user table: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;user_prefix&quot; value=&quot;{ $user_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;3&quot; /&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
++							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;test&quot; value=&quot;Test Connection&quot; type=&quot;submit&quot;&gt; &lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Start Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
++						&lt;/tr&gt;
+ 					&lt;/tbody&gt;
+-				&lt;/table&gt;
++				&lt;/table&gt;
+ 			&lt;/form&gt;
+-		&lt;/div&gt;
+-	&lt;/div&gt;
+-&lt;/body&gt;
+-
++		&lt;/div&gt;
++	&lt;/div&gt;
++
++&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
++&lt;!--
++	change_option(document.getElementById('layer').value);
++//--&gt;
++&lt;/script&gt;
++
++&lt;/body&gt;
++
+ &lt;/html&gt;
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/installer/stage3.html
+===================================================================
+--- cms/trunk/includes/templates/installer/stage3.html	2005-09-13 03:42:19 UTC (rev 118)
++++ cms/trunk/includes/templates/installer/stage3.html	2005-09-13 03:44:11 UTC (rev 119)
+@@ -0,0 +1,169 @@
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
++&lt;style type=&quot;text/css&quot;&gt;
++&lt;!--
++body
++{
++    font-family: Verdana, Helvetica, sans-serif;
++    font-size: 10px;
++    margin: 0%;
++    padding: 0px;
++    background-color: white;
++    background: url(../images/bg.gif);
++}
++
++.error { color: red; }
++
++#container
++{
++	position: relative;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: 0px;
++}
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
++}
++
++.spacer
++{
++	background-color: #ECECEC;
++}
++
++.button
++{
++	background-color: #DCE1E5;
++	border: 1px solid #ccc;
++	color: black;
++}
++
++th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
++.tablebg { background-color: #A9B8C2; }
++
++.row1 { background-color: #ECECEC; padding: 4px; }
++.row2 { background-color: #DCE1E5; padding: 4px; }
++.row3 { background-color: #C0C8D0; padding: 4px; }
++
++a:link { color: #005784; text-decoration: none; }
++a:active { color: #005784; text-decoration: none; }
++a:visited { color: #005784; text-decoration: none; }
++a:hover { color: #000000; text-decoration: none; }
++
++form { margin: 0px; padding: 0px; border: 0px; }
++input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
++select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++
++--&gt;
++&lt;/style&gt;
++
++&lt;body&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
++			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;!-- IF { $error } --&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Error&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Administrator Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Username: &lt;/b&gt;&lt;/td&gt;
++					
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password ( Confirm ): &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password_confirm&quot; value=&quot;{ $password_confirm }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email&quot; value=&quot;{ $email }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address  ( Confirm ): &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email_confirm&quot; value=&quot;{ $email_confirm }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Site Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td align=&quot;center&quot; colspan=&quot;2&quot; class=&quot;row2&quot;&gt;Default Value are usually correct, please review&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Name: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_name&quot; value=&quot;{ $site_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Domain: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_domain&quot; value=&quot;{ $site_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site path: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_path&quot; value=&quot;{ $site_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_port&quot; value=&quot;{ $site_port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Domain: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_domain&quot; value=&quot;{ $cookie_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Path: &lt;/b&gt;&lt;/td&gt;
++					
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_path&quot; value=&quot;{ $cookie_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Name: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_name&quot; value=&quot;{ $cookie_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF { $config_content } --&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Config.php Content&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;Copy the content below to your config.php file and upload to you site root&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;
++							&lt;textarea name=&quot;config_content&quot; style=&quot;width: 100%&quot; rows=&quot;15&quot;&gt;{ $config_content }&lt;/textarea&gt;
++							&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;4&quot; /&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
++							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Finalize Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
++						&lt;/tr&gt;
++					&lt;/tbody&gt;
++				&lt;/table&gt;
++			&lt;/form&gt;
++		&lt;/div&gt;
++	&lt;/div&gt;
++&lt;/body&gt;
++
++&lt;/html&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/installer.php
+===================================================================
+--- cms/trunk/installer.php	2005-09-13 03:42:19 UTC (rev 118)
++++ cms/trunk/installer.php	2005-09-13 03:44:11 UTC (rev 119)
+@@ -25,7 +25,7 @@
+ error_reporting(E_ALL);
+ 
+ //echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '../';
++$site_file_root = '';
+ 
+ if (!extension_loaded('mbstring'))
+ {
+@@ -103,7 +103,7 @@
+ 	$stage = 0;
+ }
+ 
+-if ($stage === 3)
++if ($stage === 4)
+ {
+ 	if (file_exists($site_file_root.'config.php'))
+ 	{
+@@ -218,12 +218,12 @@
+ 		'config_content'	=&gt; $config_content
+ 	));
+ 
+-	$_CLASS['core_template']-&gt;display('installer/stage2.html');
++	$_CLASS['core_template']-&gt;display('installer/stage3.html');
+ 
+ 	script_close();
+ }
+ 
+-if ($stage === 2)
++if ($stage === 3)
+ {
+ 	if ($db_layer &amp;&amp; in_array($db_layer, array_keys($database_array)))
+ 	{
+@@ -331,7 +331,7 @@
+ 
+ 	if (isset($_POST['test']) || !empty($error))
+ 	{
+-		$stage = 1;
++		$stage = 2;
+ 	}
+ 	else
+ 	{
+@@ -407,46 +407,14 @@
+ 			'config_content'	=&gt; $config_data
+ 		));
+ 
+-		$_CLASS['core_template']-&gt;display('installer/stage2.html');
++		$_CLASS['core_template']-&gt;display('installer/stage3.html');
+ 
+ 		script_close();
+ 	}
+ }
+ 
+-if ($stage === 1)
++if ($stage === 2)
+ {
+-	$php_config = array(
+-		/*array(
+-			'lang'	=&gt; 'PHP version',
+-			'recommended'	=&gt; '4.2.3 +',
+-			'current'		=&gt; PHP_VERSION
+-		),*/
+-		array(
+-			'lang'	=&gt; 'Safe Mode',
+-			'ini'	=&gt; 'safe_mode',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('safe_mode')
+-		),
+-		array(
+-			'lang'	=&gt; 'Magic Quotes GPC',
+-			'ini'	=&gt; 'magic_quotes_gpc',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('magic_quotes_gpc')
+-		),
+-		array(
+-			'lang'	=&gt; 'Register Globals',
+-			'ini'	=&gt; 'register_globals',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('register_globals')
+-		),
+-		array(
+-			'lang'	=&gt; 'Output Buffering',
+-			'ini'	=&gt; 'output_buffering',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('output_buffering')
+-		),
+-	);
+-
+ 	if (isset($_POST['test']) &amp;&amp; empty($error))
+ 	{
+ 		$error[] = 'Database Setting Perfect :-)';
+@@ -454,7 +422,6 @@
+ 
+ 	$_CLASS['core_template']-&gt;assign_array(array(
+ 		'database_options'	=&gt; $database_options,
+-		'php_config'		=&gt; $php_config,
+ 		'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
+ 
+ 		'server'		=&gt; isset($site_db['server']) ? $site_db['server'] : 'localhost',
+@@ -467,11 +434,44 @@
+ 		'user_prefix'	=&gt; get_variable('user_prefix', 'POST', 'cms_'),
+ 	));
+ 
+-	$_CLASS['core_template']-&gt;display('installer/stage1.html');
++	$_CLASS['core_template']-&gt;display('installer/stage2.html');
+ 
+ 	script_close();
+ }
+ 
++if ($stage === 1)
++{
++	$gd_info = gd_info();
++	$continue = true;
++
++	if (!$compatible = version_compare(PHP_VERSION, '4.2.0', '&gt;='))
++	{
++		$continue = false;
++	}
++	
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'error'				=&gt; false,
++		'magic_quotes_gpc'	=&gt; ((bool) ini_get('magic_quotes_gpc') === false),
++		'output_buffering'	=&gt; ((bool) ini_get('output_buffering') === false),
++		'register_globals'	=&gt; ((bool) ini_get('register_globals') === false),
++		'safe_mode'			=&gt; ((bool) ini_get('safe_mode') === false),
++
++		'php_version'			=&gt; PHP_VERSION,
++		'workable_Version'		=&gt; $compatible,
++		'recommended_Version'	=&gt; version_compare(PHP_VERSION, '4.3.0', '&gt;='),
++		
++		'mbstring'	=&gt; extension_loaded('mbstring'),
++		'zlib'		=&gt; extension_loaded('zlib'),
++		'gd'		=&gt; extension_loaded('gd'),
++		'gd_version'=&gt; $gd_info['GD Version'],
++
++		'continue'	=&gt; $continue,
++	));
++	
++	$_CLASS['core_template']-&gt;display('installer/stage1.html');
++	script_close();
++}
++
+ if (!$stage)
+ {
+ 	$_CLASS['core_template']-&gt;display('installer/agreement.html');
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000039.html">[Viperals-svncheckins] r118 - in cms/trunk: . install
+</A></li>
+	<LI>Next message: <A HREF="000041.html">[Viperals-svncheckins] r120 - in cms/trunk: includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

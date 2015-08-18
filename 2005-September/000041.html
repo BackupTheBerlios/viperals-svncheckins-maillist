@@ -1,0 +1,1492 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r120 - in cms/trunk: includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r120%20-%20in%20cms/trunk%3A%20includes/display%20includes/forums%20includes/templates/modules/Forums%20javascript%20javascript/forums%20modules/Forums&In-Reply-To=%3C200509132202.j8DM2dU6008870%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000040.html">
+   <LINK REL="Next"  HREF="000042.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r120 - in cms/trunk: includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r120%20-%20in%20cms/trunk%3A%20includes/display%20includes/forums%20includes/templates/modules/Forums%20javascript%20javascript/forums%20modules/Forums&In-Reply-To=%3C200509132202.j8DM2dU6008870%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r120 - in cms/trunk: includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums">viperal at berlios.de
+       </A><BR>
+    <I>Wed Sep 14 00:02:39 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000040.html">[Viperals-svncheckins] r119 - in cms/trunk: . includes/templates/installer
+</A></li>
+        <LI>Next message: <A HREF="000042.html">[Viperals-svncheckins] r121 - in cms/trunk: . includes includes/display
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-14 00:02:35 +0200 (Wed, 14 Sep 2005)
+New Revision: 120
+
+Added:
+   cms/trunk/javascript/common.js
+   cms/trunk/javascript/forums/
+   cms/trunk/javascript/forums/forum_view.js
+   cms/trunk/modules/Forums/ajax.php
+Removed:
+   cms/trunk/includes/forums/functions_profile_fields.php
+   cms/trunk/javascript/ajax.js
+   cms/trunk/javascript/tiny_mce/
+Modified:
+   cms/trunk/includes/display/display.php
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/templates/modules/Forums/index_body.html
+   cms/trunk/includes/templates/modules/Forums/viewforum_body.html
+   cms/trunk/includes/templates/modules/Forums/viewtopic_body.html
+   cms/trunk/modules/Forums/posting.php
+Log:
+Added some ajax to forum, just topic title editing for now
+Move ajax.js to common.js
+Removed tiny_mce, will be added back soon
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/includes/display/display.php	2005-09-13 22:02:35 UTC (rev 120)
+@@ -174,6 +174,7 @@
+ 			$this-&gt;message = '&lt;b&gt;System is in maintenance mode&lt;/b&gt;&lt;br /&gt;';
+ 		}
+ 
++		$this-&gt;header['js'] = '&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/common.js&quot;&gt;&lt;/script&gt;';
+ 
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'SITE_LANG'			=&gt;	$_CLASS['core_user']-&gt;lang['LANG'],
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/includes/forums/functions_display.php	2005-09-13 22:02:35 UTC (rev 120)
+@@ -327,6 +327,7 @@
+ 	}
+ 
+ 	$_CLASS['core_template']-&gt;assign_array(array(
++		'MODIFY_FORUM'		=&gt; $_CLASS['auth']-&gt;acl_get('a_forum'),
+ 		'U_MARK_FORUMS'		=&gt; generate_link('Forums&amp;file=viewforum&amp;f=' . $root_data['forum_id'] . '&amp;mark=Forums'), 
+ 		'S_HAS_SUBFORUM'	=&gt;	($visible_forums) ? true : false,
+ 		'L_SUBFORUM'		=&gt;	($visible_forums == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] : $_CLASS['core_user']-&gt;lang['SUBFORUMS']
+
+Deleted: cms/trunk/includes/forums/functions_profile_fields.php
+===================================================================
+--- cms/trunk/includes/forums/functions_profile_fields.php	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/includes/forums/functions_profile_fields.php	2005-09-13 22:02:35 UTC (rev 120)
+@@ -1,894 +0,0 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright &#169; 2004 by Viperal									//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-
+-// -------------------------------------------------------------
+-//
+-// $Id: functions_profile_fields.php,v 1.10 2004/09/19 20:40:20 acydburn Exp $
+-//
+-// FILENAME  : functions_profile_fields.php
+-// STARTED   : Tue Oct 21, 2003
+-// COPYRIGHT : &#169; 2003 phpBB Group
+-// WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+-// LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+-// 
+-// -------------------------------------------------------------
+-
+-class custom_profile
+-{
+-	var $profile_types = array(1 =&gt; 'int', 2 =&gt; 'string', 3 =&gt; 'text', 4 =&gt; 'bool', 5 =&gt; 'dropdown', 6 =&gt; 'date');
+-	var $profile_cache = array();
+-	var $options_lang = array();
+-
+-	// Build language options cache, useful for viewtopic display
+-	function build_cache()
+-	{
+-		global $_CLASS;
+-
+-		$this-&gt;profile_cache = array();
+-
+-		// Display hidden/no_view fields for admin/moderator
+-		$sql = 'SELECT l.*, f.*
+-			FROM ' . PROFILE_LANG_TABLE . ' l, ' . PROFILE_FIELDS_TABLE . ' f 
+-			WHERE l.lang_id = ' . $_CLASS['core_user']-&gt;get_iso_lang_id() . '
+-				AND f.field_active = 1 ' .
+-				((!$_CLASS['auth']-&gt;acl_gets('a_', 'm_')) ? '     AND f.field_hide = 0 AND f.field_no_view = 0 ' : '') . '
+-				AND l.field_id = f.field_id 
+-			GROUP BY f.field_id
+-			ORDER BY f.field_order';
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-		{
+-			$this-&gt;profile_cache[$row['field_ident']] = $row;
+-		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
+-	}
+-
+-	// Get language entries for options and store them here for later use
+-	function get_option_lang($field_id, $lang_id, $field_type, $preview)
+-	{
+-		global $_CLASS;
+-
+-		if ($preview)
+-		{
+-			$lang_options = (!is_array($this-&gt;vars['lang_options'])) ? explode(&quot;\n&quot;, $this-&gt;vars['lang_options']) : $this-&gt;vars['lang_options'];
+-			
+-			foreach ($lang_options as $num =&gt; $var)
+-			{
+-				$this-&gt;options_lang[$field_id][$lang_id][($num+1)] = $var;
+-			}
+-		}
+-		else
+-		{
+-			$sql = 'SELECT option_id, value
+-				FROM ' . PROFILE_FIELDS_LANG_TABLE . &quot;
+-					WHERE field_id = $field_id
+-					AND lang_id = $lang_id
+-					AND field_type = $field_type
+-				ORDER BY option_id&quot;;
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-			{
+-				$this-&gt;options_lang[$field_id][$lang_id][$row['option_id']] = $row['value'];
+-			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
+-		}
+-	}
+-
+-	// Functions performing operations on register/profile/profile admin
+-	function submit_cp_field($mode, $lang_id, &amp;$cp_data, &amp;$cp_error)
+-	{
+-		global $_CLASS;
+-
+-		$sql = 'SELECT l.*, f.*
+-			FROM ' . PROFILE_LANG_TABLE . ' l, ' . PROFILE_FIELDS_TABLE . &quot; f 
+-			WHERE l.lang_id = $lang_id
+-				AND f.field_active = 1
+-				&quot; . (($mode == 'register') ? ' AND f.field_show_on_reg = 1' : '') .
+-				(($_CLASS['auth']-&gt;acl_gets('a_', 'm_') &amp;&amp; $mode == 'profile') ? '' : ' AND f.field_hide = 0') . '
+-				AND l.field_id = f.field_id 
+-			GROUP BY f.field_id
+-			ORDER BY f.field_order';
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-					
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-		{
+-			$cp_data[$row['field_ident']] = $this-&gt;get_profile_field($row);
+-
+-			// get_profile_field returns an array with values for TEXT fields.
+-			if(is_array($cp_data[$row['field_ident']]))
+-			{
+-				// Contains the original text without bbcode processing etc
+-				$check_value = $cp_data[$row['field_ident']]['submitted'];
+-				
+-				foreach($cp_data[$row['field_ident']] as $key =&gt; $value)
+-				{
+-					if($key != 'submitted')
+-					{
+-						$cp_data[$key] = $value;
+-					}
+-				}
+-			}
+-			else
+-			{
+-				$check_value = $cp_data[$row['field_ident']];
+-			}
+-			
+-			if (($cp_result = $this-&gt;validate_profile_field($row['field_type'], $check_value, $row)) !== false)
+-			{
+-				// If not and only showing common error messages, use this one
+-				$error = false;
+-
+-				switch ($cp_result)
+-				{
+-					case 'FIELD_INVALID_DATE':
+-					case 'FIELD_REQUIRED':
+-						$error = sprintf($_CLASS['core_user']-&gt;lang[$cp_result], $row['lang_name']);
+-						break;
+-					case 'FIELD_TOO_SHORT':
+-					case 'FIELD_TOO_SMALL':
+-						$error = sprintf($_CLASS['core_user']-&gt;lang[$cp_result], $row['lang_name'], $row['field_minlen']);
+-						break;
+-					case 'FIELD_TOO_LONG':
+-					case 'FIELD_TOO_LARGE':
+-						$error = sprintf($_CLASS['core_user']-&gt;lang[$cp_result], $row['lang_name'], $row['field_maxlen']);
+-						break;
+-					case 'FIELD_INVALID_CHARS':
+-						switch ($row['field_validation'])
+-						{
+-							case '[0-9]+':
+-								$error = sprintf($_CLASS['core_user']-&gt;lang[$cp_result . '_NUMBERS_ONLY'], $row['lang_name']);
+-								break;
+-							case '[\w]+':
+-								$error = sprintf($_CLASS['core_user']-&gt;lang[$cp_result . '_ALPHA_ONLY'], $row['lang_name']);
+-								break;
+-							case '[\w_\+\. \-\[\]]+':
+-								$error = sprintf($_CLASS['core_user']-&gt;lang[$cp_result . '_SPACERS_ONLY'], $row['lang_name']);
+-								break;
+-						}
+-						break;
+-				}
+-
+-				if ($error)
+-				{
+-					$cp_error[] = $error;
+-				}
+-			}
+-		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
+-	}
+-	
+-	// Assign fields to template, mode can be profile (for profile change) or register (for registration)
+-//	function generate_profile_fields($mode, $lang_id, $cp_error)
+-	function generate_profile_fields($mode, $lang_id)
+-	{
+-		global $_CLASS;
+-
+-		$sql = 'SELECT l.*, f.*
+-			FROM ' . PROFILE_LANG_TABLE . ' l, ' . PROFILE_FIELDS_TABLE . &quot; f 
+-			WHERE l.lang_id = $lang_id
+-				AND f.field_active = 1
+-				&quot; . (($mode == 'register') ? ' AND f.field_show_on_reg = 1' : '') .
+-				(($_CLASS['auth']-&gt;acl_gets('a_', 'm_') &amp;&amp; $mode == 'profile') ? '' : ' AND f.field_hide = 0') . '
+-				AND l.field_id = f.field_id 
+-			GROUP BY f.field_id
+-			ORDER BY f.field_order';
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('profile_fields', array(
+-				'LANG_NAME' =&gt; $row['lang_name'],
+-				'LANG_EXPLAIN' =&gt; $row['lang_explain'],
+-				'FIELD' =&gt; $this-&gt;process_field_row('change', $row))
+-//				'ERROR' =&gt; $error)
+-			);
+-		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
+-	}
+-
+-	// Assign fields to template, used for viewprofile, viewtopic and memberlist (if load setting is enabled)
+-	// This is directly connected to the user -&gt; mode == grab is to grab the user specific fields, mode == show is for assigning the row to the template
+-	function generate_profile_fields_template($mode, $user_id = 0, $profile_row = false)
+-	{
+-		global $_CLASS;
+-
+-		if ($mode == 'grab')
+-		{
+-			if (!is_array($user_id))
+-			{
+-				$user_id = array($user_id);
+-			}
+-			
+-			if (!sizeof($this-&gt;profile_cache))
+-			{
+-				$this-&gt;build_cache();
+-			}
+-
+-			if (!implode(', ', $user_id))
+-			{
+-				return array();
+-			}
+-
+-			$sql = 'SELECT *
+-				FROM ' . PROFILE_DATA_TABLE . '
+-				WHERE user_id IN (' . implode(', ', array_map('intval', $user_id)) . ')';
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-
+-			if (!($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)))
+-			{
+-				return array();
+-			}
+-			
+-			$user_fields = array();
+-			do
+-			{
+-				foreach ($row as $ident =&gt; $value)
+-				{
+-					if (isset($this-&gt;profile_cache[$ident]))
+-					{
+-						$user_fields[$row['user_id']][$ident]['value'] = $value;
+-						$user_fields[$row['user_id']][$ident]['data'] = $this-&gt;profile_cache[$ident];
+-					}
+-					else if($i = strpos($ident, '_bbcode'))
+-					{
+-						// Add extra data (bbcode_uid and bbcode_bitfield) to the data for this profile field.
+-						// TODO: Maybe we should try to make this a bit more generic (not limited to bbcode)?
+-						$field = substr($ident, 0, $i);
+-						$subfield = substr($ident, $i+1);
+-						$user_fields[$row['user_id']][$field]['data'][$subfield] = $value;
+-					}
+-				}
+-			} 
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result));
+-			
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
+-
+-			return $user_fields;
+-
+-		}
+-		elseif ($mode == 'show')
+-		{
+-			// $profile_row == $user_fields[$row['user_id']];
+-			$tpl_fields = array();
+-			$tpl_fields['row'] = $tpl_fields['blockrow'] = array();
+-
+-			foreach ($profile_row as $ident =&gt; $ident_ary)
+-			{
+-				$tpl_fields['row'] += array(
+-					'PROFILE_' . strtoupper($ident) . '_VALUE'	=&gt; $this-&gt;get_profile_value($ident_ary),
+-					'PROFILE_' . strtoupper($ident) . '_TYPE'	=&gt; $ident_ary['data']['field_type'],
+-					'PROFILE_' . strtoupper($ident) . '_NAME'	=&gt; $ident_ary['data']['lang_name'],
+-					'PROFILE_' . strtoupper($ident) . '_EXPLAIN'=&gt; $ident_ary['data']['lang_explain'],
+-
+-					'S_PROFILE_' . strtoupper($ident)			=&gt; true
+-				);
+-				
+-				$tpl_fields['blockrow'][] = array(
+-					'PROFILE_FIELD_VALUE'   =&gt; $this-&gt;get_profile_value($ident_ary),
+-					'PROFILE_FIELD_TYPE'    =&gt; $ident_ary['data']['field_type'],
+-					'PROFILE_FIELD_NAME'    =&gt; $ident_ary['data']['lang_name'],
+-					'PROFILE_FIELD_EXPLAIN' =&gt; $ident_ary['data']['lang_explain'],
+-					'S_PROFILE_' . strtoupper($ident)               =&gt; true
+-				);
+-			}
+-		
+-			return $tpl_fields;
+-		}
+-	}
+-	
+-	// VALIDATE Function - validate entered data
+-	function validate_profile_field($field_type, &amp;$field_value, $field_data)
+-	{
+-		switch ($field_type)
+-		{
+-			case FIELD_INT:
+-			case FIELD_DROPDOWN:
+-				$field_value = (int) $field_value;
+-				break;
+-
+-			case FIELD_BOOL:
+-				$field_value = (bool) $field_value;
+-				break;
+-		}
+-
+-		switch ($field_type)
+-		{
+-			case FIELD_DATE:
+-				$field_validate = explode('-', $field_value);
+-				
+-				$day = (int) $field_validate[0];
+-				$month = (int) $field_validate[1];
+-				$year = (int) $field_validate[2];
+-
+-				if ((!$day || !$month || !$year) &amp;&amp; !$field_data['field_required'])
+-				{
+-					return false;
+-				}
+-
+-				if ((!$day || !$month || !$year) &amp;&amp; $field_data['field_required'])
+-				{
+-					return 'FIELD_REQUIRED';
+-				}
+-
+-				if ($day &lt; 0 || $day &gt; 31 || $month &lt; 0 || $month &gt; 12 || ($year &lt; 1901 &amp;&amp; $year &gt; 0) || $year &gt; gmdate('Y', time()))
+-				{
+-					return 'FIELD_INVALID_DATE';
+-				}
+-				break;
+-
+-			case FIELD_INT:
+-				if (empty($field_value) &amp;&amp; !$field_data['field_required'])
+-				{
+-					return false;
+-				}
+-
+-				if ($field_value &lt; $field_data['field_minlen'])
+-				{
+-					return 'FIELD_TOO_SMALL';
+-				}
+-				else if ($field_value &gt; $field_data['field_maxlen']) 
+-				{
+-					return 'FIELD_TOO_LARGE';
+-				}
+-				break;
+-		
+-			case FIELD_DROPDOWN:
+-				if ($field_value == $field_data['field_novalue'] &amp;&amp; $field_data['field_required'])
+-				{
+-					return 'FIELD_REQUIRED';
+-				}
+-				break;
+-			
+-			case FIELD_STRING:
+-			case FIELD_TEXT:
+-				if (empty($field_value) &amp;&amp; !$field_data['field_required'])
+-				{
+-					return false;
+-				}
+-				else if (empty($field_value) &amp;&amp; $field_data['field_required'])
+-				{
+-					return 'FIELD_REQUIRED';
+-				}
+-
+-				if ($field_data['field_minlen'] &amp;&amp; strlen($field_value) &lt; $field_data['field_minlen'])
+-				{
+-					return 'FIELD_TOO_SHORT';
+-				}
+-				else if ($field_data['field_maxlen'] &amp;&amp; strlen($field_value) &gt; $field_data['field_maxlen'])
+-				{
+-					return 'FIELD_TOO_LONG';
+-				}
+-
+-				if (!empty($field_data['field_validation']) &amp;&amp; $field_data['field_validation'] != '.*')
+-				{
+-					$field_validate = ($field_type == FIELD_STRING) ? $field_value : str_replace(&quot;\n&quot;, ' ', $field_value);
+-					if (!preg_match('#^' . str_replace('\\\\', '\\', $field_data['field_validation']) . '$#i', $field_validate))
+-					{
+-						return 'FIELD_INVALID_CHARS';
+-					}
+-				}
+-				break;
+-		}
+-
+-		return false;
+-	}
+-
+-	// Get Profile Value for display
+-	function get_profile_value($ident_ary)
+-	{
+-		$value = $ident_ary['value'];
+-		$field_type = $ident_ary['data']['field_type'];
+-		
+-		switch ($this-&gt;profile_types[$field_type])
+-		{
+-			case 'int':
+-				return (int) $value;
+-				break;
+-			case 'string':
+-				return str_replace(&quot;\n&quot;, '&lt;br /&gt;', $value);
+-				break;
+-			case 'text':
+-				// Prepare further, censor_text, smilies, bbcode, html, whatever
+-				if ($ident_ary['data']['bbcode_bitfield'])
+-				{
+-					$bbcode = new bbcode($ident_ary['data']['bbcode_bitfield']);
+-					$bbcode-&gt;bbcode_second_pass($value, $ident_ary['data']['bbcode_uid'], $ident_ary['data']['bbcode_bitfield']);
+-					$value = smiley_text($value);
+-					$value = censor_text($value);
+-				}
+-				
+-				return str_replace(&quot;\n&quot;, '&lt;br /&gt;', $value);
+-				break;
+-			case 'date':
+-				break;
+-			case 'dropdown':
+-				$field_id = $ident_ary['data']['field_id'];
+-				$lang_id = $ident_ary['data']['lang_id'];
+-				if (!isset($this-&gt;options_lang[$field_id][$lang_id]))
+-				{
+-					$this-&gt;get_option_lang($field_id, $lang_id, FIELD_DROPDOWN, false);
+-				}
+-
+-				return $this-&gt;options_lang[$field_id][$lang_id][(int) $value];
+-				break;
+-			case 'bool':
+-				break;
+-			default:
+-				trigger_error('Unknown profile type');
+-				break;
+-		}
+-	}
+-
+-	// Get field value for registration/profile
+-	function get_var($field_validation, &amp;$profile_row, $default_value, $preview)
+-	{
+-		global $_CLASS;
+-
+-		$profile_row['field_ident'] = (isset($profile_row['var_name'])) ? $profile_row['var_name'] : 'pf_' . $profile_row['field_ident'];
+-		
+-		// checkbox - only testing for isset
+-		if ($profile_row['field_type'] == FIELD_BOOL &amp;&amp; $profile_row['field_length'] == 2)
+-		{
+-			$value = (isset($_REQUEST[$profile_row['field_ident']])) ? true : ((!isset($_CLASS['core_user']-&gt;profile_fields[$profile_row['field_ident']]) || $preview) ? $default_value : $_CLASS['core_user']-&gt;profile_fields[$profile_row['field_ident']]);
+-		}
+-		else
+-		{
+-			$value = (isset($_REQUEST[$profile_row['field_ident']])) ? request_var($profile_row['field_ident'], $default_value) : ((!isset($_CLASS['core_user']-&gt;profile_fields[str_replace('pf_', '', $profile_row['field_ident'])]) || $preview) ? $default_value : $_CLASS['core_user']-&gt;profile_fields[str_replace('pf_', '', $profile_row['field_ident'])]);
+-		}
+-
+-		switch ($field_validation)
+-		{
+-			case 'int':
+-				return (int) $value;
+-				break;
+-		}
+-
+-		return $value;
+-	}
+-	
+-	// GENERATE_* Functions - return templated, storable profile fields
+-	function generate_int($profile_row, $preview = false)
+-	{
+-		$value = $this-&gt;get_var('int', $profile_row, $profile_row['field_default_value'], $preview);
+-		$this-&gt;set_tpl_vars($profile_row, $value);
+-
+-		return $this-&gt;get_cp_html();
+-	}
+-
+-	function generate_date($profile_row, $preview = false)
+-	{
+-		global $_CLASS;
+-
+-		$profile_row['field_ident'] = (isset($profile_row['var_name'])) ? $profile_row['var_name'] : 'pf_' . $profile_row['field_ident'];
+-		$now = getdate();
+-
+-		if (!isset($_REQUEST[$profile_row['field_ident'] . '_day']))
+-		{
+-			if ($profile_row['field_default_value'] == 'now')
+-			{
+-				$profile_row['field_default_value'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], $now['year']);
+-			}
+-			list($day, $month, $year) = explode('-', ((!isset($_CLASS['core_user']-&gt;profile_fields[$profile_row['field_ident']]) || $preview) ? $profile_row['field_default_value'] : $_CLASS['core_user']-&gt;profile_fields[$profile_row['field_ident']]));
+-		}
+-		else
+-		{
+-			if ($preview &amp;&amp; $profile_row['field_default_value'] == 'now')
+-			{
+-				$profile_row['field_default_value'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], $now['year']);
+-				list($day, $month, $year) = explode('-', ((!isset($_CLASS['core_user']-&gt;profile_fields[$profile_row['field_ident']]) || $preview) ? $profile_row['field_default_value'] : $_CLASS['core_user']-&gt;profile_fields[$profile_row['field_ident']]));
+-			}
+-			else
+-			{
+-				$day = request_var($profile_row['field_ident'] . '_day', 0);
+-				$month = request_var($profile_row['field_ident'] . '_month', 0);
+-				$year = request_var($profile_row['field_ident'] . '_year', 0);
+-			}
+-		}
+-
+-		$profile_row['s_day_options'] = '&lt;option value=&quot;0&quot;' . ((!$day) ? ' selected=&quot;selected&quot;' : '') . '&gt;--&lt;/option&gt;';
+-		for ($i = 1; $i &lt; 32; $i++)
+-		{
+-			$profile_row['s_day_options'] .= '&lt;option value=&quot;' . $i . '&quot;' . (($i == $day) ? ' selected=&quot;selected&quot;' : '') . &quot;&gt;$i&lt;/option&gt;&quot;;
+-		}
+-
+-		$profile_row['s_month_options'] = '&lt;option value=&quot;0&quot;' . ((!$month) ? ' selected=&quot;selected&quot;' : '') . '&gt;--&lt;/option&gt;';
+-		for ($i = 1; $i &lt; 13; $i++)
+-		{
+-			$profile_row['s_month_options'] .= '&lt;option value=&quot;' . $i . '&quot;' . (($i == $month) ? ' selected=&quot;selected&quot;' : '') . &quot;&gt;$i&lt;/option&gt;&quot;;
+-		}
+-
+-		$profile_row['s_year_options'] = '&lt;option value=&quot;0&quot;' . ((!$year) ? ' selected=&quot;selected&quot;' : '') . '&gt;--&lt;/option&gt;';
+-		for ($i = $now['year'] - 100; $i &lt;= $now['year']; $i++)
+-		{
+-			$profile_row['s_year_options'] .= '&lt;option value=&quot;' . $i . '&quot;' . (($i == $year) ? ' selected=&quot;selected&quot;' : '') . &quot;&gt;$i&lt;/option&gt;&quot;;
+-		}
+-		unset($now);
+-		
+-		$this-&gt;set_tpl_vars($profile_row, 0);
+-		return $this-&gt;get_cp_html();
+-	}
+-
+-	function generate_bool($profile_row, $preview = false)
+-	{
+-		global $_CLASS;
+-
+-		$value = $this-&gt;get_var('int', $profile_row, $profile_row['field_default_value'], $preview);
+-
+-		$this-&gt;set_tpl_vars($profile_row, $value);
+-
+-		if ($profile_row['field_length'] == 1)
+-		{
+-			if (!isset($this-&gt;options_lang[$profile_row['field_id']][$profile_row['lang_id']]) || !sizeof($this-&gt;options_lang[$profile_row['field_id']][$profile_row['lang_id']]))
+-			{
+-				$this-&gt;get_option_lang($profile_row['field_id'], $profile_row['lang_id'], FIELD_BOOL, $preview);
+-			}
+-
+-			foreach ($this-&gt;options_lang[$profile_row['field_id']][$profile_row['lang_id']] as $option_id =&gt; $option_value)
+-			{
+-				$_CLASS['core_template']-&gt;assign_vars_array('bool.options', array(
+-					'OPTION_ID' =&gt; $option_id,
+-					'CHECKED' =&gt; ($value == $option_id) ? ' checked=&quot;checked&quot;' : '',
+-					'VALUE' =&gt; $option_value)
+-				);
+-			}
+-		}
+-
+-		return $this-&gt;get_cp_html();
+-	}
+-
+-	// Get the data associated with this field for this user
+-	function generate_string($profile_row, $preview = false)
+-	{
+-		$value = $this-&gt;get_var('', $profile_row, $profile_row['lang_default_value'], $preview);
+-		$this-&gt;set_tpl_vars($profile_row, $value);
+-
+-		return $this-&gt;get_cp_html();
+-	}
+-
+-	function generate_text($profile_row, $preview = false)
+-	{
+-		global $_CLASS, $site_file_root;
+-		
+-		$value = $this-&gt;get_var('', $profile_row, $profile_row['lang_default_value'], $preview);
+-		
+-		if($preview == false)
+-		{
+-			include_once($site_file_root.'includes/forums/message_parser.php');
+-			include_once($site_file_root.'includes/forums/functions_posting.php');
+-			
+-			$message_parser = new parse_message();
+-			$message_parser-&gt;message = $value;
+-			$message_parser-&gt;decode_message($_CLASS['core_user']-&gt;profile_fields[str_replace('pf_', '', $profile_row['field_ident']) . '_bbcode_uid']);
+-			$value = $message_parser-&gt;message;
+-		}
+-		
+-		$field_length = explode('|', $profile_row['field_length']);
+-		$profile_row['field_rows'] = $field_length[0];
+-		$profile_row['field_cols'] = $field_length[1];
+-
+-		$this-&gt;set_tpl_vars($profile_row, $value);
+-
+-		return $this-&gt;get_cp_html();
+-	}
+-
+-	function generate_dropdown($profile_row, $preview = false)
+-	{
+-		global $_CLASS;
+-
+-		$value = $this-&gt;get_var('int', $profile_row, $profile_row['field_default_value'], $preview);
+-
+-		if (!isset($this-&gt;options_lang[$profile_row['field_id']]) || !sizeof($this-&gt;options_lang[$profile_row['field_id']][$profile_row['lang_id']]))
+-		{
+-			$this-&gt;get_option_lang($profile_row['field_id'], $profile_row['lang_id'], FIELD_DROPDOWN, $preview);
+-		}
+-
+-		$this-&gt;set_tpl_vars($profile_row, $value);
+-
+-		foreach ($this-&gt;options_lang[$profile_row['field_id']][$profile_row['lang_id']] as $option_id =&gt; $option_value)
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('dropdown.options', array(
+-				'OPTION_ID' =&gt; $option_id,
+-				'SELECTED' =&gt; ($value == $option_id) ? ' selected=&quot;selected&quot;' : '',
+-				'VALUE' =&gt; $option_value)
+-			);
+-		}
+-
+-		return $this-&gt;get_cp_html();
+-	}
+-
+-
+-	// Return Templated value (change == user is able to set/enter profile values; show == just show the value)
+-	function process_field_row($mode, $profile_row)
+-	{
+-		$preview = false;
+-
+-		switch ($mode)
+-		{
+-			case 'preview':
+-				$preview = true;
+-			case 'change':
+-				$type_func = 'generate_' . $this-&gt;profile_types[$profile_row['field_type']];
+-				break;
+-			default:
+-				return;
+-		}
+-
+-		return $this-&gt;$type_func($profile_row, $preview);
+-	}
+-
+-	// Build Array for user insertion into custom profile fields table
+-	function build_insert_sql_array($cp_data)
+-	{
+-		global $_CLASS;
+-
+-		$sql = 'SELECT f.field_type, f.field_ident, f.field_default_value, l.lang_default_value
+-			FROM ' . PROFILE_LANG_TABLE . ' l, ' . PROFILE_FIELDS_TABLE . ' f 
+-			WHERE l.lang_id = ' . $_CLASS['core_user']-&gt;get_iso_lang_id() . ' 
+-				AND f.field_active = 1
+-				AND f.field_show_on_reg = 0
+-				' . (($_CLASS['auth']-&gt;acl_gets('a_', 'm_')) ? '' : ' AND f.field_hide = 0') . '
+-				AND l.field_id = f.field_id 
+-			GROUP BY f.field_id';
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-		{
+-			if ($row['field_default_value'] == 'now' &amp;&amp; $row['field_type'] == FIELD_DATE)
+-			{
+-				$now = getdate();
+-				$row['field_default_value'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], $now['year']);
+-			}
+-			$cp_data[$row['field_ident']] = (in_array($row['field_type'], array(FIELD_TEXT, FIELD_STRING))) ? $row['lang_default_value'] : $row['field_default_value'];
+-		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
+-		
+-		return $cp_data;
+-	}
+-
+-	function get_profile_field($profile_row)
+-	{
+-		global $site_file_root;
+-		
+-		switch ($profile_row['field_type'])
+-		{
+-			case FIELD_DATE:
+-
+-				if (!isset($_REQUEST[$var_name . '_day']))
+-				{
+-					if ($profile_row['field_default_value'] == 'now')
+-					{
+-						$now = getdate();
+-						$profile_row['field_default_value'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], $now['year']);
+-					}
+-					list($day, $month, $year) = explode('-', $profile_row['field_default_value']);
+-				}
+-				else
+-				{
+-					$day = request_var($var_name . '_day', 0);
+-					$month = request_var($var_name . '_month', 0);
+-					$year = request_var($var_name . '_year', 0);
+-				}
+-				
+-				$var = sprintf('%2d-%2d-%4d', $day, $month, $year);
+-				break;
+-
+-			case FIELD_TEXT:
+-				include_once($site_file_root.'includes/forums/message_parser.php');
+-				$message_parser = new parse_message(request_var($var_name, ''));
+-				
+-				// Get the allowed settings from the global settings. Magic URLs are always set to true.
+-				// TODO: It might be nice to make this a per field setting.
+-				$message_parser-&gt;parse($config['allow_html'], $config['allow_bbcode'], true, $config['allow_smilies']);
+-				
+-				$var = array(
+-					$profile_row['field_ident'] =&gt; $message_parser-&gt;message,
+-					$profile_row['field_ident'] . '_bbcode_uid' =&gt; $message_parser-&gt;bbcode_uid,
+-					$profile_row['field_ident'] . '_bbcode_bitfield' =&gt; $message_parser-&gt;bbcode_bitfield,
+-					 'submitted' =&gt; request_var($var_name, '')
+-				);
+-				break;
+-
+-			default:
+-				$var = request_var($var_name, $profile_row['field_default_value']);
+-				break;
+-		}
+-
+-		return $var;
+-	}
+-
+-	function set_tpl_vars($profile_row, $field_value)
+-	{
+-		global $_CLASS;
+-		
+-		foreach ($this-&gt;profile_types as $field_case =&gt; $field_type)
+-		{
+-			unset($_CLASS['core_template']-&gt;_tpl_vars[$field_type]);
+-		}
+-
+-		foreach ($profile_row as $key =&gt; $value)
+-		{
+-			unset($profile_row[$key]);
+-			$profile_row[strtoupper($key)] = $value;
+-		}
+-
+-		$profile_row['FIELD_VALUE'] = $field_value;
+-
+-		$_CLASS['core_template']-&gt;assign_vars_array($this-&gt;profile_types[$profile_row['FIELD_TYPE']], $profile_row);
+-	}
+-
+-	function get_cp_html()
+-	{
+-		global $_CLASS;
+-
+-		ob_start();
+-
+-		$_CLASS['core_template']-&gt;display('forums/custom_profile_fields.html');
+-
+-		$data = ob_get_contents();
+-		ob_end_clean();
+-
+-		return $data;
+-	}
+-}
+-
+-class custom_profile_admin extends custom_profile
+-{
+-	var $vars = array();
+-	
+-
+-	function validate_options()
+-	{
+-		global $_CLASS;
+-
+-		$validate_ary = array('CHARS_ANY' =&gt; '.*', 'NUMBERS_ONLY' =&gt; '[0-9]+', 'ALPHA_ONLY' =&gt; '[\w]+', 'ALPHA_SPACERS' =&gt; '[\w_\+\. \-\[\]]+');
+-
+-		$validate_options = '';
+-		foreach ($validate_ary as $lang =&gt; $value)
+-		{
+-			$selected = ($this-&gt;vars['field_validation'] == $value) ? ' selected=&quot;selected&quot;' : '';
+-			$validate_options .= '&lt;option value=&quot;' . $value . '&quot;' . $selected . '&gt;' . $_CLASS['core_user']-&gt;lang[$lang] . '&lt;/option&gt;';
+-		}
+-
+-		return $validate_options;
+-	}
+-	
+-	// GET_* get admin options for second step
+-	function get_string_options()
+-	{
+-		global $_CLASS;
+-
+-		$options = array(
+-			0 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['FIELD_LENGTH'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_length&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['field_length'] . '&quot; /&gt;'),
+-			1 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['MIN_FIELD_CHARS'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_minlen&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['field_minlen'] . '&quot; /&gt;'),
+-			2 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['MAX_FIELD_CHARS'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_maxlen&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['field_maxlen'] . '&quot; /&gt;'),
+-			3 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['FIELD_VALIDATION'], 'FIELD' =&gt; '&lt;select name=&quot;field_validation&quot;&gt;' . $this-&gt;validate_options() . '&lt;/select&gt;')
+-		);
+-
+-		return $options;
+-	}
+-
+-	function get_text_options()
+-	{
+-		global $_CLASS;
+-
+-		$options = array(
+-			0 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['FIELD_LENGTH'], 'FIELD' =&gt; '&lt;table border=0&gt;&lt;tr&gt;&lt;td&gt;&lt;input name=&quot;rows&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['rows'] . '&quot; class=&quot;post&quot; /&gt;&lt;/td&gt;&lt;td&gt;[ ' . $_CLASS['core_user']-&gt;lang['ROWS'] . ' ]&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;input name=&quot;columns&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['columns'] . '&quot; class=&quot;post&quot; /&gt;&lt;/td&gt;&lt;td&gt;[ ' . $_CLASS['core_user']-&gt;lang['COLUMNS'] . ' ] &lt;input type=&quot;hidden&quot; name=&quot;field_length&quot; value=&quot;' . $this-&gt;vars['field_length'] . '&quot; /&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;'),
+-			1 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['MIN_FIELD_CHARS'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_minlen&quot; size=&quot;10&quot; value=&quot;' . $this-&gt;vars['field_minlen'] . '&quot; /&gt;'),
+-			2 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['MAX_FIELD_CHARS'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_maxlen&quot; size=&quot;10&quot; value=&quot;' . $this-&gt;vars['field_maxlen'] . '&quot; /&gt;'),
+-			3 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['FIELD_VALIDATION'], 'FIELD' =&gt; '&lt;select name=&quot;field_validation&quot;&gt;' . $this-&gt;validate_options() . '&lt;/select&gt;')
+-		);
+-
+-		return $options;
+-	}
+-
+-	function get_int_options()
+-	{
+-		global $_CLASS;
+-
+-		$options = array(
+-			0 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['FIELD_LENGTH'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_length&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['field_length'] . '&quot; /&gt;'),
+-			1 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['MIN_FIELD_NUMBER'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_minlen&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['field_minlen'] . '&quot; /&gt;'),
+-			2 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['MAX_FIELD_NUMBER'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;field_maxlen&quot; size=&quot;5&quot; value=&quot;' . $this-&gt;vars['field_maxlen'] . '&quot; /&gt;'),
+-			3 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['DEFAULT_VALUE'], 'FIELD' =&gt; '&lt;input class=&quot;post&quot; type=&quot;post&quot; name=&quot;field_default_value&quot; value=&quot;' . $this-&gt;vars['field_default_value'] . '&quot; /&gt;')
+-		);
+-
+-		return $options;
+-	}
+-
+-	function get_bool_options()
+-	{
+-		global $_CLASS, $config, $lang_defs;
+-
+-		$default_lang_id = $lang_defs['iso'][$config['default_lang']];
+-
+-		$profile_row = array(
+-			'var_name'				=&gt; 'field_default_value',
+-			'field_id'				=&gt; 1,
+-			'lang_name'				=&gt; $this-&gt;vars['lang_name'],
+-			'lang_explain'			=&gt; $this-&gt;vars['lang_explain'],
+-			'lang_id'				=&gt; $default_lang_id,
+-			'field_default_value'	=&gt; $this-&gt;vars['field_default_value'],
+-			'field_ident'			=&gt; 'field_default_value',
+-			'field_type'			=&gt; FIELD_BOOL,
+-			'field_length'			=&gt; $this-&gt;vars['field_length'],
+-			'lang_options'			=&gt; $this-&gt;vars['lang_options']
+-		);
+-
+-		$options = array(
+-			0 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['FIELD_TYPE'], 'EXPLAIN' =&gt; $_CLASS['core_user']-&gt;lang['BOOL_TYPE_EXPLAIN'], 'FIELD' =&gt; '&lt;input type=&quot;radio&quot; name=&quot;field_length&quot; value=&quot;1&quot;' . (($this-&gt;vars['field_length'] == 1) ? ' checked=&quot;checked&quot;' : '') . ' /&gt;' . $_CLASS['core_user']-&gt;lang['RADIO_BUTTONS'] . '&nbsp; &nbsp;&lt;input type=&quot;radio&quot; name=&quot;field_length&quot; value=&quot;2&quot;' . (($this-&gt;vars['field_length'] == 2) ? ' checked=&quot;checked&quot;' : '') . ' /&gt;' . $_CLASS['core_user']-&gt;lang['CHECKBOX'] . '&nbsp; &nbsp;'),
+-			1 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['DEFAULT_VALUE'], 'FIELD' =&gt; $this-&gt;generate_bool($profile_row, true))
+-		);
+-
+-		return $options;
+-	}
+-
+-	function get_dropdown_options()
+-	{
+-		global $_CLASS, $config, $lang_defs;
+-
+-		$default_lang_id = $lang_defs['iso'][$config['default_lang']];
+-
+-		$profile_row[0] = array(
+-			'var_name'				=&gt; 'field_default_value',
+-			'field_id'				=&gt; 1,
+-			'lang_name'				=&gt; $this-&gt;vars['lang_name'],
+-			'lang_explain'			=&gt; $this-&gt;vars['lang_explain'],
+-			'lang_id'				=&gt; $default_lang_id,
+-			'field_default_value'	=&gt; $this-&gt;vars['field_default_value'],
+-			'field_ident'			=&gt; 'field_default_value',
+-			'field_type'			=&gt; FIELD_DROPDOWN,
+-			'lang_options'			=&gt; $this-&gt;vars['lang_options']
+-		);
+-
+-		$profile_row[1] = $profile_row[0];
+-		$profile_row[1]['var_name'] = 'field_novalue';
+-		$profile_row[1]['field_ident'] = 'field_novalue';
+-		$profile_row[1]['field_default_value']	= $this-&gt;vars['field_novalue'];
+-
+-
+-		$options = array(
+-			0 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['DEFAULT_VALUE'], 'FIELD' =&gt; $this-&gt;generate_dropdown($profile_row[0], true)),
+-			1 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['NO_VALUE_OPTION'], 'EXPLAIN' =&gt; $_CLASS['core_user']-&gt;lang['NO_VALUE_OPTION_EXPLAIN'], 'FIELD' =&gt; $this-&gt;generate_dropdown($profile_row[1], true))
+-		);
+-
+-		return $options;
+-	}
+-
+-	function get_date_options()
+-	{
+-		global $_CLASS, $config, $lang_defs;
+-
+-		$default_lang_id = $lang_defs['iso'][$config['default_lang']];
+-
+-		$profile_row = array(
+-			'var_name'				=&gt; 'field_default_value',
+-			'lang_name'				=&gt; $this-&gt;vars['lang_name'],
+-			'lang_explain'			=&gt; $this-&gt;vars['lang_explain'],
+-			'lang_id'				=&gt; $default_lang_id,
+-			'field_default_value'	=&gt; $this-&gt;vars['field_default_value'],
+-			'field_ident'			=&gt; 'field_default_value',
+-			'field_type'			=&gt; FIELD_DATE,
+-			'field_length'			=&gt; $this-&gt;vars['field_length']
+-		);
+-
+-		$options = array(
+-			0 =&gt; array('TITLE' =&gt; $_CLASS['core_user']-&gt;lang['DEFAULT_VALUE'], 'FIELD' =&gt; $this-&gt;generate_date($profile_row, true) . '&lt;br /&gt;&lt;input type=&quot;checkbox&quot; name=&quot;always_now&quot;' . ((isset($_REQUEST['always_now']) || $this-&gt;vars['field_default_value'] == 'now') ? ' checked=&quot;checked&quot;' : '') . ' /&gt;&nbsp; ' . $_CLASS['core_user']-&gt;lang['ALWAYS_TODAY'])
+-		);
+-
+-		return $options;
+-	}
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/Forums/index_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/index_body.html	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/includes/templates/modules/Forums/index_body.html	2005-09-13 22:02:35 UTC (rev 120)
+@@ -1,4 +1,5 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/forums/forum_view.js&quot;&gt;&lt;/script&gt;
+ 
+ &lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
+ 
+@@ -12,8 +13,7 @@
+ 		&lt;th width=&quot;50&quot;&gt;&nbsp;{ $L_POSTS }&nbsp;&lt;/th&gt;
+ 		&lt;th&gt;&nbsp;{ $L_LAST_POST }&nbsp;&lt;/th&gt;
+ 	&lt;/tr&gt;
+-	
+-	&lt;!-- LOOP $forumrow --&gt;
++&lt;!-- LOOP $forumrow --&gt;
+ 	&lt;!-- IF { $forumrow:S_IS_CAT } --&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;cat&quot; colspan=&quot;2&quot;&gt;&lt;h4&gt;&lt;a href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;/h4&gt;&lt;/td&gt;
+@@ -23,11 +23,11 @@
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;50&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;!-- IF { $forumrow:CLICKS } --&gt;
+-		&lt;td class=&quot;row1&quot;&gt;
++		&lt;td class=&quot;row1&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt;onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
+ 		&lt;!-- ELSE --&gt;
+-		&lt;td class=&quot;row1&quot; colspan=&quot;4&quot;&gt;
++		&lt;td class=&quot;row1&quot; colspan=&quot;4&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt;onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt;  width=&quot;100%&quot;&gt;
+ 		&lt;!-- ENDIF --&gt;
+-			&lt;a class=&quot;forumlink&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;
++			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;
+ 			&lt;p class=&quot;forumdesc&quot;&gt;{ $forumrow:FORUM_DESC }&lt;/p&gt;&lt;/td&gt;
+ 		&lt;!-- IF { $forumrow:CLICKS } --&gt;
+ 		&lt;td class=&quot;row2&quot; colspan=&quot;3&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_REDIRECTS }: { $forumrow:CLICKS }&lt;/span&gt;&lt;/td&gt;
+@@ -36,8 +36,8 @@
+ 	&lt;!-- ELSE --&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; height=&quot;40&quot; width=&quot;100%&quot;&gt;
+-			&lt;a class=&quot;forumlink&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;
++		&lt;td class=&quot;row1&quot; height=&quot;40&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt;onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
++			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;
+ 			&lt;p class=&quot;forumdesc&quot;&gt;{ $forumrow:FORUM_DESC }&lt;/p&gt;
+ 			&lt;!-- IF { $forumrow:MODERATORS } --&gt;
+ 				&lt;p class=&quot;forumdesc&quot;&gt;&lt;strong&gt;{ $forumrow:L_MODERATOR_STR }:&lt;/strong&gt; { $forumrow:MODERATORS }&lt;/p&gt;
+
+Modified: cms/trunk/includes/templates/modules/Forums/viewforum_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-13 22:02:35 UTC (rev 120)
+@@ -1,4 +1,5 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/forums/forum_view.js&quot;&gt;&lt;/script&gt;
+ 
+ &lt;!-- INCLUDE modules/Forums/overall_header.html --&gt;
+ 
+@@ -154,14 +155,14 @@
+ 		&lt;!-- IF { $S_TOPIC_ICONS } --&gt;
+ 		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;&lt;!-- IF { $topicrow:TOPIC_ICON_IMG } --&gt;&lt;img src=&quot;{ $T_ICONS_PATH }{ $topicrow:TOPIC_ICON_IMG }&quot; width=&quot;{ $topicrow:TOPIC_ICON_IMG_WIDTH }&quot; height=&quot;{ $topicrow:TOPIC_ICON_IMG_HEIGHT }&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ 		&lt;!-- ENDIF --&gt;
+-		&lt;td class=&quot;row1&quot;&gt;
++		&lt;td class=&quot;row1&quot; id=&quot;topic_{ $topicrow:TOPIC_ID }&quot; onmouseover=&quot;tite_edit_init('{ $topicrow:TOPIC_ID }', 'topic');&quot;&gt;
+ 			&lt;!-- IF { $topicrow:S_TOPIC_UNAPPROVED } --&gt;
+ 				&lt;a href=&quot;{ $topicrow:U_MCP_QUEUE }&quot;&gt;{ $UNAPPROVED_IMG }&lt;/a&gt;&nbsp;
+ 			&lt;!-- ENDIF --&gt;
+ 			&lt;!-- IF { $topicrow:S_TOPIC_REPORTED } --&gt;
+ 				&lt;a href=&quot;{$topicrow:U_MCP_REPORT}&quot;&gt;{ $REPORTED_IMG }&lt;/a&gt;&nbsp;
+ 			&lt;!-- ENDIF --&gt;
+-			&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt; &lt;/p&gt;
++			{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a class=&quot;topictitle&quot; id=&quot;topic_name_{ $topicrow:TOPIC_ID }&quot; href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt;
+ 			&lt;!-- IF { $topicrow:PAGINATION } --&gt;
+ 			&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG }{ $L_GOTO_PAGE }: { $topicrow:PAGINATION } ] &lt;/p&gt;
+ 			&lt;!-- ENDIF --&gt;
+
+Modified: cms/trunk/includes/templates/modules/Forums/viewtopic_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewtopic_body.html	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/includes/templates/modules/Forums/viewtopic_body.html	2005-09-13 22:02:35 UTC (rev 120)
+@@ -157,16 +157,6 @@
+ 				&lt;!-- IF { $postrow:POSTER_FROM } --&gt;&lt;div class=&quot;poster_details&quot;&gt;&lt;b&gt;{ $L_LOCATION }:&lt;/b&gt; { $postrow:POSTER_FROM }&lt;/div&gt;&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $postrow:POSTER_POSTS } --&gt;&lt;div class=&quot;poster_details&quot;&gt;&lt;b&gt;{ $L_POSTS }:&lt;/b&gt; { $postrow:POSTER_POSTS }&lt;/div&gt;&lt;!-- ENDIF --&gt;
+ 				&lt;br /&gt;
+-				&lt;!-- IF isset({ $postrow:S_PROFILE_FIELD_1 }) --&gt;
+-				&lt;!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. --&gt;
+-				&lt;br /&gt;&lt;b&gt;{ $postrow:PROFILE_FIELD1_NAME }:&lt;/b&gt; { $postrow:PROFILE_FIELD1_VALUE }
+-				&lt;!-- ENDIF --&gt;
+-				&lt;!---
+-				need to think of a way of doing it
+-				 BEGIN custom_fields 
+-				&lt;br /&gt;&lt;b&gt;{postrow.custom_fields.PROFILE_FIELD_NAME}:&lt;/b&gt; {postrow.custom_fields.PROFILE_FIELD_VALUE}
+-				END custom_fields
+-				--&gt;
+ 				&lt;/div&gt;
+ 			&lt;/td&gt;
+ 			&lt;td valign=&quot;top&quot;&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;5&quot;&gt;
+
+Deleted: cms/trunk/javascript/ajax.js
+===================================================================
+--- cms/trunk/javascript/ajax.js	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/javascript/ajax.js	2005-09-13 22:02:35 UTC (rev 120)
+@@ -1,40 +0,0 @@
+-// By Ryan Marshall ( <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A> )
+-
+-function core_ajax()
+-{
+-	this.request = false;
+-	this.async = true;
+-}
+-
+-core_ajax.prototype.init = function()
+-{
+-	try
+-	{
+-		this.request = new XMLHttpRequest();
+-	}
+-	catch(e)
+-	{
+-		try
+-		{
+-			this.request = new ActiveXObject('Microsoft.XMLHTTP');
+-			return true;
+-		}
+-		catch(e)
+-		{
+-			return false;
+-		}
+-	}
+-}
+-
+-core_ajax.prototype.send = function(url, data)
+-{
+-	if (!this.request)
+-	{
+-		this.init();
+-	}
+-	
+-	this.request.open('POST', url, this.async);
+-	this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+-	
+-	this.request.send(data);
+-}
+\ No newline at end of file
+
+Added: cms/trunk/javascript/common.js
+===================================================================
+--- cms/trunk/javascript/common.js	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/javascript/common.js	2005-09-13 22:02:35 UTC (rev 120)
+@@ -0,0 +1,79 @@
++// By Ryan Marshall ( <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A> )
++
++function array_search(needle, haystack, strict)
++{
++	for (var i in haystack)
++	{
++		if (haystack[i] == needle)
++		{
++			return i;
++		}
++	}
++
++	return null;
++}
++
++function core_ajax()
++{
++	this.request = null;
++	this.async = true;
++}
++
++core_ajax.prototype.init = function()
++{
++	try
++	{
++		this.request = new XMLHttpRequest();
++
++		return true;
++	}
++	catch(e)
++	{
++		try
++		{
++			this.request = new ActiveXObject('Microsoft.XMLHTTP');
++
++			return true;
++		}
++		catch(e)
++		{
++			return false;
++		}
++	}
++}
++
++core_ajax.prototype.send = function(url, data)
++{
++	if (!this.request)
++	{
++		this.init();
++	}
++
++	this.request.open('POST', url, this.async);
++	this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
++
++	this.request.send(data);
++}
++
++core_ajax.prototype.onreadystatechange = function(event)
++{
++	if (!this.request)
++	{
++		this.init();
++	}
++
++	if (typeof(event) == 'function')
++	{
++		this.request.onreadystatechange = event;
++	}
++}
++
++core_ajax.prototype.responseText = function()
++{
++	return this.request.responseText;
++}
++
++core_ajax.prototype.state_ready = function()
++{
++	return (this.request.readyState == 4 &amp;&amp; this.request.status == 200);
++}
+\ No newline at end of file
+
+Added: cms/trunk/javascript/forums/forum_view.js
+===================================================================
+--- cms/trunk/javascript/forums/forum_view.js	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/javascript/forums/forum_view.js	2005-09-13 22:02:35 UTC (rev 120)
+@@ -0,0 +1,133 @@
++// By Ryan Marshall ( <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A> )
++
++function tite_edit_init(id, mode)
++{
++	var area = document.getElementById(mode + '_' + id)
++
++	if (!area)
++	{
++		return
++	}
++
++	area.onmouseover = '';
++	area.ondblclick = function()
++	{
++		tite_edit_add(id, mode);
++	}
++}
++
++function tite_edit_add(id, mode)
++{
++	if (document.getElementById(mode + '_input_' + id))
++	{
++		return;
++	}
++
++	var area = document.getElementById(mode + '_' + id);
++	var title = document.getElementById(mode + '_name_' + id);
++	var input = document.createElement('input');
++
++	title.style.display ='none';
++
++	input.type = 'text';
++	input.size = 50;
++	input.className = 'post';
++	input.value = title.innerHTML;
++	//input.title = title.innerHTML;
++	input.id = mode + '_input_' + id;
++	input.onblur =	function()
++	{
++		tite_edit_onblur(id, mode);
++	}
++
++	input.onkeypress = function(e)
++	{
++		switch (e.keyCode)
++		{
++			case 13:
++			{
++				ajax = new core_ajax();
++
++				var onreadystatechange = function()
++				{
++					if (ajax.state_ready() &amp;&amp; ajax.responseText())
++					{
++						title.innerHTML = ajax.responseText();
++					}
++				}
++				
++				ajax.onreadystatechange(onreadystatechange);
++
++				var input = document.getElementById(mode + '_input_' + id);
++
++				ajax.send('index.php?mod=Forums&amp;file=ajax', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
++
++				tite_edit_remove(id, mode);
++			}
++	
++			case 27:
++			{
++				tite_edit_remove(id, mode);
++			}
++		}
++	}
++
++	if (input = area.insertBefore(input, title))
++	{
++		input.focus();
++	}
++
++	return false;
++}
++
++function tite_edit_remove(id, mode)
++{
++	var area = document.getElementById(mode + '_' + id);
++	var title = document.getElementById(mode + '_name_' + id);
++	var input = document.getElementById(mode + '_input_' + id);
++
++	if (!input)
++	{
++		return;
++	}
++
++	title.style.display = '';
++
++	area.removeChild(input);
++}
++
++function tite_edit_onblur(id, mode)
++{
++	var input = document.getElementById(mode + '_input_' + id);
++	var title = document.getElementById(mode + '_name_' + id);
++
++	if (!input)
++	{
++		return;
++	}
++
++	if (input.value == title.innerHTML)
++	{
++		tite_edit_remove(id, mode);
++
++		return;
++	}
++
++	ajax = new core_ajax();
++
++	var onreadystatechange = function()
++	{
++		if (ajax.state_ready() &amp;&amp; ajax.responseText())
++		{
++			title.innerHTML = ajax.responseText();
++		}
++	}
++	
++	ajax.onreadystatechange(onreadystatechange);
++
++	var input = document.getElementById(mode + '_input_' + id);
++
++	ajax.send('index.php?mod=Forums&amp;file=ajax', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
++
++	tite_edit_remove(id, mode);
++}
+\ No newline at end of file
+
+Added: cms/trunk/modules/Forums/ajax.php
+===================================================================
+--- cms/trunk/modules/Forums/ajax.php	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/modules/Forums/ajax.php	2005-09-13 22:02:35 UTC (rev 120)
+@@ -0,0 +1,79 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++header('Content-Type: text/html');
++
++Switch (get_variable('mode', 'POST', false))
++{
++	case 'forum_edit_title':
++		$forum_id = get_variable('id', 'POST', false, 'int');
++		$title = get_variable('title', 'POST', false);
++		
++		if (!$forum_id || !$title || !$_CLASS['auth']-&gt;acl_get('a_forum'))
++		{
++			die;
++		}
++
++		$title = mb_strtolower(htmlentities($title, ENT_QUOTES, 'UTF-8'));
++		$array = array('forum_name' =&gt; $title);
++		
++		$_CLASS['core_db']-&gt;report_error(false);
++		$_CLASS['core_db']-&gt;query('UPDATE ' . FORUMS_FORUMS_TABLE . ' SET '. $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $array).' WHERE forum_id = '.$forum_id);
++
++		echo $title;
++	break;
++
++	case 'topic_edit_title':
++		$topic_id = get_variable('id', 'POST', false, 'int');
++		$title = get_variable('title', 'POST', false);
++
++		if (!$topic_id || !$title )
++		{
++			die;
++		}
++
++		$result = $_CLASS['core_db']-&gt;query('SELECT forum_id FROM ' . FORUMS_TOPICS_TABLE . ' WHERE topic_id = '.$topic_id);
++		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		if (!$row || !$_CLASS['auth']-&gt;acl_get('m_edit', $row['forum_id']))
++		{
++			die;
++		}
++
++		$title = mb_strtolower(htmlentities($title, ENT_QUOTES, 'UTF-8'));
++		$array = array('topic_title' =&gt; $title);
++
++		$_CLASS['core_db']-&gt;report_error(false);
++		$_CLASS['core_db']-&gt;query('UPDATE ' . FORUMS_TOPICS_TABLE . ' SET '. $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $array).' WHERE topic_id = '.$topic_id);
++
++		echo $title;
++	break;
++}
++
++?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/Forums/posting.php
+===================================================================
+--- cms/trunk/modules/Forums/posting.php	2005-09-13 03:44:11 UTC (rev 119)
++++ cms/trunk/modules/Forums/posting.php	2005-09-13 22:02:35 UTC (rev 120)
+@@ -535,7 +535,7 @@
+ 
+ 	$topic_cur_post_id	= get_variable('topic_cur_post_id', 'POST', 0, 'int');
+ 
+-	$subject = mb_strtolower(get_variable('subject', 'POST', ''));
++	$subject = mb_strtolower(htmlentities(get_variable('subject', 'POST', ''), ENT_QUOTES, 'UTF-8'));
+ 	$message_parser-&gt;message = request_var('message', '', true);
+ 
+ 
+@@ -1615,7 +1615,7 @@
+ 			$sql_data[FORUMS_FORUMS_TABLE]['stat'][] = 'forum_topics_real = forum_topics_real - 1' . (($row['topic_approved']) ? ', forum_topics = forum_topics - 1' : '');
+ 
+ 			// Update forum_ids for all posts
+-			$sql = 'UPDATE ' . POSTS_TABLE . '
++			$sql = 'UPDATE ' . FORUMS_POSTS_TABLE . '
+ 				SET forum_id = 0
+ 				WHERE topic_id = ' . $data['topic_id'];
+ 			$_CLASS['core_db']-&gt;query($sql);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000040.html">[Viperals-svncheckins] r119 - in cms/trunk: . includes/templates/installer
+</A></li>
+	<LI>Next message: <A HREF="000042.html">[Viperals-svncheckins] r121 - in cms/trunk: . includes includes/display
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

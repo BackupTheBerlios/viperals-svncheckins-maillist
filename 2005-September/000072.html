@@ -1,0 +1,2504 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r152 - in cms/trunk: includes/db includes/display includes/templates/en/email includes/templates/en/email/control_panel includes/templates/modules/Control_Panel install javascript modules/Control_Panel/ucp modules/Forums modules/calender
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r152%20-%20in%20cms/trunk%3A%20includes/db%20includes/display%20includes/templates/en/email%20includes/templates/en/email/control_panel%20includes/templates/modules/Control_Panel%20install%20javascript%20modules/Control_Panel/ucp%20modules/Forums%20modules/calender&In-Reply-To=%3C200509301558.j8UFwbu1025193%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000071.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r152 - in cms/trunk: includes/db includes/display includes/templates/en/email includes/templates/en/email/control_panel includes/templates/modules/Control_Panel install javascript modules/Control_Panel/ucp modules/Forums modules/calender</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r152%20-%20in%20cms/trunk%3A%20includes/db%20includes/display%20includes/templates/en/email%20includes/templates/en/email/control_panel%20includes/templates/modules/Control_Panel%20install%20javascript%20modules/Control_Panel/ucp%20modules/Forums%20modules/calender&In-Reply-To=%3C200509301558.j8UFwbu1025193%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r152 - in cms/trunk: includes/db includes/display includes/templates/en/email includes/templates/en/email/control_panel includes/templates/modules/Control_Panel install javascript modules/Control_Panel/ucp modules/Forums modules/calender">viperal at berlios.de
+       </A><BR>
+    <I>Fri Sep 30 17:58:37 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000071.html">[Viperals-svncheckins] r151 - in cms/branches/1.0alpha2: . admin includes/display includes/forums includes/templates/admin/system install modules/Control_Panel/ucp modules/Forums modules/calender
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#72">[ date ]</a>
+              <a href="thread.html#72">[ thread ]</a>
+              <a href="subject.html#72">[ subject ]</a>
+              <a href="author.html#72">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-30 17:58:35 +0200 (Fri, 30 Sep 2005)
+New Revision: 152
+
+Added:
+   cms/trunk/includes/templates/en/email/control_panel/
+   cms/trunk/includes/templates/en/email/control_panel/index.htm
+   cms/trunk/includes/templates/en/email/control_panel/pm_notify.txt
+Removed:
+   cms/trunk/includes/db/mssql.php
+Modified:
+   cms/trunk/includes/db/sqlite.php
+   cms/trunk/includes/db/sqlite_pdo.php
+   cms/trunk/includes/display/calender.php
+   cms/trunk/includes/display/display.php
+   cms/trunk/includes/templates/modules/Control_Panel/ucp_calender_add.html
+   cms/trunk/includes/templates/modules/Control_Panel/ucp_main_bookmarks.html
+   cms/trunk/includes/templates/modules/Control_Panel/ucp_main_subscribed.html
+   cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_popup.html
+   cms/trunk/install/build_data.php
+   cms/trunk/install/build_tables.php
+   cms/trunk/javascript/editor.js
+   cms/trunk/modules/Control_Panel/ucp/ucp_calender.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_groups.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_main.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_pm_compose.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_prefs.php
+   cms/trunk/modules/Forums/viewforum.php
+   cms/trunk/modules/calender/configurator.php
+   cms/trunk/modules/calender/index.php
+Log:
+
+
+Deleted: cms/trunk/includes/db/mssql.php
+===================================================================
+--- cms/trunk/includes/db/mssql.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/db/mssql.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -1,693 +0,0 @@
+-&lt;?php
+-/*
+-||**************************************************************||
+-||  Viperal CMS &#194;&#169; :												||
+-||**************************************************************||
+-||																||
+-||	Copyright (C) 2004, 2005									||
+-||  By Ryan Marshall ( Viperal )								||
+-||																||
+-||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
+-||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
+-||																||
+-||**************************************************************||
+-||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
+-||**************************************************************||
+-||  Viperal CMS is released under the terms and conditions		||
+-||  of the GNU General Public License version 2					||
+-||																||
+-||**************************************************************||
+-
+-$Id$
+-*/
+-
+-class db_mssql
+-{
+-	var $link_identifier = false;
+-	var $db_layer = 'mssql';
+-
+-	var $last_result;
+-	var $return_on_error;
+-	var $in_transaction;
+-
+-	var $queries_time = 0;
+-	var $num_queries = 0;
+-
+-	var	$query_list = array();
+-	var $query_details = array();
+-	var $open_queries = array();
+-
+-	var $_indexs = array();
+-	var $_fields = array();
+-	var $_table_name = false;
+-	
+-	var $_limit_last_key = 0;
+-	var $_limit_result = array();
+-
+-	function connect($db)
+-	{		
+-		if ($db['port'])
+-		{
+-			$db['server'] .= ':' . $port;
+-		}
+-
+-		if ($this-&gt;link_identifier)
+-		{
+-			$this-&gt;disconnect();
+-		}
+-
+-		$this-&gt;link_identifier = ($db['persistent']) ? mssql_pconnect($db['server'], $db['username'], $db['password']) : mssql_connect($db['server'], $db['username'], $db['password']);
+-
+-		if ($this-&gt;link_identifier)
+-		{
+-			if (mssql_select_db($db['database']))
+-			{
+-				return $this-&gt;link_identifier;
+-			}
+-
+-			$error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB2&lt;/center&gt;';
+-		}
+-
+-		if (!$error)
+-		{
+-			$error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB1&lt;/center&gt;';
+-		}
+-
+-		$this-&gt;disconnect();
+-
+-		trigger_error($error, E_USER_ERROR);
+-	}
+-
+-	function disconnect()
+-	{
+-		if (!$this-&gt;link_identifier)
+-		{
+-			return;
+-		}
+-
+-		@mssql_close($this-&gt;link_identifier);
+-		$this-&gt;link_identifier = false;
+-	}
+-
+-	function sql_return_on_error($fail = false)
+-	{
+-		$this-&gt;return_on_error = $fail;
+-	}
+-
+-	function transaction($option = 'start')
+-	{
+-		if (!$this-&gt;link_identifier)
+-		{
+-			return;
+-		}
+-
+-		$result = false;
+-
+-		switch ($option)
+-		{
+-			case 'start':
+-				if ($this-&gt;in_transaction)
+-				{
+-					break;
+-				}
+-
+-				$result = mysql_query('BEGIN  TRANSACTION', $this-&gt;link_identifier);
+-				$this-&gt;in_transaction = true;
+-			break;
+-
+-			case 'commit':
+-			
+-				if (!$this-&gt;in_transaction)
+-				{
+-					break;
+-				}
+-
+-				$result = mysql_query('COMMIT', $this-&gt;link_identifier);
+-				
+-				if (!$result)
+-				{
+-					mysql_query('ROLLBACK', $this-&gt;link_identifier);
+-				}
+-				
+-				$this-&gt;in_transaction = false;
+-			break;
+-
+-			case 'rollback':
+-				if (!$this-&gt;in_transaction)
+-				{
+-					break;
+-				}
+-
+-				$result = mysql_query('ROLLBACK', $this-&gt;link_identifier);
+-				$this-&gt;in_transaction = false;
+-			break;
+-		}
+-
+-		return $result;
+-	}
+-
+-	function query($query = false,  $backtrace = false)
+-	{
+-		if (!$query || !$this-&gt;link_identifier) 
+-		{ 
+-			return false; 
+-		}
+-
+-		global $_CLASS, $site_file_root;
+-			
+-		$this-&gt;num_queries++;
+-		$this-&gt;last_query = $query;
+-
+-		if (!$backtrace)
+-		{
+-			$debug_backtrace = debug_backtrace();
+-			$backtrace = array();
+-			// remove the root directorys
+-			$backtrace['file'] = str_replace('\\','/', $debug_backtrace[0]['file']);
+-			$backtrace['file'] = str_replace($site_file_root, '', str_replace($_SERVER['DOCUMENT_ROOT'],'', $backtrace['file']));
+-
+-			$backtrace['line'] = $debug_backtrace[0]['line'];
+-		}
+-
+-		$this-&gt;_debug('start', $backtrace);
+-		$this-&gt;last_result = $this-&gt;sql_query($query);
+-		$this-&gt;_debug('stop', $backtrace);
+-
+-		if ($this-&gt;last_result === false)
+-		{
+-			$this-&gt;_error($query, $backtrace);
+-		}
+-		elseif (strpos($query, 'SELECT') !== false)
+-		{
+-			$this-&gt;open_queries[(int) $this-&gt;last_result] = $this-&gt;last_result;
+-		}
+-
+-		return $this-&gt;last_result;
+-	}
+-
+-	function sql_query($query = false)
+-	{
+-		return mssql_query($query, $this-&gt;link_identifier);
+-	}
+-
+-	function query_limit($query = false, $total = false, $offset = 0, $backtrace = false) 
+-	{
+-		if (!$query || !$total || !$this-&gt;link_identifier) 
+-		{
+-			// no need to check for query or link_id, it's checked in db::query()
+-			return $this-&gt;query($query);; 
+-		}
+-
+-		global $site_file_root;
+-
+-		if (!$backtrace)
+-		{
+-			$debug_backtrace = debug_backtrace();
+-			$backtrace = array();
+-			// remove the root directorys
+-			$backtrace['file'] = str_replace('\\','/', $debug_backtrace[0]['file']);
+-			$backtrace['file'] = str_replace($site_file_root, '', str_replace($_SERVER['DOCUMENT_ROOT'],'', $backtrace['file']));
+-
+-			$backtrace['line'] = $debug_backtrace[0]['line'];
+-		}
+-
+-		$query = substr(trim($query));
+-		
+-		if (!$offset)
+-		{
+-			return $this-&gt;query(&quot;SELECT TOP($total) $query&quot;);
+-		}
+-		
+-		/*
+-			Welcome to hell
+-
+-			We'll do two query and get the diffence in php to make sure things work right
+-			Other why needs us to know the a unique feild/key or primary key
+-		*/
+-		
+-		// here we go, get the all data up to the offset row. offset row = total need + offset
+-		$result = $this-&gt;query('SELECT TOP('.$total + $offset.&quot;) $query&quot;);
+-
+-		// need to test dataseek, if it resets after the a fetch do mssql_next_result loop
+-		if (!$result || !mssql_data_seek($offset))
+-		{
+-			$this-&gt;free_result($result);
+-
+-			return false;
+-		}
+-
+-		/*
+-			change mssql_data_seek to mssql_num_rows &lt; $offset above if this is used
+-			for ($i = 1; $i &lt;= $offset; $i++)
+-			{
+-				mssql_next_result($result);
+-			}
+-		*/
+-
+-		// we fetch array so both assoc and num can be used, May change later on
+-
+-		$this-&gt;_limit_last_key ++;
+-		$result_id = 'LIMIT_'.$this-&gt;_limit_last_key;
+-		
+-		while ($row = mssql_fetch_array($result))
+-		{
+-			$this-&gt;_limit_result[$result_id][] = $row;
+-		}
+-
+-		return $result_id;
+-	}
+-
+-	/*
+-		Boy do I like this but it phpBB's, may have to do something similar
+-	*/
+-	function sql_build_array($query, $assoc_ary = false)
+-	{
+-		if (!is_array($assoc_ary))
+-		{
+-			return false;
+-		}
+-
+-		$fields = array();
+-		$values = array();
+-
+-		if ($query == 'INSERT')
+-		{
+-			foreach ($assoc_ary as $key =&gt; $var)
+-			{
+-				$fields[] = $key;
+-
+-				if (is_null($var))
+-				{
+-					$values[] = 'NULL';
+-				}
+-				elseif (is_string($var))
+-				{
+-					$values[] = &quot;'&quot; . $this-&gt;escape($var) . &quot;'&quot;;
+-				}
+-				else
+-				{
+-					$values[] = (is_bool($var)) ? intval($var) : $var;
+-				}
+-			}
+-
+-			$query = ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+-		}
+-		else if ($query == 'UPDATE' || $query == 'SELECT')
+-		{
+-			$values = array();
+-			foreach ($assoc_ary as $key =&gt; $var)
+-			{
+-				if (is_null($var))
+-				{
+-					$values[] = &quot;$key = NULL&quot;;
+-				}
+-				elseif (is_string($var))
+-				{
+-					$values[] = &quot;$key = '&quot; . $this-&gt;escape($var) . &quot;'&quot;;
+-				}
+-				else
+-				{
+-					$values[] = (is_bool($var)) ? &quot;$key = &quot; . intval($var) : &quot;$key = $var&quot;;
+-				}
+-			}
+-			$query = implode(($query == 'UPDATE') ? ', ' : ' AND ', $values);
+-		}
+-
+-		return $query;
+-	}
+-
+-	function num_rows($result = false)
+-	{
+-		if (!$result || !$this-&gt;link_identifier) 
+-		{ 
+-			return 0; 
+-		}
+-
+-		if (strpos($result, 'LIMIT_') === 0)
+-		{
+-			return (empty($this-&gt;_limit_result[$result]) ? 0 : count($this-&gt;_limit_result[$result]));
+-		}
+-
+-		return mssql_num_rows($result);
+-	}
+-
+-	function affected_rows()
+-	{
+-		if (!$this-&gt;link_identifier)
+-		{ 
+-			return 0; 
+-		}
+-
+-		$num = mssql_rows_affected($this-&gt;link_identifier);
+-
+-		// not sure what it returns one fail, test maybe ?
+-		return (!$num || $num == -1) ? 0 : $num;
+-	}
+-
+-	function fetch_row_assoc($result = false)
+-	{
+-		global $_CLASS;
+-
+-		if (!$result || !$this-&gt;link_identifier)
+-		{
+-			return false;
+-		}
+-
+-		if (strpos($result, 'LIMIT_') === 0)
+-		{
+-			if (empty($this-&gt;_limit_result[$result]) || !($value = each($this-&gt;_limit_result[$result])))
+-			{
+-				return false;
+-			}
+-			return $value['value'];
+-		}
+-
+-		return @mssql_fetch_assoc($result);
+-	}
+-
+-	function fetch_row_num($result = false)
+-	{
+-		if (!$result || !$this-&gt;link_identifier)
+-		{
+-			return false;
+-		}
+-
+-		if (strpos($result, 'LIMIT_') === 0)
+-		{
+-			if (empty($this-&gt;_limit_result[$result]) || !($value = each($this-&gt;_limit_result[$result])))
+-			{
+-				return false;
+-			}
+-			return $value['value'];
+-		}
+-
+-		return @mssql_fetch_row($result);
+-	}
+-
+-	function fetch_row_both($result = false)
+-	{
+-		if (!$result || !$this-&gt;link_identifier)
+-		{
+-			return false;
+-		}
+-
+-		if (strpos($result, 'LIMIT_') === 0)
+-		{
+-			if (empty($this-&gt;_limit_result[$result]) || !($value = each($this-&gt;_limit_result[$result])))
+-			{
+-				return false;
+-			}
+-			return $value['value'];
+-		}
+-
+-		return @mssql_fetch_array($result);
+-	}
+-	
+-	function insert_id()
+-	{
+-		if (!$this-&gt;link_identifier)
+-		{
+-			return false;
+-		}
+-		
+-		//@@IDENTITY
+-		if ($result = mssql_query('SELECT SCOPE_IDENTITY() AS Identity', $this-&gt;db_connect_id))
+-		{
+-			$row = mssql_fetch_assoc($result);
+-			mssql_free_result($result);
+-		}
+-
+-		return (isset($row['Identity']) &amp;&amp; !is_null($row['Identity'])) ? $row['Identity'] : false;
+-	}
+-
+-	function free_result($result = false)
+-	{
+-		if ($result &amp;&amp; strpos($result, 'LIMIT_') === 0)
+-		{
+-			if (isset($this-&gt;_limit_result[$result]))
+-			{
+-				unset($this-&gt;_limit_result[$result]);
+-			}
+-			return;
+-		}
+-
+-		if (!$result || !isset($this-&gt;open_queries[(int) $result]) || !$this-&gt;link_identifier) 
+-		{ 
+-			return; 
+-		}
+-
+-		unset($this-&gt;open_queries[(int) $result]);
+-
+-		@mssql_free_result($result);
+-	}
+-
+-	function escape($text)
+-	{
+-		return str_replace(&quot;'&quot;, &quot;''&quot;, str_replace('\\', '\\\\', $text));
+-	}
+-
+-	function escape_array($value)
+-	{
+-		return preg_replace('#(.*?)#e', &quot;\$this-&gt;escape('\\1')&quot;, $value);
+-	}
+-		
+-	function optimize_tables()
+-	{
+-
+-	}
+-
+-	function version()
+-	{
+-		//add later, more important things to do
+-		//@@VERSION
+-	}
+-
+-	function _error($sql = '', $backtrace)
+-	{
+-		if ($this-&gt;return_on_error)
+-		{
+-			return;
+-		}
+-
+-		// should we use the long error getting why ?
+-		$message = '&lt;u&gt;SQL ERROR&lt;/u&gt;&lt;br /&gt;&lt;br /&gt;' . @mssql_get_last_message() . '&lt;br /&gt;&lt;br /&gt;File:&lt;br/&gt;&lt;br/&gt;'.$backtrace['file'].'&lt;br /&gt;&lt;br /&gt;Line:&lt;br /&gt;&lt;br /&gt;'.$backtrace['line'].'&lt;br /&gt;&lt;br /&gt;&lt;u&gt;CALLING PAGE&lt;/u&gt;&lt;br /&gt;&lt;br /&gt;'.(($sql) ? '&lt;br /&gt;&lt;br /&gt;&lt;u&gt;SQL&lt;/u&gt;&lt;br /&gt;&lt;br /&gt;' . $sql : '') . '&lt;br /&gt;';
+-
+-		if ($this-&gt;in_transaction)
+-		{
+-			$this-&gt;transaction('rollback');
+-		}
+-		
+-		trigger_error($message, E_USER_ERROR);
+-	}
+-
+-	function _debug($mode, $backtrace)
+-	{
+-		global $_CLASS, $_CORE_CONFIG;
+-		static $start_time;
+-
+-		if (!$this-&gt;link_identifier) 
+-		{ 
+-			return false; 
+-		}
+-
+-		switch ($mode)
+-		{
+-			case 'start':
+-				$this-&gt;query_details[$this-&gt;num_queries][] = '';
+-
+-				$start_time = explode(' ', microtime());
+-				$start_time = $start_time[0] + $start_time[1];
+-			break;
+-
+-			case 'stop':
+-				global $site_file_root;
+-
+-				$end_time = explode(' ', microtime());
+-				$end_time = $end_time[0] + $end_time[1];
+-				$this-&gt;queries_time += $end_time - $start_time;
+-
+-				if (empty($_CORE_CONFIG['global']['error']) || $_CORE_CONFIG['global']['error'] == ERROR_DEBUGGER)
+-				{
+-					if ($this-&gt;last_result !== false)
+-					{
+-						$affected = false;
+-
+-						if (preg_match('/^(UPDATE|DELETE|REPLACE)/', $this-&gt;last_query))
+-						{
+-							$affected = $this-&gt;affected_rows($this-&gt;last_result);
+-						}
+-						
+-						$this-&gt;query_list[$this-&gt;num_queries] = array('query' =&gt; $this-&gt;last_query, 'file' =&gt; $backtrace['file'], 'line'=&gt; $backtrace['line'], 'affected' =&gt; $affected, 'time' =&gt; ($end_time - $start_time));
+-					}
+-					else
+-					{
+-						// should we use the long error getting why ?
+-						$this-&gt;query_list[$this-&gt;num_queries] = array('query' =&gt; $this-&gt;last_query, 'file' =&gt; $backtrace['file'], 'line'=&gt; $backtrace['line'], 'error'=&gt; 1, 'errorcode' =&gt; mssql_get_last_message());
+-					}
+-				}
+-			break;
+-		}
+-	}
+-
+-	/*
+-		Table creation
+-	*/
+-	function table_create($option, $name = false)
+-	{
+-		switch ($option)
+-		{
+-			case 'start':
+-				$this-&gt;_table_name = $name;
+-				$this-&gt;_fields = $this-&gt;_indexs = array();
+-			break;
+-
+-			case 'commit':
+-			case 'return':
+-				if (!$this-&gt;_table_name)
+-				{
+-					return;
+-				}
+-
+-				$fields = implode(&quot;, \n&quot;, $this-&gt;_fields);
+-				if ($indexs = implode(&quot;, \n&quot;, $this-&gt;_indexs))
+-				{
+-					$fields .= &quot;, \n&quot;;
+-				}
+-				
+-				//#MyTempTable -- local temp tables
+-				//##MyTempTable -- Global temp tables
+-
+-				$table = 'CREATE TABLE ['.$this-&gt;_table_name.&quot;] ( \n&quot; .$fields. $indexs .&quot; \n ) ENGINE=InnoDB;&quot;;
+-				// Let users choose transaction safe InnoDB or MyISAM
+-				// ENGINE=MyISAM
+-				if ($option == 'return')
+-				{
+-					return $table;
+-				}
+-
+-				$this-&gt;sql_query($table);
+-
+-			case 'cancel':
+-				$this-&gt;_table_name = false;
+-				$this-&gt;_fields = $this-&gt;_indexs = array();
+-			break;
+-		}
+-	}
+-
+-//$name, $number_min, $number_max = false, $default = 0, $auto_increment = false
+-	function add_table_field_int($name, $setting_sent)
+-	{
+-		$setting = array('default' =&gt; 0, 'min' =&gt; 0, 'max' =&gt; 0, 'auto_increment' =&gt; false, 'null' =&gt; false);
+-		$setting = array_merge($setting, $setting_sent);
+-
+-		$length = max(strlen($setting['min']), strlen($setting['max']));
+-
+-		if ($setting['min'] &gt;= -0 &amp;&amp; $setting['max'] &lt;= 255)
+-		{
+-			// TINYINT UNSIGNED ( 0 to 255 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` TINYINT($length) UNSIGNED&quot;;
+-		}
+-		elseif ($setting['min'] &gt;= -128 &amp;&amp; $setting['max'] &lt;= 128)
+-		{
+-			// TINYINT ( -128 to 127 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` TINYINT($length) DEFAULT&quot;;
+-		}
+-		elseif ($setting['min'] &gt;= 0 &amp;&amp; $setting['max'] &lt;= 65535)
+-		{
+-			// SMALLINT UNSIGNED ( 0 to 65,535 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` SMALLINT($length) UNSIGNED&quot;;
+-		}
+-		elseif ($setting['min'] &gt;= -32768 &amp;&amp; $setting['max'] &lt;= 32767)
+-		{
+-			// SMALLINT ( -32,768 to 32,767 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` SMALLINT($length)&quot;;
+-		}
+-		elseif ($setting['min'] &gt;= 0 &amp;&amp; $setting['max'] &lt;= 16777215)
+-		{
+-			// MEDIUMINT UNSIGNED ( 0 to 16,777,215 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` MEDIUMINT($length) UNSIGNED&quot;;
+-		}
+-		elseif ($setting['min'] &gt;= -8388608 &amp;&amp; $setting['max'] &lt;= 8388607)
+-		{
+-			// MEDIUMINT ( -8,388,608 to 8,388,607 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` MEDIUMINT($length)&quot;;
+-		}
+-		elseif ($setting['min'] &gt;= -2147483647 &amp;&amp; $setting['max'] &lt;= 2147483647)
+-		{
+-			// INT ( -2,147,483,647 to 2,147,483,647 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` INT($length)&quot;;
+-		}
+-		elseif ($setting['min'] &gt;= 0 &amp;&amp; $setting['max'] &lt;= 4294967295) // we'll do this last
+-		{
+-			// INT UNSIGNED ( 0 to 4,294,967,295 )
+-			$this-&gt;_fields[$name] =  &quot;`$name` INT($length) UNSIGNED&quot;;
+-		}
+-
+-		if ($auto_increment)
+-		{
+-			$this-&gt;_fields[$name] .= ' auto_increment';
+-		}
+-		else
+-		{
+-			$this-&gt;_fields[$name] .= ($setting['null']) ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
+-			$this-&gt;_fields[$name] .= &quot; DEFAULT '&quot;.(int) $default.&quot;'&quot;;
+-		}
+-	}
+-
+-	function add_table_field_text($name, $characters = 60000, $null = false)
+-	{
+-		if ($characters &lt;= 255)
+-		{
+-			// TINYTEXT 1 to 255 Characters
+-			$this-&gt;_fields[$name] =  &quot;`$name` TINYTEXT&quot;;
+-		}
+-		elseif ($characters &lt;= 65535)
+-		{
+-			// TEXT 1 to 65535 Characters
+-			$this-&gt;_fields[$name] =  &quot;`$name` TEXT&quot;;
+-		}
+-		elseif ($characters &lt;= 16777215)
+-		{
+-			// MEDIUMTEXT 1 to 16,777,215 Characters
+-			$this-&gt;_fields[$name] =  &quot;`$name` MEDIUMTEXT&quot;;
+-		}
+-		elseif ($characters &lt;= 4294967295)
+-		{
+-			// LONGTEXT 1 to 4,294,967,295 Characters
+-			$this-&gt;_fields[$name] =  &quot;`$name` LONGTEXT&quot;;
+-		}
+-
+-		$this-&gt;_fields[$name] .= ($null) ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
+-	}
+-
+-	function add_table_field_char($name, $characters, $default = '', $padded = false)
+-	{
+-
+-		$this-&gt;_fields[$name] = ($padded) ? &quot;`$name` CHAR($characters)&quot; :  &quot;`$name` VARCHAR($characters)&quot;;
+-		$this-&gt;_fields[$name] .= (is_null($default)) ? &quot; NULL&quot; : &quot; NOT NULL DEFAULT '$default'&quot;;
+-	}
+-
+-	function add_table_index($field, $type  = 'index', $index_name = false)
+-	{
+-		$index_name = ($index_name) ? $index_name : $field;
+-
+-		if (empty($this-&gt;_fields[$field]))
+-		{
+-			return;
+-		}
+-
+-		switch ($type)
+-		{
+-			case 'index':
+-			case 'unique':
+-				$this-&gt;_indexs[$index_name] = (($type == 'UNIQUE') ? 'UNIQUE ' : '') . &quot;KEY `$index_name` (`$field`)&quot;;
+-			break;
+-
+-			case 'primary':
+-				$this-&gt;_indexs['primary'] = &quot;PRIMARY KEY (`$field`)&quot;;
+-			break;
+-		}
+-	}
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/db/sqlite.php
+===================================================================
+--- cms/trunk/includes/db/sqlite.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/db/sqlite.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -65,6 +65,11 @@
+ 			return $this-&gt;link_identifier;
+ 		}
+ 		
++		if (!$this-&gt;report_error)
++		{
++			return false;
++		}
++
+ 		if (!$error)
+ 		{
+ 			$error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB1&lt;/center&gt;';
+
+Modified: cms/trunk/includes/db/sqlite_pdo.php
+===================================================================
+--- cms/trunk/includes/db/sqlite_pdo.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/db/sqlite_pdo.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -55,6 +55,11 @@
+ 		}
+ 		catch (PDOException $e)
+ 		{
++			if (!$this-&gt;report_error)
++			{
++				return false;
++			}
++
+ 			trigger_error('Connection failed: ' . $e-&gt;getMessage());
+ 		}
+ 
+
+Modified: cms/trunk/includes/display/calender.php
+===================================================================
+--- cms/trunk/includes/display/calender.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/display/calender.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -192,7 +192,7 @@
+ 		}
+ 		
+ 		$date = explode(':', date('n:d:y', $time));
+-		
++
+ 		$day['start'] = mktime(0, 0, 0, $date[0], $date[1], $date[2]) + 60;
+ 		$day['end'] = mktime(24, 0, 0, $date[0], $date[1], $date[2]) - 1;
+ 
+@@ -249,7 +249,7 @@
+ 			$time = mktime(12, 0, 0, $this-&gt;month, $this-&gt;day, $this-&gt;year);
+ 		}
+ 		
+-		$date = explode(',', date('n,t,Y', $time));
++		$date = explode(':', date('n:t:Y', $time));
+ 		$month['start'] = mktime(0, 0, 0, $date[0], 1, $date[2]);
+ 		$month['end'] = mktime(24, 0, 0, $date[0], $date[1], $date[2]) - 1;
+ 
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/display/display.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -49,12 +49,14 @@
+ 
+ 		if ($module['module_status'] != STATUS_ACTIVE)
+ 		{
+-			if (!$_CLASS['core_auth']-&gt;admin_auth('modules'))
++			if ($module['module_status'] == STATUS_DISABLE &amp;&amp; $_CLASS['core_auth']-&gt;admin_auth('modules'))
+ 			{
++				$_CLASS['core_display']-&gt;message = '&lt;b&gt;Module '.$module['module_name'].' Isn\'t Active&lt;/b&gt;&lt;br /&gt;';
++			}
++			else
++			{
+ 				return '_MODULE_NOT_ACTIVE';
+ 			}
+-
+-			$_CLASS['core_display']-&gt;message = '&lt;b&gt;Module '.$module['module_name'].' Isn\'t Active&lt;/b&gt;&lt;br /&gt;';
+ 		}
+ 
+ 		//authization check here
+
+Added: cms/trunk/includes/templates/en/email/control_panel/index.htm
+===================================================================
+--- cms/trunk/includes/templates/en/email/control_panel/index.htm	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/templates/en/email/control_panel/index.htm	2005-09-30 15:58:35 UTC (rev 152)
+@@ -0,0 +1,10 @@
++&lt;html&gt;
++&lt;head&gt;
++&lt;title&gt;&lt;/title&gt;
++&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=iso-8859-1&quot;&gt;
++&lt;/head&gt;
++
++&lt;body bgcolor=&quot;#FFFFFF&quot; text=&quot;#000000&quot;&gt;
++
++&lt;/body&gt;
++&lt;/html&gt;
+
+Added: cms/trunk/includes/templates/en/email/control_panel/pm_notify.txt
+===================================================================
+--- cms/trunk/includes/templates/en/email/control_panel/pm_notify.txt	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/templates/en/email/control_panel/pm_notify.txt	2005-09-30 15:58:35 UTC (rev 152)
+@@ -0,0 +1,13 @@
++Hello,
++
++You have received a new private message from &quot;{ $AUTHOR_NAME }&quot; to your account on &quot;{ $SITENAME }&quot; with the following subject:
++
++{ $SUBJECT } 
++
++You can view your new message by clicking on the following link:
++
++{ $LINK_INBOX } 
++
++You have requested that you be notified on this event, remember that you can always choose not to be notified of new messages by changing the appropriate setting in your profile.
++
++{ $EMAIL_SIG }
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/Control_Panel/ucp_calender_add.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Control_Panel/ucp_calender_add.html	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/templates/modules/Control_Panel/ucp_calender_add.html	2005-09-30 15:58:35 UTC (rev 152)
+@@ -28,80 +28,89 @@
+ }
+ 
+ &lt;/script&gt;
+-
+-&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;0&quot;&gt;
+-	&lt;tr&gt;
+-		&lt;td width=&quot;60%&quot; valign=&quot;top&quot;&gt;
+-			&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+-				&lt;tr&gt;
+-					&lt;th colspan=&quot;2&quot;&gt;{ $L_BASIC_INFO }&lt;/th&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt; 
+-					&lt;td class=&quot;row2&quot; align=&quot;center&quot; colspan=&quot;3&quot;&gt;
+-						&lt;font class=&quot;error&quot;&gt;No Content check yet, so don't hack plz&lt;/font&gt;
+-					&lt;/td&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_TITLE }&lt;/td&gt;
+-					&lt;td class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;title&quot; value=&quot;&quot; size=&quot;39&quot; type=&quot;text&quot;&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td valign=&quot;top&quot; class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_DESCRIPTION }&lt;br/&gt;&lt;a id=&quot;preview_fast&quot; href=&quot;#&quot; onclick=&quot;fast_preview()&quot;&gt;{ $L_PREVIEW }&lt;/a&gt;&lt;/td&gt;
+-					&lt;td class=&quot;row1&quot;&gt;
+-						&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5&quot;&gt;&lt;/div&gt;
+-						&lt;textarea name=&quot;description&quot; id=&quot;description&quot; rows=&quot;5&quot; cols=&quot;35&quot; style=&quot;display: ;&quot; wrap=&quot;virtual&quot; size=&quot;40&quot;&gt;&lt;/textarea&gt;
+-					&lt;/td&gt;
+-				&lt;/tr&gt;	
+-				&lt;tr&gt;
+-					&lt;th colspan=&quot;2&quot;&gt;&lt;/th&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_START }&lt;/td&gt;
+-					&lt;td class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; id=&quot;start&quot; name=&quot;start&quot; value=&quot;&quot; size=&quot;35&quot; type=&quot;text&quot; /&gt; &lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot;  id=&quot;start_trigger&quot; /&gt;&lt;/td&gt;
+-
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_END }&lt;/td&gt;
+-					&lt;td class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; id=&quot;end&quot; name=&quot;end&quot; value=&quot;&quot; size=&quot;35&quot; type=&quot;text&quot; /&gt; &lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot;  id=&quot;end_trigger&quot; /&gt;&lt;/td&gt;
+-
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td class=&quot;cat&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;btnmain&quot; name=&quot;submit&quot; value=&quot;Submit&quot; type=&quot;submit&quot;&gt;&nbsp;&lt;/td&gt;
+-					&lt;td class=&quot;cat&quot; align=&quot;center&quot;&gt;&lt;/td&gt;
+-				&lt;/tr&gt;
+-			&lt;/table&gt;
+-		&lt;/td&gt;
+-		&lt;td width=&quot;40%&quot; valign=&quot;top&quot;&gt;
++
++&lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
++	&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;0&quot;&gt;
++		&lt;tr&gt;
++			&lt;td width=&quot;60%&quot; valign=&quot;top&quot;&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++					&lt;!-- IF { $ERROR } --&gt;
++					&lt;tr&gt;
++						&lt;td class=&quot;row1&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;genmed&quot; style=&quot;color:red&quot;&gt;{ $ERROR }&lt;/span&gt;&lt;/td&gt;
++					&lt;/tr&gt;
++					&lt;!-- ENDIF --&gt;
++					&lt;tr&gt;
++						&lt;th colspan=&quot;2&quot;&gt;{ $L_BASIC_INFO }&lt;/th&gt;
++					&lt;/tr&gt;
++					&lt;tr&gt; 
++						&lt;td class=&quot;row2&quot; align=&quot;center&quot; colspan=&quot;3&quot;&gt;
++							&lt;font class=&quot;error&quot;&gt;No Content check yet, so don't hack plz&lt;/font&gt;
++						&lt;/td&gt;
++					&lt;/tr&gt;
++					&lt;tr&gt;
++						&lt;td class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_TITLE }&lt;/td&gt;
++						&lt;td class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;title&quot; value=&quot;&quot; size=&quot;39&quot; type=&quot;text&quot; /&gt;&lt;/td&gt;
++					&lt;/tr&gt;
++					&lt;tr&gt;
++						&lt;td valign=&quot;top&quot; class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_DESCRIPTION }&lt;br/&gt;&lt;a id=&quot;preview_fast&quot; href=&quot;#&quot; onclick=&quot;fast_preview(); return false;&quot;&gt;{ $L_PREVIEW }&lt;/a&gt;&lt;/td&gt;
++						&lt;td class=&quot;row1&quot;&gt;
++							&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5&quot;&gt;&lt;/div&gt;
++							&lt;textarea name=&quot;description&quot; id=&quot;description&quot; rows=&quot;5&quot; cols=&quot;35&quot; style=&quot;display: ;&quot; wrap=&quot;virtual&quot; size=&quot;40&quot;&gt;&lt;/textarea&gt;
++						&lt;/td&gt;
++					&lt;/tr&gt;	
++					&lt;tr&gt;
++						&lt;th colspan=&quot;2&quot;&gt;&lt;/th&gt;
++					&lt;/tr&gt;
++					&lt;tr&gt;
++						&lt;td class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_START }&lt;/td&gt;
++						&lt;td class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; id=&quot;start&quot; name=&quot;start&quot; value=&quot;&quot; size=&quot;35&quot; type=&quot;text&quot; /&gt; &lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot;  id=&quot;start_trigger&quot; /&gt;&lt;/td&gt;
+ 	
+-			&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+-				&lt;tr&gt;
+-					&lt;th&gt;{ $L_BASIC_INFO }&lt;/th&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td class=&quot;row1&quot;&gt;{ $L_BASIC_INFO }&lt;/td&gt;
+-				&lt;/tr&gt;
+-				&lt;tr&gt;
+-					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;a href=&quot;#&quot; onclick=&quot;if (document.getElementById('options_recu').style.display)
+-																		{
+-																			document.getElementById('options_recu').style.display = '';
+-																			this.innerHTML = '{ $L_HIDE_RECURRENCE }';
+-																		}
+-																		else
+-																		{
+-																			document.getElementById('options_recu').style.display = 'none';
+-																			this.innerHTML = '{ $L_SHOW_RECURRENCE }';
+-																		}&quot;&gt;
+-					{ $L_SHOW_RECURRENCE }&lt;/a&gt;&lt;/th&gt;
+-				&lt;/tr&gt;
+-				
+-				&lt;tr id=&quot;options_recu&quot; style=&quot;display: none;&quot;&gt;
+-					&lt;td class=&quot;row1&quot;&gt;Recurre Every: &lt;input class=&quot;post&quot; name=&quot;title&quot; value=&quot;&quot; size=&quot;5&quot; type=&quot;text&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;&lt;/span&gt;&lt;select name=&quot;recurrence_rate&quot;&gt;&lt;option value=&quot;86400&quot;&gt;Days&lt;/option&gt;&lt;option value=&quot;86400&quot;&gt;1&lt;/option&gt;&lt;/select&gt;&lt;/td&gt;
+-				&lt;/tr&gt;
+-				
+-			&lt;/table&gt;
+-		&lt;/td&gt;
+-	&lt;/tr&gt;
+-&lt;/table&gt;
++					&lt;/tr&gt;
++					&lt;tr&gt;
++						&lt;td class=&quot;row1&quot; width=&quot;30%&quot;&gt;{ $L_END }&lt;/td&gt;
++						&lt;td class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; id=&quot;end&quot; name=&quot;end&quot; value=&quot;&quot; size=&quot;35&quot; type=&quot;text&quot; /&gt; &lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot;  id=&quot;end_trigger&quot; /&gt;&lt;/td&gt;
++	
++					&lt;/tr&gt;
++					&lt;tr&gt;
++						&lt;td class=&quot;cat&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;btnmain&quot; name=&quot;submit&quot; value=&quot;Submit&quot; type=&quot;submit&quot;&gt;&nbsp;&lt;/td&gt;
++						&lt;td class=&quot;cat&quot; align=&quot;center&quot;&gt;&lt;/td&gt;
++					&lt;/tr&gt;
++				&lt;/table&gt;
++			&lt;/td&gt;
++			&lt;td width=&quot;40%&quot; valign=&quot;top&quot;&gt;
++		
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++					&lt;tr&gt;
++						&lt;th&gt;{ $L_BASIC_INFO }&lt;/th&gt;
++					&lt;/tr&gt;
++					&lt;tr&gt;
++						&lt;td class=&quot;row1&quot;&gt;{ $L_BASIC_INFO }&lt;/td&gt;
++					&lt;/tr&gt;
++					&lt;tr&gt;
++						&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;a href=&quot;#&quot; onclick=&quot;if (document.getElementById('options_recu').style.display)
++																			{
++																				document.getElementById('options_recu').style.display = '';
++																				this.innerHTML = '{ $L_HIDE_RECURRENCE }';
++																			}
++																			else
++																			{
++																				document.getElementById('options_recu').style.display = 'none';
++																				this.innerHTML = '{ $L_SHOW_RECURRENCE }';
++																			}
++																			
++																			return false;&quot;&gt;
++						{ $L_SHOW_RECURRENCE }&lt;/a&gt;&lt;/th&gt;
++					&lt;/tr&gt;
++					
++					&lt;tr id=&quot;options_recu&quot; style=&quot;display: none;&quot;&gt;
++						&lt;td class=&quot;row1&quot;&gt;Recurre Every: &lt;input class=&quot;post&quot; name=&quot;recurrence_rate&quot; value=&quot;1&quot; size=&quot;5&quot; type=&quot;text&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;&lt;/span&gt;&lt;select name=&quot;recurrence_type&quot;&gt;&lt;option value=&quot;86400&quot;&gt;Days&lt;/option&gt;&lt;option value=&quot;86400&quot;&gt;Weeks&lt;/option&gt;&lt;option value=&quot;month&quot;&gt;Month&lt;/option&gt;&lt;/select&gt;&lt;/td&gt;
++					&lt;/tr&gt;
++					
++				&lt;/table&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;/table&gt;
++&lt;form&gt;
+ 
+ &lt;script type=&quot;text/javascript&quot;&gt;
+   Calendar.setup(
+
+Modified: cms/trunk/includes/templates/modules/Control_Panel/ucp_main_bookmarks.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Control_Panel/ucp_main_bookmarks.html	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/templates/modules/Control_Panel/ucp_main_bookmarks.html	2005-09-30 15:58:35 UTC (rev 152)
+@@ -14,88 +14,90 @@
+ 
+ //--&gt;
+ &lt;/script&gt;
+-
+-&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+-	&lt;tr&gt;
+-		&lt;th colspan=&quot;5&quot;&gt;{ $L_UCP }&lt;/th&gt;
+-	&lt;/tr&gt;
+-	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_UCP_WELCOME }&lt;/span&gt;&lt;/td&gt;
+-	&lt;/tr&gt;
++
++&lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
++	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++		&lt;tr&gt;
++			&lt;th colspan=&quot;5&quot;&gt;{ $L_UCP }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row1&quot; colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_UCP_WELCOME }&lt;/span&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		
++		&lt;!-- IF { $S_BOOKMARKS_DISABLED } --&gt;
++		&lt;tr class=&quot;row1&quot;&gt;
++			&lt;td colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_BOOKMARKS_DISABLED }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ELSE --&gt;
++		&lt;tr&gt;
++			&lt;th colspan=&quot;5&quot;&gt;{ $L_BOOKMARKS_FORUMS }&lt;/th&gt;
++		&lt;/tr&gt;
+ 	
+-	&lt;!-- IF { $S_BOOKMARKS_DISABLED } --&gt;
+-	&lt;tr class=&quot;row1&quot;&gt;
+-		&lt;td colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_BOOKMARKS_DISABLED }&lt;/b&gt;&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- ELSE --&gt;
+-	&lt;tr&gt;
+-		&lt;th colspan=&quot;5&quot;&gt;{ $L_BOOKMARKS_FORUMS }&lt;/th&gt;
+-	&lt;/tr&gt;
+-
+-	&lt;!-- LOOP $forummarks --&gt;
+-
+-	&lt;!-- IF { $forummarks:#LOOP_INDEX } % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;20px&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{ $forummarks:TOPIC_FOLDER_IMG }&lt;/td&gt;
+-	&lt;!-- IF { $forummarks:S_DELETED_TOPIC } --&gt;
+-		&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px&quot; width=&quot;100%&quot; colspan=&quot;2&quot;&gt;{ $L_DELETED_TOPIC }&lt;/td&gt;
+-	&lt;!-- ELSE --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot; valign=&quot;top&quot;&gt;
+-		&lt;p class=&quot;topictitle&quot;&gt;{ $forummarks:ATTACH_ICON_IMG } &lt;a href=&quot;{ $forummarks:U_VIEW_TOPIC }&quot;&gt;{ $forummarks:TOPIC_TITLE }&lt;/a&gt;&lt;/p&gt;&lt;br /&gt;
+-		&lt;span class=&quot;gensmall&quot;&gt;&lt;b&gt;{ $L_FORUM }: &lt;/b&gt;&lt;a href=&quot;{ $forummarks:U_VIEW_FORUM }&quot;&gt;{ $forummarks:FORUM_NAME }&lt;/a&gt;&lt;/span&gt;
+-		&lt;!-- IF { $forummarks:PAGINATION } --&gt;
+-			&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG }{ $L_GOTO_PAGE }: { $forummarks:PAGINATION } ] &lt;/p&gt;
++		&lt;!-- LOOP $forummarks --&gt;
++	
++		&lt;!-- IF { $forummarks:#LOOP_INDEX } % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;20px&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{ $forummarks:TOPIC_FOLDER_IMG }&lt;/td&gt;
++		&lt;!-- IF { $forummarks:S_DELETED_TOPIC } --&gt;
++			&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px&quot; width=&quot;100%&quot; colspan=&quot;2&quot;&gt;{ $L_DELETED_TOPIC }&lt;/td&gt;
++		&lt;!-- ELSE --&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot; valign=&quot;top&quot;&gt;
++			&lt;p class=&quot;topictitle&quot;&gt;{ $forummarks:ATTACH_ICON_IMG } &lt;a href=&quot;{ $forummarks:U_VIEW_TOPIC }&quot;&gt;{ $forummarks:TOPIC_TITLE }&lt;/a&gt;&lt;/p&gt;&lt;br /&gt;
++			&lt;span class=&quot;gensmall&quot;&gt;&lt;b&gt;{ $L_FORUM }: &lt;/b&gt;&lt;a href=&quot;{ $forummarks:U_VIEW_FORUM }&quot;&gt;{ $forummarks:FORUM_NAME }&lt;/a&gt;&lt;/span&gt;
++			&lt;!-- IF { $forummarks:PAGINATION } --&gt;
++				&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG }{ $L_GOTO_PAGE }: { $forummarks:PAGINATION } ] &lt;/p&gt;
++			&lt;!-- ENDIF --&gt;
++		&lt;/td&gt;
++		&lt;td style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;
++			&lt;p class=&quot;topicdetails&quot;&gt;{ $forummarks:LAST_POST_TIME }&lt;/p&gt;
++			&lt;p class=&quot;topicdetails&quot;&gt;&lt;!-- IF { $forummarks:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{ $forummarks:U_LAST_POST_AUTHOR }&quot;&gt;{ $forummarks:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $forummarks:LAST_POST_AUTHOR }&lt;!-- ENDIF --&gt;
++				&lt;a href=&quot;{ $forummarks:U_LAST_POST }&quot;&gt;{ $forummarks:LAST_POST_IMG }&lt;/a&gt;
++			&lt;/p&gt;
++		&lt;/td&gt;
+ 		&lt;!-- ENDIF --&gt;
+-	&lt;/td&gt;
+-	&lt;td style=&quot;padding: 4px;&quot; align=&quot;left&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;
+-		&lt;p class=&quot;topicdetails&quot;&gt;{ $forummarks:LAST_POST_TIME }&lt;/p&gt;
+-		&lt;p class=&quot;topicdetails&quot;&gt;&lt;!-- IF { $forummarks:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{ $forummarks:U_LAST_POST_AUTHOR }&quot;&gt;{ $forummarks:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $forummarks:LAST_POST_AUTHOR }&lt;!-- ENDIF --&gt;
+-			&lt;a href=&quot;{ $forummarks:U_LAST_POST }&quot;&gt;{ $forummarks:LAST_POST_IMG }&lt;/a&gt;
+-		&lt;/p&gt;
+-	&lt;/td&gt;
+-	&lt;!-- ENDIF --&gt;
+-		&lt;!-- IF { $forummarks:U_MOVE_UP } || { $forummarks:U_MOVE_DOWN } --&gt;
+-		&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;
+-			&lt;!-- IF { $forummarks:U_MOVE_UP } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_UP }&quot;&gt;{ $L_MOVE_UP }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;!-- IF { $forummarks:U_MOVE_UP } &amp;&amp; { $forummarks:U_MOVE_DOWN } --&gt; | &lt;!-- ENDIF --&gt;
+-			&lt;!-- IF { $forummarks:U_MOVE_DOWN } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_DOWN }&quot;&gt;{ $L_MOVE_DOWN }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;!-- IF { $forummarks:U_MOVE_UP } || { $forummarks:U_MOVE_DOWN } --&gt;
++			&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;
++				&lt;!-- IF { $forummarks:U_MOVE_UP } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_UP }&quot;&gt;{ $L_MOVE_UP }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;!-- IF { $forummarks:U_MOVE_UP } &amp;&amp; { $forummarks:U_MOVE_DOWN } --&gt; | &lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $forummarks:U_MOVE_DOWN } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_DOWN }&quot;&gt;{ $L_MOVE_DOWN }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;!-- ENDIF --&gt;
++			&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;t[]&quot; value=&quot;{ $forummarks:TOPIC_ID }&quot; /&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOPELSE --&gt;
++		&lt;tr class=&quot;row1&quot;&gt;
++			&lt;td colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_BOOKMARKS }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDLOOP --&gt;
++		&lt;tr&gt;
++			&lt;th colspan=&quot;5&quot;&gt;{ $L_BOOKMARKS_SITE }&lt;/th&gt;
++		&lt;/tr&gt;
++	
++		&lt;!-- LOOP $sitemarks --&gt;
++	
++		&lt;!-- IF { $sitemarks:#LOOP_INDEX } % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;20&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{$forummarks[sitemarksloop].TOPIC_FOLDER_IMG}&lt;/td&gt;
++		&lt;!-- IF { $forummarks[sitemarksloop].S_DELETED_TOPIC } --&gt;
++			&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px&quot; width=&quot;100%&quot; colspan=&quot;2&quot;&gt;{$L_DELETED_TOPIC}&lt;/td&gt;
++		&lt;!-- ELSE --&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot;&gt;&lt;p class=&quot;topictitle&quot;&gt;&lt;a href=&quot;{$forummarks:U_VIEW_TOPIC}&quot;&gt;{$forummarks:TOPIC_TITLE}&lt;/a&gt;&lt;/p&gt;&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;{$L_FORUM}: &lt;a href=&quot;{$forummarks:U_VIEW_FORUM}&quot;&gt;{$forummarks:FORUM_NAME}&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;
++			&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;{$L_POSTED}:&lt;br /&gt;{$forummarks[sitemarksloop].POSTED_AT}&lt;/td&gt;
+ 		&lt;!-- ENDIF --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;t[{$forummarks:TOPIC_ID}]&quot; /&gt; &lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- LOOPELSE --&gt;
+-	&lt;tr class=&quot;row1&quot;&gt;
+-		&lt;td colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_BOOKMARKS }&lt;/b&gt;&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- ENDLOOP --&gt;
+-	&lt;tr&gt;
+-		&lt;th colspan=&quot;5&quot;&gt;{ $L_BOOKMARKS_SITE }&lt;/th&gt;
+-	&lt;/tr&gt;
+-
+-	&lt;!-- LOOP $sitemarks --&gt;
+-
+-	&lt;!-- IF { $sitemarks:#LOOP_INDEX } % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;20&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{$forummarks[sitemarksloop].TOPIC_FOLDER_IMG}&lt;/td&gt;
+-	&lt;!-- IF { $forummarks[sitemarksloop].S_DELETED_TOPIC } --&gt;
+-		&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px&quot; width=&quot;100%&quot; colspan=&quot;2&quot;&gt;{$L_DELETED_TOPIC}&lt;/td&gt;
+-	&lt;!-- ELSE --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot;&gt;&lt;p class=&quot;topictitle&quot;&gt;&lt;a href=&quot;{$forummarks:U_VIEW_TOPIC}&quot;&gt;{$forummarks:TOPIC_TITLE}&lt;/a&gt;&lt;/p&gt;&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;{$L_FORUM}: &lt;a href=&quot;{$forummarks:U_VIEW_FORUM}&quot;&gt;{$forummarks:FORUM_NAME}&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;
+-		&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;{$L_POSTED}:&lt;br /&gt;{$forummarks[sitemarksloop].POSTED_AT}&lt;/td&gt;
+-	&lt;!-- ENDIF --&gt;
+-		&lt;!-- IF { $forummarks[sitemarksloop].U_MOVE_UP } || { $forummarks[sitemarksloop].U_MOVE_DOWN } --&gt;
+-		&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;
+-			&lt;!-- IF { $forummarks:U_MOVE_UP } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_UP }&quot;&gt;{ $L_MOVE_UP }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;!-- IF { $forummarks:U_MOVE_UP } &amp;&amp; { $forummarks:U_MOVE_DOWN } --&gt; | &lt;!-- ENDIF --&gt;
+-			&lt;!-- IF { $forummarks:U_MOVE_DOWN } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_DOWN }&quot;&gt;{ $L_MOVE_DOWN }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;!-- IF { $forummarks[sitemarksloop].U_MOVE_UP } || { $forummarks[sitemarksloop].U_MOVE_DOWN } --&gt;
++			&lt;td class=&quot;postdetails&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;
++				&lt;!-- IF { $forummarks:U_MOVE_UP } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_UP }&quot;&gt;{ $L_MOVE_UP }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;!-- IF { $forummarks:U_MOVE_UP } &amp;&amp; { $forummarks:U_MOVE_DOWN } --&gt; | &lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $forummarks:U_MOVE_DOWN } --&gt;&lt;a href=&quot;{ $forummarks:U_MOVE_DOWN }&quot;&gt;{ $L_MOVE_DOWN }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;!-- ENDIF --&gt;
++			&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;t[]&quot; value=&quot;{ $forummarks:TOPIC_ID }&quot;/&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOPELSE --&gt;
++		&lt;tr class=&quot;row1&quot;&gt;
++			&lt;td colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_BOOKMARKS }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDLOOP --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;5&quot; align=&quot;right&quot;&gt;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;unbookmark&quot; value=&quot;{$L_REMOVE_BOOKMARK_MARKED}&quot; /&gt;&nbsp;&lt;/td&gt;
++		&lt;/tr&gt;
+ 		&lt;!-- ENDIF --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;t[{ $forummarks:TOPIC_ID }]&quot; /&gt; &lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- LOOPELSE --&gt;
+-	&lt;tr class=&quot;row1&quot;&gt;
+-		&lt;td colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_BOOKMARKS }&lt;/b&gt;&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- ENDLOOP --&gt;
+-	&lt;tr&gt;
+-		&lt;td class=&quot;cat&quot; colspan=&quot;5&quot; align=&quot;right&quot;&gt;&lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;unbookmark&quot; value=&quot;{$L_REMOVE_BOOKMARK_MARKED}&quot; /&gt;&nbsp;&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- ENDIF --&gt;
+-&lt;/table&gt;
++	&lt;/table&gt;
++&lt;/form&gt;
+ 
+ &lt;!-- IF !{ $S_BOOKMARKS } --&gt;&lt;div class=&quot;gensmall&quot; style=&quot;float: right; padding-top: 2px;&quot;&gt;&lt;b&gt;&lt;a href=&quot;javascript:marklist('ucp', true);&quot;&gt;{ $L_MARK_ALL }&lt;/a&gt; :: &lt;a  href=&quot;javascript:marklist('ucp', false);&quot;&gt;{ $L_UNMARK_ALL }&lt;/a&gt;&lt;/b&gt;&lt;/div&gt;&lt;!-- ENDIF --&gt;
+ &lt;br /&gt;
+
+Modified: cms/trunk/includes/templates/modules/Control_Panel/ucp_main_subscribed.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Control_Panel/ucp_main_subscribed.html	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/templates/modules/Control_Panel/ucp_main_subscribed.html	2005-09-30 15:58:35 UTC (rev 152)
+@@ -16,87 +16,89 @@
+ //--&gt;
+ &lt;/script&gt;
+ 
+-&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+-	&lt;tr&gt;
+-		&lt;th colspan=&quot;4&quot;&gt;{ $L_UCP }&lt;/th&gt;
+-	&lt;/tr&gt;
+-	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; colspan=&quot;4&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_UCP_WELCOME }&lt;/span&gt;&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;tr&gt;
+-		&lt;th colspan=&quot;4&quot;&gt;{ $L_WATCHED_FORUMS }&lt;/th&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- LOOP $forumrow --&gt;
+-
+-	&lt;!-- IF { $forumrow:#LOOP_INDEX } % 2 --&gt;
+-	&lt;tr class=&quot;row1&quot;&gt;
+-	&lt;!-- ELSE --&gt;
+-	&lt;tr class=&quot;row2&quot;&gt;
+-	&lt;!-- ENDIF --&gt;
+-
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;20&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot;&gt;&lt;p class=&quot;topictitle&quot;&gt;&lt;a href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;gensmall&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;&lt;!-- IF { $forumrow:LAST_POST_TIME } --&gt;{ $forumrow:LAST_POST_TIME }&lt;br /&gt;
+-		&lt;!-- IF { $forumrow:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{$forumrow:U_LAST_POST_AUTHOR}&quot;&gt;{ $forumrow:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $forumrow:LAST_POST_AUTHOR }
+-		&lt;!-- ENDIF --&gt; &lt;a href=&quot;{ $forumrow:U_LAST_POST }&quot;&gt;{ $forumrow:LAST_POST_IMG }&lt;/a&gt;&lt;!-- ELSE --&gt;{$L_NO_POSTS}&lt;!-- ENDIF --&gt;&lt;/td&gt;
+-		&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;f[{ $forumrow:FORUM_ID }]&quot; /&gt; &lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- LOOPELSE --&gt;
+-	&lt;tr class=&quot;row1&quot;&gt;
+-		&lt;td colspan=&quot;4&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_WATCHED_FORUMS }&lt;/b&gt;&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- ENDLOOP --&gt;
++&lt;form name=&quot;ucp&quot; method=&quot;post&quot; action=&quot;{ $S_UCP_ACTION }&quot;&lt;!-- IF isset({ $S_FORM_ENCTYPE }) --&gt;{ $S_FORM_ENCTYPE }&lt;!-- ENDIF --&gt; &gt;
++	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++		&lt;tr&gt;
++			&lt;th colspan=&quot;4&quot;&gt;{ $L_UCP }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row1&quot; colspan=&quot;4&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_UCP_WELCOME }&lt;/span&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;th colspan=&quot;4&quot;&gt;{ $L_WATCHED_FORUMS }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOP $forumrow --&gt;
+ 	
+-	&lt;tr&gt;
+-		&lt;th colspan=&quot;4&quot;&gt;{ $L_WATCHED_TOPICS }&lt;/th&gt;
+-	&lt;/tr&gt;
++		&lt;!-- IF { $forumrow:#LOOP_INDEX } % 2 --&gt;
++		&lt;tr class=&quot;row1&quot;&gt;
++		&lt;!-- ELSE --&gt;
++		&lt;tr class=&quot;row2&quot;&gt;
++		&lt;!-- ENDIF --&gt;
+ 	
+-	&lt;!-- IF { $TOTAL_TOPICS } --&gt;
+-	&lt;tr&gt;
+-		&lt;td class=&quot;row3&quot; colspan=&quot;4&quot;&gt;
+-			&lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+-			&lt;tr&gt;
+-				&lt;td class=&quot;nav&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;{ $PAGE_NUMBER }&lt;br /&gt;&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;[ { $TOTAL_TOPICS } ]&nbsp;&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot; width=&quot;100%&quot; align=&quot;right&quot; nowrap=&quot;nowrap&quot;&gt;&lt;!-- IF { $PAGINATION } --&gt;&lt;b&gt;&lt;a href=&quot;javascript:jumpto();&quot;&gt;{ $L_GOTO_PAGE }&lt;/a&gt; &lt;!-- IF { $PREVIOUS_PAGE } --&gt;&lt;a href=&quot;{ $PREVIOUS_PAGE }&quot;&gt;{ $L_PREVIOUS }&lt;/a&gt;&nbsp;&nbsp;&lt;!-- ENDIF --&gt;{ $PAGINATION }&lt;!-- IF { $NEXT_PAGE } --&gt;&nbsp;&nbsp;&lt;a href=&quot;{ $NEXT_PAGE }&quot;&gt;{ $L_NEXT }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/b&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+-			&lt;/tr&gt;
+-			&lt;/table&gt;
+-		&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- ENDIF --&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;20&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot;&gt;&lt;p class=&quot;topictitle&quot;&gt;&lt;a href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;/p&gt;&lt;/td&gt;
++			&lt;td class=&quot;gensmall&quot; style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;&lt;!-- IF { $forumrow:LAST_POST_TIME } --&gt;{ $forumrow:LAST_POST_TIME }&lt;br /&gt;
++			&lt;!-- IF { $forumrow:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{$forumrow:U_LAST_POST_AUTHOR}&quot;&gt;{ $forumrow:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $forumrow:LAST_POST_AUTHOR }
++			&lt;!-- ENDIF --&gt; &lt;a href=&quot;{ $forumrow:U_LAST_POST }&quot;&gt;{ $forumrow:LAST_POST_IMG }&lt;/a&gt;&lt;!-- ELSE --&gt;{$L_NO_POSTS}&lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;f[]&quot; value=&quot;{ $forumrow:FORUM_ID }&quot; /&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOPELSE --&gt;
++		&lt;tr class=&quot;row1&quot;&gt;
++			&lt;td colspan=&quot;4&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_WATCHED_FORUMS }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDLOOP --&gt;
++		
++		&lt;tr&gt;
++			&lt;th colspan=&quot;4&quot;&gt;{ $L_WATCHED_TOPICS }&lt;/th&gt;
++		&lt;/tr&gt;
++		
++		&lt;!-- IF { $TOTAL_TOPICS } --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row3&quot; colspan=&quot;4&quot;&gt;
++				&lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++				&lt;tr&gt;
++					&lt;td class=&quot;nav&quot; valign=&quot;middle&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;{ $PAGE_NUMBER }&lt;br /&gt;&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;[ { $TOTAL_TOPICS } ]&nbsp;&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot; width=&quot;100%&quot; align=&quot;right&quot; nowrap=&quot;nowrap&quot;&gt;&lt;!-- IF { $PAGINATION } --&gt;&lt;b&gt;&lt;a href=&quot;javascript:jumpto();&quot;&gt;{ $L_GOTO_PAGE }&lt;/a&gt; &lt;!-- IF { $PREVIOUS_PAGE } --&gt;&lt;a href=&quot;{ $PREVIOUS_PAGE }&quot;&gt;{ $L_PREVIOUS }&lt;/a&gt;&nbsp;&nbsp;&lt;!-- ENDIF --&gt;{ $PAGINATION }&lt;!-- IF { $NEXT_PAGE } --&gt;&nbsp;&nbsp;&lt;a href=&quot;{ $NEXT_PAGE }&quot;&gt;{ $L_NEXT }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/b&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;/table&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		
++		&lt;!-- LOOP $topicrow --&gt;
+ 	
+-	&lt;!-- LOOP $topicrow --&gt;
++		&lt;!-- IF { $topicrow:#LOOP_INDEX } % 2 --&gt;
++		&lt;tr class=&quot;row1&quot;&gt;
++		&lt;!-- ELSE --&gt;
++		&lt;tr class=&quot;row2&quot;&gt;
++		&lt;!-- ENDIF --&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;20&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
++			&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot; valign=&quot;middle&quot;&gt;
++				&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt;&lt;/p&gt;&lt;br /&gt;
++				&lt;!-- IF { $topicrow:PAGINATION } --&gt;
++					&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG } { $L_GOTO_PAGE }: { $topicrow:PAGINATION } ] &lt;/p&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;td style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:LAST_POST_TIME }&lt;/p&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;&lt;!-- IF { $topicrow:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{ $topicrow:U_LAST_POST_AUTHOR }&quot;&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;!-- ENDIF --&gt;
++					&lt;a href=&quot;{ $topicrow:U_LAST_POST }&quot;&gt;{ $topicrow:LAST_POST_IMG }&lt;/a&gt;
++				&lt;/p&gt;
++			&lt;/td&gt;
++			&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;t[]&quot; value=&quot;{ $topicrow:TOPIC_ID }&quot; /&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOPELSE --&gt;
++		&lt;tr class=&quot;row1&quot;&gt;
++			&lt;td colspan=&quot;4&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_WATCHED_TOPICS }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDLOOP --&gt;
++	
++		&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;4&quot; align=&quot;right&quot;&gt;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;unwatch&quot; value=&quot;{ $L_UNWATCH_MARKED }&quot; /&gt;&nbsp;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;/table&gt;
++&lt;/form&gt;
+ 
+-	&lt;!-- IF { $topicrow:#LOOP_INDEX } % 2 --&gt;
+-	&lt;tr class=&quot;row1&quot;&gt;
+-	&lt;!-- ELSE --&gt;
+-	&lt;tr class=&quot;row2&quot;&gt;
+-	&lt;!-- ENDIF --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;20&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; width=&quot;100%&quot; valign=&quot;top&quot;&gt;
+-			&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt;&lt;/p&gt;&lt;br /&gt;
+-			&lt;!-- IF { $topicrow:PAGINATION } --&gt;
+-				&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG } { $L_GOTO_PAGE }: { $topicrow:PAGINATION } ] &lt;/p&gt;
+-			&lt;!-- ENDIF --&gt;
+-		&lt;td style=&quot;padding: 4px;&quot; align=&quot;center&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;
+-			&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:LAST_POST_TIME }&lt;/p&gt;
+-			&lt;p class=&quot;topicdetails&quot;&gt;&lt;!-- IF { $topicrow:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{ $topicrow:U_LAST_POST_AUTHOR }&quot;&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;!-- ENDIF --&gt;
+-				&lt;a href=&quot;{ $topicrow:U_LAST_POST }&quot;&gt;{ $topicrow:LAST_POST_IMG }&lt;/a&gt;
+-			&lt;/p&gt;
+-		&lt;/td&gt;
+-		&lt;td style=&quot;padding: 4px;&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;t[{ $topicrow:TOPIC_ID }]&quot; /&gt; &lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- LOOPELSE --&gt;
+-	&lt;tr class=&quot;row1&quot;&gt;
+-		&lt;td colspan=&quot;4&quot; align=&quot;center&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_NO_WATCHED_TOPICS }&lt;/b&gt;&lt;/td&gt;
+-	&lt;/tr&gt;
+-	&lt;!-- ENDLOOP --&gt;
+-
+-	&lt;tr&gt;
+-		&lt;td class=&quot;cat&quot; colspan=&quot;4&quot; align=&quot;right&quot;&gt;&lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;unwatch&quot; value=&quot;{ $L_UNWATCH_MARKED }&quot; /&gt;&nbsp;&lt;/td&gt;
+-	&lt;/tr&gt;
+-&lt;/table&gt;
+-
+ &lt;div class=&quot;gensmall&quot; style=&quot;float: right; padding-top: 2px;&quot;&gt;&lt;b&gt;&lt;a href=&quot;javascript:marklist('ucp', true);&quot;&gt;{ $L_MARK_ALL }&lt;/a&gt; :: &lt;a  href=&quot;javascript:marklist('ucp', false);&quot;&gt;{ $L_UNMARK_ALL }&lt;/a&gt;&lt;/b&gt;&lt;/div&gt;
+ &lt;br/&gt;
+ &lt;!-- INCLUDE modules/Control_Panel/ucp_footer.html --&gt;
+
+Modified: cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_popup.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_popup.html	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_popup.html	2005-09-30 15:58:35 UTC (rev 152)
+@@ -1,7 +1,8 @@
+ &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset={ $SITE_CHARSET }&quot; /&gt;
+ &lt;head&gt;
+-&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
++	&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++	&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++	&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $THEME_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
+ &lt;/head&gt;
+ &lt;html&gt;
+ 	&lt;body&gt;
+@@ -16,26 +17,29 @@
+ 	//--&gt;
+ 	&lt;/script&gt;
+ 
+-	{ $A_TABLE_OPEN }
++	{ $THEME_TABLE_OPEN }
++
+ 	&lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;10&quot;&gt;
+-	&lt;tr&gt;
+-		&lt;td&gt;
+-			&lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; class=&quot;tablebg&quot;&gt;
+-			&lt;tr class=&quot;row1&quot;&gt;
+-				&lt;td valign=&quot;top&quot; align=&quot;center&quot;&gt;
+-					&lt;br /&gt;&lt;span class=&quot;gen&quot;&gt;
+-					&lt;!-- IF { $S_NOT_LOGGED_IN } --&gt;
+-						{ $L_LOGIN_CHECK_PM }
+-					&lt;!-- ELSE --&gt;
+-						{ $MESSAGE }&lt;br /&gt;&lt;br /&gt;{ $CLICK_TO_VIEW }
+-					&lt;!-- ENDIF --&gt;
+-					&lt;/span&gt;
+-					&lt;br /&gt;&lt;br /&gt;&lt;span class=&quot;genmed&quot;&gt;&lt;a href=&quot;javascript:window.close();&quot;&gt;{ $L_CLOSE_WINDOW }&lt;/a&gt;&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+-			&lt;/tr&gt;
+-			&lt;/table&gt;
+-		&lt;/td&gt;
+-	&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td&gt;
++				&lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; class=&quot;tablebg&quot;&gt;
++				&lt;tr class=&quot;row1&quot;&gt;
++					&lt;td valign=&quot;top&quot; align=&quot;center&quot;&gt;
++						&lt;br /&gt;&lt;span class=&quot;gen&quot;&gt;
++						&lt;!-- IF { $S_NOT_LOGGED_IN } --&gt;
++							{ $L_LOGIN_CHECK_PM }
++						&lt;!-- ELSE --&gt;
++							{ $MESSAGE }&lt;br /&gt;&lt;br /&gt;{ $CLICK_TO_VIEW }
++						&lt;!-- ENDIF --&gt;
++						&lt;/span&gt;
++						&lt;br /&gt;&lt;br /&gt;&lt;span class=&quot;genmed&quot;&gt;&lt;a href=&quot;javascript:window.close();&quot;&gt;{ $L_CLOSE_WINDOW }&lt;/a&gt;&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;/table&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
+ 	&lt;/table&gt;
+-	{ $A_TABLE_CLOSE }
++	
++	{ $THEME_TABLE_CLOSE }
++
+ 	&lt;/body&gt;
+ &lt;/html&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/install/build_data.php
+===================================================================
+--- cms/trunk/install/build_data.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/install/build_data.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -129,7 +129,7 @@
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('articles', 1, 1, 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Contact', 1, 2, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Calender', 1, 1, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('calender', 1, 1, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Control_Panel', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Forums', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Members_List', 1, 2, 2)&quot;);
+@@ -176,7 +176,7 @@
+ 
+ $admin_data = $guest_data = $bot_data = $_CLASS['core_db']-&gt;escape($data);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0, '$guest_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0, '$guest_data', 0, 0, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', '', 1, 1, 1, 1, 1, '$admin_data', 0, 0, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'MSN', '', '', '', $time, '65.54.188.', 'msnbot/', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+
+Modified: cms/trunk/install/build_tables.php
+===================================================================
+--- cms/trunk/install/build_tables.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/install/build_tables.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -287,7 +287,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('user_allow_email', array('max' =&gt; 1));
+ 
+ $_CLASS['core_db']-&gt;add_table_field_char('user_sig_bbcode_uid', 5, true);
+-$_CLASS['core_db']-&gt;add_table_field_int('user_sig_bbcode_bitfield', array('max' =&gt; 1600, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('user_sig_bbcode_bitfield', array('max' =&gt; 16000000, 'null' =&gt; true));
+ 
+ $_CLASS['core_db']-&gt;add_table_field_int('user_topic_show_days', array('max' =&gt; 200, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('user_topic_sortby_type', 1, true);
+@@ -506,7 +506,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_text('forum_rules', 20000, true);
+ $_CLASS['core_db']-&gt;add_table_field_char('forum_rules_link', 200, true);
+ $_CLASS['core_db']-&gt;add_table_field_char('forum_rules_flags', 50, true);
+-$_CLASS['core_db']-&gt;add_table_field_int('forum_rules_bbcode_bitfield', array('max' =&gt; 1000000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('forum_rules_bbcode_bitfield', array('max' =&gt; 16000000, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('forum_rules_bbcode_uid', 5, true);
+ $_CLASS['core_db']-&gt;add_table_field_char('forum_link', 200, true);
+ $_CLASS['core_db']-&gt;add_table_field_char('forum_password', 40, true);
+@@ -877,7 +877,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('message_edit_user', array('max' =&gt; 16000000, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('message_checksum', 11);
+ $_CLASS['core_db']-&gt;add_table_field_int('message_attachment', array('max' =&gt; 1));
+-$_CLASS['core_db']-&gt;add_table_field_int('bbcode_bitfield', 1000000000);
++$_CLASS['core_db']-&gt;add_table_field_int('bbcode_bitfield', array('max' =&gt; 16000000));
+ $_CLASS['core_db']-&gt;add_table_field_char('bbcode_uid', 5);
+ field_unix_time('message_edit_time', true);
+ $_CLASS['core_db']-&gt;add_table_field_int('message_edit_count', array('max' =&gt; 200, 'null' =&gt; true));
+@@ -969,7 +969,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_text('search_array', 16000000);
+ 
+ $_CLASS['core_db']-&gt;add_table_index('search_id', 'primary');
+-$_CLASS['core_db']-&gt;add_table_index('session_id', 'primary');
++$_CLASS['core_db']-&gt;add_table_index('session_id');
+ 
+ $_CLASS['core_db']-&gt;table_create('commit');
+ 
+
+Modified: cms/trunk/javascript/editor.js
+===================================================================
+--- cms/trunk/javascript/editor.js	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/javascript/editor.js	2005-09-30 15:58:35 UTC (rev 152)
+@@ -107,17 +107,9 @@
+ 
+ 	var message_name = 'message_' + post_id;
+ 	var theSelection = '';
+-	var divarea = false;
+ 
+-	if (document.all)
+-	{
+-		eval(&quot;divarea = document.all.&quot; + message_name + &quot;;&quot;);
+-	}
+-	else
+-	{
+-		eval(&quot;divarea = document.getElementById('&quot; + message_name + &quot;');&quot;);
+-	}
+-
++	var divarea = document.getElementById(message_name);
++	
+ 	// Get text selection - not only the post content :(
+ 	if (window.getSelection)
+ 	{
+@@ -132,7 +124,7 @@
+ 		theSelection = document.selection.createRange().text;
+ 	}
+ 
+-	if (theSelection == '')
++	if (!theSelection)
+ 	{
+ 		if (document.all)
+ 		{
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_calender.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_calender.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_calender.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -1,7 +1,30 @@
+ &lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
+ 
++$Id$
++*/
++
+ class ucp_calender extends module  
+ {
++	var $error = array();
++
+ 	function ucp_calender($id, $mode)
+ 	{
+ 		global $_CLASS, $table_prefix, $site_file_root;
+@@ -21,7 +44,7 @@
+ 		$_CLASS['calender']-&gt;table = CALENDER_TABLE;
+ 		$_CLASS['calender']-&gt;set_date($day, $month, $year);
+ 		
+-		if (isset($_GET['mode']) &amp;&amp; $_GET['mode'] == 'details')
++		if (isset($_GET['mode']) &amp;&amp; $_GET['mode'] === 'details')
+ 		{
+ 			$mode = 'details';
+ 		}
+@@ -60,15 +83,14 @@
+ 			case 'add_event':
+ 				if (isset($_POST['submit']))
+ 				{
+-					if ($this-&gt;add_event() === false)
++					if ($this-&gt;add_event() !== false)
+ 					{
+-						echo implode('&lt;br/&gt;', $this-&gt;error);
+-					}
+-					
+-					break;
++						trigger_error('EVENT_ADDED');
++					}			
+ 				}
+ 
+ 				$_CLASS['core_template']-&gt;assign_array(array(
++					'ERROR'			=&gt; empty($this-&gt;error) ? '' : implode('&lt;br/&gt;', $this-&gt;error),
+ 					'S_UCP_ACTION'	=&gt; generate_link(&quot;Control_Panel&amp;i=$id&amp;mode=$mode&quot;),
+ 				));
+ 
+@@ -91,9 +113,8 @@
+ 				$_CLASS['core_display']-&gt;display(false, 'modules/Control_Panel/ucp_calender_details.html');
+ 			break;
+ 			
+-			case 'month_view':
++			//case 'month_view':
+ 			default:
+-				
+ 				$_CLASS['calender']-&gt;get_events_month($link);
+ 				$_CLASS['calender']-&gt;month_view($link);
+ 
+@@ -129,47 +150,50 @@
+ 		global $_CLASS;
+ 
+ 		$data_array = array(
+-			'calender_title'	=&gt; get_variable('title', 'POST', false),
+-			'calender_text'		=&gt; get_variable('description', 'POST', false),
+-			'calender_notes'	=&gt; get_variable('note', 'POST', false),
++			'calender_title'	=&gt; mb_strtolower(htmlentities(get_variable('title', 'POST', ''), ENT_QUOTES, 'UTF-8')),
++			'calender_text'		=&gt; strip_tags(get_variable('description', 'POST', false)),
++			'calender_notes'	=&gt; strip_tags(get_variable('note', 'POST', false)),
+ 			'calender_starts'	=&gt; get_variable('start', 'POST', false),
+ 			'calender_expires'	=&gt; get_variable('end', 'POST', false),
+ 			//'recur'			=&gt; false,
+ 		);
+ 
+-		$error = array();
++		$this-&gt;error = array();
+ 
++		if (empty($data_array['calender_title']))
++		{
++			$this-&gt;error[] = $_CLASS['core_user']-&gt;get_lang('NO_TITLE');
++		}
++
+ 		$start_time = strtotime($data_array['calender_starts']);
+ 
+ 		if (!$start_time || $start_time === -1)
+ 		{
+-			$error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_START_TIME');
++			$this-&gt;error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_START_TIME');
+ 		}
+ 
+ 		$end_time = strtotime($data_array['calender_expires']);
+ 
+ 		if (!$end_time || $end_time === -1)
+ 		{
+-			$error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_END_TIME');
++			$this-&gt;error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_END_TIME');
+ 		}
+ 		
+-		if (!$error &amp;&amp; $start_time &gt; $end_time)
++		if (empty($this-&gt;error) &amp;&amp; $start_time &gt; $end_time)
+ 		{
+-			$error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_');
++			$this-&gt;error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_');
+ 		}
+ 
+-		if (!empty($error))
++		if (!empty($this-&gt;error))
+ 		{
+-			$this-&gt;error = $error;
+-
+ 			return false;
+ 		}
+ 
+ 		//$duration = $start_time - $end_time;
+ 		//$start_time = $date = implode(''. explode(':', date('H:i', $start_time)));;
+ 
+-		$data_array['calender_starts'] = $start_time;
+-		$data_array['calender_expires'] = $end_time;
++		$data_array['calender_starts'] = $_CLASS['core_user']-&gt;time_convert($start_time, 'gmt');
++		$data_array['calender_expires'] = $_CLASS['core_user']-&gt;time_convert($end_time, 'gmt');
+ 		
+ 		$_CLASS['core_db']-&gt;query('INSERT INTO ' . CALENDER_TABLE .' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $data_array));
+ 
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_groups.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_groups.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_groups.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -35,7 +35,7 @@
+ 		{
+ 			if (is_array($_POST['group_id']))
+ 			{
+-				$group_id = array_map('intval', get_variable('group_id', 'REQUEST', false, 'array'));
++				$group_id = array_unique(get_variable('group_id', 'REQUEST', array(), 'array:int'));
+ 			}
+ 			else
+ 			{
+@@ -59,11 +59,6 @@
+ 			switch ($_POST['mode'])
+ 			{
+ 				case 'resign':
+-// need to get member status and add other group types ( pending members can resign from all )
+-					$sql = 'SELECT group_id	FROM  ' . GROUPS_TABLE . '
+-								WHERE group_type IN (' . GROUP_SYSTEM .', '.GROUP_SPECIAL.')
+-								AND group_id IN ('. implode(', ', $group_id) .')';
+-								
+ 					$sql = 'SELECT m.member_status, g.group_id, g.group_type
+ 								FROM ' . USER_GROUP_TABLE . ' m, ' . GROUPS_TABLE . ' g 
+ 								WHERE m.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . '
+@@ -72,7 +67,6 @@
+ 					$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 					$unset = array();
+-
+ 					while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 					{
+ 						if ($row['group_type'] == GROUP_SYSTEM &amp;&amp; $row['group_type'] == GROUP_SPECIAL &amp;&amp; $row['member_status'] != STATUS_PENDING)
+@@ -85,18 +79,20 @@
+ 					$group_id = array_diff($group_id, $unset);
+ 					unset($unset);
+ 
+-					groups_user_remove($group_id, $_CLASS['core_user']-&gt;data['user_id']);
++					if (!empty($group_id))
++					{
++						groups_user_remove($group_id, $_CLASS['core_user']-&gt;data['user_id']);
++					}
+ 				break;
+ 
+ 				case 'apply':
+ 					$sql = 'SELECT group_id FROM ' . USER_GROUP_TABLE . '
+ 						WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . '
+ 						AND group_id IN ('. implode(', ', $group_id) .')';
+-	
++
+ 					$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 					$unset = array();
+-
+ 					while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 					{
+ 						$unset[] = $row['group_id'];
+@@ -188,7 +184,6 @@
+ 		$_CLASS['core_template']-&gt;assign('S_UCP_ACTION', generate_link(&quot;Control_Panel&amp;i=$id&amp;mode=$mode&quot;));
+ 
+ 		$this-&gt;display($_CLASS['core_user']-&gt;get_lang('UCP_GROUPS'), 'ucp_groups_membership.html');
+-		
+ 	}
+ }
+ 
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_main.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_main.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_main.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -29,7 +29,6 @@
+ 		switch ($mode)
+ 		{
+ 			case 'front':
+-
+ 				$_CLASS['core_user']-&gt;add_lang(false,'Members_List');
+ 
+ 				if ($config['load_db_lastread'] || $config['load_db_track'])
+@@ -137,75 +136,16 @@
+ 				}
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 
+-/// 
+ 				$num_real_posts = $_CLASS['core_user']-&gt;data['user_posts'];
+ 				$active_f_row = $active_t_row = array();
+ 
+-				$_CLASS['auth']-&gt;acl_getf('f_read');
+-/*
+-				if ($post_count_ary = $_CLASS['auth']-&gt;acl_getf('f_postcount'))
+-				{
+-					$forum_ary = array();
+-					foreach ($post_count_ary as $forum_id =&gt; $allowed)
+-					{
+-						if ($allowed['f_read'] &amp;&amp; $allowed['f_postcount'])
+-						{
+-							$forum_ary[] = $forum_id;
+-						}
+-					}
+-	
+-					$post_count_sql = (sizeof($forum_ary)) ? 'AND f.forum_id IN (' . implode(', ', $forum_ary) . ')' : '';
+-					unset($forum_ary, $post_count_ary);
+-	
+-					if ($post_count_sql)
+-					{
+-						// NOTE: The following three queries could be a problem for big boards
+-						
+-						// Grab all the relevant data
+-						$sql = 'SELECT COUNT(p.post_id) AS num_posts   
+-							FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_FORUMS_TABLE . ' f
+-							WHERE p.poster_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot; 
+-								AND f.forum_id = p.forum_id 
+-								$post_count_sql&quot;;
+-						$result = $_CLASS['core_db']-&gt;query($sql);
+-						list($num_posts) = $_CLASS['core_db']-&gt;fetch_row_num($result);
+-						$_CLASS['core_db']-&gt;free_result($result);
+-	
+-						$num_real_posts = min($_CLASS['core_user']-&gt;data['user_posts'], $num_posts);
+-	
+-						$sql = 'SELECT f.forum_id, f.forum_name, COUNT(post_id) AS num_posts   
+-							FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_FORUMS_TABLE . ' f 
+-							WHERE p.poster_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot; 
+-								AND f.forum_id = p.forum_id 
+-								$post_count_sql
+-							GROUP BY f.forum_id, f.forum_name  
+-							ORDER BY num_posts DESC&quot;; 
+-						$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+-	
+-						$active_f_row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-						$_CLASS['core_db']-&gt;free_result($result);
+-	
+-						$sql = 'SELECT t.topic_id, t.topic_title, COUNT(p.post_id) AS num_posts   
+-							FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_TOPICS_TABLE . ' t, ' . FORUMS_FORUMS_TABLE . ' f  
+-							WHERE p.poster_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot; 
+-								AND t.topic_id = p.topic_id  
+-								AND f.forum_id = t.forum_id 
+-								$post_count_sql
+-							GROUP BY t.topic_id, t.topic_title  
+-							ORDER BY num_posts DESC&quot;;
+-						$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+-	
+-						$active_t_row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-						$_CLASS['core_db']-&gt;free_result($result);
+-					}
+-				}
+-			*/
+ 				// Do the relevant calculations 
+ 				$memberdays = max(1, round(($_CLASS['core_user']-&gt;time - $_CLASS['core_user']-&gt;data['user_reg_date']) / 86400));
+ 				$posts_per_day = $_CLASS['core_user']-&gt;data['user_posts'] / $memberdays;
+ 				$percentage = ($config['num_posts']) ? min(100, ($num_real_posts / $config['num_posts']) * 100) : 0;
+ 
+ 				$active_f_name = $active_f_id = $active_f_count = $active_f_pct = '';
++
+ 				if (!empty($active_f_row['num_posts']))
+ 				{
+ 					$active_f_name = $active_f_row['forum_name'];
+@@ -216,6 +156,7 @@
+ 				unset($active_f_row);
+ 
+ 				$active_t_name = $active_t_id = $active_t_count = $active_t_pct = '';
++
+ 				if (!empty($active_t_row['num_posts']))
+ 				{
+ 					$active_t_name = $active_t_row['topic_title'];
+@@ -252,36 +193,34 @@
+ 				break;
+ 
+ 			case 'subscribed':
+-
+ 				require($site_file_root.'includes/forums/functions_display.php');
+-				//$_CLASS['core_user']-&gt;add_lang('viewforum');
+ 
+-				$unwatch = (isset($_POST['unwatch'])) ? true : false;
++				$unwatch = isset($_POST['unwatch']);
+ 				
+ 				if ($unwatch)
+ 				{
+-					$forums = (isset($_POST['f'])) ? implode(', ', array_map('intval', array_keys($_POST['f']))) : false;
+-					$topics = (isset($_POST['t'])) ? implode(', ', array_map('intval', array_keys($_POST['t']))) : false;
++					$forums = array_unique(get_variable('f', 'POST', array(), 'array:int'));
++					$topics = array_unique(get_variable('t', 'POST', array(), 'array:int'));
+ 
+-					if ($forums || $topics)
++					if (!empty($forums) || !empty($topics))
+ 					{
+ 						$l_unwatch = '';
+ 
+-						if ($forums)
++						if (!empty($forums))
+ 						{
+-							$sql = 'DELETE FROM ' . FORUMS_WATCH_TABLE . &quot;
+-								WHERE forum_id IN ($forums) AND topic_id = 0
+-									AND user_id = &quot; .$_CLASS['core_user']-&gt;data['user_id'];
++							$sql = 'DELETE FROM ' . FORUMS_WATCH_TABLE . '
++								WHERE forum_id IN ('.implode(', ', $forums).') AND topic_id = 0
++									AND user_id = ' .$_CLASS['core_user']-&gt;data['user_id'];
+ 							$_CLASS['core_db']-&gt;query($sql);
+ 
+ 							$l_unwatch .= '_FORUMS';
+ 						}
+ 
+-						if ($topics)
++						if (!empty($topics))
+ 						{
+-							$sql = 'DELETE FROM ' . FORUMS_WATCH_TABLE . &quot;
+-								WHERE topic_id IN ($topics)
+-									AND user_id = &quot; .$_CLASS['core_user']-&gt;data['user_id'];
++							$sql = 'DELETE FROM ' . FORUMS_WATCH_TABLE . '
++								WHERE topic_id IN ('.implode(', ', $topics) .')
++									AND user_id = ' .$_CLASS['core_user']-&gt;data['user_id'];
+ 							$_CLASS['core_db']-&gt;query($sql);
+ 
+ 							$l_unwatch .= '_TOPICS';
+@@ -296,7 +235,8 @@
+ 
+ 				if ($config['load_db_lastread'])
+ 				{
+-					$sql_from = FORUMS_FORUMS_TABLE . ' f  LEFT JOIN ' . FORUMS_TRACK_TABLE . ' ft ON (ft.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ' AND ft.forum_id = f.forum_id)';
++					$sql_from = FORUMS_FORUMS_TABLE . ' f  LEFT JOIN ' . FORUMS_TRACK_TABLE . ' ft ON (ft.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ' 
++									AND ft.forum_id = f.forum_id AND ft.topic_id = 0)';
+ 					$lastread_select = ', ft.mark_time ';
+ 				}
+ 				else
+@@ -304,38 +244,44 @@
+ 					$sql_from = FORUMS_FORUMS_TABLE . ' f ';
+ 					$lastread_select = '';
+ 
+-					$tracking_topics = (isset($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) ? unserialize(stripslashes($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) : array();
++					$tracking = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
++
++					if (!is_array($tracking))
++					{
++						$tracking = array();
++					}
+ 				}
+ 
+ 				$sql = &quot;SELECT f.*$lastread_select 
+ 					FROM $sql_from, &quot; . FORUMS_WATCH_TABLE . ' fw
+ 					WHERE fw.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ' 
+-						AND f.forum_id = fw.forum_id 
++						 AND fw.topic_id = 0 AND f.forum_id = fw.forum_id
+ 					ORDER BY left_id';
+ 
+ 				$result = $_CLASS['core_db']-&gt;query($sql);
+-				$topics_count = $_CLASS['core_db']-&gt;num_rows($result);
++				//$topics_count = $_CLASS['core_db']-&gt;num_rows($result);
+ 
+ 				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+-					$forum_id = $row['forum_id'];
++					$forum_id = (int) $row['forum_id'];
+ 
+ 					$unread_forum = false;
+ 					
+ 					if ($config['load_db_lastread'])
+ 					{
+-						$forum_check = $row['mark_time'];
++						$mark_time_forum = $row['mark_time'];
+ 					}
+ 					else
+ 					{
+-						$forum_check = isset($tracking_topics[$forum_id][0]) ? $tracking_topics[$forum_id][0] : 0;
++						$forum_id36 = base_convert($forum_id, 10, 36);
++						$mark_time_forum = isset($tracking[$forum_id36][0]) ? (int) base_convert($tracking[$forum_id36][0], 36, 10) : 0;
+ 					}
+ 
+-					if ($forum_check &lt; $row['forum_last_post_time'])
++					if ($mark_time_forum &lt; $row['forum_last_post_time'])
+ 					{
+ 						$unread_forum = true;
+ 					}
+-	
++
+ 					// Which folder should we display?
+ 					if ($row['forum_status'] == ITEM_LOCKED)
+ 					{
+@@ -379,45 +325,62 @@
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 				// Subscribed Topics
+-				$start = request_var('start', 0);
++				$start = get_variable('start', 'REQUEST', 0, 'int');
+ 
+-				if ($topics_count)
++				if ($config['load_db_lastread'])
+ 				{
+-					$_CLASS['core_template']-&gt;assign_array(array(
+-						'PAGINATION'	=&gt; generate_pagination(&quot;Control_Panel&amp;i=$id&amp;mode=$mode&quot;, $topics_count, $config['topics_per_page'], $start),
+-						'PAGE_NUMBER'	=&gt; on_page($topics_count, $config['topics_per_page'], $start),
+-						'TOTAL_TOPICS'	=&gt; ($topics_count == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPIC'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPICS'], $topics_count))
+-					);
++					$sql_from = FORUMS_TOPICS_TABLE . ' t LEFT JOIN ' . FORUMS_TRACK_TABLE . ' tt ON (tt.topic_id = t.topic_id AND tt.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ')';
++					$sql_t_select = ', tt.mark_time';
+ 				}
+-// Fix this up
+-				$sql_from = ($config['load_db_lastread']) ? FORUMS_TOPICS_TABLE . ' t LEFT JOIN ' . FORUMS_TRACK_TABLE . ' tt ON (tt.topic_id = t.topic_id AND tt.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ')' : TOPICS_TABLE . ' t';
+-				$sql_t_select = ($config['load_db_lastread']) ? ', tt.mark_time' : '';
+-//
++				else
++				{
++					$sql_from = FORUMS_TOPICS_TABLE . ' t';
++					$sql_t_select = '';
++				}
++
+ 				$sql = &quot;SELECT t.* $sql_t_select 
+ 					FROM &quot;. FORUMS_WATCH_TABLE . &quot; tw, $sql_from 
+ 					WHERE tw.user_id = &quot; . $_CLASS['core_user']-&gt;data['user_id'] . '
+ 						AND t.topic_id = tw.topic_id 
+ 					ORDER BY t.topic_last_post_time DESC';
++
+ 				$result = $_CLASS['core_db']-&gt;query_limit($sql, $config['topics_per_page'], $start);
++				$topics_count = $_CLASS['core_db']-&gt;num_rows($result);
++	
++				if ($topics_count)
++				{
++					$pagination = generate_pagination(&quot;Control_Panel&amp;i=$id&amp;mode=$mode&quot;, $topics_count, $config['topics_per_page'], $start);
+ 
++					$_CLASS['core_template']-&gt;assign_array(array(
++						'PAGINATION'		=&gt; $pagination['formated'],
++						'PAGINATION_ARRAY'	=&gt; $pagination['array'],
++						'PAGE_NUMBER'		=&gt; on_page($topics_count, $config['topics_per_page'], $start),
++						'TOTAL_TOPICS'		=&gt; ($topics_count === 1) ? $_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPIC'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPICS'], $topics_count))
++					);
++				}
++				else
++				{
++					$_CLASS['core_template']-&gt;assign('TOTAL_TOPICS', false);
++				}
++
+ 				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+ 					$topic_id = $row['topic_id'];
+ 					$forum_id = $row['forum_id'];
+ 					
+-					if ($config['load_db_lastread'])
++					if (!$config['load_db_lastread'])
+ 					{
+ 						$topic_id36 = base_convert($topic_id, 10, 36);
+-						$forum_id36 = ($row['topic_type'] == POST_GLOBAL) ? 0 : $forum_id;
+-						$mark_time_topic = (isset($tracking_topics[$forum_id36][$topic_id36])) ? base_convert($tracking_topics[$forum_id36][$topic_id36], 36, 10) + $config['board_startdate'] : 0;
++						$forum_id36 = ($row['topic_type'] == POST_GLOBAL) ? 0 : base_convert($forum_id, 10, 36);
+ 
+-						$mark_time_forum = (isset($tracking_topics[$forum_id][0])) ? base_convert($tracking_topics[$forum_id][0], 36, 10) + $config['board_startdate'] : 0;
++						$mark_time_topic = isset($tracking[$forum_id36][$topic_id36]) ? (int) base_convert($tracking[$forum_id36][$topic_id36], 36, 10) : 0;
++						$mark_time_forum = isset($tracking[$forum_id36][0]) ? (int) base_convert($tracking[$forum_id36][0], 36, 10) : 0;
+ 
+ 						$row['mark_time'] = max($mark_time_topic, $mark_time_forum);
+ 					}
+ 
+ 					// Replies
+-					$replies = ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['topic_replies_real'] : $row['topic_replies'];
++					$replies = $_CLASS['auth']-&gt;acl_get('m_approve', $forum_id) ? $row['topic_replies_real'] : $row['topic_replies'];
+ 
+ 					if ($row['topic_status'] == ITEM_MOVED)
+ 					{
+@@ -430,17 +393,24 @@
+ 					topic_status($row, $replies, $row['mark_time'], $unread_topic, $folder_img, $folder_alt, $topic_type);
+ 					$newest_post_img = ($unread_topic) ? '&lt;a href=&quot;'. generate_link(&quot;Forums&amp;file=viewtopic&amp;f=$forum_id&amp;t=$topic_id&amp;view=unread#unread&quot;).'&quot;&gt;' . $_CLASS['core_user']-&gt;img('icon_post_newest', 'VIEW_NEWEST_POST') . '&lt;/a&gt; ' : '';
+ 
+-					$view_topic_url = &quot;Forums&amp;file=viewtopic&amp;f=$forum_id&amp;t=$topic_id&quot;;
++					$view_topic_url = 'Forums&amp;file=viewtopic&amp;t='.$topic_id;
++					$pagination = generate_pagination($view_topic_url, $replies, $config['topics_per_page'], 0);
+ 
+ 					$_CLASS['core_template']-&gt;assign_vars_array('topicrow', array(
+ 						'FORUM_ID' 			=&gt; $forum_id,
+ 						'TOPIC_ID' 			=&gt; $topic_id,
+-						'TOPIC_AUTHOR' 		=&gt; topic_topic_author($row),
++
++						'TOPIC_AUTHOR' 		=&gt; ($row['topic_poster'] == ANONYMOUS) ? (($row['topic_first_poster_name']) ? $row['topic_first_poster_name'] : $_CLASS['core_user']-&gt;get_lang('GUEST')) : $row['topic_first_poster_name'],
++						'LINK_AUTHOR' 		=&gt; ($row['topic_poster'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['topic_poster']),
++
+ 						'FIRST_POST_TIME' 	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_time']),
+ 						'LAST_POST_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']),
+ 						'LAST_VIEW_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_view_time']),
+ 						'LAST_POST_AUTHOR' 	=&gt; ($row['topic_last_poster_name']) ? $row['topic_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'],
+-						'PAGINATION' 		=&gt; topic_generate_pagination($replies, 'Forums&amp;file=viewtopic&amp;f=' . (($row['forum_id']) ? $row['forum_id'] : $forum_id) . &quot;&amp;t=$topic_id&quot;),
++
++						'PAGINATION'		=&gt; $pagination['formated'],
++						'PAGINATION_ARRAY'	=&gt; $pagination['array'],
++
+ 						'REPLIES' 			=&gt; $replies,
+ 						'VIEWS' 			=&gt; $row['topic_views'],
+ 						'TOPIC_TITLE' 		=&gt; censor_text($row['topic_title']),
+@@ -449,14 +419,14 @@
+ 						'LAST_POST_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'),
+ 						'NEWEST_POST_IMG' 	=&gt; $newest_post_img,
+ 						'TOPIC_FOLDER_IMG' 	=&gt; $_CLASS['core_user']-&gt;img($folder_img, $folder_alt),
+-						'TOPIC_ICON_IMG'	=&gt; (!empty($icons[$row['icon_id']])) ? '&lt;img src=&quot;' . $config['icons_path'] . '/' . $icons[$row['icon_id']]['img'] . '&quot; width=&quot;' . $icons[$row['icon_id']]['width'] . '&quot; height=&quot;' . $icons[$row['icon_id']]['height'] . '&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;' : '',
++						'TOPIC_ICON_IMG'	=&gt; empty($icons[$row['icon_id']]) ? '' : '&lt;img src=&quot;' . $config['icons_path'] . '/' . $icons[$row['icon_id']]['img'] . '&quot; width=&quot;' . $icons[$row['icon_id']]['width'] . '&quot; height=&quot;' . $icons[$row['icon_id']]['height'] . '&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;',
+ 						'ATTACH_ICON_IMG'	=&gt; ($_CLASS['auth']-&gt;acl_gets('f_download', 'u_download', $forum_id) &amp;&amp; $row['topic_attachment']) ? $_CLASS['core_user']-&gt;img('icon_attach', sprintf($_CLASS['core_user']-&gt;lang['TOTAL_ATTACHMENTS'], $row['topic_attachment'])) : '',
+ 
+-						'S_TOPIC_TYPE'			=&gt; $row['topic_type'],
+-						'S_UNREAD_TOPIC'		=&gt; $unread_topic,
++						'S_TOPIC_TYPE'		=&gt; $row['topic_type'],
++						'S_UNREAD_TOPIC'	=&gt; $unread_topic,
+ 
+ 						'U_LAST_POST'		=&gt; generate_link($view_topic_url .  '&amp;p=' . $row['topic_last_post_id'] . '#' . $row['topic_last_post_id']),
+-						'U_LAST_POST_AUTHOR'=&gt; ($row['topic_last_poster_id'] != ANONYMOUS &amp;&amp; $row['topic_last_poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']) : '',
++						'U_LAST_POST_AUTHOR'=&gt; ($row['topic_last_poster_id'] &amp;&amp; $row['topic_last_poster_id'] != ANONYMOUS) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']) : '',
+ 						'U_VIEW_TOPIC'		=&gt; generate_link($view_topic_url))
+ 					);
+ 					
+@@ -465,13 +435,6 @@
+ 			break;
+ 
+ 			case 'bookmarks':
+-				
+-				if (!$config['allow_bookmarks'])
+-				{
+-					$_CLASS['core_template']-&gt;assign('S_BOOKMARKS_DISABLED', true);
+-					break;
+-				}
+-				
+ 				require($site_file_root.'includes/forums/functions_display.php');
+ 
+ 				$move_up = request_var('move_up', 0);
+@@ -500,28 +463,25 @@
+ 				
+ 				if (isset($_POST['unbookmark']))
+ 				{
+-					$s_hidden_fields = '&lt;input type=&quot;hidden&quot; name=&quot;unbookmark&quot; value=&quot;1&quot; /&gt;';
+-					$topics = (isset($_POST['t'])) ? array_map('intval', array_keys($_POST['t'])) : array();
+-					$url = generate_link('Control_Panel&amp;i=main&amp;mode=bookmarks');
++					$topics = array_unique(get_variable('t', 'POST', array(), 'array:int'));
+ 					
+ 					if (empty($topics))
+ 					{
+ 						trigger_error('NO_BOOKMARKS_SELECTED');
+ 					}
+-					
+-					foreach ($topics as $topic_id)
+-					{
+-						$s_hidden_fields .= '&lt;input type=&quot;hidden&quot; name=&quot;t[' . $topic_id . ']&quot; value=&quot;1&quot; /&gt;';
+-					}
+ 
+-					if (confirm_box(true))
++					$hidden_fields = array(
++						'unbookmark' =&gt; 1,
++						't' =&gt; $topics
++					);
++
++					if (display_confirmation($_CLASS['core_user']-&gt;get_lang('REMOVE_SELECTED_BOOKMARKS'), generate_hidden_fields($hidden_fields)))
+ 					{
+ 						$sql = 'DELETE FROM ' . FORUMS_BOOKMARKS_TABLE . '
+ 							WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . '
+ 								AND topic_id IN (' . implode(', ', $topics) . ')';
+ 						$_CLASS['core_db']-&gt;query($sql);
+ 
+-						// Re-Order bookmarks (possible with one query? This query massaker is not really acceptable...)
+ 						$sql = 'SELECT topic_id FROM ' . FORUMS_BOOKMARKS_TABLE . '
+ 							WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . '
+ 							ORDER BY order_id ASC';
+@@ -538,14 +498,12 @@
+ 						}
+ 						$_CLASS['core_db']-&gt;free_result($result);
+ 
++						$url = generate_link('Control_Panel&amp;i=main&amp;mode=bookmarks');
++
+ 						$_CLASS['core_display']-&gt;meta_refresh(3, $url);
+ 						$message = $_CLASS['core_user']-&gt;lang['BOOKMARKS_REMOVED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_UCP'], '&lt;a href=&quot;' . $url . '&quot;&gt;', '&lt;/a&gt;');
+ 						trigger_error($message);
+ 					}
+-					else
+-					{
+-						confirm_box(false, 'REMOVE_SELECTED_BOOKMARKS', $s_hidden_fields);
+-					}
+ 				}
+ 
+ 				// We grab deleted topics here too...
+@@ -597,7 +555,9 @@
+ 						'TOPIC_TYPE' 		=&gt; $topic_type,
+ 						'FORUM_NAME'		=&gt; $row['forum_name'],
+ 
+-						'TOPIC_AUTHOR' 		=&gt; topic_topic_author($row),
++						'TOPIC_AUTHOR' 		=&gt; ($row['topic_poster'] == ANONYMOUS) ? (($row['topic_first_poster_name']) ? $row['topic_first_poster_name'] : $_CLASS['core_user']-&gt;get_lang('GUEST')) : $row['topic_first_poster_name'],
++						'LINK_AUTHOR' 		=&gt; ($row['topic_poster'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['topic_poster']),
++
+ 						'FIRST_POST_TIME' 	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_time']),
+ 						'LAST_POST_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']),
+ 						'LAST_VIEW_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_view_time']),
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_pm_compose.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_pm_compose.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_pm_compose.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -78,11 +78,6 @@
+ 		redirect($redirect);
+ 	}
+ 
+-	if ($action == 'forward' &amp;&amp; (!$config['forward_pm'] || !$_CLASS['auth']-&gt;acl_get('u_pm_forward')))
+-	{
+-		trigger_error('NO_AUTH_FORWARD_MESSAGE');
+-	}
+-
+ 	if ($action == 'edit' &amp;&amp; !$_CLASS['auth']-&gt;acl_get('u_pm_edit'))
+ 	{
+ 		trigger_error('NO_AUTH_EDIT_MESSAGE');
+@@ -662,9 +657,10 @@
+ 		}
+ 
+ 		$u = $g = array();
++
+ 		foreach (array('u', 'g') as $type)
+ 		{
+-			if (isset($result[$type]) &amp;&amp; $result[$type])
++			if (isset($result[$type]))
+ 			{
+ 				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result[$type]))
+ 				{
+@@ -723,26 +719,27 @@
+ 	{
+ 		case 'post':
+ 			$page_title = $_CLASS['core_user']-&gt;lang['POST_NEW_PM'];
+-			break;
++		break;
+ 
+ 		case 'quote':
+ 			$page_title = $_CLASS['core_user']-&gt;lang['POST_QUOTE_PM'];
+-			break;
++		break;
+ 
+ 		case 'reply':
+ 			$page_title = $_CLASS['core_user']-&gt;lang['POST_REPLY_PM'];
+-			break;
++		break;
+ 
+ 		case 'edit':
+ 			$page_title = $_CLASS['core_user']-&gt;lang['POST_EDIT_PM'];
+-			break;
++		break;
+ 
+ 		case 'forward':
+ 			$page_title = $_CLASS['core_user']-&gt;lang['POST_FORWARD_PM'];
+-			break;
++		break;
+ 
+ 		default:
+ 			trigger_error('NO_ACTION_MODE');
++		break;
+ 	}
+ 
+ 	$s_hidden_fields = '&lt;input type=&quot;hidden&quot; name=&quot;lastclick&quot; value=&quot;' . $current_time . '&quot; /&gt;';
+@@ -843,7 +840,9 @@
+ 			require_once(SITE_FILE_ROOT.'includes/functions_user.php');
+ 
+ 			$user_id_ary = user_get_id($usernames, $difference);
+-			
++
++			unset($user_id_ary[ANONYMOUS]);
++
+ 			if (!empty($user_id_ary))
+ 			{
+ 				foreach ($user_id_ary as $user_id)
+@@ -854,7 +853,7 @@
+ 		}
+ 
+ 		// Add Friends if specified
+-		$friend_list = (is_array($_REQUEST['add_' . $type])) ? array_map('intval', array_keys($_REQUEST['add_' . $type])) : array();
++		$friend_list = is_array($_REQUEST['add_' . $type]) ? array_map('intval', array_keys($_REQUEST['add_' . $type])) : array();
+ 
+ 		foreach ($friend_list as $user_id)
+ 		{
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_prefs.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_prefs.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_prefs.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -1,11 +1,33 @@
+ &lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
+ // -------------------------------------------------------------
+ //
+ // $Id: ucp_prefs.php,v 1.15 2004/06/06 21:44:48 acydburn Exp $
+ //
+ // FILENAME  : ucp_prefs.php
+ // STARTED   : Mon May 19, 2003
+-// COPYRIGHT : &#169; 2001, 2003 phpBB Group
++// COPYRIGHT : 2001, 2003 phpBB Group
+ // WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+ // LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+ // 
+@@ -29,32 +51,32 @@
+ 				{
+ 					$time_format	= get_variable('time_format', 'REQUEST', null);
+ 					$lang			= get_variable('lang', 'REQUEST', null);
+-					$tz				= get_variable('tz', 'REQUEST', null);
++					$tz				= get_variable('tz', 'REQUEST', 0);
+ 					$dst			= get_variable('dst', 'REQUEST', null);
+ 
+ 					$theme 		= get_variable('theme', 'REQUEST', null);
+-	
++
+ 					$viewemail		= (bool) get_variable('viewemail', 'REQUEST', true, 'interger');
+ 					$massemail		= (bool) get_variable('massemail', 'REQUEST', false, 'interger');
+-					$hideonline	= (bool) get_variable('hideonline', 'REQUEST', true, 'interger');
+-					$notifypm		= (bool) get_variable('notifypm', 'REQUEST', true, 'interger');
++					$hideonline		= (bool) get_variable('hideonline', 'REQUEST', true, 'interger');
++					$notify_pm		= (bool) get_variable('notifypm', 'REQUEST', true, 'interger');
+ 
+ 					$popuppm	= (bool) get_variable('popuppm', 'REQUEST', true, 'interger');
+ 					$allowpm	= (bool) get_variable('allowpm', 'REQUEST', true, 'interger');
+-				//$report_pm_notify	= (bool) get_variable('report_pm_notify', 'REQUEST', true, 'interger');
++					//$report_pm_notify	= (bool) get_variable('report_pm_notify', 'REQUEST', true, 'interger');
+ 
+ 					if (empty($error))
+ 					{
+ 						$_CLASS['core_user']-&gt;optionset('popuppm', $popuppm);
+ 						//$_CLASS['core_user']-&gt;optionset('report_pm_notify', $report_pm_notify);
+ 						
+-						$sql_ary = array(
++						$sql_array = array(
+ 							'user_allow_pm'			=&gt; $allowpm, 
+ 							'user_allow_viewemail'	=&gt; $viewemail, 
+ 							'user_allow_massemail'	=&gt; $massemail, 
+ 							'user_allow_viewonline'	=&gt; ($_CLASS['forums_auth']-&gt;acl_get('u_hideonline')) ? !$hideonline : $_CLASS['core_user']-&gt;data['user_allow_viewonline'], 
+ 							//'user_notify_type'		=&gt; $notifymethod, 
+-							//'user_notify_pm'		=&gt; $notifypm,
++							'user_notify_pm'		=&gt; $notify_pm,
+ 							'user_data'				=&gt; serialize($_CLASS['core_user']-&gt;data['user_data']), 
+ 
+ 							'user_dst'				=&gt; $dst,
+@@ -64,55 +86,58 @@
+ 							'user_theme'			=&gt; $theme,
+ 						);
+ 
++						array_merge($_CLASS['core_user']-&gt;data, $sql_array);
++
+ 						$sql = 'UPDATE ' . USERS_TABLE . ' 
+-							SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $sql_ary) . '
++							SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $sql_array) . '
+ 							WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'];
+ 						$_CLASS['core_db']-&gt;sql_query($sql);
+ 						
+-						if ($theme != $_CLASS['core_display']-&gt;theme)
++						if ($theme !== $_CLASS['core_display']-&gt;theme_name)
+ 						{
+ 							$_CLASS['core_user']-&gt;session_data_remove('user_theme');
+ 						}
+ 						
+ 						$_CLASS['core_display']-&gt;meta_refresh(3, generate_link(&quot;Control_Panel&amp;i=$id&amp;mode=$mode&quot;));
+ 						$message = $_CLASS['core_user']-&gt;lang['PREFERENCES_UPDATED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_UCP'], '&lt;a href=&quot;'.generate_link(&quot;Control_Panel&amp;i=$id&amp;mode=$mode&quot;).'&quot;&gt;', '&lt;/a&gt;');
++
+ 						trigger_error($message);
+ 					}
+-					// Replace &quot;error&quot; strings with their real, localised form
+-					$error = preg_replace('#^([A-Z_]+)$#e', &quot;(!empty(\$_CLASS['core_user']-&gt;lang['\\1'])) ? \$_CLASS['core_user']-&gt;lang['\\1'] : '\\1'&quot;, $error);
+ 				}
+ 
+-				$viewemail = (isset($viewemail)) ? $viewemail : $_CLASS['core_user']-&gt;data['user_allow_viewemail'];
++				$allowpm = isset($allowpm) ? $allowpm : $_CLASS['core_user']-&gt;data['user_allow_pm'];
++				$dst = isset($dst) ? $dst : $_CLASS['core_user']-&gt;data['user_dst'];
++				$hideonline = isset($hideonline) ? $hideonline : !$_CLASS['core_user']-&gt;data['user_allow_viewonline'];
++				$massemail = isset($massemail) ? $massemail : $_CLASS['core_user']-&gt;data['user_allow_massemail'];
++				$notifypm = isset($notifypm) ? $notifypm : $_CLASS['core_user']-&gt;data['user_notify_pm'];
++				$popuppm = isset($popuppm) ? $popuppm : $_CLASS['core_user']-&gt;optionget('popuppm');
++				$viewemail = isset($viewemail) ? $viewemail : $_CLASS['core_user']-&gt;data['user_allow_viewemail'];
++				$report_pm_notify = isset($report_pm_notify) ? $report_pm_notify : $_CLASS['core_user']-&gt;optionget('report_pm_notify');
++				$notifymethod = isset($notifymethod) ? $notifymethod : $_CLASS['core_user']-&gt;data['user_notify_type'];
++				$dateformat = isset($dateformat) ? $dateformat : $_CLASS['core_user']-&gt;data['user_time_format'];
++				$lang = isset($lang) ? $lang : $_CLASS['core_user']-&gt;data['user_lang'];
++				$theme = isset($theme) ? $theme : $_CLASS['core_user']-&gt;data['user_theme'];
++				$tz = isset($tz) ? $tz * 3600 : $_CLASS['core_user']-&gt;data['user_timezone'] / 3600;
++
+ 				$view_email_yes = ($viewemail) ? ' checked=&quot;checked&quot;' : '';
+ 				$view_email_no = (!$viewemail) ? ' checked=&quot;checked&quot;' : '';
+-				$massemail = (isset($massemail)) ? $massemail : $_CLASS['core_user']-&gt;data['user_allow_massemail'];
+ 				$mass_email_yes = ($massemail) ? ' checked=&quot;checked&quot;' : '';
+ 				$mass_email_no = (!$massemail) ? ' checked=&quot;checked&quot;' : '';
+-				$allowpm = (isset($allowpm)) ? $allowpm : $_CLASS['core_user']-&gt;data['user_allow_pm'];
+ 				$allow_pm_yes = ($allowpm) ? ' checked=&quot;checked&quot;' : '';
+ 				$allow_pm_no = (!$allowpm) ? ' checked=&quot;checked&quot;' : '';
+-				$hideonline = (isset($hideonline)) ? $hideonline : !$_CLASS['core_user']-&gt;data['user_allow_viewonline'];
+ 				$hide_online_yes = ($hideonline) ? ' checked=&quot;checked&quot;' : '';
+ 				$hide_online_no = (!$hideonline) ? ' checked=&quot;checked&quot;' : '';
+-				$notifypm = (isset($notifypm)) ? $notifypm : '';
+ 				$notify_pm_yes = ($notifypm) ? ' checked=&quot;checked&quot;' : '';
+ 				$notify_pm_no = (!$notifypm) ? ' checked=&quot;checked&quot;' : '';
+-				$popuppm = (isset($popuppm)) ? $popuppm : $_CLASS['core_user']-&gt;optionget('popuppm');
+ 				$popup_pm_yes = ($popuppm) ? ' checked=&quot;checked&quot;' : '';
+ 				$popup_pm_no = (!$popuppm) ? ' checked=&quot;checked&quot;' : '';
+-				$report_pm_notify = (isset($report_pm_notify)) ? $report_pm_notify : $_CLASS['core_user']-&gt;optionget('report_pm_notify');
+ 				$report_pm_notify_yes = ($report_pm_notify) ? ' checked=&quot;checked&quot;' : '';
+ 				$report_pm_notify_no = (!$report_pm_notify) ? ' checked=&quot;checked&quot;' : '';
+-				$dst = (isset($dst)) ? $dst : $_CLASS['core_user']-&gt;data['user_dst'];
+ 				$dst_yes = ($dst) ? ' checked=&quot;checked&quot;' : '';
+ 				$dst_no = (!$dst) ? ' checked=&quot;checked&quot;' : '';
+ 
+-				$notifymethod = (isset($notifymethod)) ? $notifymethod : $_CLASS['core_user']-&gt;data['user_notify_type'];
+-				$dateformat = (isset($dateformat)) ? $dateformat : $_CLASS['core_user']-&gt;data['user_time_format'];
+-				$lang = (isset($lang)) ? $lang : $_CLASS['core_user']-&gt;data['user_lang'];
+-				$theme = (isset($theme)) ? $theme : $_CLASS['core_user']-&gt;data['user_theme'];
+-				$tz = (isset($tz)) ? $tz * 3600 : $_CLASS['core_user']-&gt;data['user_timezone'] / 3600;
+ 
++
+ 				$_CLASS['core_template']-&gt;assign_array(array( 
+ 					'ERROR'				=&gt; (sizeof($error)) ? implode('&lt;br /&gt;', $error) : '',
+ 
+
+Modified: cms/trunk/modules/Forums/viewforum.php
+===================================================================
+--- cms/trunk/modules/Forums/viewforum.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/Forums/viewforum.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -288,7 +288,7 @@
+ 	'TOTAL_TOPICS'		=&gt; ($forum_data['forum_flags'] &amp; 16) ? false : (($topics_count == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPIC'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPICS'], $topics_count)),
+ 	'MODERATORS'		=&gt; empty($moderators[$forum_id]) ? '' : implode(', ', $moderators[$forum_id]),
+ 
+-	'POST_IMG' 				=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;img('btn_locked', $post_alt) : $_CLASS['core_user']-&gt;img('btn_post', $post_alt),
++	'POST_IMG' 			=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;img('btn_locked', $post_alt) : $_CLASS['core_user']-&gt;img('btn_post', $post_alt),
+ 
+ 	'MOD_TOPIC_LOCK'	=&gt;	$_CLASS['auth']-&gt;acl_get('m_lock', $forum_id),
+ 	'MOD_TOPIC_TITLE'	=&gt;	$_CLASS['auth']-&gt;acl_get('m_', $forum_id),
+
+Modified: cms/trunk/modules/calender/configurator.php
+===================================================================
+--- cms/trunk/modules/calender/configurator.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/calender/configurator.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -84,6 +84,8 @@
+ 		$_CLASS['core_db']-&gt;query('DROP TABLE ' . CALENDER_TABLE);
+ 
+ 		$_CLASS['core_db']-&gt;report_error(true);
++		
++		return true;
+ 	}
+ }
+ 
+
+Modified: cms/trunk/modules/calender/index.php
+===================================================================
+--- cms/trunk/modules/calender/index.php	2005-09-30 15:46:45 UTC (rev 151)
++++ cms/trunk/modules/calender/index.php	2005-09-30 15:58:35 UTC (rev 152)
+@@ -75,7 +75,7 @@
+ 			'NEXT_DAY_LINK'			=&gt; $next_day,
+ 		));
+ 
+-		$_CLASS['core_display']-&gt;display(false, 'modules/calender/calender_day.html');
++		$_CLASS['core_display']-&gt;display(false, 'modules/Control_Panel/ucp_calender_day.html');
+ 	break;
+ 		
+ 	case 'details':
+@@ -91,7 +91,7 @@
+ 			'CAL_END_TIME'		=&gt; $_CLASS['core_user']-&gt;format_date($data['end_time']),
+ 		));
+ 	
+-		$_CLASS['core_display']-&gt;display(false, 'modules/calender/calender_details.html');
++		$_CLASS['core_display']-&gt;display(false, 'modules/Control_Panel/ucp_calender_details.html');
+ 
+ 	break;
+ 	
+@@ -122,7 +122,7 @@
+ 			'NEXT_MONTH'			=&gt; generate_link($link.'&amp;mode=month_view&amp;year='.$month_flanks['next_month']['year'].'&amp;month='.$month_flanks['next_month']['month']),
+ 		));
+ 
+-		$_CLASS['core_display']-&gt;display(false, 'modules/calender/calender_main.html');
++		$_CLASS['core_display']-&gt;display(false, 'modules/Control_Panel/ucp_calender_main.html');
+ 
+ 	break;	
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000071.html">[Viperals-svncheckins] r151 - in cms/branches/1.0alpha2: . admin includes/display includes/forums includes/templates/admin/system install modules/Control_Panel/ucp modules/Forums modules/calender
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#72">[ date ]</a>
+              <a href="thread.html#72">[ thread ]</a>
+              <a href="subject.html#72">[ subject ]</a>
+              <a href="author.html#72">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

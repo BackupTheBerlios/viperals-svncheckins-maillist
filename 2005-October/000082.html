@@ -1,0 +1,3508 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r162 - in cms/trunk: . blocks images includes includes/display includes/forums includes/forums/admin includes/forums/mcp includes/templates includes/templates/installer includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List install modules/Control_Panel/ucp modules/Forums themes/viperal/style
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r162%20-%20in%20cms/trunk%3A%20.%20blocks%20images%20includes%20includes/display%20includes/forums%20includes/forums/admin%20includes/forums/mcp%20includes/templates%20includes/templates/installer%20includes/templates/modules/Control_Panel%20includes/templates/modules/Forums%20includes/templates/modules/Members_List%20install%20modules/Control_Panel/ucp%20modules/Forums%20themes/viperal/style&In-Reply-To=%3C200510061822.j96IMdqJ015869%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000081.html">
+   <LINK REL="Next"  HREF="000083.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r162 - in cms/trunk: . blocks images includes includes/display includes/forums includes/forums/admin includes/forums/mcp includes/templates includes/templates/installer includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List install modules/Control_Panel/ucp modules/Forums themes/viperal/style</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r162%20-%20in%20cms/trunk%3A%20.%20blocks%20images%20includes%20includes/display%20includes/forums%20includes/forums/admin%20includes/forums/mcp%20includes/templates%20includes/templates/installer%20includes/templates/modules/Control_Panel%20includes/templates/modules/Forums%20includes/templates/modules/Members_List%20install%20modules/Control_Panel/ucp%20modules/Forums%20themes/viperal/style&In-Reply-To=%3C200510061822.j96IMdqJ015869%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r162 - in cms/trunk: . blocks images includes includes/display includes/forums includes/forums/admin includes/forums/mcp includes/templates includes/templates/installer includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List install modules/Control_Panel/ucp modules/Forums themes/viperal/style">viperal at berlios.de
+       </A><BR>
+    <I>Thu Oct  6 20:22:39 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000081.html">[Viperals-svncheckins] r161 - in modules: . google_search google_search/includes google_search/includes/templates google_search/includes/templates/modules google_search/includes/templates/modules/google_search google_search/javascript google_search/javascript/google_search google_search/modules google_search/modules/google_search
+</A></li>
+        <LI>Next message: <A HREF="000083.html">[Viperals-svncheckins] r163 - in cms/trunk: . includes includes/display install modules/Contact modules/Control_Panel modules/Forums modules/Members_List modules/Quick_Message modules/articles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-10-06 20:22:34 +0200 (Thu, 06 Oct 2005)
+New Revision: 162
+
+Added:
+   cms/trunk/images/progress_bar.gif
+   cms/trunk/includes/templates/installer/stage4.html
+Removed:
+   cms/trunk/includes/forums/admin/images/
+Modified:
+   cms/trunk/blocks/block-Quick_Message.php
+   cms/trunk/blocks/block-User.php
+   cms/trunk/core.php
+   cms/trunk/debug.php
+   cms/trunk/includes/display/display.php
+   cms/trunk/includes/forums/functions.php
+   cms/trunk/includes/forums/functions_admin.php
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/forums/mcp/mcp_main.php
+   cms/trunk/includes/forums/mcp/mcp_post.php
+   cms/trunk/includes/forums/mcp/mcp_topic.php
+   cms/trunk/includes/forums/message_parser.php
+   cms/trunk/includes/functions.php
+   cms/trunk/includes/handler.php
+   cms/trunk/includes/session.php
+   cms/trunk/includes/system.php
+   cms/trunk/includes/tables.php
+   cms/trunk/includes/templates/installer/stage2.html
+   cms/trunk/includes/templates/installer/stage3.html
+   cms/trunk/includes/templates/login_admin.html
+   cms/trunk/includes/templates/login_body.html
+   cms/trunk/includes/templates/login_body_full.html
+   cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_history.html
+   cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_viewmessage.html
+   cms/trunk/includes/templates/modules/Forums/mcp_post.html
+   cms/trunk/includes/templates/modules/Members_List/memberlist_body.html
+   cms/trunk/includes/user.php
+   cms/trunk/install/build_data.php
+   cms/trunk/install/build_tables.php
+   cms/trunk/installer.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_main.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_pm.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php
+   cms/trunk/modules/Forums/ajax.php
+   cms/trunk/modules/Forums/download.php
+   cms/trunk/modules/Forums/mcp.php
+   cms/trunk/themes/viperal/style/style.css
+Log:
+
+
+Modified: cms/trunk/blocks/block-Quick_Message.php
+===================================================================
+--- cms/trunk/blocks/block-Quick_Message.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/blocks/block-Quick_Message.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -55,9 +55,9 @@
+ 	$this-&gt;content .= 'Name: &lt;br /&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; style=&quot;width:90%;&quot; id=&quot;poster_name&quot; name=&quot;poster_name&quot; size=&quot;10&quot; maxlength=&quot;10&quot; /&gt;&lt;br /&gt;';
+ }
+ 
+-$this-&gt;content .= 'Message &lt;br/&gt; &lt;textarea id=&quot;message&quot; name=&quot;message&quot; style=&quot;width:90%;&quot; rows=&quot;3&quot;&gt;&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;
++$this-&gt;content .= 'Message &lt;br/&gt; &lt;textarea id=&quot;message&quot; name=&quot;message&quot; style=&quot;width:90%;&quot; rows=&quot;4&quot;&gt;&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;
+ 			&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Post&quot; /&gt;
+ 			&lt;input class=&quot;button&quot; type=&quot;button&quot; name=&quot;submit&quot; onclick=&quot;quick_message_refresh()&quot; value=&quot;Refresh&quot; /&gt;
+-		&lt;/div&gt;&lt;/form&gt;';
++		&lt;/form&gt;&lt;/div&gt;';
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/blocks/block-User.php
+===================================================================
+--- cms/trunk/blocks/block-User.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/blocks/block-User.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -35,14 +35,16 @@
+ 	if ($_CLASS['core_user']-&gt;data['user_avatar'])
+ 	{
+ 		$avatar_img = '';
++
+ 		switch ($_CLASS['core_user']-&gt;data['user_avatar_type'])
+ 		{
+ 			case AVATAR_UPLOAD:
+-				$avatar_img = $config['avatar_path'] . '/';
+-				break;
++				$avatar_img = $_CORE_CONFIG['global']['path_avatar_upload'] . '/';
++			break;
++
+ 			case AVATAR_GALLERY:
+-				$avatar_img = $config['avatar_gallery_path'] . '/';
+-				break;
++				$avatar_img = $_CORE_CONFIG['global']['path_avatar_gallery'] . '/';
++			break;
+ 		}
+ 		
+ 		$avatar_img .= $_CLASS['core_user']-&gt;data['user_avatar'];
+@@ -72,7 +74,7 @@
+ 	&lt;/tr&gt;
+ 	&lt;tr&gt;
+ 		&lt;td colspan=&quot;2&quot;&gt;
+-			&lt;input name=&quot;autologin&quot; type=&quot;checkbox&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;Remmeber me&lt;/span&gt;
++			&lt;input name=&quot;autologin&quot; type=&quot;checkbox&quot; /&gt;&lt;span class=&quot;gensmall&quot;&gt;Remmeber me&lt;/span&gt;
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;/table&gt;
+@@ -103,11 +105,20 @@
+ {
+ 	if ($row['user_id'] != ANONYMOUS &amp;&amp; !in_array($row['user_id'], $prev_ip))
+   	{
+-		if (!$_CLASS['core_user']-&gt;is_admin &amp;&amp; (!$row['user_allow_viewonline'] || $row['session_hidden']))
++		$prev_id[] = $row['user_id'];
++
++		if (!$row['user_allow_viewonline'] || $row['session_hidden'])
+ 		{
+ 			$online['hidden']++;
+ 
+-			continue;
++			if ($_CLASS['core_user']-&gt;is_admin)
++			{
++				$row['username'] = '&lt;i&gt;' . $row['username'] . '&lt;/i&gt;';
++			}
++			else
++			{
++				continue;
++			}
+ 		}
+ 		else
+ 		{
+@@ -118,11 +129,11 @@
+ 		{
+ 			$row['username'] = '&lt;b style=&quot;color:#' . $row['user_colour'] . '&quot;&gt;' . $row['username'] . '&lt;/b&gt;';
+ 		}
+-		
+-		$prev_id[] = $row['user_id'];
+ 	}
+ 	elseif ($row['user_id'] == ANONYMOUS &amp;&amp; !in_array($row['session_ip'], $prev_ip))
+ 	{
++		$prev_ip[] = $row['session_ip'];
++
+ 		$online['guest']++;		
+ 	}
+ 	else
+@@ -130,7 +141,6 @@
+ 		continue;	
+ 	}
+ 	
+-	$prev_ip[] = $row['session_ip'];
+ 	$online['total']++;
+ 
+ 	if (!$row['session_page'])
+@@ -205,5 +215,31 @@
+ 	&lt;/td&gt;
+   &lt;/tr&gt;
+ &lt;/table&gt;';
++/*
++if ($_CORE_CONFIG['user']['enable_confirm'])
++{
++	$this-&gt;content .=  '
++	&lt;div id=&quot;block_user_menu&quot; &gt;
++		&lt;table class=&quot;tablebg&quot; border=&quot;0&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot;&gt;
++			&lt;tbody&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;Enter the code exactly as you see it in the image&lt;br/&gt;&lt;b&gt;This is case sensitive&lt;/b&gt;&lt;/span&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot; class=&quot;row2&quot;&gt;&lt;img src=&quot;'.generate_link('system&amp;mode=confirmation_image').'&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;confirm_code&quot; size=&quot;10&quot; maxlength=&quot;6&quot; type=&quot;text&quot; /&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;&lt;input type=&quot;submit&quot; name=&quot;login&quot; class=&quot;button&quot; value=&quot;Login&quot;/&gt;&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/tbody&gt;
++		&lt;/table&gt;
++	&lt;/div&gt;';
+ 
++	$_CLASS['core_user']-&gt;session_data_set('confirmation_code', generate_string(6));
++}
++*/
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/core.php
+===================================================================
+--- cms/trunk/core.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/core.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -26,8 +26,15 @@
+     die;
+ }
+ 
++if (extension_loaded('zlib') &amp;&amp; !ob_get_length())
++{
++	@ob_start('ob_gzhandler');
++}
++
+ //ini_set('display_errors', 1);
+ set_magic_quotes_runtime(0);
++//error_reporting(E_STRICT);
++error_reporting(E_ALL);
+ 
+ //Error reporting tyoe
+ define('ERROR_NONE', 0);
+@@ -85,11 +92,11 @@
+ 
+ // Load basic classes
+ load_class(false, 'core_template');
+-load_class(false, 'core_error_handler');
++load_class(false, 'core_handler');
+ 
+ // Set error handler
+-$_CLASS['core_error_handler']-&gt;start();
+-//$_CLASS['core_error_handler']-&gt;stop();
++$_CLASS['core_handler']-&gt;start();
++//$_CLASS['core_handler']-&gt;stop();
+ //error_reporting(E_ERROR | E_WARNING | E_PARSE);
+ 
+ if (empty($site_db))
+@@ -219,20 +226,20 @@
+ 
+ if ($_CLASS['core_user']-&gt;is_admin)
+ {
+-	$_CLASS['core_error_handler']-&gt;report = $_CORE_CONFIG['server']['error_options'];	
++	$_CLASS['core_handler']-&gt;report = $_CORE_CONFIG['server']['error_options'];	
+ }
+ else
+ {
+ 	$_CORE_CONFIG['server']['error_options'] = ERROR_NONE;
+-	$_CLASS['core_error_handler']-&gt;report = ERROR_NONE;
++	$_CLASS['core_handler']-&gt;report = ERROR_NONE;
+ }
+ 
+-/*
++
+ $_CORE_CONFIG['server']['error_options'] = ERROR_DEBUGGER;	
+ //$_CORE_CONFIG['server']['error_options'] = ERROR_ONPAGE;	
+-$_CLASS['core_error_handler']-&gt;report = $_CORE_CONFIG['server']['error_options'];
+-*/
++$_CLASS['core_handler']-&gt;report = $_CORE_CONFIG['server']['error_options'];
+ 
++
+ if ($_SERVER['REQUEST_METHOD'] == 'POST' &amp;&amp; $_CLASS['core_user']-&gt;new_session)
+ {
+ 	// error here
+
+Modified: cms/trunk/debug.php
+===================================================================
+--- cms/trunk/debug.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/debug.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -15,6 +15,8 @@
+ 
+ define('VIPERAL', 'Admin');
+ 
++error_reporting(E_ALL);
++
+ //echo str_replace('\\','/', getenv('DOCUMENT_ROOT')); die;
+ $site_file_root = '';
+ 
+@@ -22,22 +24,20 @@
+ 
+ if (!$_CLASS['core_user']-&gt;is_admin)
+ {
+-	die('this is admin only :-) need better language :-(');
++	//die('this is admin only :-) need better language :-(');
+ }
+ 
+-$_CLASS['core_error_handler']-&gt;stop();
++$_CLASS['core_handler']-&gt;stop();
+ $_CLASS['core_user']-&gt;user_setup();
+ error_reporting(E_ALL);
+ 
+ $mode = get_variable('mode', 'GET', false);
+ 
+-$_CLASS['core_template']-&gt;assign(array(
++$_CLASS['core_template']-&gt;assign_array(array(
+ 	'MODE'				=&gt;	$mode,
+ 	'L_NOTICES'			=&gt;	'NOTICE ERRORS',
+ 	'L_WARNINGS'		=&gt;	'WARNING ERRORS',
+ 	'L_QUERIES'			=&gt;	'DB QUERY DETAILS',
+-	'bottomblock'		=&gt;	false,
+-	'MAIN_CONTENT'		=&gt;	false,
+ ));
+ 
+ switch ($mode)
+
+Added: cms/trunk/images/progress_bar.gif
+===================================================================
+(Binary files differ)
+
+
+Property changes on: cms/trunk/images/progress_bar.gif
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/display/display.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -141,11 +141,6 @@
+ 
+ 		$this-&gt;displayed['header'] = true;
+ 
+-		if (extension_loaded('zlib') &amp;&amp; !ob_get_length())
+-		{
+-			ob_start('ob_gzhandler');
+-		}
+-
+ 		if ($title)
+ 		{
+ 			$_CORE_MODULE['module_title'] = $title;
+@@ -161,7 +156,6 @@
+ 		if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $_CLASS['core_user']-&gt;data['user_new_privmsg'] &amp;&amp; $_CLASS['core_user']-&gt;user_data_get('popuppm'))
+ 		{
+ 			$this-&gt;header['js'][] = '&lt;script type=&quot;text/javascript&quot;&gt;window.open(\''. preg_replace('/&amp;/', '&amp;', generate_link('Control_Panel&amp;i=pm&amp;mode=popup', array('full' =&gt; true))).&quot;', '_phpbbprivmsg','height=135,resizable=yes,status=no,width=400');&lt;/script&gt;&quot;;
+-// need some other field
+ 			//$_CLASS['core_db']-&gt;sql_query('UPDATE ' . USERS_TABLE . ' SET user_new_privmsg = 0 WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id']);
+ 		}
+ 
+
+Modified: cms/trunk/includes/forums/functions.php
+===================================================================
+--- cms/trunk/includes/forums/functions.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/forums/functions.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -1181,65 +1181,62 @@
+ 	
+ 	if ($config['load_online'] &amp;&amp; $config['load_online_time'])
+ 	{
+-		$userlist_ary = $userlist_visible = array();
+-		$logged_visible_online = $logged_hidden_online = $guests_online = $prev_user_id = 0;
+-		$prev_session_ip = $reading_sql = '';
+-		//////////////////
+-		/// Need to fix this\
+-		/// Think about removing session_users();
+-		/////////////////
+-		if (!empty($_REQUEST['f']))
++		$logged_visible_online = $logged_hidden_online = $guests_online = 0;
++		$reading_sql = '';
++
++		$prev_ip = $prev_id = array();
++
++		if (isset($_REQUEST['f']))
+ 		{
+-			$f = request_var('f', 0);
+-			$reading_sql = &quot;AND s.session_url LIKE '%f=$f%'&quot;;
++			$f = get_variable('f', 'REQUEST', 0, 'int');
++			$reading_sql = &quot; AND s.session_url LIKE '%f=$f%'&quot;;
+ 		}
+ 
+-		$session_users = session_users();
+-		foreach ($session_users as $row)
++		$sql = 'SELECT session_hidden, session_ip, session_page, session_url, u.username, u.user_id, u.user_type, u.user_allow_viewonline, u.user_colour
++					FROM ' . SESSIONS_TABLE . ' s, '.USERS_TABLE.' u
++						WHERE s.session_time &gt; ' . ($_CLASS['core_user']-&gt;time - (int) $_CORE_CONFIG['server']['session_length']) .'
++						AND u.user_id = s.session_user_id'.$reading_sql;
++		$result = $_CLASS['core_db']-&gt;query($sql);
++
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			// User is logged in and therefor not a guest
+-			if ($row['user_id'] != ANONYMOUS)
++			if ($row['user_id'] != ANONYMOUS &amp;&amp; !in_array($row['user_id'], $prev_ip))
+ 			{
+-				// Skip multiple sessions for one user
+-				if ($row['user_id'] != $prev_user_id)
++				$prev_id[] = $row['user_id'];
++
++				if ((!$row['user_allow_viewonline'] || $row['session_hidden']))
+ 				{
+-					if ($row['user_colour'])
++					if ($_CLASS['core_user']-&gt;is_admin)
+ 					{
+-						$row['username'] = '&lt;b style=&quot;color:#' . $row['user_colour'] . '&quot;&gt;' . $row['username'] . '&lt;/b&gt;';
++						$row['username'] = '&lt;i&gt;' . $row['username'] . '&lt;/i&gt;';
+ 					}
++					$logged_hidden_online++;
++				}
++				else
++				{
++					$logged_visible_online++;
++				}
+ 
+-					if ($row['user_allow_viewonline'] &amp;&amp; !$row['session_hidden'])
+-					{
+-						$user_online_link = $row['username'];
+-						$logged_visible_online++;
+-					}
+-					else
+-					{
+-						$user_online_link = '&lt;i&gt;' . $row['username'] . '&lt;/i&gt;';
+-						$logged_hidden_online++;
+-					}
+-// Fix this
+-					if ($row['user_allow_viewonline'] || $_CLASS['auth']-&gt;acl_get('u_viewonline'))
+-					{
+-						$user_online_link = ($row['user_type'] &amp; USER_BOT) ? &quot;&lt;a href=\&quot;&quot; . generate_link('Members_List&amp;&amp;mode=viewprofile&amp;u=' . $row['user_id']) . '&quot;&gt;' . $user_online_link . '&lt;/a&gt;' : $user_online_link;
+-						$online_userlist .= ($online_userlist != '') ? ', ' . $user_online_link : $user_online_link;
+-					}
++				if ($row['user_colour'])
++				{
++					$row['username'] = '&lt;b style=&quot;color:#' . $row['user_colour'] . '&quot;&gt;' . $row['username'] . '&lt;/b&gt;';
+ 				}
++	
++				$row['username'] = ($row['user_type'] == USER_BOT) ? $row['username'] : '&lt;a href=&quot;' . generate_link('Members_List&amp;&amp;mode=viewprofile&amp;u=' . $row['user_id']) . '&quot;&gt;' . $row['username'] . '&lt;/a&gt;';
++				$online_userlist .= ($online_userlist !== '') ? ', ' . $row['username'] : $row['username'];
++			}
++			elseif ($row['user_id'] == ANONYMOUS &amp;&amp; !in_array($row['session_ip'], $prev_ip))
++			{
++				$prev_ip[] = $row['session_ip'];
+ 
+-				$prev_user_id = $row['user_id'];
++				$guests_online++;
+ 			}
+ 			else
+ 			{
+-				// Skip multiple sessions for one user
+-				if ($row['session_ip'] != $prev_session_ip)
+-				{
+-					$guests_online++;
+-				}
++				continue;	
+ 			}
+-
+-			$prev_session_ip = $row['session_ip'];
+ 		}
+-		unset($session_users);
+ 		
+ 		if (!$online_userlist)
+ 		{
+@@ -1260,8 +1257,8 @@
+ 
+ 		if ($total_online_users &gt; $config['record_online_users'])
+ 		{
+-			set_config('record_online_users', $total_online_users, TRUE);
+-			set_config('record_online_date', time(), TRUE);
++			set_config('record_online_users', $total_online_users, true);
++			set_config('record_online_date', $_CLASS['core_user']-&gt;time, true);
+ 		}
+ 
+ 		// Build online listing
+@@ -1278,15 +1275,15 @@
+ 			{
+ 				case 0:
+ 					${$var_ary[1]} = $_CLASS['core_user']-&gt;lang[$l_prefix . '_USERS_ZERO_TOTAL'];
+-					break;
++				break;
+ 
+ 				case 1:
+ 					${$var_ary[1]} = $_CLASS['core_user']-&gt;lang[$l_prefix . '_USER_TOTAL'];
+-					break;
++				break;
+ 
+ 				default:
+ 					${$var_ary[1]} = $_CLASS['core_user']-&gt;lang[$l_prefix . '_USERS_TOTAL'];
+-					break;
++				break;
+ 			}
+ 		}
+ 		unset($vars_online);
+
+Modified: cms/trunk/includes/forums/functions_admin.php
+===================================================================
+--- cms/trunk/includes/forums/functions_admin.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/forums/functions_admin.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -233,7 +233,7 @@
+ 	global $_CLASS;
+ 
+ 	$forum_ids = array($forum_id);
+-	$sql_where = (is_array($topic_ids)) ? 'IN (' . implode(', ', $topic_ids) . ')' : '= ' . $topic_ids;
++	$sql_where = is_array($topic_ids) ? 'IN (' . implode(', ', $topic_ids) . ')' : '= ' . $topic_ids;
+ 
+ 	$sql = 'DELETE FROM ' . FORUMS_TOPICS_TABLE . &quot;
+ 		WHERE topic_moved_id $sql_where
+@@ -253,8 +253,12 @@
+ 		}
+ 		$_CLASS['core_db']-&gt;free_result($result);
+ 	}
+-	
+-	$table_ary = array(FORUMS_TOPICS_TABLE, FORUMS_POSTS_TABLE, FORUMS_LOG_TABLE);
++
++	$_CLASS['core_db']-&gt;transaction();
++
++	//$table_ary = array(FORUMS_FORUMS_TABLE, FORUMS_POLL_OPTIONS_TABLE, , FORUMS_TOPICS_TABLE);
++	$table_ary = array(FORUMS_TOPICS_TABLE, FORUMS_POSTS_TABLE, FORUMS_TRACK_TABLE, FORUMS_WATCH_TABLE, FORUMS_LOG_TABLE);
++
+ 	foreach ($table_ary as $table)
+ 	{
+ 		$sql = &quot;UPDATE $table
+@@ -264,10 +268,11 @@
+ 	}
+ 	unset($table_ary);
+ 
++	$_CLASS['core_db']-&gt;transaction('commit');
++
+ 	if ($auto_sync)
+ 	{
+ 		sync('forum', 'forum_id', $forum_ids, true);
+-		unset($forum_ids);
+ 	}
+ }
+ 
+@@ -315,9 +320,8 @@
+ 	$_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$sql = 'UPDATE ' . FORUMS_ATTACHMENTS_TABLE . &quot;
+-		SET topic_id = $topic_id
+-			AND in_message = 0
+-		WHERE post_msg_id IN (&quot; . implode(', ', $post_ids) . ')';
++		SET topic_id = $topic_id WHERE 
++		post_msg_id IN (&quot; . implode(', ', $post_ids) . ') AND in_message = 0';
+ 	$_CLASS['core_db']-&gt;query($sql);
+ 
+ 	if ($auto_sync)
+@@ -655,8 +659,12 @@
+ 	return $num_deleted;
+ }
+ 
++
++// FIX
+ function delete_topic_shadows($max_age, $forum_id = '', $auto_sync = TRUE)
+ {
++	global $_CLASS;
++
+ 	$where = (is_array($forum_id)) ? 'AND t.forum_id IN (' . implode(', ', $forum_id) . ')' : (($forum_id) ? &quot;AND t.forum_id = $forum_id&quot; : '');
+ 
+ 	switch ($_CLASS['core_db']-&gt;db_layer)
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/forums/functions_display.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -361,7 +361,7 @@
+ 		$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_MOVED'];
+ 		$folder_img = 'folder_moved';
+ 		$folder_alt = 'VIEW_TOPIC_MOVED';
+-		$status = 9;
++		//$status = 9;
+ 	}
+ 	else
+ 	{
+@@ -369,7 +369,7 @@
+ 		{
+ 			$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_LOCKED'];
+ 			$folder_img = ($unread) ? 'folder_locked_new' :'folder_locked';
+-			$status = ($unread) ? 11 : 10;
++			//$status = ($unread) ? 11 : 10;
+ 		}
+ 		else
+ 		{
+@@ -379,25 +379,25 @@
+ 				case POST_ANNOUNCE:
+ 					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_ANNOUNCEMENT'];
+ 					$folder_img = ($unread) ? 'folder_announce_new' : 'folder_announce';
+-					$status = ($unread) ? 8 : 7;
++					//$status = ($unread) ? 8 : 7;
+ 				break;
+ 	
+ 				case POST_STICKY:
+ 					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_STICKY'];
+ 					$folder_img = ($unread) ? 'folder_sticky_new' : 'folder_sticky';
+-					$status = ($unread) ? 6 : 5;
++					//$status = ($unread) ? 6 : 5;
+ 				break;
+ 	
+ 				default:
+ 					if ($replies &gt;= $config['hot_threshold'])
+ 					{
+ 						$folder_img = ($unread) ? 'folder_hot_new': 'folder_hot';
+-						$status = ($unread) ? 4 : 3;
++						//$status = ($unread) ? 4 : 3;
+ 					}
+ 					else
+ 					{
+ 						$folder_img = ($unread) ? 'folder_new' : 'folder';
+-						$status = ($unread) ? 2 : 1;
++						//$status = ($unread) ? 2 : 1;
+ 					}
+ 				break;
+ 			}
+@@ -411,7 +411,7 @@
+ 		$topic_type .= $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POLL'];
+ 	}
+ 
+-	return $status;
++	//return $status;
+ }
+ 
+ // Display Attachments
+
+Modified: cms/trunk/includes/forums/mcp/mcp_main.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_main.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/forums/mcp/mcp_main.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -102,7 +102,7 @@
+ // Change Topic Type
+ function change_topic_type($mode, $topic_ids)
+ {
+-	global $db, $_CLASS;
++	global $_CLASS;
+ 
+ 	if (!check_ids($topic_ids, FORUMS_TOPICS_TABLE, 'topic_id', 'm_'))
+ 	{
+@@ -169,27 +169,33 @@
+ 		}
+ 		else
+ 		{
+-			$sql = 'UPDATE ' . TOPICS_TABLE . &quot;
+-				SET topic_type = $new_topic_type, forum_id = 0
++			$sql = 'UPDATE ' . FORUMS_TOPICS_TABLE . &quot;
++				SET topic_type = $new_topic_type
+ 				WHERE topic_id IN (&quot; . implode(', ', $topic_ids) . &quot;)&quot;;
+ 			$_CLASS['core_db']-&gt;query($sql);
++
++			move_topics($topic_ids, 0, true);
+ 		}
+ 
+ 		$success_msg = (count($topic_ids) === 1) ? 'TOPIC_TYPE_CHANGED' : 'TOPICS_TYPE_CHANGED';
+ 
+ 		$data = get_topic_data($topic_ids);
+ 
++		$_CLASS['core_db']-&gt;transaction();
++
+ 		foreach ($data as $topic_id =&gt; $row)
+ 		{
+ 			add_log('mod', $forum_id, $topic_id, 'LOG_TOPIC_TYPE_CHANGED', $row['topic_title']);
+ 		}
++		
++		$_CLASS['core_db']-&gt;transaction('commit');
+ 	}
+ 
+-	$redirect = generate_link($redirect);
++	$redirect = generate_link($redirect, array('full' =&gt; true));
+ 
+ 	if (!$success_msg)
+ 	{
+-		url_redirect($redirect);
++		redirect($redirect);
+ 	}
+ 	else
+ 	{
+@@ -210,7 +216,7 @@
+ 		return;
+ 	}
+ 
+-	$redirect = get_variable('redirect', 'POST', $_CLASS['core_user']-&gt;data['session_url']);//generate_link('Forums')
++	$redirect = get_variable('redirect', 'POST', $_CLASS['core_user']-&gt;data['session_url']);
+ 	$to_forum_id = get_variable('to_forum_id', 'POST', 0, 'int');
+ 
+ 	$additional_msg = $success_msg = '';
+@@ -399,7 +405,7 @@
+ // Delete Posts
+ function mcp_delete_post($post_ids)
+ {
+-	global $_CLASS, $db;
++	global $_CLASS;
+ 
+ 	if (!check_ids($post_ids, FORUMS_POSTS_TABLE, 'post_id', 'm_delete'))
+ 	{
+@@ -508,7 +514,7 @@
+ // Fork Topic
+ function mcp_fork_topic($topic_ids)
+ {
+-	global $db, $_CLASS, $config;
++	global $_CLASS, $config;
+ 
+ 	if (!check_ids($topic_ids, FORUMS_TOPICS_TABLE, 'topic_id', 'm_'))
+ 	{
+@@ -621,7 +627,7 @@
+ 				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+ 					$sql = 'INSERT INTO ' . FORUMS_POLL_OPTIONS_TABLE . ' (poll_option_id, topic_id, poll_option_text, poll_option_total)
+-						VALUES (' . $row['poll_option_id'] . ', ' . $new_topic_id . &quot;, '&quot; . $db-&gt;sql_escape($row['poll_option_text']) . &quot;', 0)&quot;;
++						VALUES (' . $row['poll_option_id'] . ', ' . $new_topic_id . &quot;, '&quot; . $_CLASS['core_db']-&gt;escape($row['poll_option_text']) . &quot;', 0)&quot;;
+ 					$_CLASS['core_db']-&gt;query($sql);
+ 				}
+ 				$_CLASS['core_db']-&gt;free_result($result);
+
+Modified: cms/trunk/includes/forums/mcp/mcp_post.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_post.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/forums/mcp/mcp_post.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -23,378 +23,333 @@
+ // 
+ // -------------------------------------------------------------
+ 
+-function mcp_post_details($id, $mode, $action, $url)
+-{
+-	global $config, $_CLASS;
+-	
+-	$_CLASS['core_user']-&gt;add_lang('posting');
+ 
+-	$_CLASS['core_template']-&gt;assign(array(
+-		'L_POST_DETAILS'		=&gt; $_CLASS['core_user']-&gt;lang['POST_DETAILS'],
+-		'L_POST_SUBJECT'		=&gt; $_CLASS['core_user']-&gt;lang['POST_SUBJECT'],
+-		'L_POSTER'				=&gt; $_CLASS['core_user']-&gt;lang['POSTER'],
+-		'L_READ_PROFILE'		=&gt; $_CLASS['core_user']-&gt;lang['READ_PROFILE'],
+-		'L_READ_USERNOTES'		=&gt; $_CLASS['core_user']-&gt;lang['READ_USERNOTES'],
+-		'L_READ_WARNINGS'		=&gt; $_CLASS['core_user']-&gt;lang['READ_WARNINGS'],
+-		'L_THIS_POST_IP'		=&gt; $_CLASS['core_user']-&gt;lang['THIS_POST_IP'],
+-		'L_POSTED'				=&gt; $_CLASS['core_user']-&gt;lang['POSTED'],
+-		'L_PREVIEW'				=&gt; $_CLASS['core_user']-&gt;lang['PREVIEW'],
+-		'L_APPROVE'				=&gt; $_CLASS['core_user']-&gt;lang['APPROVE'],
+-		'L_DISAPPROVE'			=&gt; $_CLASS['core_user']-&gt;lang['DISAPPROVE'],
+-		'L_REPORTS'				=&gt; $_CLASS['core_user']-&gt;lang['REPORTS'],
+-		'L_ADD_FEEDBACK'		=&gt; $_CLASS['core_user']-&gt;lang['ADD_FEEDBACK'],
+-		'L_FEEDBACK'			=&gt; $_CLASS['core_user']-&gt;lang['FEEDBACK'],
+-		'L_DELETE_MARKED'		=&gt; $_CLASS['core_user']-&gt;lang['DELETE_MARKED'],
+-		'L_DELETE_ALL'			=&gt; $_CLASS['core_user']-&gt;lang['DELETE_ALL'],
+-		'L_REPORTER'			=&gt; $_CLASS['core_user']-&gt;lang['REPORTER'],
+-		'L_MORE_INFO'			=&gt; $_CLASS['core_user']-&gt;lang['MORE_INFO'],
+-		'L_MOD_OPTIONS'			=&gt; $_CLASS['core_user']-&gt;lang['MOD_OPTIONS'],
+-		'L_CHANGE_POSTER'		=&gt; $_CLASS['core_user']-&gt;lang['CHANGE_POSTER'],
+-		'L_CONFIRM'				=&gt; $_CLASS['core_user']-&gt;lang['CONFIRM'],
+-		'L_SEARCH'				=&gt; $_CLASS['core_user']-&gt;lang['SEARCH'],
+-		'L_MOD_OPTIONS'			=&gt; $_CLASS['core_user']-&gt;lang['MOD_OPTIONS'],
+-		'L_UNLOCK_POST'			=&gt; $_CLASS['core_user']-&gt;lang['UNLOCK_POST'],
+-		'L_UNLOCK_POST_EXPLAIN'	=&gt; $_CLASS['core_user']-&gt;lang['UNLOCK_POST_EXPLAIN'],
+-		'L_LOCK_POST'			=&gt; $_CLASS['core_user']-&gt;lang['LOCK_POST'],
+-		'L_LOCK_POST_EXPLAIN'	=&gt; $_CLASS['core_user']-&gt;lang['LOCK_POST_EXPLAIN'],
+-		'L_DELETE_POST'			=&gt; $_CLASS['core_user']-&gt;lang['DELETE_POST'],
+-		'L_SUBMIT'				=&gt; $_CLASS['core_user']-&gt;lang['SUBMIT'],
+-		'L_IP_INFO'				=&gt; $_CLASS['core_user']-&gt;lang['IP_INFO'],
+-		'L_OTHER_USERS'			=&gt; $_CLASS['core_user']-&gt;lang['OTHER_USERS'],
+-		'L_NO_MATCHES_FOUND'	=&gt; $_CLASS['core_user']-&gt;lang['NO_MATCHES_FOUND'],
+-		'L_OTHER_IPS'			=&gt; $_CLASS['core_user']-&gt;lang['OTHER_IPS'],
+-		'L_LOOKUP_ALL'			=&gt; $_CLASS['core_user']-&gt;lang['LOOKUP_ALL'],
+-		'L_JUMP_TO'				=&gt; $_CLASS['core_user']-&gt;lang['JUMP_TO'],
+-		'L_GO'					=&gt; $_CLASS['core_user']-&gt;lang['GO'],
+-		'L_LOOKUP_IP'			=&gt; $_CLASS['core_user']-&gt;lang['LOOKUP_IP'])
+-	);
+-	
++$_CLASS['core_user']-&gt;add_lang('posting');
++$id = 0;
++$url = 'Forums&amp;file=mcp';
++$post_id = request_var('p', 0);
++$start	= request_var('start', 0);
+ 
+-	$post_id = request_var('p', 0);
+-	$start	= request_var('start', 0);
++// Get post data
++$post_info = get_post_data(array($post_id));
+ 
+-	// Get post data
+-	$post_info = get_post_data(array($post_id));
++if (empty($post_info))
++{
++	trigger_error('POST_NOT_EXIST');
++}
+ 
+-	if (!sizeof($post_info))
+-	{
+-		trigger_error($_CLASS['core_user']-&gt;lang['POST_NOT_EXIST']);
+-	}
++$post_info = $post_info[$post_id];
+ 
+-	$post_info = $post_info[$post_id];
++switch ($action)
++{
++	case 'chgposter_search':
++		$username = request_var('username', '');
+ 
+-	switch ($action)
+-	{
+-		case 'chgposter_search':
+-		
+-			$username = request_var('username', '');
++		if ($username)
++		{
++			$users_ary = array();
+ 
+-			if ($username)
++			if (strpos($username, '*') === false)
+ 			{
+-				$users_ary = array();
++				$username = &quot;*$username*&quot;;
++			}
++			$username = str_replace('*', '%', str_replace('%', '\%', $username));
+ 
+-				if (strpos($username, '*') === false)
+-				{
+-					$username = &quot;*$username*&quot;;
+-				}
+-				$username = str_replace('*', '%', str_replace('%', '\%', $username));
++			$sql = 'SELECT user_id, username
++				FROM ' . USERS_TABLE . &quot;
++				WHERE username LIKE '&quot; . $_CLASS['core_db']-&gt;sql_escape($username) . &quot;'
++					AND user_type NOT IN (&quot; . USER_INACTIVE . ', ' . USER_IGNORE . ')
++					AND user_id &lt;&gt; ' . $post_info['user_id'];
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-				$sql = 'SELECT user_id, username
+-					FROM ' . USERS_TABLE . &quot;
+-					WHERE username LIKE '&quot; . $_CLASS['core_db']-&gt;sql_escape($username) . &quot;'
+-						AND user_type NOT IN (&quot; . USER_INACTIVE . ', ' . USER_IGNORE . ')
+-						AND user_id &lt;&gt; ' . $post_info['user_id'];
+-				$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-
+-				while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-				{
+-					$users_ary[strtolower($row['username'])] = $row;
+-				}
+-
+-				$user_select = '';
+-				ksort($users_ary);
+-				foreach ($users_ary as $row)
+-				{
+-					$user_select .= '&lt;option value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . &quot;&lt;/option&gt;\n&quot;;
+-				}
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++			{
++				$users_ary[strtolower($row['username'])] = $row;
+ 			}
+ 
+-			if (!$user_select)
++			$user_select = '';
++			ksort($users_ary);
++			foreach ($users_ary as $row)
+ 			{
+-				$_CLASS['core_template']-&gt;assign('MESSAGE', $_CLASS['core_user']-&gt;lang['NO_MATCHES_FOUND']);
++				$user_select .= '&lt;option value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . &quot;&lt;/option&gt;\n&quot;;
+ 			}
++		}
+ 
+-			$_CLASS['core_template']-&gt;assign(array(
+-				'S_USER_SELECT'		=&gt;	$user_select,
+-				'SEARCH_USERNAME'	=&gt;	request_var('username', ''))
+-			);
+-			break;
++		if (!$user_select)
++		{
++			$_CLASS['core_template']-&gt;assign('MESSAGE', $_CLASS['core_user']-&gt;lang['NO_MATCHES_FOUND']);
++		}
+ 
+-		case 'chgposter':
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'S_USER_SELECT'		=&gt;	$user_select,
++			'SEARCH_USERNAME'	=&gt;	request_var('username', ''))
++		);
++		break;
+ 
+-			$new_user = request_var('u', 0);
++	case 'chgposter':
+ 
+-			if ($new_user &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']) &amp;&amp; $new_user != $post_info['user_id'])
+-			{
+-				$sql = 'UPDATE ' . POSTS_TABLE . &quot;
+-					SET poster_id = $new_user
+-					WHERE post_id = $post_id&quot;;
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++		$new_user = request_var('u', 0);
+ 
+-				if ($post_info['topic_last_post_id'] == $post_info['post_id'] || $post_info['forum_last_post_id'] == $post_info['post_id'])
+-				{
+-					sync('topic', 'topic_id', $post_info['topic_id'], false, false);
+-					sync('forum', 'forum_id', $post_info['forum_id'], false, false);
+-				}
+-				
+-				// Renew post info
+-				$post_info = get_post_data(array($post_id));
++		if ($new_user &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']) &amp;&amp; $new_user != $post_info['user_id'])
++		{
++			$sql = 'UPDATE ' . POSTS_TABLE . &quot;
++				SET poster_id = $new_user
++				WHERE post_id = $post_id&quot;;
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+-				if (!sizeof($post_info))
+-				{
+-					trigger_error($_CLASS['core_user']-&gt;lang['POST_NOT_EXIST']);
+-				}
+-
+-				$post_info = $post_info[$post_id];
++			if ($post_info['topic_last_post_id'] == $post_info['post_id'] || $post_info['forum_last_post_id'] == $post_info['post_id'])
++			{
++				sync('topic', 'topic_id', $post_info['topic_id'], false, false);
++				sync('forum', 'forum_id', $post_info['forum_id'], false, false);
+ 			}
+-			break;
+ 			
+-		case 'del_marked':
+-		case 'del_all':
+-		case 'add_feedback':
+-			
+-			$deletemark = ($action == 'del_marked') ? true : false;
+-			$deleteall	= ($action == 'del_all') ? true : false;
+-			$marked		= request_var('marknote', 0);
+-			$usernote	= request_var('usernote', '');
++			// Renew post info
++			$post_info = get_post_data(array($post_id));
+ 
+-			if (($deletemark || $deleteall) &amp;&amp; $_CLASS['auth']-&gt;acl_get('a_clearlogs'))
++			if (empty($post_info))
+ 			{
+-				$where_sql = '';
+-				if ($deletemark &amp;&amp; $marked)
++				trigger_error('POST_NOT_EXIST');
++			}
++
++			$post_info = $post_info[$post_id];
++		}
++	break;
++		
++	case 'del_marked':
++	case 'del_all':
++	case 'add_feedback':
++		$deletemark = ($action == 'del_marked') ? true : false;
++		$deleteall	= ($action == 'del_all') ? true : false;
++		$marked		= request_var('marknote', 0);
++		$usernote	= request_var('usernote', '');
++
++		if (($deletemark || $deleteall) &amp;&amp; $_CLASS['auth']-&gt;acl_get('a_clearlogs'))
++		{
++			$where_sql = '';
++			if ($deletemark &amp;&amp; $marked)
++			{
++				$sql_in = array();
++				foreach ($marked as $mark)
+ 				{
+-					$sql_in = array();
+-					foreach ($marked as $mark)
+-					{
+-						$sql_in[] = $mark;
+-					}
+-					$where_sql = ' AND log_id IN (' . implode(', ', $sql_in) . ')';
+-					unset($sql_in);
++					$sql_in[] = $mark;
+ 				}
++				$where_sql = ' AND log_id IN (' . implode(', ', $sql_in) . ')';
++				unset($sql_in);
++			}
+ 
+-				$sql = 'DELETE FROM ' . LOG_TABLE . '
+-					WHERE log_type = ' . LOG_USERS . &quot; 
+-						$where_sql&quot;;
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++			$sql = 'DELETE FROM ' . LOG_TABLE . '
++				WHERE log_type = ' . LOG_USERS . &quot; 
++					$where_sql&quot;;
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+-				add_log('admin', 'LOG_USERS_CLEAR');
++			add_log('admin', 'LOG_USERS_CLEAR');
+ 
+-				$msg = ($deletemark) ? 'MARKED_DELETED' : 'ALL_DELETED';
+-				$redirect = generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;);
+-				$_CLASS['core_display']-&gt;meta_refresh(2, $redirect);
+-				trigger_error($_CLASS['core_user']-&gt;lang[$msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
+-			}
++			$msg = ($deletemark) ? 'MARKED_DELETED' : 'ALL_DELETED';
++			$redirect = generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;);
++			$_CLASS['core_display']-&gt;meta_refresh(2, $redirect);
++			trigger_error($_CLASS['core_user']-&gt;lang[$msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
++		}
+ 
+-			if ($usernote &amp;&amp; $action == 'add_feedback')
+-			{
+-				add_log('admin', 'LOG_USER_FEEDBACK', $post_info['username']);
+-				add_log('user', $post_info['user_id'], 'LOG_USER_GENERAL', $usernote);
++		if ($usernote &amp;&amp; $action == 'add_feedback')
++		{
++			add_log('admin', 'LOG_USER_FEEDBACK', $post_info['username']);
++			add_log('user', $post_info['user_id'], 'LOG_USER_GENERAL', $usernote);
+ 
+-				$redirect = generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;);
+-				$_CLASS['core_display']-&gt;meta_refresh(2, $redirect);
+-				trigger_error($_CLASS['core_user']-&gt;lang['USER_FEEDBACK_ADDED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
+-			}
+-			break;
+-			
+-		default:
+-	}
++			$redirect = generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;);
++			$_CLASS['core_display']-&gt;meta_refresh(2, $redirect);
++			trigger_error($_CLASS['core_user']-&gt;lang['USER_FEEDBACK_ADDED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
++		}
++	break;
++}
+ 
+-	// Set some vars
+-	$users_ary = array();
+-	$poster = ($post_info['user_colour']) ? '&lt;span style=&quot;color:#' . $post_info['user_colour'] . '&quot;&gt;' . $post_info['username'] . '&lt;/span&gt;' : $post_info['username'];
++// Set some vars
++$users_ary = array();
++$poster = ($post_info['user_colour']) ? '&lt;span style=&quot;color:#' . $post_info['user_colour'] . '&quot;&gt;' . $post_info['username'] . '&lt;/span&gt;' : $post_info['username'];
+ 
+-	// Process message, leave it uncensored
+-	$message = $post_info['post_text'];
+-	if ($post_info['bbcode_bitfield'])
+-	{
+-		global $site_file_root;
+-		require_once($site_file_root.'includes/forums/bbcode.php');
+-		$bbcode = new bbcode($post_info['bbcode_bitfield']);
+-		$bbcode-&gt;bbcode_second_pass($message, $post_info['bbcode_uid'], $post_info['bbcode_bitfield']);
+-	}
+-	$message = smiley_text($message);
++// Process message, leave it uncensored
++$message = $post_info['post_text'];
+ 
+-	$_CLASS['core_template']-&gt;assign(array(
+-		'U_MCP_ACTION'			=&gt; generate_link($url.'&amp;i=main&amp;quickmod=1'), // Use this for mode paramaters
+-		'U_POST_ACTION'			=&gt; generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;), // Use this for action parameters
+-		'U_APPROVE_ACTION'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=queue&amp;p='.$post_id),
++if ($post_info['bbcode_bitfield'])
++{
++	global $site_file_root;
+ 
+-		'S_CAN_VIEWIP'			=&gt; $_CLASS['auth']-&gt;acl_get('m_ip', $post_info['forum_id']),
+-		'S_CAN_CHGPOSTER'		=&gt; $_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']),
+-		'S_CAN_LOCK_POST'		=&gt; $_CLASS['auth']-&gt;acl_get('m_lock', $post_info['forum_id']),
+-		'S_CAN_DELETE_POST'		=&gt; $_CLASS['auth']-&gt;acl_get('m_delete', $post_info['forum_id']),
++	require_once($site_file_root.'includes/forums/bbcode.php');
++	$bbcode = new bbcode($post_info['bbcode_bitfield']);
++	$bbcode-&gt;bbcode_second_pass($message, $post_info['bbcode_uid'], $post_info['bbcode_bitfield']);
++}
+ 
+-		'S_POST_REPORTED'		=&gt; $post_info['post_reported'],
+-		'S_POST_UNAPPROVED'		=&gt; !$post_info['post_approved'],
+-		'S_POST_LOCKED'			=&gt; $post_info['post_edit_locked'],
+-		'S_USER_WARNINGS'		=&gt; ($post_info['user_warnings']) ? true : false,
+-		'S_SHOW_USER_NOTES'		=&gt; true,
+-		'S_CLEAR_ALLOWED'		=&gt; ($_CLASS['auth']-&gt;acl_get('a_clearlogs')) ? true : false,
++$_CLASS['core_template']-&gt;assign_array(array(
++	'U_MCP_ACTION'			=&gt; generate_link($url.'&amp;i=main&amp;quickmod=1'), // Use this for mode paramaters
++	'U_POST_ACTION'			=&gt; generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;), // Use this for action parameters
++	'U_APPROVE_ACTION'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=queue&amp;p='.$post_id),
+ 
+-		'U_VIEW_PROFILE'		=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $post_info['user_id']),
++	'S_CAN_VIEWIP'			=&gt; $_CLASS['auth']-&gt;acl_get('m_ip', $post_info['forum_id']),
++	'S_CAN_CHGPOSTER'		=&gt; $_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']),
++	'S_CAN_LOCK_POST'		=&gt; $_CLASS['auth']-&gt;acl_get('m_lock', $post_info['forum_id']),
++	'S_CAN_DELETE_POST'		=&gt; $_CLASS['auth']-&gt;acl_get('m_delete', $post_info['forum_id']),
++
++	'S_POST_REPORTED'		=&gt; $post_info['post_reported'],
++	'S_POST_UNAPPROVED'		=&gt; !$post_info['post_approved'],
++	'S_POST_LOCKED'			=&gt; $post_info['post_edit_locked'],
++	//'S_USER_WARNINGS'		=&gt; ($post_info['user_warnings']) ? true : false,
++	'S_SHOW_USER_NOTES'		=&gt; true,
++	'S_CLEAR_ALLOWED'		=&gt; ($_CLASS['auth']-&gt;acl_get('a_clearlogs')) ? true : false,
++
++	'U_VIEW_PROFILE'		=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $post_info['user_id']),
+ //		'U_MCP_USERNOTES'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes&amp;u=' . $post_info['user_id']),
+ //		'U_MCP_WARNINGS'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=warnings&amp;mode=view_user&amp;u=' . $post_info['user_id']),
+-		'U_EDIT'				=&gt; ($_CLASS['auth']-&gt;acl_get('m_edit', $post_info['forum_id'])) ? generate_link(&quot;Forums&amp;file=posting&amp;mode=edit&amp;f={$post_info['forum_id']}&amp;p={$post_info['post_id']}&quot;) : '',
++	'U_EDIT'				=&gt; ($_CLASS['auth']-&gt;acl_get('m_edit', $post_info['forum_id'])) ? generate_link(&quot;Forums&amp;file=posting&amp;mode=edit&amp;f={$post_info['forum_id']}&amp;p={$post_info['post_id']}&quot;) : '',
+ 
+-		'RETURN_TOPIC'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewtopic&amp;p=$post_id#$post_id&quot;).'&quot;&gt;', '&lt;/a&gt;'),
+-		'RETURN_FORUM'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewforum&amp;f={$post_info['forum_id']}&amp;start={$start}&quot;).'&quot;&gt;', '&lt;/a&gt;'),
+-		'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', $_CLASS['core_user']-&gt;lang['POST_REPORTED']),
+-		'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', $_CLASS['core_user']-&gt;lang['POST_UNAPPROVED']),
+-		'EDIT_IMG'				=&gt; $_CLASS['core_user']-&gt;img('btn_edit', $_CLASS['core_user']-&gt;lang['EDIT_POST']),
+-
+-		'POSTER_NAME'			=&gt; $poster,
+-		'POST_PREVIEW'			=&gt; $message,
+-		'POST_SUBJECT'			=&gt; $post_info['post_subject'],
+-		'POST_DATE'				=&gt; $_CLASS['core_user']-&gt;format_date($post_info['post_time']),
+-		'POST_IP'				=&gt; $post_info['poster_ip'],
+-		'POST_IPADDR'			=&gt; @gethostbyaddr($post_info['poster_ip']),
+-		'POST_ID'				=&gt; $post_info['post_id'])
+-	);
++	'RETURN_TOPIC'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewtopic&amp;p=$post_id#$post_id&quot;).'&quot;&gt;', '&lt;/a&gt;'),
++	'RETURN_FORUM'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewforum&amp;f={$post_info['forum_id']}&amp;start={$start}&quot;).'&quot;&gt;', '&lt;/a&gt;'),
++	'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', $_CLASS['core_user']-&gt;lang['POST_REPORTED']),
++	'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', $_CLASS['core_user']-&gt;lang['POST_UNAPPROVED']),
++	'EDIT_IMG'				=&gt; $_CLASS['core_user']-&gt;img('btn_edit', $_CLASS['core_user']-&gt;lang['EDIT_POST']),
++	'SEARCH_IMG'			=&gt; $_CLASS['core_user']-&gt;img('btn_search', 'SEARCH_USER_POSTS'),
+ 	
+-	// Get User Notes
+-	$log_data = array();
+-	$log_count = 0;
+-	view_log('user', $log_data, $log_count, $config['posts_per_page'], 0, 0, 0, $post_info['user_id']);
++	'POSTER_NAME'			=&gt; $poster,
++	'POST_PREVIEW'			=&gt; smiley_text($message),
++	'POST_SUBJECT'			=&gt; $post_info['post_subject'],
++	'POST_DATE'				=&gt; $_CLASS['core_user']-&gt;format_date($post_info['post_time']),
++	'POST_IP'				=&gt; $post_info['poster_ip'],
++	'POST_IPADDR'			=&gt; @gethostbyaddr($post_info['poster_ip']),
++	'POST_ID'				=&gt; $post_info['post_id'])
++);
+ 
+-	if ($log_count)
+-	{
+-		$_CLASS['core_template']-&gt;assign('S_USER_NOTES', true);
++// Get User Notes
++$log_data = array();
++$log_count = 0;
+ 
+-		foreach ($log_data as $row)
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('usernotes', array(
+-				'REPORT_BY'		=&gt; $row['username'],
+-				'REPORT_AT'		=&gt; $_CLASS['core_user']-&gt;format_date($row['time']),
+-				'ACTION'		=&gt; $row['action'],
+-				'ID'			=&gt; $row['id'])
+-			);
+-		}
+-	}
+-	
+-	// Get Reports
+-	if ($_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']))
+-	{
+-		$sql = 'SELECT r.*, re.*, u.user_id, u.username 
+-			FROM ' . REPORTS_TABLE . ' r, ' . USERS_TABLE . ' u, ' . REASONS_TABLE . &quot; re
+-			WHERE r.post_id = $post_id
+-				AND r.reason_id = re.reason_id
+-				AND u.user_id = r.user_id
+-			ORDER BY r.report_time DESC&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++view_log('user', $log_data, $log_count, $config['posts_per_page'], 0, 0, 0, $post_info['user_id']);
+ 
+-		if ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-		{
+-			$_CLASS['core_template']-&gt;assign('S_SHOW_REPORTS', true);
++if ($log_count)
++{
++	$_CLASS['core_template']-&gt;assign('S_USER_NOTES', true);
+ 
+-			do
+-			{
+-				$_CLASS['core_template']-&gt;assign_vars_array('reports', array(
+-					'REPORT_ID'		=&gt; $row['report_id'],
+-					'REASON_TITLE'	=&gt; $_CLASS['core_user']-&gt;lang['report_reasons']['TITLE'][strtoupper($row['reason_name'])],
+-					'REASON_DESC'	=&gt; $_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_name'])],
+-					'REPORTER'		=&gt; ($row['user_id'] != ANONYMOUS) ? $row['username'] : $_CLASS['core_user']-&gt;lang['GUEST'],
+-					'U_REPORTER'	=&gt; ($row['user_id'] != ANONYMOUS) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['user_id']) : '',
+-					'USER_NOTIFY'	=&gt; ($row['user_notify']) ? true : false,
+-					'REPORT_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['report_time']),
+-					'REPORT_TEXT'	=&gt; str_replace(&quot;\n&quot;, '&lt;br /&gt;', trim($row['report_text'])))
+-				);
+-			}
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result));
+-		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++	foreach ($log_data as $row)
++	{
++		$_CLASS['core_template']-&gt;assign_vars_array('usernotes', array(
++			'REPORT_BY'		=&gt; $row['username'],
++			'REPORT_AT'		=&gt; $_CLASS['core_user']-&gt;format_date($row['time']),
++			'ACTION'		=&gt; $row['action'],
++			'ID'			=&gt; $row['id'])
++		);
+ 	}
+-	
+-	// Get IP
+-	if ($_CLASS['auth']-&gt;acl_get('m_ip', $post_info['forum_id']))
++}
++
++// Get Reports
++
++/*if ($_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']))
++{
++	$sql = 'SELECT r.*, re.*, u.user_id, u.username 
++		FROM ' . REPORTS_TABLE . ' r, ' . USERS_TABLE . ' u, ' . REASONS_TABLE . &quot; re
++		WHERE r.post_id = $post_id
++			AND r.reason_id = re.reason_id
++			AND u.user_id = r.user_id
++		ORDER BY r.report_time DESC&quot;;
++	$result = $_CLASS['core_db']-&gt;query($sql);
++
++	if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$rdns_ip_num = request_var('rdns', '');
++		$_CLASS['core_template']-&gt;assign('S_SHOW_REPORTS', true);
+ 
+-		if ($rdns_ip_num != 'all')
++		do
+ 		{
+-			$_CLASS['core_template']-&gt;assign(array(
+-				'U_LOOKUP_ALL'	=&gt; generate_link($url.'&amp;i=main&amp;mode=post_details&amp;rdns=all'))
++			$_CLASS['core_template']-&gt;assign_vars_array('reports', array(
++				'REPORT_ID'		=&gt; $row['report_id'],
++				'REASON_TITLE'	=&gt; $_CLASS['core_user']-&gt;lang['report_reasons']['TITLE'][strtoupper($row['reason_name'])],
++				'REASON_DESC'	=&gt; $_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_name'])],
++				'REPORTER'		=&gt; ($row['user_id'] != ANONYMOUS) ? $row['username'] : $_CLASS['core_user']-&gt;lang['GUEST'],
++				'U_REPORTER'	=&gt; ($row['user_id'] != ANONYMOUS) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['user_id']) : '',
++				'USER_NOTIFY'	=&gt; ($row['user_notify']) ? true : false,
++				'REPORT_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['report_time']),
++				'REPORT_TEXT'	=&gt; str_replace(&quot;\n&quot;, '&lt;br /&gt;', trim($row['report_text'])))
+ 			);
+ 		}
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
++}*/
+ 
+-		// Get other users who've posted under this IP
+-		$sql = 'SELECT u.user_id, u.username, COUNT(*) as postings
+-			FROM ' . USERS_TABLE . ' u, ' . POSTS_TABLE . &quot; p
+-			WHERE p.poster_id = u.user_id
+-				AND p.poster_ip = '{$post_info['poster_ip']}'
+-				AND p.poster_id &lt;&gt; {$post_info['user_id']}
+-			GROUP BY u.user_id
+-			ORDER BY postings DESC&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++// Get IP
++if ($_CLASS['auth']-&gt;acl_get('m_ip', $post_info['forum_id']))
++{
++	$rdns_ip_num = request_var('rdns', '');
+ 
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-		{
+-			// Fill the user select list with users who have posted
+-			// under this IP
+-			if ($row['user_id'] != $post_info['poster_id'])
+-			{
+-				$users_ary[strtolower($row['username'])] = $row;
+-			}
++	if ($rdns_ip_num != 'all')
++	{
++		$_CLASS['core_template']-&gt;assign('U_LOOKUP_ALL', generate_link($url.'&amp;i=main&amp;mode=post_details&amp;rdns=all'));
++	}
+ 
+-			$_CLASS['core_template']-&gt;assign_vars_array('userrow', array(
+-				'USERNAME'		=&gt; ($row['user_id'] == ANONYMOUS) ? $_CLASS['core_user']-&gt;lang['GUEST'] : $row['username'],
+-				'NUM_POSTS'		=&gt; $row['postings'],	
+-				'L_POST_S'		=&gt; ($row['postings'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
++	// Get other users who've posted under this IP
++	$sql = 'SELECT u.user_id, u.username, user_posts
++		FROM ' . USERS_TABLE . ' u, ' . FORUMS_POSTS_TABLE . &quot; p
++		WHERE p.poster_id = u.user_id
++			AND p.poster_ip = '{$post_info['poster_ip']}'
++			AND p.poster_id &lt;&gt; {$post_info['user_id']}
++		ORDER BY user_posts DESC&quot;;
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-				'U_PROFILE'		=&gt; ($row['user_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']),
+-				'U_SEARCHPOSTS' =&gt; generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($row['username']) . '&amp;showresults=topics'))
+-			);
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		// Fill the user select list with users who have posted
++		// under this IP
++		if ($row['user_id'] != $post_info['poster_id'])
++		{
++			$users_ary[strtolower($row['username'])] = $row;
+ 		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
+ 
+-		// Get other IP's this user has posted under
+-		$sql = 'SELECT poster_ip, COUNT(*) AS postings
+-			FROM ' . POSTS_TABLE . '
+-			WHERE poster_id = ' . $post_info['poster_id'] . '
+-			GROUP BY poster_ip
+-			ORDER BY postings DESC';
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_template']-&gt;assign_vars_array('userrow', array(
++			'USERNAME'		=&gt; ($row['user_id'] == ANONYMOUS) ? $_CLASS['core_user']-&gt;lang['GUEST'] : $row['username'],
++			'NUM_POSTS'		=&gt; $row['user_posts'],	
++			'L_POST_S'		=&gt; ($row['user_posts'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
+ 
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-		{
+-			$hostname = (($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') &amp;&amp; $row['poster_ip']) ? @gethostbyaddr($row['poster_ip']) : '';
++			'U_PROFILE'		=&gt; ($row['user_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']),
++			'U_SEARCHPOSTS' =&gt; generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($row['username']) . '&amp;showresults=topics'))
++		);
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+-			$_CLASS['core_template']-&gt;assign_vars_array('iprow', array(
+-				'IP'			=&gt; $row['poster_ip'],
+-				'HOSTNAME'		=&gt; $hostname,
+-				'NUM_POSTS'		=&gt; $row['postings'],	
+-				'L_POST_S'		=&gt; ($row['postings'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
++	// Get other IP's this user has posted under
++	$sql = 'SELECT poster_ip, COUNT(*) AS postings
++		FROM ' . FORUMS_POSTS_TABLE . '
++		WHERE poster_id = ' . $post_info['poster_id'] . '
++		GROUP BY poster_ip
++		ORDER BY postings DESC';
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-				'U_LOOKUP_IP'	=&gt; ($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') ? '' : generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&amp;rdns={$row['poster_ip']}#ip&quot;),
+-				'U_WHOIS'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;i=$id&amp;mode=whois&amp;ip={$row['poster_ip']}&quot;))
+-			);
+-		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		$hostname = (($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') &amp;&amp; $row['poster_ip']) ? @gethostbyaddr($row['poster_ip']) : '';
+ 
+-		// If we were not searching for a specific username fill
+-		// the user_select box with users who have posted under
+-		// the same IP
+-		if ($action != 'chgposter_search')
++		$_CLASS['core_template']-&gt;assign_vars_array('iprow', array(
++			'IP'			=&gt; $row['poster_ip'],
++			'HOSTNAME'		=&gt; $hostname,
++			'NUM_POSTS'		=&gt; $row['postings'],	
++			'L_POST_S'		=&gt; ($row['postings'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
++
++			'U_LOOKUP_IP'	=&gt; ($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') ? '' : generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&amp;rdns={$row['poster_ip']}#ip&quot;),
++			'U_WHOIS'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;i=$id&amp;mode=whois&amp;ip={$row['poster_ip']}&quot;))
++		);
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
++
++	// If we were not searching for a specific username fill
++	// the user_select box with users who have posted under
++	// the same IP
++	if ($action != 'chgposter_search')
++	{
++		$user_select = '';
++		ksort($users_ary);
++		foreach ($users_ary as $row)
+ 		{
+-			$user_select = '';
+-			ksort($users_ary);
+-			foreach ($users_ary as $row)
+-			{
+-				$user_select .= '&lt;option value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . &quot;&lt;/option&gt;\n&quot;;
+-			}
+-			$_CLASS['core_template']-&gt;assign('S_USER_SELECT', $user_select);
++			$user_select .= '&lt;option value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . &quot;&lt;/option&gt;\n&quot;;
+ 		}
++		$_CLASS['core_template']-&gt;assign('S_USER_SELECT', $user_select);
+ 	}
+-
+ }
+ 
++page_header();
++$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/Forums/mcp_post.html');
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/mcp/mcp_topic.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_topic.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/forums/mcp/mcp_topic.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -256,17 +256,15 @@
+ 
+ function split_topic($mode, $post_id_list, $topic_id, $to_forum_id, $subject)
+ {
+-	global $_CLASS ;
++	global $_CLASS;
+ 
+-	$start	= request_var('start', 0);
++	$start = get_variable('start', 'REQUEST', false, 'int');
+ 		
+ 	if (empty($post_id_list) || !check_ids($post_id_list, FORUMS_POSTS_TABLE, 'post_id', 'm_split'))
+ 	{
+ 		return false;
+ 	}
+ 
+-	//$post_id = $post_id_list[0];
+-
+ 	$post_info = get_post_data($post_id_list);
+ 
+ 	if (empty($post_info))
+@@ -300,11 +298,10 @@
+ 		return 'DESTINATION_FORUM_NOT_POSTABLE';
+ 	}
+ 
+-	$redirect = request_var('redirect', $_CLASS['core_user']-&gt;data['session_page']);
++	$redirect = get_variable('redirect', 'POST', $_CLASS['core_user']-&gt;data['session_url']);
+ 
+-	$s_hidden_fields = build_hidden_fields(array(
++	$hidden_fields = build_hidden_fields(array(
+ 		'post_id_list'	=&gt; $post_id_list,
+-		'f'				=&gt; $forum_id,
+ 		'mode'			=&gt; 'topic_view',
+ 		'start'			=&gt; $start,
+ 		'action'		=&gt; $mode,
+@@ -312,23 +309,25 @@
+ 		'redirect'		=&gt; $redirect,
+ 		'subject'		=&gt; $subject,
+ 		'to_forum_id'	=&gt; $to_forum_id,
+-		'icon'			=&gt; request_var('icon', 0))
+-	);
+-	$success_msg = $return_link = '';
++		'icon'			=&gt; request_var('icon', 0)
++	));
+ 
+-	if (confirm_box(true))
++	$message = ($mode == 'split_all') ? 'SPLIT_TOPIC_ALL' : 'SPLIT_TOPIC_BEYOND';
++
++	if (display_confirmation($_CLASS['core_user']-&gt;get_lang($message), $hidden_fields))
+ 	{
++		$post_id = $post_id_list[0];
+ 		//$post_info = $post_info[$post_id];
+ 
+-		if ($mode == 'split_beyond')
++		if ($mode === 'split_beyond')
+ 		{
+ 			mcp_sorting('viewtopic', $sort_days, $sort_key, $sort_dir, $sort_by_sql, $sort_order_sql, $total, $forum_id, $topic_id);
+-			$limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time &gt;= ' . (time() - ($sort_days * 86400)) : '';
++			$limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time &gt;= ' . ($_CLASS['core_user']-&gt;time - ($sort_days * 86400)) : '';
+ 
+ 			if ($sort_order_sql{0} == 'u')
+ 			{
+-				$sql = 'SELECT p.post_id, p.forum_id, p.post_approved
+-					FROM ' . POSTS_TABLE . ' p, ' . USERS_TABLE . &quot; u
++				$sql = 'SELECT p.post_id, p.poster_id, p.post_username, p.post_time
++					FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . &quot; u
+ 					WHERE p.topic_id = $topic_id
+ 						AND p.poster_id = u.user_id
+ 						$limit_time_sql
+@@ -336,27 +335,26 @@
+ 			}
+ 			else
+ 			{
+-				$sql = 'SELECT p.post_id, p.forum_id, p.post_approved
+-					FROM ' . POSTS_TABLE . &quot; p
++				$sql = 'SELECT p.post_id, p.poster_id, p.post_username, p.post_time
++					FROM ' . FORUMS_POSTS_TABLE . &quot; p
+ 					WHERE p.topic_id = $topic_id
+ 						$limit_time_sql
+ 					ORDER BY $sort_order_sql&quot;;
+ 			}
++
+ 			$result = $_CLASS['core_db']-&gt;query_limit($sql, 0, $start);
+ 
+ 			$store = false;
+ 			$post_id_list = array();
++
+ 			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+-				// If splitted from selected post (split_beyond), we split the unapproved items too.
+-				if (!$row['post_approved'] &amp;&amp; !$_CLASS['auth']-&gt;acl_get('m_approve', $row['forum_id']))
+-				{
+-//					continue;
+-				}
+-
+ 				// Start to store post_ids as soon as we see the first post that was selected
+ 				if ($row['post_id'] == $post_id)
+ 				{
++					$topic_time = $row['post_time'];
++					$topic_poster = $row['poster_id'];
++					$topic_poster_name = $row['post_username'];
+ 					$store = true;
+ 				}
+ 
+@@ -367,49 +365,53 @@
+ 			}
+ 		}
+ 
+-		if (!sizeof($post_id_list))
++		if (empty($post_id_list))
+ 		{
+-			trigger_error($_CLASS['core_user']-&gt;lang['NO_POST_SELECTED']);
++			trigger_error('NO_POST_SELECTED');
+ 		}
+ 
+-		$icon_id = request_var('icon', 0);
++		$icon_id =  get_variable('icon', 'REQUEST', false, 'int');
+ 
++		$_CLASS['core_db']-&gt;transaction();
++
+ 		$sql_ary = array(
+-			'forum_id'		=&gt; $to_forum_id,
+-			'topic_title'	=&gt; $subject,
+-			'icon_id'		=&gt; $icon_id,
+-			'topic_approved'=&gt; 1
++			'forum_id'				=&gt; $to_forum_id,
++			'topic_title'			=&gt; $subject,
++			'icon_id'				=&gt; $icon_id,
++			'topic_approved'		=&gt; 1,
++			'topic_poster' 			=&gt; $topic_poster,
++			'topic_first_poster_name'	=&gt; $topic_poster_name,
++			'topic_time'			=&gt; $_CLASS['core_user']-&gt;time,
++			'topic_status'			=&gt; ITEM_UNLOCKED,
++			'topic_type'			=&gt; POST_NORMAL,
++			'topic_attachment'		=&gt; 0,
++			'topic_replies_real'	=&gt; 0,
++			'topic_replies'			=&gt; 0,
++			'topic_views'			=&gt; 0,
++			'topic_moved_id'		=&gt; 0
+ 		);
+-	
+-		$sql = 'INSERT INTO ' . TOPICS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_ary);
+-		$_CLASS['core_db']-&gt;sql_query($sql);
+ 
+-		$to_topic_id = $_CLASS['core_db']-&gt;sql_nextid();
++		$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_TOPICS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_ary));
++		$to_topic_id = $_CLASS['core_db']-&gt;insert_id(FORUMS_TOPICS_TABLE, 'topic_id');
++
+ 		move_posts($post_id_list, $to_topic_id);
+ 
+ 		// Change topic title of first post
+-		$sql = 'UPDATE ' . POSTS_TABLE . &quot; 
+-			SET post_subject = '&quot; . $_CLASS['core_db']-&gt;sql_escape($subject) . &quot;'
++		$sql = 'UPDATE ' . FORUMS_POSTS_TABLE . &quot; 
++			SET post_subject = '&quot; . $_CLASS['core_db']-&gt;escape($subject) . &quot;'
+ 			WHERE post_id = {$post_id_list[0]}&quot;;
+-		$_CLASS['core_db']-&gt;sql_query($sql);
+-		
++		$_CLASS['core_db']-&gt;query($sql);
++
++		$_CLASS['core_db']-&gt;transaction('commit');
++
+ 		$success_msg = 'TOPIC_SPLIT_SUCCESS';
+ 
+ 		// Link back to both topics
+ 		$return_link = sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link('Forums&amp;file=viewtopic&amp;f=' . $post_info['forum_id'] . '&amp;t=' . $post_info['topic_id']) . '&quot;&gt;', '&lt;/a&gt;') . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_NEW_TOPIC'], '&lt;a href=&quot;'.generate_link('Forums&amp;file=viewtopic&amp;f=' . $to_forum_id . '&amp;t=' . $to_topic_id) . '&quot;&gt;', '&lt;/a&gt;');
+ 	}
+-	else
+-	{
+-		confirm_box(false, ($mode == 'split_all') ? 'SPLIT_TOPIC_ALL' : 'SPLIT_TOPIC_BEYOND', $s_hidden_fields);
+-	}
+ 
+-	$redirect = request_var('redirect', generate_link('Forums'));
++	$redirect = generate_link($redirect);
+ 
+-	/*if (strpos($redirect, '?') === false)
+-	{
+-		$redirect = substr_replace($redirect, &quot;.$phpEx$SID&amp;&quot;, strpos($redirect, '&amp;'), 1);
+-	}*/
+-
+ 	if (!$success_msg)
+ 	{
+ 		return;
+
+Modified: cms/trunk/includes/forums/message_parser.php
+===================================================================
+--- cms/trunk/includes/forums/message_parser.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/forums/message_parser.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -316,10 +316,9 @@
+ 					if (!preg_match('/^\&lt;\?(.*?)\?\&gt;/is', $code))
+ 					{
+ 						$remove_tags = true;
+-						$code = &quot;&lt;?php $code&quot;;
++						$code = '&lt;?php '. $code;
+ 					}
+ 
+-					
+ 					$conf = array('highlight.bg', 'highlight.comment', 'highlight.default', 'highlight.html', 'highlight.keyword', 'highlight.string');
+ 
+ 					foreach ($conf as $ini_var)
+@@ -327,7 +326,6 @@
+ 						ini_set($ini_var, str_replace('highlight.', 'syntax', $ini_var));
+ 					}
+ 					
+-
+ 					$code = highlight_string($code, true);
+ 
+ 					if (version_compare(PHP_VERSION, '5.0', '&lt;'))
+@@ -345,19 +343,20 @@
+ 					$str_to = array('', '', '&#91;', '&#93;', '&#46;', '&amp;#58', '&#058;');
+ 
+ 					$code = str_replace($str_from, $str_to, $code);
+-
+ 					if ($remove_tags)
+ 					{
+ 						// if theres any problems with this, find the first &quot;php&quot; without span remove it
+ 						// then find the first &lt;/span&gt; and remove it
+-						$pos = ($pos = mb_strpos($code, 'php&nbsp;&lt;/span&gt;')) ? $pos + 16 : mb_strpos($code, 'php &lt;/span&gt;') + 11;
+-						$code = mb_substr($code, $pos);
++						$pos = ($pos = mb_strpos($code, 'php&nbsp;')) ? $pos + 9 : mb_strpos($code, 'php ') + 40;
++						$section = mb_substr($code, 0, $pos);
++						$code = mb_substr($code, $pos);
++						$code = str_replace(array('&lt;?', '&lt;?', 'php&nbsp;', 'php '), '', $section).$code;
+ 					}
+-									
++	
+ 					$code = preg_replace('#^(&lt;span class=&quot;[a-z_]+&quot;&gt;)\n?(.*?)\n?(&lt;/span&gt;)$#is', '$1$2$3', $code);
+ 					$code = preg_replace('#^&lt;span class=&quot;[a-z]+&quot;&gt;&lt;span class=&quot;([a-z]+)&quot;&gt;(.*)&lt;/span&gt;&lt;/span&gt;#s', '&lt;span class=&quot;$1&quot;&gt;$2&lt;/span&gt;', $code);
+ 					$code = preg_replace('#(?:[\n\r\s\t]|&nbsp;)*&lt;/span&gt;$#', '&lt;/span&gt;', $code);
+-				
++			//echo $code; die;	
+ 					$out .= &quot;[code=$stx:&quot; . $this-&gt;bbcode_uid . ']' . trim($code) . '[/code:' . $this-&gt;bbcode_uid . ']';
+ 				break;
+ 
+
+Modified: cms/trunk/includes/functions.php
+===================================================================
+--- cms/trunk/includes/functions.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/functions.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -36,7 +36,8 @@
+ 
+ 	foreach ($bots_array as $bot)
+ 	{
+-		if ($bot['user_agent'] &amp;&amp; preg_match('#' . preg_quote($bot['user_agent'], '#') . '#i', $browser))
++		//if ($bot['user_agent'] &amp;&amp; preg_match('#' . preg_quote($bot['user_agent'], '#') . '#i', $browser))
++		if ($bot['user_agent'] &amp;&amp; mb_strpos($browser, $bot['user_agent']) === 0)
+ 		{
+ 			$is_bot = $bot['user_id'];
+ 		}
+
+Modified: cms/trunk/includes/handler.php
+===================================================================
+--- cms/trunk/includes/handler.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/handler.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -17,11 +17,13 @@
+ ||  of the GNU General Public License version 2					||
+ ||																||
+ ||**************************************************************||
++
++$Id$
+ */
++
+ // Add saving reports to a log file and its define ..
+-// this will be core_handlers
+ 
+-class core_error_handler
++class core_handler
+ {
+ 	var $active;
+ 	var $previous_level;
+@@ -80,18 +82,15 @@
+ 		switch ($option)
+ 		{
+ 			case 'start':
+-
+ 				$start_time = explode(' ', microtime());
+ 				$start_time = $start_time[0] + $start_time[1];
+ 
+ 				$this-&gt;debug[$name]['start_time'] = $start_time;
+ 				$this-&gt;debug[$name]['queries_before_time'] = $_CLASS['core_db']-&gt;sql_time;
+ 				$this-&gt;debug[$name]['queries_before'] = $_CLASS['core_db']-&gt;num_queries;
+-
+ 			break;
+ 
+ 			case 'stop':
+-
+ 				if (!isset($this-&gt;debug[$name]))
+ 				{
+ 					return;
+@@ -102,20 +101,16 @@
+ 
+ 				$this-&gt;debug[$name]['end_time'] = $end_time;
+ 				$this-&gt;debug[$name]['queries_after_time'] = $_CLASS['core_db']-&gt;sql_time;
+-
+ 			break;
+ 
+ 			case 'remove':
+-
+ 				if (isset($this-&gt;debug[$name]))
+ 				{
+ 					unset($this-&gt;debug[$name]);
+ 				}
+-
+ 			break;
+ 
+ 			case 'get':
+-
+ 				switch ($sub_option)
+ 				{
+ 					case 'time':
+@@ -136,7 +131,6 @@
+ 						.'&lt;br /&gt;Queries Time '.round($this-&gt;debug[$name]['queries_after_time'] - $this-&gt;debug[$name]['queries_before_time'], 4).' s&lt;br /&gt;';
+ 					break;
+ 				}
+-
+ 			break;
+ 		}
+ 	}
+@@ -147,7 +141,7 @@
+ 
+ 		if ($this-&gt;report != ERROR_NONE)
+ 		{
+-			echo $error;
++			//echo $error;
+ 
+ 			//damn windows
+ 			$errfile = str_replace('\\','/', $errfile);
+@@ -165,7 +159,7 @@
+ 					return;
+ 				}
+ 
+-				$errtype = ($errtype == E_NOTICE) ? 'E_NOTICE' : 'E_WARNING';
++				$errtype = ($errtype === E_NOTICE) ? 'E_NOTICE' : 'E_WARNING';
+ 				$this-&gt;error = array('type' =&gt; $errtype, 'error' =&gt; $error, 'file'=&gt; $errfile, 'line' =&gt; $errline);
+ 				$this-&gt;format_error($errtype);
+ 
+@@ -173,7 +167,6 @@
+ 			break;
+ 
+ 			case E_USER_ERROR:
+-
+ 				$code = false;
+ 
+ 				if (mb_strpos($error, ':')) // there shouldn't be a 0 position
+@@ -246,7 +239,7 @@
+ 
+    function format_error($type)
+    {
+-		if ($this-&gt;report == ERROR_ONPAGE)
++		if ($this-&gt;report === ERROR_ONPAGE)
+ 		{
+ 			echo &quot;PHP $type: in file &lt;b&gt;&quot;.$this-&gt;error['file'].'&lt;/b&gt; on line &lt;b&gt;'.$this-&gt;error['line'].'&lt;/b&gt;: &lt;b&gt;'.$this-&gt;error['error'].'&lt;/b&gt;&lt;br/&gt;';		
+ 		}
+
+Modified: cms/trunk/includes/session.php
+===================================================================
+--- cms/trunk/includes/session.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/session.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -31,7 +31,7 @@
+ 	var $sid_link = false;
+ 	var $need_sid = true;
+ 
+-	var $autologin_code = false;
++	var $autologin_code = '';
+ 
+ 	function start()
+ 	{
+@@ -103,6 +103,7 @@
+ 						$this-&gt;need_sid = false;
+ 					}
+ 
++					$this-&gt;autologin_code = $this-&gt;data['session_autologin'];
+ 					$this-&gt;load = check_load_status();
+ 					$this-&gt;sid_link = 'sid='.$this-&gt;data['session_id'];
+ 
+@@ -209,6 +210,7 @@
+ 			'session_admin'		=&gt; (int) $this-&gt;data['session_admin'],
+ 			'session_auth'		=&gt; (int) serialize($_CLASS['core_auth']-&gt;auth_dump()),
+ 			'session_hidden'	=&gt; (int) $this-&gt;data['session_hidden'],
++			'session_autologin'	=&gt; (string) $this-&gt;autologin_code,
+ 		);
+ 
+ 		$_CLASS['core_db']-&gt;query('INSERT INTO ' . SESSIONS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $session_data));
+@@ -218,10 +220,12 @@
+ 		$this-&gt;data = array_merge($this-&gt;data, $session_data);
+ 		unset($session_data);
+ 
+-		if ($this-&gt;time &gt; $config['session_last_gc'] + $config['session_gc'])
++		$this-&gt;gc($this-&gt;time);
++
++		/*if ($this-&gt;time &gt; $config['session_last_gc'] + $config['session_gc'])
+ 		{
+ 			$this-&gt;gc($this-&gt;time);
+-		}
++		}*/
+ 
+ 		if (!$this-&gt;is_bot)
+ 		{
+@@ -277,10 +281,10 @@
+ 		$return = false;
+ 
+ 		// This is about all we can validate other than the code, and user_id
+-		if ($row &amp;&amp; $row['auto_login_browser'] == $this-&gt;browser)
++		if ($row &amp;&amp; $row['auto_login_browser'] === $this-&gt;browser)
+ 		{
+ 			$return = $user_id;
+-			
++
+ 			$this-&gt;autologin_code = function_exists('sha1') ? sha1(uniqid(mt_rand(), true)) : md5(uniqid(mt_rand(), true));
+ 
+ 			$data_array = array(
+@@ -306,8 +310,8 @@
+ 	{
+ 		global $_CLASS;
+ 		
+-		$sql = 'DELETE FROM ' . SESSIONS_AUTOLOGIN_TABLE . &quot; 
+-			WHERE user_id = $user_id
++		$sql = 'DELETE FROM ' . SESSIONS_AUTOLOGIN_TABLE . ' 
++			WHERE user_id = '.(INT) $user_id.&quot;
+ 			AND auto_login_code = '&quot; . $_CLASS['core_db']-&gt;escape($code) . &quot;'&quot;;
+ 				
+ 		$_CLASS['core_db']-&gt;query($sql);
+@@ -320,7 +324,7 @@
+ 		if (!$session_id)
+ 		{
+ 			$session_id = $this-&gt;data['session_id'];
+-			
++
+ 			if ($logout)
+ 			{
+ 				$this-&gt;set_cookie('sid', '', $this-&gt;time - 31536000);
+@@ -368,7 +372,7 @@
+ 			case 'mysqli':
+ 				$sql = 'UPDATE ' . USERS_TABLE. ' u, ' . SESSIONS_TABLE . ' s
+ 							SET u.user_last_visit = s.session_time
+-								WHERE s.session_time &lt; ' . ($time - (int) $_CORE_CONFIG['server']['session_length']) . '
++								WHERE s.session_time &lt; ' . ($time - $_CORE_CONFIG['server']['session_length']) . '
+ 								AND u.user_id = s.session_user_id';
+ 				$_CLASS['core_db']-&gt;query($sql);
+ 			break;
+@@ -392,7 +396,7 @@
+ 		}
+ 
+ 		$sql = 'DELETE FROM ' . SESSIONS_TABLE . '
+-				WHERE session_time &lt; ' . ($time - (int) $_CORE_CONFIG['server']['session_length']);
++				WHERE session_time &lt; ' . ($time - $_CORE_CONFIG['server']['session_length']);
+ 			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		$sql = 'DELETE FROM ' . SESSIONS_AUTOLOGIN_TABLE . '
+@@ -406,7 +410,7 @@
+ 
+ 	function session_data_get($name, $default = false)
+ 	{
+-		return (empty($this-&gt;data['session_data'][$name])) ? $default : $this-&gt;data['session_data'][$name];
++		return empty($this-&gt;data['session_data'][$name]) ? $default : $this-&gt;data['session_data'][$name];
+ 	}
+ 
+ 	function session_data_remove($name)
+
+Modified: cms/trunk/includes/system.php
+===================================================================
+--- cms/trunk/includes/system.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/system.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -32,7 +32,7 @@
+ 
+ 	if (extension_loaded('zlib') &amp;&amp; !ob_get_length())
+ 	{
+-		ob_start('ob_gzhandler');
++		@ob_start('ob_gzhandler');
+ 	}
+ 
+ 	$size = 24;
+
+Modified: cms/trunk/includes/tables.php
+===================================================================
+--- cms/trunk/includes/tables.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/tables.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -107,10 +107,6 @@
+ define('POST_ANNOUNCE', 2);
+ define('POST_GLOBAL', 3);
+ 
+-// Lastread types
+-define('TRACK_NORMAL', 0);
+-define('TRACK_POSTED', 1);
+-
+ // Notify methods
+ define('NOTIFY_EMAIL', 0);
+ define('NOTIFY_IM', 1);
+@@ -165,12 +161,10 @@
+ define('FIELD_DROPDOWN', 5);
+ define('FIELD_DATE', 6);
+ 
+-
+ // Table names
+ 
+ define('FORUMS_ACL_TABLE', $table_prefix.'forums_auth');
+ define('FORUMS_ACL_OPTIONS_TABLE', $table_prefix.'forums_auth_options');
+-//define('ACL_DEPS_TABLE', $table_prefix.'forums_auth_deps');
+ define('FORUMS_ACL_PRESETS_TABLE', $table_prefix.'forums_auth_presets');
+ 
+ define('FORUMS_ATTACHMENTS_TABLE', $table_prefix.'forums_attachments');
+
+Modified: cms/trunk/includes/templates/installer/stage2.html
+===================================================================
+--- cms/trunk/includes/templates/installer/stage2.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/installer/stage2.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -1,13 +1,13 @@
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+-&lt;head&gt;
+-&lt;title&gt;Viperal: Agreement&lt;/title&gt;
+-&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+-&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
+-
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
+ &lt;style type=&quot;text/css&quot;&gt;
+-&lt;!--
+-body
++&lt;!--
++body
+ {
+     font-family: Verdana, Helvetica, sans-serif;
+     font-size: 10px;
+@@ -19,38 +19,38 @@
+ 
+ .error { color: red; }
+ 
+-#container
+-{
+-	position: absolute;
+-	top: 50%;
+-	left: 0px;
+-	width: 100%;
+-	margin-top: -130px;
++#container
++{
++	position: absolute;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: -200px;
+ }
+-
+-#wrapper
+-{
+-	position: relative;
+-	text-align: left;
+-	width: 500px;
+-	margin: 0px auto;
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
+ }
+ 
+ .spacer
+ {
+ 	background-color: #ECECEC;
+-}
+-
++}
++
+ .button
+ {
+ 	background-color: #DCE1E5;
+ 	border: 1px solid #ccc;
+ 	color: black;
+-}
++}
+ 
+ th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
+ .tablebg { background-color: #A9B8C2; }
+-
++
+ .row1 { background-color: #ECECEC; padding: 4px; }
+ .row2 { background-color: #DCE1E5; padding: 4px; }
+ .row3 { background-color: #C0C8D0; padding: 4px; }
+@@ -63,143 +63,56 @@
+ form { margin: 0px; padding: 0px; border: 0px; }
+ input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
+ select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
+-.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
+ 
+---&gt;
+-&lt;/style&gt;
+-&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
+-&lt;!--
+-var old_value = 'all';
+-
+-function change_option(name)
+-{
+-	var area = document.getElementById(name);
+-
+-	if (!area)
+-	{
+-		if (old_value == 'all')
+-		{
+-			return;
+-		}
+-		else
+-		{
+-			name = 'all'
+-			area = document.getElementById(name);
+-		}
+-	}
+-
+-	area.style.display = '';
+-
+-	var i = 1;
+-
+-	while (true)
+-	{
+-		area = document.getElementById(name + '_' + i);
+-
+-		if (!area)
+-		{
+-			break;
+-		}
+-
+-		area.style.display = '';
+-		i += 1;
+-	}
+-
+-	area = document.getElementById(old_value);
+-	area.style.display = 'none';
+-	
+-	var i = 1;
+-
+-	while (true)
+-	{
+-		area = document.getElementById(old_value + '_' + i);
+-
+-		if (!area)
+-		{
+-			break;
+-		}
+-
+-		area.style.display = 'none';
+-		i += 1;
+-	}
+-
+-	old_value = name;
+-}
+-
+-//--&gt;
+-&lt;/script&gt;
++--&gt;
++&lt;/style&gt;
++
+ &lt;body&gt;
+-	&lt;div id=&quot;container&quot;&gt;
+-		&lt;div id=&quot;wrapper&quot;&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
+ 			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+-				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+-					&lt;tbody&gt;
+-						&lt;tr&gt;
+-							&lt;th colspan=&quot;2&quot;&gt;Database Configuration&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- IF { $error } --&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database type: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;select id=&quot;layer&quot; name=&quot;layer&quot; onchange=&quot;change_option(this.value);&quot;&gt;{ $database_options }&lt;/select&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;sqlite&quot; style=&quot;display: none;&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;sqlite_pdo&quot; style=&quot;display: none;&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite_pdo&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server hostname: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;server&quot; value=&quot;{ $server }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_1&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;port&quot; value=&quot;{ $port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_2&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database name: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;database&quot; value=&quot;{ $database }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_3&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database username: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
+-					
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr id=&quot;all_4&quot;&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database password: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for tables: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;table_prefix&quot; value=&quot;{ $table_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for user table: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;user_prefix&quot; value=&quot;{ $user_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;3&quot; /&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
+-							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;test&quot; value=&quot;Test Connection&quot; type=&quot;submit&quot;&gt; &lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Start Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
+-						&lt;/tr&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;tr&gt;
++							&lt;th colspan=&quot;2&quot;&gt;Folder Permissions&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF { $error } --&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++							&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;/cache: &lt;/b&gt;&lt;/td&gt;
++							&lt;td valign=&quot;middle&quot; class=&quot;row2&quot;&gt;&lt;!-- IF { $cache } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt; &lt;b&gt;- Persmission Good&lt;/b&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;/cache/template: &lt;/b&gt;&lt;/td&gt;
++							&lt;td valign=&quot;middle&quot; class=&quot;row2&quot;&gt;&lt;!-- IF { $cache_template } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt; &lt;b&gt;- Persmission Good&lt;/b&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;/cache/hooks: &lt;/b&gt;&lt;/td&gt;
++							&lt;td valign=&quot;middle&quot; class=&quot;row2&quot;&gt;&lt;!-- IF { $cache_hooks } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt; &lt;b&gt;- Persmission Good&lt;/b&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;/images/avatars/upload: &lt;/b&gt;&lt;/td&gt;
++							&lt;td valign=&quot;middle&quot; class=&quot;row2&quot;&gt;&lt;!-- IF { $upload_folder } --&gt;&lt;img src=&quot;images/led_green.png&quot; /&gt; &lt;b&gt;- Persmission Good&lt;/b&gt;&lt;!-- ELSE --&gt;&lt;img src=&quot;images/led_yellow.png&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF !{ $continue } --&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;You may not continue, please fix all problems listed in RED&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;3&quot; /&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
++							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; &lt;!-- IF !{ $continue } --&gt;disabled=&quot;disabled&quot;&lt;!-- ENDIF --&gt; name=&quot;continue&quot; value=&quot;Continue&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
++						&lt;/tr&gt;
+ 					&lt;/tbody&gt;
+-				&lt;/table&gt;
++				&lt;/table&gt;
+ 			&lt;/form&gt;
+-		&lt;/div&gt;
+-	&lt;/div&gt;
+-
+-&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
+-&lt;!--
+-	change_option(document.getElementById('layer').value);
+-//--&gt;
+-&lt;/script&gt;
+-
+-&lt;/body&gt;
+-
++		&lt;/div&gt;
++	&lt;/div&gt;
++&lt;/body&gt;
++
+ &lt;/html&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/installer/stage3.html
+===================================================================
+--- cms/trunk/includes/templates/installer/stage3.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/installer/stage3.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -1,13 +1,13 @@
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+-&lt;head&gt;
+-&lt;title&gt;Viperal: Agreement&lt;/title&gt;
+-&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+-&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
+-
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
+ &lt;style type=&quot;text/css&quot;&gt;
+-&lt;!--
+-body
++&lt;!--
++body
+ {
+     font-family: Verdana, Helvetica, sans-serif;
+     font-size: 10px;
+@@ -19,38 +19,38 @@
+ 
+ .error { color: red; }
+ 
+-#container
+-{
+-	position: relative;
+-	top: 50%;
+-	left: 0px;
+-	width: 100%;
+-	margin-top: 0px;
++#container
++{
++	position: absolute;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: -130px;
+ }
+-
+-#wrapper
+-{
+-	position: relative;
+-	text-align: left;
+-	width: 500px;
+-	margin: 0px auto;
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
+ }
+ 
+ .spacer
+ {
+ 	background-color: #ECECEC;
+-}
+-
++}
++
+ .button
+ {
+ 	background-color: #DCE1E5;
+ 	border: 1px solid #ccc;
+ 	color: black;
+-}
++}
+ 
+ th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
+ .tablebg { background-color: #A9B8C2; }
+-
++
+ .row1 { background-color: #ECECEC; padding: 4px; }
+ .row2 { background-color: #DCE1E5; padding: 4px; }
+ .row3 { background-color: #C0C8D0; padding: 4px; }
+@@ -63,107 +63,143 @@
+ form { margin: 0px; padding: 0px; border: 0px; }
+ input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
+ select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
+-.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
+ 
+---&gt;
+-&lt;/style&gt;
+-
++--&gt;
++&lt;/style&gt;
++&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
++&lt;!--
++var old_value = 'all';
++
++function change_option(name)
++{
++	var area = document.getElementById(name);
++
++	if (!area)
++	{
++		if (old_value == 'all')
++		{
++			return;
++		}
++		else
++		{
++			name = 'all'
++			area = document.getElementById(name);
++		}
++	}
++
++	area.style.display = '';
++
++	var i = 1;
++
++	while (true)
++	{
++		area = document.getElementById(name + '_' + i);
++
++		if (!area)
++		{
++			break;
++		}
++
++		area.style.display = '';
++		i += 1;
++	}
++
++	area = document.getElementById(old_value);
++	area.style.display = 'none';
++	
++	var i = 1;
++
++	while (true)
++	{
++		area = document.getElementById(old_value + '_' + i);
++
++		if (!area)
++		{
++			break;
++		}
++
++		area.style.display = 'none';
++		i += 1;
++	}
++
++	old_value = name;
++}
++
++//--&gt;
++&lt;/script&gt;
+ &lt;body&gt;
+-	&lt;div id=&quot;container&quot;&gt;
+-		&lt;div id=&quot;wrapper&quot;&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
+ 			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+-				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+-					&lt;tbody&gt;
+-						&lt;!-- IF { $error } --&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Error&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Administrator Configuration&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Username: &lt;/b&gt;&lt;/td&gt;
+-					
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password ( Confirm ): &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password_confirm&quot; value=&quot;{ $password_confirm }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email&quot; value=&quot;{ $email }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address  ( Confirm ): &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email_confirm&quot; value=&quot;{ $email_confirm }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Site Configuration&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td align=&quot;center&quot; colspan=&quot;2&quot; class=&quot;row2&quot;&gt;Default Value are usually correct, please review&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Name: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_name&quot; value=&quot;{ $site_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Domain: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_domain&quot; value=&quot;{ $site_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site path: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_path&quot; value=&quot;{ $site_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_port&quot; value=&quot;{ $site_port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Domain: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_domain&quot; value=&quot;{ $cookie_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Path: &lt;/b&gt;&lt;/td&gt;
+-					
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_path&quot; value=&quot;{ $cookie_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Name: &lt;/b&gt;&lt;/td&gt;
+-							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_name&quot; value=&quot;{ $cookie_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- IF { $config_content } --&gt;
+-						&lt;tr&gt;
+-							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Config.php Content&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;Copy the content below to your config.php file and upload to you site root&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;tr&gt;
+-							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;
+-							&lt;textarea name=&quot;config_content&quot; style=&quot;width: 100%&quot; rows=&quot;15&quot;&gt;{ $config_content }&lt;/textarea&gt;
+-							&lt;/th&gt;
+-						&lt;/tr&gt;
+-						&lt;!-- ENDIF --&gt;
+-						&lt;tr&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;4&quot; /&gt;
+-							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
+-							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Finalize Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
+-						&lt;/tr&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;tr&gt;
++							&lt;th colspan=&quot;2&quot;&gt;Database Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF { $error } --&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database type: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;select id=&quot;layer&quot; name=&quot;layer&quot; onchange=&quot;change_option(this.value);&quot;&gt;{ $database_options }&lt;/select&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;sqlite&quot; style=&quot;display: none;&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;sqlite_pdo&quot; style=&quot;display: none;&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file_sqlite_pdo&quot; value=&quot;{ $file }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server hostname: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;server&quot; value=&quot;{ $server }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_1&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;port&quot; value=&quot;{ $port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_2&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database name: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;database&quot; value=&quot;{ $database }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_3&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database username: &lt;/b&gt;&lt;br/&gt;Required&lt;/td&gt;
++					
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_4&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database password: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for tables: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;table_prefix&quot; value=&quot;{ $table_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for user table: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;user_prefix&quot; value=&quot;{ $user_prefix }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;4&quot; /&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
++							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;test&quot; value=&quot;Test Connection&quot; type=&quot;submit&quot;&gt; &lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Start Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
++						&lt;/tr&gt;
+ 					&lt;/tbody&gt;
+-				&lt;/table&gt;
++				&lt;/table&gt;
+ 			&lt;/form&gt;
+-		&lt;/div&gt;
+-	&lt;/div&gt;
+-&lt;/body&gt;
+-
++		&lt;/div&gt;
++	&lt;/div&gt;
++
++&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
++&lt;!--
++	change_option(document.getElementById('layer').value);
++//--&gt;
++&lt;/script&gt;
++
++&lt;/body&gt;
++
+ &lt;/html&gt;
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/installer/stage4.html
+===================================================================
+--- cms/trunk/includes/templates/installer/stage4.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/installer/stage4.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -0,0 +1,169 @@
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
++&lt;style type=&quot;text/css&quot;&gt;
++&lt;!--
++body
++{
++    font-family: Verdana, Helvetica, sans-serif;
++    font-size: 10px;
++    margin: 0%;
++    padding: 0px;
++    background-color: white;
++    background: url(../images/bg.gif);
++}
++
++.error { color: red; }
++
++#container
++{
++	position: relative;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: 0px;
++}
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
++}
++
++.spacer
++{
++	background-color: #ECECEC;
++}
++
++.button
++{
++	background-color: #DCE1E5;
++	border: 1px solid #ccc;
++	color: black;
++}
++
++th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
++.tablebg { background-color: #A9B8C2; }
++
++.row1 { background-color: #ECECEC; padding: 4px; }
++.row2 { background-color: #DCE1E5; padding: 4px; }
++.row3 { background-color: #C0C8D0; padding: 4px; }
++
++a:link { color: #005784; text-decoration: none; }
++a:active { color: #005784; text-decoration: none; }
++a:visited { color: #005784; text-decoration: none; }
++a:hover { color: #000000; text-decoration: none; }
++
++form { margin: 0px; padding: 0px; border: 0px; }
++input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
++select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++
++--&gt;
++&lt;/style&gt;
++
++&lt;body&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
++			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;!-- IF { $error } --&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Error&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;{ $error }&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Administrator Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Username: &lt;/b&gt;&lt;/td&gt;
++					
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;{ $username }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;{ $password }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Password ( Confirm ): &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password_confirm&quot; value=&quot;{ $password_confirm }&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email&quot; value=&quot;{ $email }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Email address  ( Confirm ): &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;email_confirm&quot; value=&quot;{ $email_confirm }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Site Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td align=&quot;center&quot; colspan=&quot;2&quot; class=&quot;row2&quot;&gt;Default Value are usually correct, please review&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Name: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_name&quot; value=&quot;{ $site_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Domain: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_domain&quot; value=&quot;{ $site_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site path: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_path&quot; value=&quot;{ $site_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Site Port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;site_port&quot; value=&quot;{ $site_port }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Domain: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_domain&quot; value=&quot;{ $cookie_domain }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Path: &lt;/b&gt;&lt;/td&gt;
++					
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_path&quot; value=&quot;{ $cookie_path }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Cookie Name: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;cookie_name&quot; value=&quot;{ $cookie_name }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;!-- IF { $config_content } --&gt;
++						&lt;tr&gt;
++							&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;Config.php Content&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;Copy the content below to your config.php file and upload to you site root&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td colspan=&quot;2&quot; class=&quot;row2&quot; style=&quot;color: red; text-align:center;&quot;&gt;
++							&lt;textarea name=&quot;config_content&quot; style=&quot;width: 100%&quot; rows=&quot;15&quot;&gt;{ $config_content }&lt;/textarea&gt;
++							&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;!-- ENDIF --&gt;
++						&lt;tr&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;5&quot; /&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
++							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Finalize Installation&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
++						&lt;/tr&gt;
++					&lt;/tbody&gt;
++				&lt;/table&gt;
++			&lt;/form&gt;
++		&lt;/div&gt;
++	&lt;/div&gt;
++&lt;/body&gt;
++
++&lt;/html&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/login_admin.html
+===================================================================
+--- cms/trunk/includes/templates/login_admin.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/login_admin.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -87,29 +87,28 @@
+ 					&lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+ 						&lt;!-- IF { $LOGIN_ERROR } --&gt;
+ 						&lt;tr&gt;
+-							&lt;td class=&quot;gensmall&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;error&quot;&gt;{$LOGIN_ERROR}&lt;/span&gt;&lt;/td&gt;
++							&lt;td class=&quot;gensmall&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;error&quot;&gt;{ $LOGIN_ERROR }&lt;/span&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;!-- ENDIF --&gt;
+ 						&lt;tr&gt; 
+-							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_USERNAME}:&lt;/b&gt;&lt;/td&gt;
+-							&lt;td&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; size=&quot;25&quot; maxlength=&quot;40&quot; value=&quot;{$USERNAME}&quot; tabindex=&quot;1&quot; /&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{$U_REGISTER}&quot;&gt;{$L_REGISTER}&lt;/a&gt;&lt;/td&gt;
++							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_USERNAME }:&lt;/b&gt;&lt;/td&gt;
++							&lt;td&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; size=&quot;25&quot; maxlength=&quot;40&quot; value=&quot;{ $USERNAME }&quot; tabindex=&quot;1&quot; /&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;tr&gt; 
+-							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_PASSWORD}:&lt;/b&gt;&lt;/td&gt;
++							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_PASSWORD }:&lt;/b&gt;&lt;/td&gt;
+ 							&lt;td&gt;
+-								&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; maxlength=&quot;25&quot; tabindex=&quot;2&quot; /&gt;
++								&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; maxlength=&quot;25&quot; value=&quot;{ $PASSWORD }&quot; tabindex=&quot;2&quot; /&gt;
+ 								&lt;!-- IF { $U_SEND_PASSWORD } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_SEND_PASSWORD }&quot;&gt;{ $L_FORGOT_PASS }&lt;/a&gt;&lt;!-- ENDIF --&gt;
+-								&lt;!-- IF { $U_RESEND_ACTIVATION } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_RESEND_ACTIVATION }&quot;&gt;{ $L_RESEND_ACTIVATION }&lt;/a&gt;&lt;!-- ENDIF --&gt;
+ 							 &lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;!-- IF { $S_DISPLAY_FULL_LOGIN } --&gt;
+ 						&lt;tr&gt; 
+ 							&lt;td&gt;&nbsp;&lt;/td&gt;
+-							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;autologin&quot; tabindex=&quot;4&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_LOG_ME_IN}&lt;/span&gt;&lt;/td&gt;
++							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;autologin&quot; tabindex=&quot;4&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{ $L_LOG_ME_IN }&lt;/span&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;tr&gt;
+ 							&lt;td&gt;&nbsp;&lt;/td&gt;
+-							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;viewonline&quot; tabindex=&quot;5&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_HIDE_ME}&lt;/span&gt;&lt;/td&gt;
++							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;viewonline&quot; tabindex=&quot;5&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{ $L_HIDE_ME }&lt;/span&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;!-- ENDIF --&gt;
+ 					&lt;/table&gt;
+
+Modified: cms/trunk/includes/templates/login_body.html
+===================================================================
+--- cms/trunk/includes/templates/login_body.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/login_body.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -42,7 +42,7 @@
+ 			&lt;tr class=&quot;row2&quot;&gt; 
+ 				&lt;td&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_PASSWORD}:&lt;/b&gt;&lt;/td&gt;
+ 				&lt;td&gt;
+-					&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; maxlength=&quot;25&quot; tabindex=&quot;2&quot; /&gt;
++					&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; value=&quot;{ $PASSWORD }&quot; maxlength=&quot;25&quot; tabindex=&quot;2&quot; /&gt;
+ 					&lt;!-- IF { $U_SEND_PASSWORD } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_SEND_PASSWORD }&quot;&gt;{ $L_FORGOT_PASS }&lt;/a&gt;&lt;!-- ENDIF --&gt;
+ 					&lt;!-- IF { $U_RESEND_ACTIVATION } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_RESEND_ACTIVATION }&quot;&gt;{ $L_RESEND_ACTIVATION }&lt;/a&gt;&lt;!-- ENDIF --&gt;
+ 				 &lt;/td&gt;
+
+Modified: cms/trunk/includes/templates/login_body_full.html
+===================================================================
+--- cms/trunk/includes/templates/login_body_full.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/login_body_full.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -87,15 +87,15 @@
+ 					&lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+ 						&lt;!-- IF { $LOGIN_ERROR } --&gt;
+ 						&lt;tr&gt;
+-							&lt;td class=&quot;gensmall&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;error&quot;&gt;{$LOGIN_ERROR}&lt;/span&gt;&lt;/td&gt;
++							&lt;td class=&quot;gensmall&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;error&quot;&gt;{ $LOGIN_ERROR }&lt;/span&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;!-- ENDIF --&gt;
+ 						&lt;tr&gt; 
+-							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_USERNAME}:&lt;/b&gt;&lt;/td&gt;
+-							&lt;td&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; size=&quot;25&quot; maxlength=&quot;40&quot; value=&quot;{$USERNAME}&quot; tabindex=&quot;1&quot; /&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{$U_REGISTER}&quot;&gt;{$L_REGISTER}&lt;/a&gt;&lt;/td&gt;
++							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_USERNAME }:&lt;/b&gt;&lt;/td&gt;
++							&lt;td&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; size=&quot;25&quot; maxlength=&quot;40&quot; value=&quot;{ $USERNAME }&quot; tabindex=&quot;1&quot; /&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{$U_REGISTER}&quot;&gt;{$L_REGISTER}&lt;/a&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;tr&gt; 
+-							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{$L_PASSWORD}:&lt;/b&gt;&lt;/td&gt;
++							&lt;td valign=&quot;top&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_PASSWORD }:&lt;/b&gt;&lt;/td&gt;
+ 							&lt;td&gt;
+ 								&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; maxlength=&quot;25&quot; tabindex=&quot;2&quot; /&gt;
+ 								&lt;!-- IF { $U_SEND_PASSWORD } --&gt;&lt;br /&gt;&lt;a class=&quot;gensmall&quot; href=&quot;{ $U_SEND_PASSWORD }&quot;&gt;{ $L_FORGOT_PASS }&lt;/a&gt;&lt;!-- ENDIF --&gt;
+@@ -105,11 +105,11 @@
+ 						&lt;!-- IF { $S_DISPLAY_FULL_LOGIN } --&gt;
+ 						&lt;tr&gt; 
+ 							&lt;td&gt;&nbsp;&lt;/td&gt;
+-							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;autologin&quot; tabindex=&quot;4&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_LOG_ME_IN}&lt;/span&gt;&lt;/td&gt;
++							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;autologin&quot; tabindex=&quot;4&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{ $L_LOG_ME_IN}&lt;/span&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;tr&gt;
+ 							&lt;td&gt;&nbsp;&lt;/td&gt;
+-							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;viewonline&quot; tabindex=&quot;5&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{$L_HIDE_ME}&lt;/span&gt;&lt;/td&gt;
++							&lt;td&gt;&lt;input type=&quot;checkbox&quot; name=&quot;viewonline&quot; tabindex=&quot;5&quot; /&gt; &lt;span class=&quot;gensmall&quot;&gt;{ $L_HIDE_ME}&lt;/span&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;!-- ENDIF --&gt;
+ 					&lt;/table&gt;
+
+Modified: cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_history.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_history.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_history.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -11,53 +11,55 @@
+ 				&lt;tr&gt;
+ 					&lt;th width=&quot;22%&quot;&gt;{ $L_AUTHOR }&lt;/th&gt;
+ 					&lt;th&gt;{ $L_MESSAGE }&lt;/th&gt;
+-				&lt;/tr&gt;
+-				{section name=history_rowloop loop=$history_row}
++				&lt;/tr&gt;
++				&lt;!-- LOOP $history_row --&gt;
+ 
+-				{ if $smarty.section.history_rowloop.index is even }&lt;tr class=&quot;row1&quot;&gt;{ else }&lt;tr class=&quot;row2&quot;&gt;{ /if }
+-					&lt;td rowspan=&quot;2&quot; align=&quot;left&quot; valign=&quot;top&quot;&gt;&lt;a name=&quot;{$history_row[history_rowloop].U_POST_ID}&quot;&gt;&lt;/a&gt;
++				&lt;!-- IF { $history_row:#LOOP_INDEX }  % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
++					&lt;td rowspan=&quot;2&quot; align=&quot;left&quot; valign=&quot;top&quot;&gt;&lt;a name=&quot;{ $history_row:U_POST_ID }&quot;&gt;&lt;/a&gt;
+ 						&lt;table width=&quot;150&quot; cellspacing=&quot;0&quot;&gt;
+ 							&lt;tr&gt;
+-								&lt;td align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;b class=&quot;postauthor&quot;&gt;{$history_row[history_rowloop].AUTHOR_NAME}&lt;/b&gt;&lt;/td&gt;
++								&lt;td align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;b class=&quot;postauthor&quot;&gt;{ $history_row:AUTHOR_NAME }&lt;/b&gt;&lt;/td&gt;
+ 							&lt;/tr&gt;
+ 						&lt;/table&gt;
+ 					&lt;/td&gt;
+ 
+-					&lt;td width=&quot;100%&quot;{ if $history_row[history_rowloop].S_CURRENT_MSG } style=&quot;background-color:lightblue&quot;{ /if }&gt;
+-					&lt;div class=&quot;gensmall&quot; style=&quot;float:left&quot;&gt;&lt;b&gt;{$L_PM_SUBJECT}:&lt;/b&gt;&nbsp;{$history_row[history_rowloop].SUBJECT}&lt;/div&gt;&lt;div class=&quot;gensmall&quot; style=&quot;float:right&quot;&gt;&lt;b&gt;{$L_FOLDER}:&lt;/b&gt;&nbsp;{$history_row[history_rowloop].FOLDER}&lt;/div&gt;
++					&lt;td width=&quot;100%&quot;{ if $history_row:S_CURRENT_MSG } style=&quot;background-color:lightblue&quot;{ /if }&gt;
++					&lt;div class=&quot;gensmall&quot; style=&quot;float:left&quot;&gt;&lt;b&gt;{ $L_PM_SUBJECT }:&lt;/b&gt;&nbsp;{ $history_row:SUBJECT }&lt;/div&gt;&lt;div class=&quot;gensmall&quot; style=&quot;float:right&quot;&gt;&lt;b&gt;{$L_FOLDER}:&lt;/b&gt;&nbsp;{$history_row:FOLDER}&lt;/div&gt;
+ 					&lt;/td&gt;
+ 				&lt;/tr&gt;
+ 
+-				{ if $smarty.section.history_rowloop.index is even }&lt;tr class=&quot;row1&quot;&gt;{ else }&lt;tr class=&quot;row2&quot;&gt;{ /if }
++				&lt;!-- IF { $history_row:#LOOP_INDEX }  % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
+ 					&lt;td valign=&quot;top&quot;&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot;&gt;
+ 						&lt;tr&gt;
+-							&lt;td valign=&quot;top&quot;&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;2&quot;&gt;
+-								&lt;tr&gt;
+-									&lt;td&gt;&lt;div id=&quot;message_{$history_row[history_rowloop].U_POST_ID}&quot;&gt;&lt;div class=&quot;postbody&quot;&gt;{$history_row[history_rowloop].MESSAGE}&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;
+-								&lt;/tr&gt;
+-							&lt;/table&gt;&lt;/td&gt;
++							&lt;td valign=&quot;top&quot;&gt;
++								&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;2&quot;&gt;
++									&lt;tr&gt;
++										&lt;td&gt;&lt;div id=&quot;message_{ $history_row:U_POST_ID }&quot;&gt;&lt;div class=&quot;postbody&quot;&gt;{ $history_row:MESSAGE }&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;
++									&lt;/tr&gt;
++								&lt;/table&gt;
++							&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;tr&gt;
+ 							&lt;td&gt;&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot;&gt;
+ 								&lt;tr valign=&quot;middle&quot;&gt;
+ 									&lt;td width=&quot;100%&quot;&gt;&nbsp;&lt;/td&gt;
+-									&lt;td width=&quot;10&quot; nowrap=&quot;nowrap&quot;&gt;{$history_row[history_rowloop].MINI_POST_IMG}&lt;/td&gt;
+-									&lt;td class=&quot;gensmall&quot; nowrap=&quot;nowrap&quot;&gt;&lt;b&gt;{$L_SENT_AT}:&lt;/b&gt; {$history_row[history_rowloop].SENT_DATE}&lt;/td&gt;
++									&lt;td width=&quot;10&quot; nowrap=&quot;nowrap&quot;&gt;{ $history_row:MINI_POST_IMG }&lt;/td&gt;
++									&lt;td class=&quot;gensmall&quot; nowrap=&quot;nowrap&quot;&gt;&lt;b&gt;{ $L_SENT_AT }:&lt;/b&gt; { $history_row:SENT_DATE }&lt;/td&gt;
+ 								&lt;/tr&gt;
+ 							&lt;/table&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 					&lt;/table&gt;&lt;/td&gt;
+ 				&lt;/tr&gt;
+ 
+-				{ if $smarty.section.history_rowloop.index is even }&lt;tr class=&quot;row1&quot;&gt;{ else }&lt;tr class=&quot;row2&quot;&gt;{ /if }
+-					&lt;td class=&quot;gensmall&quot; align=&quot;center&quot; height=&quot;28px&quot;&gt;&lt;a href=&quot;{$history_row[history_rowloop].U_VIEW_MESSAGE}&quot;&gt;{$L_VIEW_PM}&lt;/a&gt;&lt;/td&gt;
+-					&lt;td&gt;&lt;div class=&quot;gensmall&quot; style=&quot;float:left&quot;&gt;&nbsp;{ if $history_row[history_rowloop].U_PROFILE }&lt;a href=&quot;{$history_row[history_rowloop].U_PROFILE}&quot;&gt;{$PROFILE_IMG}&lt;/a&gt; { /if } { if $history_row[history_rowloop].U_EMAIL }&lt;a href=&quot;{$history_row[history_rowloop].U_EMAIL}&quot;&gt;{$EMAIL_IMG}&lt;/a&gt; { /if }&nbsp;&lt;/div&gt; &lt;div class=&quot;gensmall&quot; style=&quot;float:right&quot;&gt;{ if $history_row[history_rowloop].U_QUOTE }&lt;a href=&quot;{$history_row[history_rowloop].U_QUOTE}&quot;&gt;{$QUOTE_IMG}&lt;/a&gt; { /if } { if $history_row[history_rowloop].U_POST_REPLY_PM }&lt;a href=&quot;{$history_row[history_rowloop].U_POST_REPLY_PM}&quot;&gt;{$REPLY_IMG}&lt;/a&gt;{ /if }&nbsp;&lt;/div&gt;&lt;/td&gt;
++				&lt;!-- IF { $history_row:#LOOP_INDEX }  % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
++					&lt;td class=&quot;gensmall&quot; align=&quot;center&quot; height=&quot;28px&quot;&gt;&lt;a href=&quot;{ $history_row:U_VIEW_MESSAGE }&quot;&gt;{ $L_VIEW_PM }&lt;/a&gt;&lt;/td&gt;
++					&lt;td&gt;&lt;div class=&quot;gensmall&quot; style=&quot;float:left&quot;&gt;&nbsp;&lt;!-- IF { $history_row:U_AUTHOR_PROFILE } --&gt;&lt;a href=&quot;{ $history_row:U_AUTHOR_PROFILE }&quot;&gt;{ $PROFILE_IMG }&lt;/a&gt; &lt;!-- ENDIF --&gt;&lt;!-- IF { $history_row:U_EMAIL } --&gt; &lt;a href=&quot;{ $history_row:U_EMAIL }&quot;&gt;{ $EMAIL_IMG }&lt;/a&gt;&lt;!-- ENDIF --&gt;&nbsp;&lt;/div&gt; &lt;div class=&quot;gensmall&quot; style=&quot;float:right&quot;&gt;&lt;!-- IF { $history_row:U_QUOTE } --&gt;&lt;a href=&quot;{ $history_row:U_QUOTE }&quot;&gt;{ $QUOTE_IMG }&lt;/a&gt; &lt;!-- ENDIF --&gt;&lt;!-- IF { $history_row:U_POST_REPLY_PM } --&gt; &lt;a href=&quot;{ $history_row:U_POST_REPLY_PM }&quot;&gt;{ $REPLY_IMG }&lt;/a&gt;&lt;!-- ENDIF --&gt;&nbsp;&lt;/div&gt;&lt;/td&gt;
+ 				&lt;/tr&gt;
+ 
+ 				&lt;tr&gt;
+ 					&lt;td class=&quot;spacer&quot; colspan=&quot;2&quot;&gt;&lt;img src=&quot;images/spacer.gif&quot; alt=&quot;&quot; width=&quot;1&quot; height=&quot;1&quot; /&gt;&lt;/td&gt;
+ 				&lt;/tr&gt;
+-				{ /section }
++				&lt;!-- ENDLOOP --&gt;
+ 			&lt;/table&gt;
+ 		&lt;/div&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+
+Modified: cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_viewmessage.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_viewmessage.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/modules/Control_Panel/ucp_pm_viewmessage.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -26,7 +26,7 @@
+ 		&lt;td class=&quot;gen&quot;&gt;
+ 		&lt;!-- LOOP $to_recipient --&gt;
+ 			&lt;a href=&quot;{ $to_recipient:U_VIEW }&quot;&gt;&lt;!-- IF { $to_recipient:COLOUR } --&gt;&lt;span style=&quot;color:#{ $to_recipient:COLOUR }&quot;&gt;&lt;!-- ELSE --&gt;&lt;span&lt;!-- IF { $to_recipient:IS_GROUP} --&gt; class=&quot;blue&quot;&lt;!-- ENDIF --&gt;&gt;&lt;!-- ENDIF --&gt;{ $to_recipient:NAME }&lt;/span&gt;&lt;/a&gt;&nbsp;
+-		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- ENDLOOP $to_recipient --&gt;
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDIF --&gt;
+@@ -37,7 +37,7 @@
+ 		&lt;td class=&quot;gen&quot;&gt;
+ 		&lt;!-- LOOP $bcc_recipient --&gt;
+ 			&lt;a href=&quot;{ $bcc_recipient:U_VIEW }&quot;&gt;&lt;!-- IF { $bcc_recipient:COLOUR } --&gt;&lt;span style=&quot;color:#{ $bcc_recipient:COLOUR }&quot;&gt;&lt;!-- ELSE --&gt;&lt;span&lt;!-- IF { $bcc_recipient:IS_GROUP } --&gt; class=&quot;blue&quot;&lt;!-- ENDIF --&gt;&gt;&lt;!-- ENDIF --&gt;{ $bcc_recipient:NAME }&lt;/span&gt;&lt;/a&gt;&nbsp;
+-		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- ENDLOOP $bcc_recipient --&gt;
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDIF --&gt;
+
+Modified: cms/trunk/includes/templates/modules/Forums/mcp_post.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/mcp_post.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/modules/Forums/mcp_post.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -1,3 +1,5 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
+ &lt;!-- INCLUDE modules/Forums/mcp_header.html --&gt;
+ 
+ &lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_APPROVE_ACTION }&quot;&gt;
+@@ -186,4 +188,6 @@
+ 	&lt;!-- ENDIF --&gt;
+ &lt;!-- ENDIF --&gt;
+ 
+-&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
+\ No newline at end of file
++&lt;!-- INCLUDE modules/Forums/mcp_footer.html --&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/Members_List/memberlist_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Members_List/memberlist_body.html	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/templates/modules/Members_List/memberlist_body.html	2005-10-06 18:22:34 UTC (rev 162)
+@@ -86,7 +86,7 @@
+ 			&lt;!-- IF { $S_SEARCH_USER } --&gt;&lt;td align=&quot;center&quot;&gt;&lt;input type=&quot;checkbox&quot; name=&quot;user&quot; value=&quot;{$leader_row:USERNAME}&quot; /&gt;&lt;/td&gt;&lt;!-- ENDIF --&gt;
+ 
+ 		&lt;/tr&gt;
+-	&lt;!-- ENDLOOP --&gt;
++	&lt;!-- ENDLOOP $leader_row --&gt;
+ 
+ 	&lt;!-- IF isset({ $member_row }) &amp;&amp; { $S_SHOW_GROUP } &amp;&amp; !{ $S_SEARCH_USER } --&gt;
+ 		&lt;tr&gt;
+@@ -115,7 +115,7 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; colspan=&quot;&lt;!-- IF { $S_SEARCH_USER } --&gt;9&lt;!-- ELSE --&gt;8&lt;!-- ENDIF --&gt;&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_NO_MEMBERS }&lt;/span&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+-		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- ENDLOOP $member_row --&gt;
+ 
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;cat&quot; colspan=&quot;&lt;!-- IF { $S_SEARCH_USER } --&gt;9&lt;!-- ELSE --&gt;8&lt;!-- ENDIF --&gt;&quot; align=&quot;center&quot;&gt;
+
+Modified: cms/trunk/includes/user.php
+===================================================================
+--- cms/trunk/includes/user.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/includes/user.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -430,6 +430,7 @@
+ 	function img($img, $alt = '', $width = false, $suffix = '')
+ 	{
+ 		$img = $this-&gt;get_img($img);
++		$alt = $this-&gt;get_lang($alt);
+ 
+ 		if (!$img['src'])
+ 		{
+
+Modified: cms/trunk/install/build_data.php
+===================================================================
+--- cms/trunk/install/build_data.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/install/build_data.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -25,8 +25,9 @@
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admins (admin_section, user_id, admin_status) VALUES ('_all_', 2, 2)&quot;);
+ 
+-//$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;blocks (id, title, type, content, position, weight, active, file) VALUES (1, 'Control Panel', , 'block-Control_Panel.php')&quot;);
+-
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_type, config_cache) VALUES ('global', 'path_avatar_upload', 'images/avatars/upload', 'string', 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_type, config_cache) VALUES ('global', 'path_avatar_gallery', 'images/avatars/gallery', 'string', 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_type, config_cache) VALUES ('global', 'path_smilies', 'images/smilies', 'string', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_type, config_cache) VALUES ('global', 'site_name', '', 'string', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_type, config_cache) VALUES ('global', 'default_theme', 'viperal', 'string', 1)&quot;);
+ $content = $_CLASS['core_db']-&gt;escape('&lt;a href=&quot;feed.php?feed=rss1&quot; title=&quot;RSS 1.0 / RDF Feed&quot;&gt;&lt;img alt=&quot;RSS 1.0 / RDF&quot; src=&quot;images/rss10_logo.gif&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;feed.php?feed=rss2&quot; title=&quot;RSS 2.0 Feed&quot;&gt;&lt;img alt=&quot;RSS 2.0&quot; src=&quot;images/rss20_logo.gif&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;feed.php?feed=rss&quot; title=&quot;RSS 0.91 Feed&quot;&gt;&lt;img alt=&quot;RSS 0.9&quot; src=&quot;images/rss090_logo.gif&quot; /&gt;&lt;/a&gt;');
+@@ -180,7 +181,7 @@
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0, '$guest_data', 0, 0, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', 'AA0000', 1, 1, 1, 1, 1, '$admin_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8.,66.249.64.,66.249.71.', 'Googlebot/', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'MSN', '', '', '', $time, '65.54.188.', 'msnbot/', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Yahoo', '', '', '', $time, '66.196.90.1', 'Yahoo! Slurp', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Alexa', '', '', '', $time, '66.28.250.,209.237.238.', 'ia_archiver', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+
+Modified: cms/trunk/install/build_tables.php
+===================================================================
+--- cms/trunk/install/build_tables.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/install/build_tables.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -175,6 +175,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('session_user_type', array('max' =&gt; 10));
+ $_CLASS['core_db']-&gt;add_table_field_int('session_admin', array('max' =&gt; 10));
+ $_CLASS['core_db']-&gt;add_table_field_int('session_hidden', array('max' =&gt; 10));
++$_CLASS['core_db']-&gt;add_table_field_char('session_autologin', 40);
+ 
+ $_CLASS['core_db']-&gt;add_table_field_text('session_data', 60000);
+ $_CLASS['core_db']-&gt;add_table_field_text('session_auth', 60000);
+@@ -940,7 +941,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('replied', array('max' =&gt; 1, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_int('marked', array('max' =&gt; 1, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_int('forwarded', array('max' =&gt; 1, 'null' =&gt; true));
+-$_CLASS['core_db']-&gt;add_table_field_int('folder_id', array('max' =&gt; 16000000));
++$_CLASS['core_db']-&gt;add_table_field_int('folder_id', array('min' =&gt; -10, 'max' =&gt; 16000000));
+ 
+ $_CLASS['core_db']-&gt;add_table_index('msg_id');
+ $_CLASS['core_db']-&gt;add_table_index(array('user_id', 'folder_id'));
+
+Modified: cms/trunk/installer.php
+===================================================================
+--- cms/trunk/installer.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/installer.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -33,6 +33,7 @@
+ 
+ set_magic_quotes_runtime(0);
+ mb_internal_encoding('UTF-8');
++set_time_limit(0);
+ 
+ define('STRIP_SLASHES', get_magic_quotes_gpc());
+ 
+@@ -104,7 +105,7 @@
+ 	$stage = 0;
+ }
+ 
+-if ($stage === 4)
++if ($stage === 5)
+ {
+ 	if (file_exists(SITE_FILE_ROOT.'config.php'))
+ 	{
+@@ -222,12 +223,12 @@
+ 		'config_content'	=&gt; $config_content
+ 	));
+ 
+-	$_CLASS['core_template']-&gt;display('installer/stage3.html');
++	$_CLASS['core_template']-&gt;display('installer/stage4.html');
+ 
+ 	script_close();
+ }
+ 
+-if ($stage === 3)
++if ($stage === 4)
+ {
+ 	if ($db_layer &amp;&amp; in_array($db_layer, array_keys($database_array)))
+ 	{
+@@ -335,7 +336,7 @@
+ 
+ 	if (isset($_POST['test']) || !empty($error))
+ 	{
+-		$stage = 2;
++		$stage = 3;
+ 	}
+ 	else
+ 	{
+@@ -359,7 +360,7 @@
+ 
+ 		if (!$result)
+ 		{
+-			$stage = 2;
++			$stage = 3;
+ 			$error[] = 'Installation failed&lt;br/&gt; Please confirm that your using the currect database layer';
+ 		}
+ 		else
+@@ -422,14 +423,14 @@
+ 				'config_content'	=&gt; $config_data
+ 			));
+ 
+-			$_CLASS['core_template']-&gt;display('installer/stage3.html');
++			$_CLASS['core_template']-&gt;display('installer/stage4.html');
+ 	
+ 			script_close();
+ 		}
+ 	}
+ }
+ 
+-if ($stage === 2)
++if ($stage === 3)
+ {
+ 	if (isset($_POST['test']) &amp;&amp; empty($error))
+ 	{
+@@ -450,11 +451,27 @@
+ 		'user_prefix'	=&gt; get_variable('user_prefix', 'POST', 'cms_'),
+ 	));
+ 
+-	$_CLASS['core_template']-&gt;display('installer/stage2.html');
++	$_CLASS['core_template']-&gt;display('installer/stage3.html');
+ 
+ 	script_close();
+ }
+ 
++if ($stage === 2)
++{
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'error'				=&gt; false,
++		'continue'			=&gt; true,
++
++		'cache'				=&gt; @is_writable(SITE_FILE_ROOT.'cache'),
++		'cache_template'	=&gt; @is_writable(SITE_FILE_ROOT.'cache/template'),
++		'cache_hooks'		=&gt; @is_writable(SITE_FILE_ROOT.'cache/hooks'),
++		'upload_folder'		=&gt; @is_writable('images/avatars/upload'),
++	));
++	
++	$_CLASS['core_template']-&gt;display('installer/stage2.html');
++	script_close();
++}
++
+ if ($stage === 1)
+ {
+ 	$gd_info = gd_info();
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_main.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_main.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_main.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -539,7 +539,7 @@
+ 					$replies = ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['topic_replies_real'] : $row['topic_replies'];
+ 					
+ 					// Get folder img, topic status/type related informations
+-					$folder_img = $folder_alt = $topic_type = '';
++					$folder_img = $folder_alt = $topic_type = $unread_topic = '';
+ 					topic_status($row, $replies, $_CLASS['core_user']-&gt;time, $unread_topic, $folder_img, $folder_alt, $topic_type);
+ 
+ 					$view_topic_url = &quot;Forums&amp;file=viewtopic&amp;t=$topic_id&quot;;
+@@ -552,7 +552,6 @@
+ 						'TOPIC_ID' 			=&gt; $topic_id,
+ 						'S_DELETED_TOPIC'	=&gt; (!$row['topic_id']) ? true : false,
+ 						'TOPIC_TITLE' 		=&gt; censor_text($row['topic_title']),
+-						'TOPIC_TYPE' 		=&gt; $topic_type,
+ 						'FORUM_NAME'		=&gt; $row['forum_name'],
+ 
+ 						'TOPIC_AUTHOR' 		=&gt; ($row['topic_poster'] == ANONYMOUS) ? (($row['topic_first_poster_name']) ? $row['topic_first_poster_name'] : $_CLASS['core_user']-&gt;get_lang('GUEST')) : $row['topic_first_poster_name'],
+@@ -561,7 +560,7 @@
+ 						'FIRST_POST_TIME' 	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_time']),
+ 						'LAST_POST_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']),
+ 						'LAST_VIEW_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_view_time']),
+-						'LAST_POST_AUTHOR' 	=&gt; ($row['topic_last_poster_name'] != '') ? $row['topic_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'],
++						'LAST_POST_AUTHOR' 	=&gt; ($row['topic_last_poster_name']) ? $row['topic_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'],
+ 						'LAST_POST_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'),
+ 
+ 						'PAGINATION'		=&gt; $pagination['formated'],
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_pm.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_pm.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_pm.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -99,7 +99,7 @@
+ 			// New private messages popup
+ 			case 'popup':
+ 			
+-				$indox_link = generate_link('Control_Panel&amp;i=pm&amp;folder=inbox');
++				$indox_link = generate_link('Control_Panel&amp;i=pm&amp;folder=inbox');
+ 
+ 				if ($_CLASS['core_user']-&gt;data['user_new_privmsg'])
+ 				{
+@@ -327,6 +327,7 @@
+ 					}
+ 				}
+ 
++				$folder = array();
+ 				get_folder($_CLASS['core_user']-&gt;data['user_id'], $folder, $folder_id);
+ 	
+ 				$s_folder_options = $s_to_folder_options = '';
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -11,9 +11,9 @@
+ // 
+ // -------------------------------------------------------------
+ 	
+-function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
++function view_message($id, $mode, $folder_id, $msg_id, $folder, &amp;$message_row)
+ {
+-	global $_CLASS, $_CORE_CONFIG, $site_file_root, $config;
++	global $_CLASS, $_CORE_CONFIG, $config;
+ 
+ 	$_CLASS['core_user']-&gt;add_lang('viewtopic');
+ 	$msg_id		= (int) $msg_id;
+@@ -33,7 +33,7 @@
+ 	// Instantiate BBCode if need be
+ 	if ($message_row['bbcode_bitfield'])
+ 	{
+-		require($site_file_root.'includes/forums/bbcode.php');
++		require_once(SITE_FILE_ROOT.'includes/forums/bbcode.php');
+ 		$bbcode = new bbcode($message_row['bbcode_bitfield']);
+ 	}
+ 
+@@ -46,7 +46,7 @@
+ 	$message = $message_row['message_text'];
+ 
+ 	// If the board has HTML off but the message has HTML on then we process it, else leave it alone
+-	if ($message_row['enable_html'] &amp;&amp; (!$config['auth_html_pm'] || !$_CLASS['auth']-&gt;acl_get('u_pm_html')))
++	if ($message_row['enable_html'] &amp;&amp; !$config['auth_html_pm'])
+ 	{
+ 		$message = preg_replace('#(&lt;!\-\- h \-\-&gt;&lt;)([\/]?.*?)(&gt;&lt;!\-\- h \-\-&gt;)#is', &quot;&lt;\\2&gt;&quot;, $message);
+ 	}
+@@ -81,7 +81,7 @@
+ 
+ 	if ($message_row['message_attachment'] &amp;&amp; $config['allow_pm_attach'])
+ 	{
+-		if ($config['auth_download_pm'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_pm_download'))
++		if ($config['auth_download_pm'])
+ 		{
+ 			$sql = 'SELECT * 
+ 				FROM ' . FORUMS_ATTACHMENTS_TABLE . &quot;
+@@ -145,7 +145,7 @@
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+-	$signature = ($message_row['enable_sig'] &amp;&amp; $config['allow_sig'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_sig') &amp;&amp; $_CLASS['core_user']-&gt;optionget('viewsigs')) ? $user_info['user_sig'] : '';
++	$signature = ($message_row['enable_sig'] &amp;&amp; $config['allow_sig'] &amp;&amp; $_CLASS['core_user']-&gt;optionget('viewsigs')) ? $user_info['user_sig'] : '';
+ 	
+ 	// End signature parsing, only if needed
+ 	if ($signature)
+@@ -154,7 +154,7 @@
+ 		{
+ 			if (!isset($bbcode) || !$bbcode)
+ 			{
+-				require($site_file_root.'includes/forums/bbcode.php');
++				require_once(SITE_FILE_ROOT.'includes/forums/bbcode.php');
+ 				$bbcode = new bbcode($user_info['user_sig_bbcode_bitfield']);
+ 			}
+ 
+@@ -195,14 +195,14 @@
+ 		'EDITED_MESSAGE'	=&gt; $l_edited_by,
+ 
+ 		'U_MCP_REPORT'		=&gt; generate_link('Forums&amp;file=mcp&amp;mode=pm_details&amp;p=' . $message_row['msg_id']),
+-		'U_REPORT'			=&gt; ($config['auth_report_pm'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_pm_report')) ? generate_link('Forums&amp;file=report&amp;pm=' . $message_row['msg_id']) : '',
++		'U_REPORT'			=&gt; (false) ? generate_link('Forums&amp;file=report&amp;pm=' . $message_row['msg_id']) : '',
+ 		'U_INFO'			=&gt; ($_CLASS['auth']-&gt;acl_get('m_') &amp;&amp; ($message_row['message_reported'] || $message_row['forwarded'])) ? generate_link('Forums&amp;file=mcp&amp;mode=pm_details&amp;p=' . $message_row['msg_id']) : '',
+-		'U_DELETE' 			=&gt; ($_CLASS['auth']-&gt;acl_get('u_pm_delete')) ? generate_link(&quot;$url&amp;mode=compose&amp;action=delete&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']) : '',
+-		'U_AUTHOR_PROFILE' 		=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $author_id),
++		'U_DELETE' 			=&gt; generate_link(&quot;$url&amp;mode=compose&amp;action=delete&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']),
++		'U_AUTHOR_PROFILE' 	=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $author_id),
+ 		'U_EMAIL' 			=&gt; $user_info['email'],
+-		'U_QUOTE'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_sendpm') &amp;&amp; $author_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link(&quot;$url&amp;mode=compose&amp;action=quote&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']) : '',
+-		'U_EDIT' 			=&gt; (($message_row['message_time'] &gt; time() - $config['pm_edit_time'] || !$config['pm_edit_time']) &amp;&amp; $folder_id == PRIVMSGS_OUTBOX &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_pm_edit')) ? generate_link(&quot;$url&amp;mode=compose&amp;action=edit&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']) : '', 
+-		'U_POST_REPLY_PM' 	=&gt; ($author_id != $_CLASS['core_user']-&gt;data['user_id'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_sendpm')) ? generate_link(&quot;$url&amp;mode=compose&amp;action=reply&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']) : '',
++		'U_QUOTE'			=&gt; ($author_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link(&quot;$url&amp;mode=compose&amp;action=quote&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']) : '',
++		'U_EDIT' 			=&gt; (($message_row['message_time'] &gt; time() - $config['pm_edit_time'] || !$config['pm_edit_time']) &amp;&amp; $folder_id == PRIVMSGS_OUTBOX) ? generate_link(&quot;$url&amp;mode=compose&amp;action=edit&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']) : '', 
++		'U_POST_REPLY_PM' 	=&gt; ($author_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link(&quot;$url&amp;mode=compose&amp;action=reply&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id']) : '',
+ 		'U_PREVIOUS_PM'		=&gt; generate_link(&quot;$url&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id'] . &quot;&amp;view=previous&quot;),
+ 		'U_NEXT_PM'			=&gt; generate_link(&quot;$url&amp;f=$folder_id&amp;p=&quot; . $message_row['msg_id'] . &quot;&amp;view=next&quot;),
+ 
+@@ -225,9 +225,9 @@
+ }	
+ 
+ // Display Message History
+-function message_history($msg_id, $user_id, $message_row, $folder)
++function message_history($msg_id, $user_id, &amp;$message_row, $folder)
+ {
+-	global $config, $site_file_root, $_CLASS, $bbcode;
++	global $config, $_CLASS, $bbcode;
+ 
+ 	// Get History Messages (could be newer)
+ 	$sql = 'SELECT t.*, p.*, u.*
+@@ -283,7 +283,7 @@
+ 
+ 	$title = ($sort_dir == 'a') ? $row['message_subject'] : $title;
+ 
+-	if (sizeof($rowset) == 1)
++	if (count($rowset) === 1)
+ 	{
+ 		return false;
+ 	}
+@@ -293,7 +293,7 @@
+ 	{
+ 		if (!class_exists('bbcode'))
+ 		{
+-			require($site_file_root.'includes/forums/bbcode.php');
++			require_once(SITE_FILE_ROOT.'includes/forums/bbcode.php');
+ 		}
+ 		$bbcode = new bbcode($bbcode_bitfield);
+ 	}
+@@ -325,7 +325,7 @@
+ 		if ($id == $msg_id)
+ 		{
+ 			$next_history_pm = next($rowset);
+-			$next_history_pm = (sizeof($next_history_pm)) ? (int) $next_history_pm['msg_id'] : 0;
++			$next_history_pm = empty($next_history_pm) ? 0 : (int) $next_history_pm['msg_id'];
+ 			$previous_history_pm = $prev_id;
+ 		}
+ 
+@@ -341,8 +341,8 @@
+ 			'U_MSG_ID'			=&gt; $row['msg_id'],
+ 			'U_VIEW_MESSAGE'	=&gt; generate_link(&quot;$url&amp;f=$folder_id&amp;p=&quot; . $row['msg_id']),
+ 			'U_AUTHOR_PROFILE' 	=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u='.$author_id),
+-			'U_QUOTE'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_sendpm') &amp;&amp; $author_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link(&quot;$url&amp;mode=compose&amp;action=quote&amp;f=&quot; . $folder_id . &quot;&amp;p=&quot; . $row['msg_id']) : '',
+-			'U_POST_REPLY_PM' 	=&gt; ($author_id != $_CLASS['core_user']-&gt;data['user_id'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_sendpm')) ? generate_link(&quot;$url&amp;mode=compose&amp;action=reply&amp;f=$folder_id&amp;p=&quot; . $row['msg_id']) : '')
++			'U_QUOTE'			=&gt; ($author_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link(&quot;$url&amp;mode=compose&amp;action=quote&amp;f=&quot; . $folder_id . &quot;&amp;p=&quot; . $row['msg_id']) : '',
++			'U_POST_REPLY_PM' 	=&gt; ($author_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link(&quot;$url&amp;mode=compose&amp;action=reply&amp;f=$folder_id&amp;p=&quot; . $row['msg_id']) : '')
+ 		);
+ 		unset($rowset[$id]);
+ 		$prev_id = $id;
+@@ -442,9 +442,9 @@
+ 		$user_row['rank_title'] = $user_row['rank_image'] = '';
+ 	}
+ 
+-	if (!empty($user_row['user_allow_viewemail']) || $_CLASS['auth']-&gt;acl_get('a_email'))
++	if (!empty($user_row['user_allow_viewemail']))
+ 	{
+-		$user_row['email'] = ($config['board_email_form'] &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Members_List&amp;mode=email&amp;u='.$user_id) : (($config['board_hide_emails'] &amp;&amp; !$_CLASS['auth']-&gt;acl_get('a_email')) ? '' : 'mailto:' . $user_row['user_email']);
++		$user_row['email'] = ($config['board_email_form'] &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Members_List&amp;mode=email&amp;u='.$user_id) : (($config['board_hide_emails']) ? '' : 'mailto:' . $user_row['user_email']);
+ 	}
+ 	else
+ 	{
+
+Modified: cms/trunk/modules/Forums/ajax.php
+===================================================================
+--- cms/trunk/modules/Forums/ajax.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/modules/Forums/ajax.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -41,7 +41,7 @@
+ 		
+ 		if (!$forum_id || !$title || !$_CLASS['forums_auth']-&gt;acl_get('a_forum'))
+ 		{
+-			die;
++			script_close();
+ 		}
+ 
+ 		$title = htmlentities($title, ENT_QUOTES, 'UTF-8');
+@@ -59,7 +59,7 @@
+ 
+ 		if (!$topic_id || !$title )
+ 		{
+-			die;
++			script_close();
+ 		}
+ 
+ 		$result = $_CLASS['core_db']-&gt;query('SELECT forum_id FROM ' . FORUMS_TOPICS_TABLE . ' WHERE topic_id = '.$topic_id);
+@@ -68,7 +68,7 @@
+ 
+ 		if (!$row || !$_CLASS['forums_auth']-&gt;acl_get('m_edit', $row['forum_id']))
+ 		{
+-			die;
++			script_close();
+ 		}
+ 
+ 		$title = mb_strtolower(htmlentities($title, ENT_QUOTES, 'UTF-8'));
+@@ -86,7 +86,7 @@
+ 
+ 		if (!$topic_id)
+ 		{
+-			die;
++			script_close();
+ 		}
+ 
+ 		$result = $_CLASS['core_db']-&gt;query('SELECT forum_id FROM ' . FORUMS_TOPICS_TABLE . ' WHERE topic_id = '.$topic_id);
+@@ -95,7 +95,7 @@
+ 
+ 		if (!$row || !$_CLASS['forums_auth']-&gt;acl_get('m_lock', $row['forum_id']))
+ 		{
+-			die;
++			script_close();
+ 		}
+ 
+ 		$status = ($lock) ? ITEM_LOCKED : ITEM_UNLOCKED;
+@@ -115,7 +115,7 @@
+ 
+ 		if (!$forum_id || !$_CLASS['forums_auth']-&gt;acl_get('a_forum', $forum_id))
+ 		{
+-			die;
++			script_close();
+ 		}
+ 
+ 		$status = ($lock) ? ITEM_LOCKED : ITEM_UNLOCKED;
+@@ -130,4 +130,5 @@
+ 	break;
+ }
+ 
++script_close();
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/Forums/download.php
+===================================================================
+--- cms/trunk/modules/Forums/download.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/modules/Forums/download.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -219,11 +219,8 @@
+ 		$attachment['mimetype'] = ($browser_agent == 'ie' || $browser_agent == 'opera') ? 'application/octetstream' : 'application/octet-stream';
+ 	}
+ 
+-	if (@ob_get_length())
+-	{
+-		@ob_end_clean();
+-	}
+-	
++	while (@ob_end_clean());
++
+ 	// Now the tricky part... let's dance
+ 	header('Pragma: public');
+ 
+
+Modified: cms/trunk/modules/Forums/mcp.php
+===================================================================
+--- cms/trunk/modules/Forums/mcp.php	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/modules/Forums/mcp.php	2005-10-06 18:22:34 UTC (rev 162)
+@@ -230,7 +230,6 @@
+ 		case 'front':
+ 			require(SITE_FILE_ROOT.'includes/forums/mcp/mcp_front.php');
+ 			script_close(false);
+-			//$this-&gt;display($_CLASS['core_user']-&gt;lang['MCP'], 'mcp_front.html');
+ 		break;
+ 
+ 		case 'forum_view':
+@@ -245,10 +244,6 @@
+ 			
+ 		case 'post_details':
+ 			require(SITE_FILE_ROOT.'includes/forums/mcp/mcp_post.php');
+-			
+-			mcp_post_details($id, $mode, $action, $url);
+-			
+-			$this-&gt;display($_CLASS['core_user']-&gt;lang['MCP'], 'mcp_post.html');
+ 			script_close(false);
+ 		break;
+ 	}
+@@ -502,7 +497,7 @@
+ 			{
+ 				$sql .= 'AND topic_approved = 1';
+ 			}
+-			break;
++		break;
+ 
+ 		case 'viewtopic':
+ 			$type = 'posts';
+@@ -512,11 +507,12 @@
+ 				FROM ' . FORUMS_POSTS_TABLE . &quot;
+ 				$where_sql topic_id = $topic_id
+ 					AND post_time &gt;= $min_time&quot;;
++
+ 			if (!$_CLASS['auth']-&gt;acl_get('m_approve', $forum_id))
+ 			{
+ 				$sql .= 'AND post_approved = 1';
+ 			}
+-			break;
++		break;
+ 
+ 		case 'unapproved_posts':
+ 			$type = 'posts';
+@@ -527,7 +523,7 @@
+ 				$where_sql forum_id IN (&quot; . (($forum_id) ? $forum_id : implode(', ', get_forum_list('m_approve'))) . ')
+ 					AND post_approved = 0
+ 					AND post_time &gt;= ' . $min_time;
+-			break;
++		break;
+ 
+ 		case 'unapproved_topics':
+ 			$type = 'topics';
+@@ -538,7 +534,7 @@
+ 				$where_sql forum_id IN (&quot; . (($forum_id) ? $forum_id : implode(', ', get_forum_list('m_approve'))) . ')
+ 					AND topic_approved = 0
+ 					AND topic_time &gt;= ' . $min_time;
+-			break;
++		break;
+ 
+ 		case 'reports':
+ 			$type = 'reports';
+@@ -563,7 +559,7 @@
+ 				$where_sql
+ 					AND p.post_id = r.post_id
+ 					$limit_time_sql&quot;;
+-			break;
++		break;
+ 
+ 		case 'viewlogs':
+ 			$type = 'logs';
+@@ -574,7 +570,7 @@
+ 				$where_sql forum_id IN (&quot; . (($forum_id) ? $forum_id : implode(', ', get_forum_list('m_'))) . ')
+ 					AND log_time &gt;= ' . $min_time . ' 
+ 					AND log_type = ' . LOG_MOD;
+-			break;
++		break;
+ 	}
+ 
+ 	$sort_key = request_var('sk', $default_key);
+@@ -589,7 +585,7 @@
+ 
+ 			$sort_by_sql = array('a' =&gt; 't.topic_first_poster_name', 't' =&gt; 't.topic_last_post_time', 'tt' =&gt; 't.topic_time', 'r' =&gt; (($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? 't.topic_replies_real' : 't.topic_replies'), 's' =&gt; 't.topic_title', 'v' =&gt; 't.topic_views');
+ 			$limit_time_sql = ($min_time) ? &quot;AND t.topic_last_post_time &gt;= $min_time&quot; : '';
+-			break;
++		break;
+ 
+ 		case 'posts':
+ 			$limit_days = array(0 =&gt; $_CLASS['core_user']-&gt;lang['ALL_POSTS'], 1 =&gt; $_CLASS['core_user']-&gt;lang['1_DAY'], 7 =&gt; $_CLASS['core_user']-&gt;lang['7_DAYS'], 14 =&gt; $_CLASS['core_user']-&gt;lang['2_WEEKS'], 30 =&gt; $_CLASS['core_user']-&gt;lang['1_MONTH'], 90 =&gt; $_CLASS['core_user']-&gt;lang['3_MONTHS'], 180 =&gt; $_CLASS['core_user']-&gt;lang['6_MONTHS'], 364 =&gt; $_CLASS['core_user']-&gt;lang['1_YEAR']);
+
+Modified: cms/trunk/themes/viperal/style/style.css
+===================================================================
+--- cms/trunk/themes/viperal/style/style.css	2005-10-06 17:49:39 UTC (rev 161)
++++ cms/trunk/themes/viperal/style/style.css	2005-10-06 18:22:34 UTC (rev 162)
+@@ -1,13 +1,13 @@
+ body
+ {
+-    font-family: Verdana, Helvetica, sans-serif;
+-    font-size: 10px;
++	font-family: Verdana, Helvetica, sans-serif;
++	font-size: 65%;
+ 
+-    /* Needed for opera */
+-    margin: 0px; 
++	/* Needed for opera */
++	margin: 0px; 
+ 
+-    padding: 0px;
+-    background: url(images/bg.gif);
++	padding: 0px;
++	background: url(images/bg.gif);
+ }
+ 
+ .logo
+@@ -141,7 +141,6 @@
+ 	position: relative;
+ 	min-height: 13px;
+ 	color: black;
+-	font-size: 110%;
+ }
+ 
+ /* 
+@@ -150,7 +149,6 @@
+ .centerblock
+ {
+ 	width : 100%;
+-	font-size: 100%;
+     border-top:1px solid #ccc;
+     border-bottom:1px solid #ccc;
+ }
+@@ -172,7 +170,8 @@
+ /* 
+ 	SIDE BLOCKS
+ */
+-.blocks {
++.blocks
++{
+ 	position: relative;
+ 	margin: 0px 0px 10px 0px;
+ 	min-height: 12px;
+@@ -201,7 +200,6 @@
+     background: url(images/bg.gif);
+     border-top: 1px solid #ccc;
+     border-bottom: 1px solid #ccc;
+-    font-size: 110%;
+ }
+ 	
+ .articles_block .title
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000081.html">[Viperals-svncheckins] r161 - in modules: . google_search google_search/includes google_search/includes/templates google_search/includes/templates/modules google_search/includes/templates/modules/google_search google_search/javascript google_search/javascript/google_search google_search/modules google_search/modules/google_search
+</A></li>
+	<LI>Next message: <A HREF="000083.html">[Viperals-svncheckins] r163 - in cms/trunk: . includes includes/display install modules/Contact modules/Control_Panel modules/Forums modules/Members_List modules/Quick_Message modules/articles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

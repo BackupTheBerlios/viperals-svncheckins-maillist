@@ -1,0 +1,1652 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r163 - in cms/trunk: . includes includes/display install modules/Contact modules/Control_Panel modules/Forums modules/Members_List modules/Quick_Message modules/articles
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r163%20-%20in%20cms/trunk%3A%20.%20includes%20includes/display%20install%20modules/Contact%20modules/Control_Panel%20modules/Forums%20modules/Members_List%20modules/Quick_Message%20modules/articles&In-Reply-To=%3C200510171931.j9HJVGIm024084%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000082.html">
+   <LINK REL="Next"  HREF="000084.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r163 - in cms/trunk: . includes includes/display install modules/Contact modules/Control_Panel modules/Forums modules/Members_List modules/Quick_Message modules/articles</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r163%20-%20in%20cms/trunk%3A%20.%20includes%20includes/display%20install%20modules/Contact%20modules/Control_Panel%20modules/Forums%20modules/Members_List%20modules/Quick_Message%20modules/articles&In-Reply-To=%3C200510171931.j9HJVGIm024084%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r163 - in cms/trunk: . includes includes/display install modules/Contact modules/Control_Panel modules/Forums modules/Members_List modules/Quick_Message modules/articles">viperal at berlios.de
+       </A><BR>
+    <I>Mon Oct 17 21:31:16 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000082.html">[Viperals-svncheckins] r162 - in cms/trunk: . blocks images includes includes/display includes/forums includes/forums/admin includes/forums/mcp includes/templates includes/templates/installer includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List install modules/Control_Panel/ucp modules/Forums themes/viperal/style
+</A></li>
+        <LI>Next message: <A HREF="000084.html">[Viperals-svncheckins] r164 - in cms/trunk: . admin blocks includes includes/display includes/forums install javascript
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#83">[ date ]</a>
+              <a href="thread.html#83">[ thread ]</a>
+              <a href="subject.html#83">[ subject ]</a>
+              <a href="author.html#83">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-10-17 21:31:14 +0200 (Mon, 17 Oct 2005)
+New Revision: 163
+
+Modified:
+   cms/trunk/ajax.php
+   cms/trunk/core.php
+   cms/trunk/includes/display/blocks.php
+   cms/trunk/includes/display/display.php
+   cms/trunk/includes/functions.php
+   cms/trunk/includes/tables.php
+   cms/trunk/includes/user.php
+   cms/trunk/index.php
+   cms/trunk/install/build_data.php
+   cms/trunk/install/build_tables.php
+   cms/trunk/installer.php
+   cms/trunk/modules/Contact/index.php
+   cms/trunk/modules/Control_Panel/index.php
+   cms/trunk/modules/Forums/index.php
+   cms/trunk/modules/Members_List/index.php
+   cms/trunk/modules/Quick_Message/ajax.php
+   cms/trunk/modules/Quick_Message/index.php
+   cms/trunk/modules/articles/index.php
+Log:
+TRUNCK will be broken for a few days.
+
+First major change commit.
+
+Modified: cms/trunk/ajax.php
+===================================================================
+--- cms/trunk/ajax.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/ajax.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -22,24 +22,17 @@
+ //require(SITE_FILE_ROOT.'core.php');
+ require('core.php');
+ 
+-$mod = get_variable('mod', 'REQUEST', false);
+-
+-if (!$mod)
++if ($mod = get_variable('mod', 'REQUEST', false))
+ {
+-	die;
+-}
+-else
+-{
+-	$sql = 'SELECT * FROM '.CORE_MODULES_TABLE.'
+-				WHERE module_type = ' . MODULE_NORMAL . &quot;
+-				AND module_name = '&quot; . $_CLASS['core_db']-&gt;escape($mod) . &quot;'&quot;;
++	$sql = 'SELECT * FROM ' . CORE_PAGES_TABLE . &quot;
++				WHERE page_name = '&quot; . $_CLASS['core_db']-&gt;escape($mod) . &quot;'&quot;;
+ 
+ 	//Grab module data if it exsits
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+-	$status = $_CLASS['core_display']-&gt;add_module($row);
++	$status = $_CLASS['core_display']-&gt;process_page($row, 'ajax');
+ 
+ 	if ($status !== true)
+ 	{
+@@ -47,14 +40,9 @@
+ 		script_close(false);
+ 	}
+ 
+-	$_CORE_MODULE = $_CLASS['core_display']-&gt;get_module();
++	$_CLASS['core_display']-&gt;generate_page('ajax');
+ }
+ 
+-$path = SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/ajax.php';
+-$_CLASS['core_user']-&gt;page = $_CORE_MODULE['module_name'];
+-
+-require_once($path);
+-
+ script_close(false);
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/core.php
+===================================================================
+--- cms/trunk/core.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/core.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -44,7 +44,7 @@
+ define('STRIP_SLASHES', get_magic_quotes_gpc());
+ 
+ // Remove registered globals
+-if ((bool) ini_get('register_globals'))
++if (ini_get('register_globals'))
+ {
+ 	foreach ($_REQUEST as $var_name =&gt; $value)
+ 	{
+@@ -57,12 +57,9 @@
+ 	define('SITE_FILE_ROOT', str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/');
+ }
+ 
+-// TEMP
+-$site_file_root = SITE_FILE_ROOT;
+-
+ if (!extension_loaded('mbstring'))
+ {
+-	require_once(SITE_FILE_ROOT.'includes/compatiblity/mbstring.php');
++	require_once SITE_FILE_ROOT.'includes/compatiblity/mbstring.php';
+ }
+ 
+ mb_internal_encoding('UTF-8');
+@@ -83,10 +80,10 @@
+ 	}
+ }
+ 
+-require_once(SITE_FILE_ROOT.'includes/display/template.php');
+-require_once(SITE_FILE_ROOT.'includes/functions.php');
+-require_once(SITE_FILE_ROOT.'includes/handler.php');
+-require_once(SITE_FILE_ROOT.'config.php');
++require_once SITE_FILE_ROOT.'includes/display/template.php';
++require_once SITE_FILE_ROOT.'includes/functions.php';
++require_once SITE_FILE_ROOT.'includes/handler.php';
++require_once SITE_FILE_ROOT.'config.php';
+ 
+ @register_shutdown_function('script_close');
+ 
+@@ -96,7 +93,7 @@
+ 
+ // Set error handler
+ $_CLASS['core_handler']-&gt;start();
+-//$_CLASS['core_handler']-&gt;stop();
++$_CLASS['core_handler']-&gt;stop();
+ //error_reporting(E_ERROR | E_WARNING | E_PARSE);
+ 
+ if (empty($site_db))
+@@ -110,10 +107,10 @@
+ 	trigger_error('503:&lt;p style=&quot;text-align:center&quot;&gt;Site isn\'t Installed&lt;br/&gt;&lt;a href=&quot;installer.php&quot;&gt;Click here to install&lt;/a&gt;&lt;/p&gt;', E_USER_ERROR);
+ }
+ 
+-require_once(SITE_FILE_ROOT.'includes/tables.php');
+-require_once(SITE_FILE_ROOT.'includes/db/'.$site_db['type'].'.php');
+-require_once(SITE_FILE_ROOT.'includes/cache/cache.php');
+-require_once(SITE_FILE_ROOT.'includes/cache/cache_' . $acm_type . '.php');
++require_once SITE_FILE_ROOT.'includes/tables.php';
++require_once SITE_FILE_ROOT.'includes/db/'.$site_db['type'].'.php';
++require_once SITE_FILE_ROOT.'includes/cache/cache.php';
++require_once SITE_FILE_ROOT.'includes/cache/cache_' . $acm_type . '.php';
+ 
+ load_class(false, 'core_cache', 'cache_'.$acm_type);
+ load_class(false, 'core_db', 'db_'.$site_db['type']);
+@@ -205,12 +202,12 @@
+ }
+ 
+ // Load user based classes, and display options
+-require(SITE_FILE_ROOT.'includes/session.php');
+-require(SITE_FILE_ROOT.'includes/user.php');
+-require(SITE_FILE_ROOT.'includes/auth/auth.php');
+-require(SITE_FILE_ROOT.'includes/auth/auth_db.php');
+-require(SITE_FILE_ROOT.'includes/display/blocks.php');
+-require(SITE_FILE_ROOT.'includes/display/display.php');
++require SITE_FILE_ROOT.'includes/session.php';
++require SITE_FILE_ROOT.'includes/user.php';
++require SITE_FILE_ROOT.'includes/auth/auth.php';
++require SITE_FILE_ROOT.'includes/auth/auth_db.php';
++require SITE_FILE_ROOT.'includes/display/blocks.php';
++require SITE_FILE_ROOT.'includes/display/display.php';
+ 
+ load_class(false, 'core_display');
+ load_class(false, 'core_blocks');
+@@ -242,7 +239,7 @@
+ 
+ if ($_SERVER['REQUEST_METHOD'] == 'POST' &amp;&amp; $_CLASS['core_user']-&gt;new_session)
+ {
+-	// error here
++	die;// error here
+ }
+ 
+ function get_memory_usage()
+
+Modified: cms/trunk/includes/display/blocks.php
+===================================================================
+--- cms/trunk/includes/display/blocks.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/includes/display/blocks.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -32,40 +32,42 @@
+ 	var $content;
+ 	var $template;
+ 
++	var $expire_updated;
++
+ 	/*
+ 		Check to see there's any blocks for the specified side
+ 		should be used to stop themes from displaying blank sides
+ 	*/
+ 	function check_side($side)
+ 	{
+-// expand this for center blocks
+ 		static $side_check = array();
+-		
+-		if (isset($side_check[$side]))
++
++		settype($side, 'int');
++		$true_side = $side &gt;&gt; 1;
++
++		if (isset($side_check[$true_side]))
+ 		{
+-			return $side_check[$side];
++			return $side_check[$true_side];
+ 		}
+ 
+-		global $_CORE_MODULE, $_CLASS;
++		global $_CLASS;
+ 
+-		$trueside = $side;
+-
+-		if ($_CLASS['core_user']-&gt;lang['DIRECTION'] == 'rtl')
++		if ($_CLASS['core_user']-&gt;lang['DIRECTION'] === 'rtl')
+ 		{
+-			$side = ($side == BLOCK_LEFT) ? BLOCK_RIGHT : BLOCK_LEFT;
++			$side = ($side === BLOCK_LEFT) ? BLOCK_RIGHT : BLOCK_LEFT;
+ 		}
+-			
+-		if ($_CORE_MODULE['module_sides'] == BLOCK_ALL || ($side == BLOCK_LEFT &amp;&amp; $_CORE_MODULE['module_sides'] == BLOCK_LEFT) || ($side == BLOCK_RIGHT &amp;&amp; $_CORE_MODULE['module_sides'] == BLOCK_RIGHT))
++
++		if ($_CLASS['core_display']-&gt;page['page_blocks'] &amp; $side)
+ 		{
+ 			$this-&gt;load_blocks();
+ 
+-			if (!empty($this-&gt;blocks_array[$side]))
++			if (!empty($this-&gt;blocks_array[$side &gt;&gt; 1]))
+ 			{
+-				return $side_check[$trueside] = $side;
++				return $side_check[$true_side] = $side;
+ 			}
+ 		}
+ 		
+-		return $side_check[$trueside] = false;
++		return $side_check[$true_side] = false;
+ 	}
+ 
+ 	/*
+@@ -121,18 +123,22 @@
+ 	*/
+ 	function display($position)
+ 	{
++		settype($position, 'int');
++
+ 		$this-&gt;display_position = $position;
+ 
+-		if ($position == BLOCK_LEFT || $position == BLOCK_RIGHT)
++		if ($position === BLOCK_LEFT || $position === BLOCK_RIGHT)
+ 		{
+ 			$position = $this-&gt;check_side($position);
+-			
+-			if ($position == false)
++
++			if ($position === false)
+ 			{
+ 				return false;
+ 			}
+ 		}
+ 
++		$position = ($position &gt;&gt; 1);
++
+ 		$this-&gt;load_blocks();
+ 
+ 		if (empty($this-&gt;blocks_array[$position]))
+@@ -140,7 +146,6 @@
+ 			return false;
+ 		}
+ 
+-		static $expire_updated = false;
+ 		global $_CLASS;
+ 
+ 		$this-&gt;content = '';
+@@ -155,12 +160,12 @@
+ 				continue;
+ 			}
+ 
+-			if ($this-&gt;block['block_expires'] &amp;&amp; !$expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $this-&gt;block['block_expires']))
++			if ($this-&gt;block['block_expires'] &amp;&amp; !$this-&gt;expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $this-&gt;block['block_expires']))
+ 			{
+ 				$_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET block_status = ' . STATUS_DISABLED . ' WHERE block_expires &gt; 0 AND block_expires &lt;= ' . $_CLASS['core_user']-&gt;time);
+ 										
+ 				$_CLASS['core_cache']-&gt;destroy('blocks');
+-				$expire_updated = true;
++				$this-&gt;expire_updated = true;
+ 
+ 				continue;
+ 			}
+@@ -258,8 +263,7 @@
+ 
+ 		//$this-&gt;content .= '&lt;div style=&quot;text-align: center;&quot;&gt;&lt;br /&gt;'.$_CLASS['core_error_handler']-&gt;debug_get($this-&gt;block['block_title'], 'formated').'&lt;/div&gt;';
+ 		//$_CLASS['core_error_handler']-&gt;debug_remove($this-&gt;block['block_title']);
+-
+-		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++		if ($this-&gt;display_position === BLOCK_LEFT || $this-&gt;display_position === BLOCK_RIGHT)
+ 		{
+ 			$this-&gt;block_side();
+ 		}
+@@ -289,7 +293,7 @@
+ 			$edit_link = $expires = false;
+ 		}
+ 
+-		$postion = ($this-&gt;display_position == BLOCK_MESSAGE_TOP) ? 'top' : 'bottom';
++		$postion = ($this-&gt;display_position === BLOCK_MESSAGE_TOP) ? 'top' : 'bottom';
+ 
+ 		$_CLASS['core_template']-&gt;assign_vars_array('message_block_'.$postion, array(
+ 				//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
+@@ -306,7 +310,7 @@
+ 	{
+ 		global $_CLASS;
+ 		
+-		$position = ($this-&gt;display_position == BLOCK_RIGHT) ? 'right' : 'left';
++		$position = ($this-&gt;display_position === BLOCK_RIGHT) ? 'right' : 'left';
+ 		
+ 		$_CLASS['core_template']-&gt;assign_vars_array('block_'.$position, array(
+ 			//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
+@@ -321,7 +325,7 @@
+ 	{
+ 		$this-&gt;content = $this-&gt;block['block_content'];
+ 
+-		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++		if ($this-&gt;display_position === BLOCK_LEFT || $this-&gt;display_position === BLOCK_RIGHT)
+ 		{
+ 			$this-&gt;block_side();
+ 		}
+@@ -340,7 +344,7 @@
+ 		{
+ 			$this-&gt;content = $this-&gt;block['block_content'];
+ 
+-			if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++			if ($this-&gt;display_position === BLOCK_LEFT || $this-&gt;display_position === BLOCK_RIGHT)
+ 			{
+ 				$this-&gt;block_side();
+ 			}
+@@ -402,7 +406,7 @@
+ 			$_CLASS['core_cache']-&gt;destroy('blocks');
+ 		}
+ 
+-		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++		if ($this-&gt;display_position === BLOCK_LEFT || $this-&gt;display_position === BLOCK_RIGHT)
+ 		{
+ 			$this-&gt;block_side();
+ 		}
+@@ -416,7 +420,7 @@
+ 	{
+ 		global $_CLASS;
+ 		
+-		$position = ($this-&gt;display_position == BLOCK_TOP) ? 'center' : 'bottom';
++		$position = ($this-&gt;display_position === BLOCK_TOP) ? 'center' : 'bottom';
+ 		
+ 		$_CLASS['core_template']-&gt;assign_vars_array('block_'.$position , array(
+ 			'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/includes/display/display.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -31,62 +31,125 @@
+ 
+ 	var $theme = false;
+ 	var $homepage = false;
+-	var $modules = array();
+ 
++	var $pages_holding = array();
++	var $page = array();
++
+ 	var $copyright = 'Powered by &lt;a href=&quot;<A HREF="http://www.viperal.com">http://www.viperal.com</A>&quot;&gt;CMS alpha-dev&lt;/a&gt; (c) 2004 - 2005 Ryan Marshall ( Viperal )';
+ 
+ 	/*
+ 		Handles sorting and auth'ing of modules
+ 	*/
+-	function add_module($module, $homepage = true)
++	function process_page($page, $type = 'page')
+ 	{
+-		global $_CLASS;
+-
+-		if (!$module || !file_exists(SITE_FILE_ROOT.'modules/'.$module['module_name'].'/index.php'))
++		if (!$page)
+ 		{
+ 			return '404:_PAGE_NOT_FOUND';
+ 		}
+ 
+-		if ($module['module_status'] != STATUS_ACTIVE)
++		global $_CLASS;
++
++		settype($page['page_status'], 'int');
++		settype($page['page_type'], 'int');
++		settype($page['page_status'], 'int');
++		settype($page['page_blocks'], 'int');
++
++		if ($page['page_status'] !== STATUS_ACTIVE)
+ 		{
+-			if ($module['module_status'] == STATUS_DISABLED &amp;&amp; $_CLASS['core_auth']-&gt;admin_auth('modules'))
++			if ($page['page_status'] === STATUS_DISABLED &amp;&amp; $_CLASS['core_auth']-&gt;admin_auth('pages'))
+ 			{
+-				$_CLASS['core_display']-&gt;message = '&lt;b&gt;Module '.$module['module_name'].' Isn\'t Active&lt;/b&gt;&lt;br /&gt;';
++				$_CLASS['core_display']-&gt;message = '&lt;b&gt;Module '.$page['page_name'].' Isn\'t Active&lt;/b&gt;&lt;br /&gt;';
+ 			}
+ 			else
+ 			{
+-				return '_MODULE_NOT_ACTIVE';
++				return '_PAGE_NOT_ACTIVE';
+ 			}
+ 		}
+ 
+-		//authization check here
+-		$module['module_auth'] = ($module['module_auth']) ? unserialize($module['module_auth']) : '';
++		switch ($type)
++		{
++			case 'admin':
++				if (!$_CLASS['core_auth']-&gt;admin_power($_CORE_MODULE['module_name']))
++				{
++					trigger_error('NOT_AUTH', E_USER_ERROR);
++				}
++				
++				if (file_exists(SITE_FILE_ROOT.'admin/'.$page['page_name'].'.php'))
++				{
++					$page['page_location'] = SITE_FILE_ROOT.'admin/'.$page['page_name'].'.php';
++				}
++				elseif (file_exists(SITE_FILE_ROOT.'modules/'.$page['page_name'].'/admin/index.php'))
++				{
++					$page['page_location'] = SITE_FILE_ROOT.'modules/'.$page['page_name'].'/admin/index.php';
++				}
++				else
++				{
++					return '404:_PAGE_NOT_FOUND';
++				}
++			break;
++			
++			case 'ajax':
++				$page['page_location'] = SITE_FILE_ROOT.'modules/'.$page['page_name'].'/ajax.php';
+ 
+-		if (($module['module_auth'] &amp;&amp; !$_CLASS['core_auth']-&gt;auth($module['module_auth'])) &amp;&amp; !$_CLASS['core_auth']-&gt;admin_power('modules'))
+-		{
+-			return '_MODULE_NOT_AUTH';
++			default:
++				//authization check here
++				$page['page_auth'] = ($page['page_auth']) ? @unserialize($page['page_auth']) : '';
++		
++				if (($page['page_auth'] &amp;&amp; !$_CLASS['core_auth']-&gt;auth($page['page_auth'])) &amp;&amp; !$_CLASS['core_auth']-&gt;admin_power('pages'))
++				{
++					return '_PAGE_NOT_AUTH';
++				}
++	
++				if (!$page['page_location'])
++				{
++					$page['page_location'] = SITE_FILE_ROOT.'modules/'.$page['page_name'].'/index.php';
++				}
++
++				if (!file_exists($page['page_location']))
++				{
++					return '404:_PAGE_NOT_FOUND';
++				}
++			break;
+ 		}
+ 
+-		//first module control the sides.
+-		if (!empty($this-&gt;modules))
++		//first page control the sides.
++		if (!empty($this-&gt;pages_holding))
+ 		{
+-			$module['module_sides'] = $this-&gt;modules[0]['module_sides'];
++			$page['page_sides'] = $this-&gt;pages_holding[0]['page_sides'];
+ 		}
++		else
++		{
++			$_CLASS['core_user']-&gt;page = $page['page_name'];
++		}
+ 
+-		$this-&gt;modules[] = $module;
++		$this-&gt;pages_holding[] = $page;
+ 
+ 		return true;
+ 	}
+ 
+ 	/*
+-		Returns parsed module data
++		Returns parsed page data
+ 	*/
+-	function get_module()
++	function generate_page($type = 'page')
+ 	{
+-		if (isset($this-&gt;modules))
++		if (!empty($this-&gt;pages_holding))
+ 		{
+ 			// this also unsets $this-&gt;modules
+-			return array_shift($this-&gt;modules);
++			$this-&gt;page = array_shift($this-&gt;pages_holding);
++
++			if ($this-&gt;page['page_location'])
++			{
++				require_once $this-&gt;page['page_location'];
++				
++				$class_name = $type.'_'.$this-&gt;page['page_name'];
++
++				if (class_exists($class_name))
++				{
++					$module = new $class_name;
++				}
++			}
++
++			return true;
+ 		}
+ 
+ 		return false;
+@@ -177,6 +240,9 @@
+ 		$this-&gt;header['js'][] = &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;\nvar cms_session_id = '{$_CLASS['core_user']-&gt;data['session_id']}';\nvar cms_cookie_path = '{$_CORE_CONFIG['server']['cookie_path']}';\nvar cms_cookie_domain = '{$_CORE_CONFIG['server']['cookie_domain']}';\n&lt;/script&gt;&quot;;
+ 		$this-&gt;header['meta'][] = '&lt;base href=&quot;'.generate_base_url().'&quot; /&gt;';
+ 
++		$this-&gt;header['meta'][] = '&lt;meta name=&quot;description&quot; content=&quot;Development Site for Viperal CMS&quot; /&gt;';
++		$this-&gt;header['meta'][] = '&lt;meta name=&quot;keywords&quot; content=&quot;viperal, cms, php, mysql, postgresql, postgres, sqlite, nuke, community, forums, bulletin, boards, javascript, open source, GPL, online, html&quot; /&gt;';
++		
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'SITE_LANG'			=&gt;	$_CLASS['core_user']-&gt;lang['LANG'],
+ 			'SITE_TITLE'		=&gt;	$_CORE_CONFIG['global']['site_name'].': '.(is_array($_CORE_MODULE['module_title']) ? implode(' &gt; ', $_CORE_MODULE['module_title']) : $_CORE_MODULE['module_title']),
+@@ -217,9 +283,14 @@
+ 			script_close($save);
+ 		}
+ 
+-		if ($_CORE_MODULE = $this-&gt;get_module())
++		if ($this-&gt;generate_page())
+ 		{
+-			require(SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/index.php');
++// TEMP
++//$_CORE_MODULE =&amp; $_CLASS['core_display']-&gt;page;
++
++		//	require(SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/index.php');
++			return;
++
+ 		}
+ 
+ 		$this-&gt;displayed['footer'] = true;
+
+Modified: cms/trunk/includes/functions.php
+===================================================================
+--- cms/trunk/includes/functions.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/includes/functions.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -593,7 +593,7 @@
+ 	{
+ 		if ($file)
+ 		{
+-			include_once($file);
++			require_once $file;
+ 		}
+ 
+ 		$_CLASS[$name] =&amp; new $class;
+@@ -810,12 +810,9 @@
+ 	
+ 	while ($file = readdir($handle))
+ 	{
+-		if (mb_strpos($file, '.') === false)
++		if (mb_strpos($file, '.') === false &amp;&amp; file_exists(SITE_FILE_ROOT.&quot;themes/$file/index.php&quot;))
+ 		{
+-			if (file_exists(SITE_FILE_ROOT.&quot;themes/$file/index.php&quot;))
+-			{
+-				$theme_array[] = array('file' =&gt; $file, 'template'=&gt; true);
+-			}
++			$theme_array[] = array('file' =&gt; $file, 'template'=&gt; true);
+ 		}
+ 	}
+ 	
+
+Modified: cms/trunk/includes/tables.php
+===================================================================
+--- cms/trunk/includes/tables.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/includes/tables.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -60,15 +60,13 @@
+ define('ADMIN_NOT_ADMIN', 1);
+ define('ADMIN_IS_ADMIN', 2);
+ 
+-// Block side defines
+-define('BLOCK_NONE', 0);
+-define('BLOCK_ALL', 1);
+-define('BLOCK_LEFT', 2);
+-define('BLOCK_RIGHT', 3);
+-define('BLOCK_TOP', 4);
+-define('BLOCK_BOTTOM', 5);
+-define('BLOCK_MESSAGE_TOP', 6);
+-define('BLOCK_MESSAGE_BOTTOM', 7);
++// Block side
++define('BLOCK_LEFT', (1 &lt;&lt; 1));
++define('BLOCK_RIGHT', (1 &lt;&lt; 2));
++define('BLOCK_TOP', (1 &lt;&lt; 3));
++define('BLOCK_BOTTOM', (1 &lt;&lt; 4));
++define('BLOCK_MESSAGE_TOP', (1 &lt;&lt; 5));
++define('BLOCK_MESSAGE_BOTTOM', (1 &lt;&lt; 6));
+ 
+ define('BLOCKTYPE_FILE',0);
+ define('BLOCKTYPE_FEED',1);
+@@ -202,10 +200,8 @@
+ define('ADMIN_AUTH_TABLE', $table_prefix.'admins');
+ 
+ define('BLOCKS_TABLE', $table_prefix.'blocks');
+-
+ define('CORE_CONFIG_TABLE', $table_prefix.'config');
+-define('CORE_MODULES_TABLE', $table_prefix.'modules');
+-
++define('CORE_PAGES_TABLE', $table_prefix.'pages');
+ define('SMILIES_TABLE', $table_prefix.'smilies');
+ 
+ define('USER_GROUP_TABLE', $table_prefix.'groups_members');
+
+Modified: cms/trunk/includes/user.php
+===================================================================
+--- cms/trunk/includes/user.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/includes/user.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -205,7 +205,6 @@
+ 		}
+ 
+ 		$this-&gt;user_setup = true;
+-		$this-&gt;data['user_unread_privmsg'] = 0; // TEMP
+ 		
+ 		if (!is_null($theme))
+ 		{
+@@ -281,23 +280,23 @@
+ 
+ 		if (!$img_file || !ereg('/', $img_file))
+ 		{
+-			global $_CORE_MODULE, $_CLASS;
++			global $_CLASS;
+ 			
+-			$module = ($module) ? $module : $_CORE_MODULE['module_name'];
++			$module = ($module) ? $module : $_CLASS['core_display']-&gt;page['page_name'];
+ 			$lang = ($lang) ? $lang : $this-&gt;lang_name;
+ 
+ 			if (file_exists($_CLASS['core_display']-&gt;theme_path.&quot;/images/modules/$module/$img_file&quot;))
+ 			{
+-				include($_CLASS['core_display']-&gt;theme_path.&quot;/images/modules/$module/$img_file&quot;);
++				include $_CLASS['core_display']-&gt;theme_path.&quot;/images/modules/$module/$img_file&quot;;
+ 			}
+ 			else
+ 			{
+-				include(SITE_FILE_ROOT.'modules/'.$module.&quot;/images/$img_file&quot;);
++				include SITE_FILE_ROOT.'modules/'.$module.&quot;/images/$img_file&quot;;
+ 			}
+ 		}
+ 		else
+ 		{
+-			include($img_file.'.php');
++			include $img_file.'.php';
+ 		}
+ 	}
+ 	
+@@ -351,7 +350,7 @@
+ 		{
+ 			if (mb_strpos($lang_file, '/') !== false)
+ 			{
+-				include(SITE_FILE_ROOT.&quot;language/$this-&gt;lang_name/$lang_file&quot;);
++				include SITE_FILE_ROOT.&quot;language/$this-&gt;lang_name/$lang_file&quot;;
+ 
+ 				return;
+ 			}
+@@ -365,14 +364,14 @@
+ 
+ 		if (!$module)
+ 		{
+-			global $_CORE_MODULE;
+-			
+-			include(SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].&quot;/language/$this-&gt;lang_name/$lang_file&quot;);
++			global $_CLASS;
+ 
++			include SITE_FILE_ROOT.'modules/'.$_CLASS['core_display']-&gt;page['page_name'].&quot;/language/$this-&gt;lang_name/$lang_file&quot;;
++
+ 			return;
+ 		}
+ 		
+-		include(SITE_FILE_ROOT.&quot;modules/$module/language/$this-&gt;lang_name/$lang_file&quot;);		
++		include SITE_FILE_ROOT.&quot;modules/$module/language/$this-&gt;lang_name/$lang_file&quot;;		
+ 	}
+ 
+ 	function user_data_get($name, $default = false)
+
+Modified: cms/trunk/index.php
+===================================================================
+--- cms/trunk/index.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/index.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -22,11 +22,11 @@
+ */
+ 
+ define('VIPERAL', 'CMS');
+-
++//print_r($_GET);die;
+ error_reporting(E_ALL);
+ 
+-//require(SITE_FILE_ROOT.'core.php');
+-require('core.php');
++//require_once SITE_FILE_ROOT.'core.php';
++require_once 'core.php';
+ 
+ $mod = get_variable('mod', 'REQUEST', false);
+ 
+@@ -36,20 +36,33 @@
+ 	$_CLASS['core_display']-&gt;homepage = true;
+ 	$_CORE_CONFIG['global']['index_page'] = 'articles';
+ 
+-	$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.CORE_MODULES_TABLE.&quot; WHERE module_name = '{$_CORE_CONFIG['global']['index_page']}'&quot;);
++	$sql = 'SELECT * FROM ' . CORE_PAGES_TABLE . &quot;
++				WHERE page_name = '&quot;.$_CLASS['core_db']-&gt;escape($_CORE_CONFIG['global']['index_page']).&quot;'&quot;;
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	While ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$_CLASS['core_display']-&gt;add_module($row);
++		$_CLASS['core_display']-&gt;process_page($row);
+ 	}
+-
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+-	if (!($_CORE_MODULE = $_CLASS['core_display']-&gt;get_module()))
++	if (!$_CLASS['core_display']-&gt;generate_page())
+ 	{
+-		$_CORE_MODULE['module_sides'] = BLOCK_ALL;
+-		$_CORE_MODULE += array('module_name' =&gt; '', 'module_title' =&gt; ''); // temp
++		/*
++		$blocks = 0;
++		$blocks |= BLOCK_LEFT;
++		$blocks |= BLOCK_RIGHT;
++		$blocks |= BLOCK_TOP;
++		$blocks |= BLOCK_BOTTOM;
++		$blocks |= BLOCK_MESSAGE_TOP;
++		$blocks |= BLOCK_MESSAGE_BOTTOM;
++		echo $blocks;
++		*/
+ 
++		$blocks = 126;
++
++		$_CLASS['core_display']-&gt;page = array('page_blocks' =&gt; $blocks, 'page_name' =&gt; '', 'page_title' =&gt; '');
++
+ 		$_CLASS['core_user']-&gt;user_setup();
+ 		$_CLASS['core_display']-&gt;display_header();
+ 
+@@ -60,13 +73,13 @@
+ 		}
+ 	
+ 		$_CLASS['core_display']-&gt;display_footer();
+-	}
++	}	
+ }
+ else
+ {
+ 	if ($mod === 'system')
+ 	{
+-		require_once(SITE_FILE_ROOT.'includes/system.php');
++		require_once SITE_FILE_ROOT.'includes/system.php';
+ 
+ 		$mode = get_variable('mode', 'REQUEST', false);
+ 
+@@ -81,30 +94,24 @@
+ 		script_close(false);
+ 	}
+ 
+-	$sql = 'SELECT * FROM '.CORE_MODULES_TABLE.'
+-				WHERE module_type = ' . MODULE_NORMAL . &quot;
+-				AND module_name = '&quot; . $_CLASS['core_db']-&gt;escape($mod) . &quot;'&quot;;
++	$sql = 'SELECT * FROM '.CORE_PAGES_TABLE.'
++				WHERE page_type = ' . MODULE_NORMAL . &quot;
++				AND page_name = '&quot; . $_CLASS['core_db']-&gt;escape($mod) . &quot;'&quot;;
+ 
+-	//Grab module data if it exsits
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+-	$status = $_CLASS['core_display']-&gt;add_module($row);
++	$status = $_CLASS['core_display']-&gt;process_page($row);
+ 	
+ 	if ($status !== true)
+ 	{
+ 		trigger_error($status, E_USER_ERROR);
+ 	}
+ 
+-	$_CORE_MODULE = $_CLASS['core_display']-&gt;get_module();
++	$_CLASS['core_display']-&gt;generate_page();
+ }
+ 
+-$path = SITE_FILE_ROOT.'modules/'.$_CORE_MODULE['module_name'].'/index.php';
+-$_CLASS['core_user']-&gt;page = $_CORE_MODULE['module_name'];
+-
+-require_once($path);
+-
+ script_close();
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/install/build_data.php
+===================================================================
+--- cms/trunk/install/build_data.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/install/build_data.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -120,23 +120,22 @@
+ $content = $_CLASS['core_db']-&gt;escape('&lt;div style=&quot;text-align:center&quot;&gt;Hello and welcome&lt;/div&gt;');
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;blocks (block_title, block_type, block_status, block_position, block_order, block_content) VALUES ('Welcome', 4, 2, 6, 4, '$content')&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('blocks', 0, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('groups', 0, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('system', 0, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('messages', 0, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('modules', 0, 2)&quot;);
+-//$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('services', 0, 2, '')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('smiles', 0, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('users', 0, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status) VALUES ('groups', 0, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('blocks', 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('groups', 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('system', 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('messages', 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('pages', 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('smiles', 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('users', 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admin_module (module_name, module_status) VALUES ('groups', 2)&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('articles', 1, 1, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Contact', 1, 2, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('calender', 1, 1, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Control_Panel', 1, 2, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Forums', 1, 2, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Members_List', 1, 2, 2)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Quick_Message', 1, 1, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;pages (page_name, page_type, page_status, page_blocks) VALUES ('articles', 1, 1, 102)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;pages (page_name, page_type, page_status, page_blocks) VALUES ('Contact', 1, 2, 102)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;pages (page_name, page_type, page_status, page_blocks) VALUES ('calender', 1, 1, 98)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;pages (page_name, page_type, page_status, page_blocks) VALUES ('Control_Panel', 1, 2, 98)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;pages (page_name, page_type, page_status, page_blocks) VALUES ('Forums', 1, 2, 98)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;pages (page_name, page_type, page_status, page_blocks) VALUES ('Members_List', 1, 2, 98)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;pages (page_name, page_type, page_status, page_blocks) VALUES ('Quick_Message', 1, 1, 102)&quot;);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':D', 'grin.png', 'Very Happy', 19, 19, 1, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':)', 'smile.png', 'Smile', 19, 19, 2, 0)&quot;);
+
+Modified: cms/trunk/install/build_tables.php
+===================================================================
+--- cms/trunk/install/build_tables.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/install/build_tables.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -32,7 +32,7 @@
+ 	Admin Auth Table
+ */
+ 
+-$_CLASS['core_db']-&gt;table_create('start', $table_prefix.'admins');
++$_CLASS['core_db']-&gt;table_create('start', $table_prefix.'admin_access');
+ 
+ $_CLASS['core_db']-&gt;add_table_field_char('admin_section', 100);
+ 
+@@ -141,16 +141,15 @@
+ /*
+ 	Modules Table
+ */
+-$_CLASS['core_db']-&gt;table_create('start', $table_prefix.'modules');
++$_CLASS['core_db']-&gt;table_create('start', $table_prefix.'admin_modules');
+ 
+ $_CLASS['core_db']-&gt;add_table_field_int('module_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('module_name', 100);
+ $_CLASS['core_db']-&gt;add_table_field_char('module_title', 100, true);
++$_CLASS['core_db']-&gt;add_table_field_char('module_location', 100, true);
+ $_CLASS['core_db']-&gt;add_table_field_int('module_type', array('max' =&gt; 10));
+ $_CLASS['core_db']-&gt;add_table_field_int('module_status', array('max' =&gt; 10));
+-$_CLASS['core_db']-&gt;add_table_field_int('module_sides', array('max' =&gt; 10, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_text('module_auth', 60000, true);
+-$_CLASS['core_db']-&gt;add_table_field_text('module_auth_options', 60000, true);
+ $_CLASS['core_db']-&gt;add_table_field_text('module_admin_options', 6000, true);
+ 
+ $_CLASS['core_db']-&gt;add_table_index('module_id', 'primary');
+@@ -158,6 +157,23 @@
+ 
+ $_CLASS['core_db']-&gt;table_create('commit');
+ 
++$_CLASS['core_db']-&gt;table_create('start', $table_prefix.'pages');
++
++$_CLASS['core_db']-&gt;add_table_field_int('page_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('page_name', 100);
++$_CLASS['core_db']-&gt;add_table_field_char('page_title', 100, true);
++$_CLASS['core_db']-&gt;add_table_field_char('page_location', 100, true);
++$_CLASS['core_db']-&gt;add_table_field_int('page_type', array('max' =&gt; 10));
++$_CLASS['core_db']-&gt;add_table_field_int('page_status', array('max' =&gt; 10));
++$_CLASS['core_db']-&gt;add_table_field_int('page_blocks', array('max' =&gt; 10000, 'null' =&gt; true)); // Convert to bitfield
++$_CLASS['core_db']-&gt;add_table_field_text('page_auth', 60000, true);
++$_CLASS['core_db']-&gt;add_table_field_text('page_auth_options', 60000, true);
++
++$_CLASS['core_db']-&gt;add_table_index('page_id', 'primary');
++$_CLASS['core_db']-&gt;add_table_index('page_name', 'unique');
++
++$_CLASS['core_db']-&gt;table_create('commit');
++
+ /*
+ 	Sessions Table
+ */
+
+Modified: cms/trunk/installer.php
+===================================================================
+--- cms/trunk/installer.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/installer.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -28,7 +28,7 @@
+ 
+ if (!extension_loaded('mbstring'))
+ {
+-	require_once(SITE_FILE_ROOT.'includes/compatiblity/mbstring.php');
++	require_once SITE_FILE_ROOT.'includes/compatiblity/mbstring.php';
+ }
+ 
+ set_magic_quotes_runtime(0);
+@@ -46,8 +46,8 @@
+ 	}
+ }
+ 
+-require_once(SITE_FILE_ROOT.'includes/functions.php');
+-require_once(SITE_FILE_ROOT.'includes/display/template.php');
++require_once SITE_FILE_ROOT.'includes/functions.php';
++require_once SITE_FILE_ROOT.'includes/display/template.php';
+ 
+ load_class(false, 'core_template');
+ 
+@@ -109,7 +109,7 @@
+ {
+ 	if (file_exists(SITE_FILE_ROOT.'config.php'))
+ 	{
+-		require_once(SITE_FILE_ROOT.'config.php');
++		require_once SITE_FILE_ROOT.'config.php';
+ 	}
+ 
+ 	$site_name		= get_variable('site_name', 'POST');
+@@ -167,9 +167,9 @@
+ 
+ 	if (empty($error))
+ 	{
+-		require_once(SITE_FILE_ROOT.'includes/tables.php');
+-		require_once(SITE_FILE_ROOT.'includes/cache/cache.php');
+-		require_once(SITE_FILE_ROOT.'includes/cache/cache_' . $acm_type . '.php');
++		require_once SITE_FILE_ROOT.'includes/tables.php';
++		require_once SITE_FILE_ROOT.'includes/cache/cache.php';
++		require_once SITE_FILE_ROOT.'includes/cache/cache_' . $acm_type . '.php';
+ 
+ 		load_class(false, 'core_cache', 'cache_'.$acm_type);
+ 
+@@ -321,8 +321,8 @@
+ 	{
+ 		$user_prefix	= get_variable('user_prefix', 'POST');
+ 		$table_prefix	= get_variable('table_prefix', 'POST');
+-		
+-		require_once(SITE_FILE_ROOT.'includes/tables.php');
++
++		require_once SITE_FILE_ROOT.'includes/tables.php';
+ 	
+ 		$sql = 'SELECT * FROM ' . CORE_CONFIG_TABLE;
+ 		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+
+Modified: cms/trunk/modules/Contact/index.php
+===================================================================
+--- cms/trunk/modules/Contact/index.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/modules/Contact/index.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -21,97 +21,100 @@
+ $Id$
+ */
+ 
+-// Add departments
++/*$this-&gt;test = 'test';
++echo $this-&gt; 'test';*/
+ 
+-if (!defined('VIPERAL'))
++class page_contact
+ {
+-    die;
+-}
+-
+-$_CLASS['core_user']-&gt;user_setup();
+-$_CLASS['core_user']-&gt;add_lang();
+-
+-$error = '';
+-
+-if (!empty($_POST['preview']) || !empty($_POST['contact']))
+-{
+-	$data['MESSAGE']= trim(get_variable('message', 'POST', ''));
+-	$data['NAME']	= get_variable('sender_name', 'POST', '');
+-	$data['EMAIL']	= get_variable('sender_email', 'POST', '');
+-
+-	foreach ($data as $field =&gt; $value)
++	function page_contact()
+ 	{
+-		if (!$value)
++		// Add departments
++		global $_CLASS;
++		
++		if (!defined('VIPERAL'))
+ 		{
+-			$error .= $_CLASS['core_user']-&gt;lang['ERROR_'.$field].'&lt;br /&gt;';
+-			unset($field, $value, $lang);
+-        }
+-        elseif ($field == 'EMAIL' &amp;&amp; !check_email($value))
+-        {
+-			$error .= $_CLASS['core_user']-&gt;lang['BAD_EMAIL'].'&lt;br /&gt;';
++			die;
+ 		}
+-	} 
+ 
+-	if (!empty($_POST['preview']) &amp;&amp; $data['MESSAGE'])
+-	{
+-		send_feedback($data['NAME'],  $data['EMAIL'], $data['MESSAGE'], $preview = true);
++		$_CLASS['core_user']-&gt;user_setup();
++		$_CLASS['core_user']-&gt;add_lang();
++		
++		$this-&gt;error = '';
++		$this-&gt;preview = !empty($_POST['preview']);
++		
++		if ($this-&gt;preview || !empty($_POST['contact']))
++		{
++			$this-&gt;data['MESSAGE'] = trim(get_variable('message', 'POST', ''));
++			$this-&gt;data['NAME']	= get_variable('sender_name', 'POST', '');
++			$this-&gt;data['EMAIL']	= get_variable('sender_email', 'POST', '');
++		
++			foreach ($this-&gt;data as $field =&gt; $value)
++			{
++				if (!$value)
++				{
++					$this-&gt;error .= $_CLASS['core_user']-&gt;lang['ERROR_'.$field].'&lt;br /&gt;';
++					unset($field, $value, $lang);
++				}
++				elseif ($field == 'EMAIL' &amp;&amp; !check_email($value))
++				{
++					$this-&gt;error .= $_CLASS['core_user']-&gt;lang['BAD_EMAIL'].'&lt;br /&gt;';
++				}
++			} 
++		
++			if (!$this-&gt;error)
++			{
++				$this-&gt;send_feedback();
++			}
++		}
++		else
++		{
++			$this-&gt;data['NAME'] = ($_CLASS['core_user']-&gt;is_user) ? $_CLASS['core_user']-&gt;data['username'] : '';
++			$this-&gt;data['EMAIL'] = ($_CLASS['core_user']-&gt;is_user) ? $_CLASS['core_user']-&gt;data['user_email'] : '';
++			$this-&gt;data['MESSAGE'] = '';
++		}
++		
++		$_CLASS['core_template']-&gt;assign_array(array( 
++			'ERROR' 				=&gt; $this-&gt;error,
++			'MESSAGE' 				=&gt; $this-&gt;data['MESSAGE'],
++			'ACTION' 				=&gt; generate_link($_CLASS['core_display']-&gt;page['page_name']),
++			'SENDER_EMAIL' 			=&gt; $this-&gt;data['EMAIL'],
++			'SENDER_NAME' 			=&gt; $this-&gt;data['NAME'],
++		));
++		
++		$_CLASS['core_template']-&gt;display('modules/Contact/index.html');
+ 	}
+-	elseif (!empty($_POST['contact']) &amp;&amp; !$error)
+-	{
+-		send_feedback($data['NAME'], $data['EMAIL'], $data['MESSAGE']);
+-	}
+ 
+-	$sender_name = $data['NAME'];
+-	$sender_email = $data['EMAIL'];
+-	$message = $data['MESSAGE'];
+-}
+-else
+-{
+-	$sender_name = ($_CLASS['core_user']-&gt;is_user) ? $_CLASS['core_user']-&gt;data['username'] : '';
+-	$sender_email = ($_CLASS['core_user']-&gt;is_user) ? $_CLASS['core_user']-&gt;data['user_email'] : '';
+-	$message = '';
+-}
+-
+-$_CLASS['core_template']-&gt;assign_array(array( 
+-	'ERROR' 				=&gt; $error,
+-	'MESSAGE' 				=&gt; $message,
+-	'ACTION' 				=&gt; generate_link($_CORE_MODULE['module_name']),
+-	'SENDER_EMAIL' 			=&gt; $sender_email,
+-	'SENDER_NAME' 			=&gt; $sender_name,
+-));
+-
+-$_CLASS['core_template']-&gt;display('modules/Contact/index.html');
+-
+-// remove this function
+-function send_feedback($sender_name, $sender_email, $message, $preview = false)
+-{
+-	global $_CLASS, $_CORE_CONFIG;
+-
+-	$_CLASS['core_template']-&gt;assign_array(array(
+-		'SENT_FROM'		=&gt; $sender_name,
+-		'SENDER_NAME'	=&gt; $sender_name,
+-		'SENDER_EMAIL'	=&gt; $sender_email,
+-		'SENDER_IP'		=&gt; $_CLASS['core_user']-&gt;ip,
+-		'MESSAGE' 		=&gt; $message,
+-	));
+-
+-	$body = trim($_CLASS['core_template']-&gt;display('email/contact/index.txt', true));
+-
+-	if ($preview)
++	// remove this function
++	function send_feedback()
+ 	{
+-		$_CLASS['core_template']-&gt;assign('PREVIEW', modify_lines($body, '&lt;br/&gt;'));
+-
+-		return;
++		global $_CLASS, $_CORE_CONFIG;
++	
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'SENT_FROM'		=&gt; $this-&gt;data['NAME'],
++			'SENDER_NAME'	=&gt; $this-&gt;data['NAME'],
++			'SENDER_EMAIL'	=&gt; $this-&gt;data['EMAIL'],
++			'SENDER_IP'		=&gt; $_CLASS['core_user']-&gt;ip,
++			'MESSAGE' 		=&gt; $this-&gt;data['MESSAGE'],
++		));
++	
++		$body = trim($_CLASS['core_template']-&gt;display('email/contact/index.txt', true));
++	
++		if ($this-&gt;preview)
++		{
++			$_CLASS['core_template']-&gt;assign('PREVIEW', modify_lines($body, '&lt;br/&gt;'));
++	
++			return;
++		}
++	
++		require_once SITE_FILE_ROOT.'includes/mailer.php';
++	
++		$mailer = new core_mailer;
++		$mailer-&gt;to($_CORE_CONFIG['email']['site_mail'], $_CORE_CONFIG['global']['site_name']);
++		$mailer-&gt;subject($_CLASS['core_user']-&gt;get_lang('SITE_FEEDBACK'));
++	
++		$mailer-&gt;message = $body;
++	
++		trigger_error($mailer-&gt;send() ? 'SEND_SUCCESSFULL' : $mailer-&gt;error);
+ 	}
+-
+-	require_once(SITE_FILE_ROOT.'includes/mailer.php');
+-
+-	$mailer = new core_mailer;
+-	$mailer-&gt;to($_CORE_CONFIG['email']['site_mail'], false);
+-	$mailer-&gt;subject($_CLASS['core_user']-&gt;get_lang('SITE_FEEDBACK'));
+-
+-	$mailer-&gt;message = $body;
+-
+-	trigger_error($mailer-&gt;send() ? 'SEND_SUCCESSFULL' : $mailer-&gt;error);
+ }
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/Control_Panel/index.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/index.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/modules/Control_Panel/index.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -16,8 +16,10 @@
+     die;
+ }
+ 
+-require_once($site_file_root.'includes/forums/functions.php');
+-load_class($site_file_root.'includes/forums/auth.php', 'forums_auth');
++global $_CLASS, $_CORE_CONFIG;
++
++require_once(SITE_FILE_ROOT.'includes/forums/functions.php');
++load_class(SITE_FILE_ROOT.'includes/forums/auth.php', 'forums_auth');
+ $_CLASS['auth'] =&amp; $_CLASS['forums_auth'];
+ 
+ $_CLASS['core_user']-&gt;user_setup();
+@@ -30,8 +32,6 @@
+ 
+ $ucp = new module();
+ 
+-//require($site_file_root.'includes/forums/functions_user.php');
+-
+ //define the undefineds
+ $_CLASS['core_template']-&gt;assign_array(array(
+ 	'S_DISPLAY_FORM'		=&gt; false,
+@@ -170,8 +170,6 @@
+ 
+ 	function load($type = false, $name = false, $mode = false, $run = true)
+ 	{
+-		global $site_file_root;
+-
+ 		if ($type)
+ 		{
+ 			$this-&gt;type = $type;
+@@ -184,7 +182,7 @@
+ 
+ 		if (!class_exists($this-&gt;type . '_' . $this-&gt;name))
+ 		{
+-			require_once($site_file_root.&quot;modules/Control_Panel/{$this-&gt;type}/{$this-&gt;type}_{$this-&gt;name}.php&quot;);
++			require_once(SITE_FILE_ROOT.&quot;modules/Control_Panel/{$this-&gt;type}/{$this-&gt;type}_{$this-&gt;name}.php&quot;);
+ 
+ 			if ($run)
+ 			{
+@@ -213,32 +211,6 @@
+ 
+ 		script_close();
+ 	}
+-
+-	// Public methods to be overwritten by modules
+-	function module()
+-	{
+-		// Module name
+-		// Module filename
+-		// Module description
+-		// Module version
+-		// Module compatibility
+-		return false;
+-	}
+-
+-	function init()
+-	{
+-		return false;
+-	}
+-
+-	function install()
+-	{
+-		return false;
+-	}
+-
+-	function uninstall()
+-	{
+-		return false;
+-	}
+ }
+ //
+ // FUNCTIONS
+@@ -300,23 +272,21 @@
+ 	break;
+ 		
+ 	case 'delete_cookies':
+-		// Delete Cookies with dynamic names (do NOT delete poll cookies)
+-		if (confirm_box(true))
++		if (display_confirmation($_CLASS['core_user']-&gt;get_lang('DELETE_COOKIES')))
+ 		{
+ 			global $_CORE_CONFIG;
+ 			
+-			$set_time = time() - 31536000;
++			$set_time = gmtime() - 31536000;
++
+ 			foreach ($_COOKIE as $cookie_name =&gt; $cookie_data)
+ 			{
+ 				$cookie_name = str_replace($_CORE_CONFIG['server']['cookie_name'] . '_', '', $cookie_name);
++
+ 				if (strpos($cookie_name, '_poll') === false)
+ 				{
+ 					$_CLASS['core_user']-&gt;set_cookie($cookie_name, '', $set_time);
+ 				}
+ 			}
+-			$_CLASS['core_user']-&gt;set_cookie('track', '', $set_time);
+-			$_CLASS['core_user']-&gt;set_cookie('data', '', $set_time);
+-			$_CLASS['core_user']-&gt;set_cookie('sid', '', $set_time);
+ 
+ 			$_CLASS['core_user']-&gt;logout();
+ 
+@@ -326,10 +296,6 @@
+ 			trigger_error($message);
+ 
+ 		}
+-		else
+-		{
+-			confirm_box(false, 'DELETE_COOKIES', '');
+-		}
+ 		
+ 		redirect();
+ 		break;
+
+Modified: cms/trunk/modules/Forums/index.php
+===================================================================
+--- cms/trunk/modules/Forums/index.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/modules/Forums/index.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -21,6 +21,8 @@
+ $Id$
+ */
+ 
++global $_CLASS, $_CORE_CONFIG;
++
+ $file = get_variable('file', 'REQUEST', false);
+ 
+ $approved_files = array('viewforum', 'viewtopic', 'report', 'faq', 'posting', 'download', 'mcp', 'search');
+
+Modified: cms/trunk/modules/Members_List/index.php
+===================================================================
+--- cms/trunk/modules/Members_List/index.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/modules/Members_List/index.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -27,12 +27,13 @@
+     die();
+ }
+ 
+-require_once($site_file_root.'includes/forums/functions.php');
+-load_class($site_file_root.'includes/forums/auth.php', 'forums_auth');
+-$_CLASS['auth'] =&amp; $_CLASS['forums_auth'];
++global $_CLASS, $_CORE_CONFIG;
+ 
+-$_CLASS['auth']-&gt;acl($_CLASS['core_user']-&gt;data);
++require_once(SITE_FILE_ROOT.'includes/forums/functions.php');
++load_class(SITE_FILE_ROOT.'includes/forums/auth.php', 'forums_auth');
+ 
++$_CLASS['forums_auth']-&gt;acl($_CLASS['core_user']-&gt;data);
++
+ $_CLASS['core_user']-&gt;user_setup();
+ $_CLASS['core_user']-&gt;add_lang();
+ $_CLASS['core_user']-&gt;add_img(false, 'Forums');
+@@ -62,30 +63,25 @@
+ // What do you want to do today? ... oops, I think that line is taken ...
+ switch ($mode)
+ {
+-
+-	case 'forum_leaders':
++	case 'leaders':
+ 		// Display a listing of board admins, moderators
+-
+-		$_CLASS['core_user']-&gt;add_lang('groups', 'Forums');
++		//$_CLASS['core_user']-&gt;add_lang('groups', 'Forums');
+ 		
+ 		$page_title = $_CLASS['core_user']-&gt;lang['LEADER'];
+ 		$template_html = 'memberlist_leaders.html';
+ 
+-		$user_ary = $_CLASS['auth']-&gt;acl_get_list(false, array('a_', 'm_'), false);
++		$user_ary = $_CLASS['forums_auth']-&gt;acl_get_list(false, 'm_', false);
++		$admin_id_ary = $mod_id_ary = $forum_id_ary = array();
+ 
+-		$admin_id_ary = $mod_id_ary = $forum_id_ary = array();
+ 		foreach ($user_ary as $forum_id =&gt; $forum_ary)
+ 		{
+-			foreach ($forum_ary as $auth_option =&gt; $id_ary)
+-			{
+-				(!$forum_id &amp;&amp; $auth_option == 'a_') ? $admin_id_ary += $id_ary : $mod_id_ary += $id_ary;
++			$mod_id_ary += $forum_ary['m_'];
+ 
+-				if ($forum_id)
++			if ($forum_id)
++			{
++				foreach ($forum_ary['m_'] as $id)
+ 				{
+-					foreach ($id_ary as $id)
+-					{
+-						$forum_id_ary[$id][] = $forum_id;
+-					}
++					$forum_id_ary[$id][] = $forum_id;
+ 				}
+ 			}
+ 		}
+@@ -112,21 +108,21 @@
+ 
+ 		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+-			$which_row = (in_array($row['user_id'], $admin_id_ary)) ? 'admin' : 'mod';
++			$which_row = in_array($row['user_id'], $admin_id_ary) ? 'admin' : 'mod';
+ 
+ 			$s_forum_select = '';
+ 			if ($which_row == 'mod' &amp;&amp; sizeof(array_diff(array_keys($forums), $forum_id_ary[$row['user_id']])))
+ 			{
+ 				foreach ($forum_id_ary[$row['user_id']] as $forum_id)
+ 				{
+-					if (isset($forums[$forum_id]) &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_list', $forum_id))
++					if (isset($forums[$forum_id]) &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_list', $forum_id))
+ 					{
+ 						$s_forum_select .= '&lt;option value=&quot;&quot;&gt;' . $forums[$forum_id] . '&lt;/option&gt;';
+ 					}
+ 				}
+ 			}
+ 			
+-			if ($row['group_type'] == GROUP_HIDDEN &amp;&amp; !$_CLASS['auth']-&gt;acl_gets('a_group', 'a_groupadd', 'a_groupdel') &amp;&amp; $row['ug_user_id'] != $_CLASS['core_user']-&gt;data['user_id'])
++			if ($row['group_type'] == GROUP_HIDDEN &amp;&amp; $row['ug_user_id'] != $_CLASS['core_user']-&gt;data['user_id'])
+ 			{
+ 				$group_name = $_CLASS['core_user']-&gt;get_lang('UNDISCLOSED');
+ 				$u_group = '';
+@@ -153,7 +149,7 @@
+ 
+ 				'U_GROUP'		=&gt; $u_group,
+ 				'U_VIEWPROFILE'	=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['user_id']),
+-				'U_PM'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_sendpm')) ? generate_link('Control_Panel&amp;i=pm&amp;mode=compose&amp;u='.$row['user_id']) : '')
++				'U_PM'			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('u_sendpm')) ? generate_link('Control_Panel&amp;i=pm&amp;mode=compose&amp;u='.$row['user_id']) : '')
+ 			);
+ 		}
+ 		$_CLASS['core_db']-&gt;free_result($result);
+@@ -237,7 +233,7 @@
+ 				if ($submit &amp;&amp; @extension_loaded('xml'))
+ 				{
+ 					// Add class loader
+-					require_once($site_file_root.'includes/forums/functions_messenger.php');
++					require_once(SITE_FILE_ROOT.'includes/forums/functions_messenger.php');
+ 
+ 					$subject = sprintf($_CLASS['core_user']-&gt;lang['IM_JABBER_SUBJECT'], $_CLASS['core_user']-&gt;data['username'], $config['server_name']);
+ 					$message = $_POST['message'];
+@@ -367,7 +363,7 @@
+ 		*/
+ 
+ 		// Change post_count_sql to an forum_id array the user is able to see
+-		if ($permission_array = $_CLASS['auth']-&gt;acl_getf('f_read'))
++		if ($permission_array = $_CLASS['forums_auth']-&gt;acl_getf('f_read'))
+ 		{
+ 			$post_count_sql = 'AND f.forum_id IN (' . implode(', ', array_keys($permission_array)) . ')';
+ 	
+@@ -427,7 +423,7 @@
+ 		if ($member['user_sig_bbcode_bitfield'] &amp;&amp; $member['user_sig'])
+ 		{
+ 			// Add class loader
+-			require_once($site_file_root.'includes/forums/bbcode.php');
++			require_once(SITE_FILE_ROOT.'includes/forums/bbcode.php');
+ 			$bbcode = new bbcode();
+ 			$bbcode-&gt;bbcode_second_pass($member['user_sig'], $member['user_sig_bbcode_uid'], $member['user_sig_bbcode_bitfield']);
+ 		}
+@@ -516,7 +512,7 @@
+ 			trigger_error('NO_EMAIL');
+ 		}
+ 
+-		if (!$_CLASS['auth']-&gt;acl_get('u_sendemail'))
++		if (!$_CLASS['forums_auth']-&gt;acl_get('u_sendemail'))
+ 		{
+ 			trigger_error('NO_EMAIL');
+ 		}
+@@ -556,7 +552,7 @@
+ 			}
+ 			
+ 			// Can we send email to this user?
+-			if (!$row['user_allow_viewemail'] &amp;&amp; !$_CLASS['auth']-&gt;acl_get('a_user'))
++			if (!$row['user_allow_viewemail'] &amp;&amp; !$_CLASS['forums_auth']-&gt;acl_get('a_user'))
+ 			{
+ 				trigger_error('NO_EMAIL');
+ 			}
+@@ -575,7 +571,7 @@
+ 				trigger_error('NO_TOPIC');
+ 			}
+ 
+-			if (!$_CLASS['auth']-&gt;acl_get('f_read', $row['forum_id']))
++			if (!$_CLASS['forums_auth']-&gt;acl_get('f_read', $row['forum_id']))
+ 			{
+ 				trigger_error('NO_FORUM_READ');
+ 			}
+@@ -730,7 +726,7 @@
+ 		$form	= $window = request_var('form', '');
+ 		$field	= request_var('field', 'username');
+ 
+-		if ($mode == 'searchuser' &amp;&amp; ($config['load_search'] || $_CLASS['auth']-&gt;acl_get('a_')))
++		if ($mode == 'searchuser' &amp;&amp; ($config['load_search'] || $_CLASS['forums_auth']-&gt;acl_get('a_')))
+ 		{
+ 			$username	= request_var('username', '');
+ 			$email		= request_var('email', '');
+@@ -784,7 +780,7 @@
+ 			$sql_where .= (sizeof($joined) &gt; 1) ? &quot; AND u.user_reg_date &quot; . $find_key_match[$joined_select] . ' ' . gmmktime(0, 0, 0, intval($joined[1]), intval($joined[2]), intval($joined[0])) : '';
+ 			$sql_where .= (sizeof($active) &gt; 1) ? &quot; AND u.user_last_visit &quot; . $find_key_match[$active_select] . ' ' . gmmktime(0, 0, 0, $active[1], intval($active[2]), intval($active[0])) : '';
+ 
+-			if ($ipdomain &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_ip'))
++			if ($ipdomain &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('m_ip'))
+ 			{
+ 				$ips = (preg_match('#[a-z]#', $ipdomain)) ? implode(', ', preg_replace('#([0-9]{1,3}\.[0-9]{1,3}[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})#', &quot;'\\1'&quot;, gethostbynamel($ipdomain))) : &quot;'&quot; . str_replace('*', '%', $ipdomain) . &quot;'&quot;;
+ 
+@@ -863,7 +859,7 @@
+ 					$group_row['group_type'] = 'HIDDEN';
+ 					
+ 					// Check for membership or special permissions
+-					if (!$_CLASS['auth']-&gt;acl_gets('a_group', 'a_groupadd', 'a_groupdel') &amp;&amp; $group_row['user_id'] != $_CLASS['core_user']-&gt;data['user_id'])
++					if (!$_CLASS['forums_auth']-&gt;acl_gets('a_group', 'a_groupadd', 'a_groupdel') &amp;&amp; $group_row['user_id'] != $_CLASS['core_user']-&gt;data['user_id'])
+ 					{
+ 						trigger_error('NO_GROUP');
+ 					}
+@@ -914,7 +910,7 @@
+ 				'AVATAR_IMG'	=&gt; $avatar_img,
+ 				'RANK_IMG'		=&gt; $rank_img,
+ 
+-				'U_PM'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_sendpm') &amp;&amp; $group_row['group_receive_pm'] &amp;&amp; $config['allow_mass_pm']) ? generate_link('Control_Panel&amp;i=pm&amp;mode=compose&amp;g='.$group_id) : '',)
++				'U_PM'			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('u_sendpm') &amp;&amp; $group_row['group_receive_pm'] &amp;&amp; $config['allow_mass_pm']) ? generate_link('Control_Panel&amp;i=pm&amp;mode=compose&amp;g='.$group_id) : '',)
+ 			);
+ 
+ 			$sql_fields = ', ug.member_status';
+@@ -956,6 +952,8 @@
+ 		// Build a relevant pagination_url
+ 		$global_var = ($submit) ? '_POST' : '_GET';
+ 
++		global $$global_var;
++
+ 		foreach ($$global_var as $key =&gt; $var)
+ 		{
+ 			// what don't we need ?
+@@ -965,14 +963,14 @@
+ 			}
+ 			
+ 			$pagination_url .= '&amp;' . $key . '=' . urlencode(htmlspecialchars($var));
+-			$pagination_url2 .= ($key != 'start') ? '&amp;' . $key . '=' . urlencode(htmlspecialchars($var)) : '';
++			$pagination_url2 .= ($key !== 'start') ? '&amp;' . $key . '=' . urlencode(htmlspecialchars($var)) : '';
+ 		}
+ 
+ 		$u_hide_find_member = $pagination_url;
+ 		$pagination_url .= (($mode) ? '&amp;mode='.$mode : '') . (($first_char) ? '&amp;first_char='.$first_char : '');
+ 
+ 		// Some search user specific data
+-		if ($mode == 'searchuser' &amp;&amp; ($config['load_search'] || $_CLASS['auth']-&gt;acl_get('a_')))
++		if ($mode == 'searchuser' &amp;&amp; ($config['load_search'] || $_CLASS['forums_auth']-&gt;acl_get('a_')))
+ 		{
+ 			$_CLASS['core_template']-&gt;assign_array(array(
+ 				'USERNAME'	=&gt; $username,
+@@ -1066,7 +1064,7 @@
+ 		'JABBER_IMG'	=&gt; $_CLASS['core_user']-&gt;img('btn_jabber', $_CLASS['core_user']-&gt;lang['JABBER']),
+ 		'SEARCH_IMG'	=&gt; $_CLASS['core_user']-&gt;img('btn_search', $_CLASS['core_user']-&gt;lang['SEARCH']),
+ 
+-		'U_FIND_MEMBER'		=&gt; (!empty($config['load_search']) || $_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('Members_List&amp;mode=searchuser') : '',
++		'U_FIND_MEMBER'		=&gt; (!empty($config['load_search']) || $_CLASS['forums_auth']-&gt;acl_get('a_')) ? generate_link('Members_List&amp;mode=searchuser') : '',
+ 		'U_HIDE_FIND_MEMBER'=&gt; ($mode == 'searchuser') ? generate_link($u_hide_find_member) : '',
+ 		'U_SORT_USERNAME'	=&gt; generate_link($pagination_url . '&amp;sk=a&amp;sd=' . (($sort_key == 'a' &amp;&amp; $sort_dir == 'a') ? 'd' : 'a')),
+ 		'U_SORT_FROM'		=&gt; generate_link($pagination_url . '&amp;sk=b&amp;sd=' . (($sort_key == 'b' &amp;&amp; $sort_dir == 'a') ? 'd' : 'a')),
+@@ -1082,7 +1080,7 @@
+ 		'U_SORT_RANK'		=&gt; generate_link($pagination_url . '&amp;sk=l&amp;sd=' . (($sort_key == 'l' &amp;&amp; $sort_dir == 'a') ? 'd' : 'a')),
+ 		'U_LIST_CHAR'		=&gt; generate_link($pagination_url . '&amp;sk=a&amp;sd=' . (($sort_key == 'l' &amp;&amp; $sort_dir == 'a') ? 'd' : 'a')),
+ 
+-		'S_SEND_MESSAGE'	=&gt; ($_CLASS['auth']-&gt;acl_get('u_sendpm')) ? true : false,
++		'S_SEND_MESSAGE'	=&gt; ($_CLASS['forums_auth']-&gt;acl_get('u_sendpm')) ? true : false,
+ 		'S_SHOW_GROUP'		=&gt; ($mode == 'group') ? true : false,
+ 		'S_MODE_SELECT'		=&gt; $s_sort_key,
+ 		'S_ORDER_SELECT'	=&gt; $s_sort_dir,
+@@ -1135,9 +1133,9 @@
+ 
+ 	get_user_rank($data['user_rank'], $data['user_posts'], $rank_title, $rank_img);
+ 	
+-	if (!empty($data['user_allow_viewemail']) || $_CLASS['auth']-&gt;acl_get('a_email'))
++	if (!empty($data['user_allow_viewemail']) || $_CLASS['forums_auth']-&gt;acl_get('a_email'))
+ 	{
+-		$email = ($config['board_email_form'] &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Members_List&amp;mode=email&amp;u='.$user_id) : (($config['board_hide_emails'] &amp;&amp; !$_CLASS['auth']-&gt;acl_get('a_email')) ? '' : 'mailto:' . $data['user_email']);
++		$email = ($config['board_email_form'] &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Members_List&amp;mode=email&amp;u='.$user_id) : (($config['board_hide_emails'] &amp;&amp; !$_CLASS['forums_auth']-&gt;acl_get('a_email')) ? '' : 'mailto:' . $data['user_email']);
+ 	}
+ 	else
+ 	{
+@@ -1161,8 +1159,8 @@
+ 		'ICQ_STATUS_IMG'=&gt; ($data['user_icq']) ? '&lt;img src=&quot;<A HREF="http://web.icq.com/whitepages/online?icq=">http://web.icq.com/whitepages/online?icq=</A>' . $data['user_icq'] . '&amp;img=5&quot; width=&quot;18&quot; height=&quot;18&quot; border=&quot;0&quot; /&gt;' : '',
+ 
+ 		'U_PROFILE'		=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u='.$user_id),
+-		'U_SEARCH_USER'	=&gt; ($_CLASS['auth']-&gt;acl_get('u_search')) ? generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($data['username']) . '&amp;show_results=posts') : '',
+-		'U_PM'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_sendpm')) ? generate_link('Control_Panel&amp;i=pm&amp;mode=compose&amp;u='.$user_id) : '',
++		'U_SEARCH_USER'	=&gt; ($_CLASS['forums_auth']-&gt;acl_get('u_search')) ? generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($data['username']) . '&amp;show_results=posts') : '',
++		'U_PM'			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('u_sendpm')) ? generate_link('Control_Panel&amp;i=pm&amp;mode=compose&amp;u='.$user_id) : '',
+ 		'U_EMAIL'		=&gt; $email,
+ 		'U_WWW'			=&gt; ($data['user_website']) ? $data['user_website'] : '',
+ 		'U_ICQ'			=&gt; ($data['user_icq']) ? generate_link('Members_List&amp;mode=contact&amp;action=icq&amp;u='.$user_id) : '',
+
+Modified: cms/trunk/modules/Quick_Message/ajax.php
+===================================================================
+--- cms/trunk/modules/Quick_Message/ajax.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/modules/Quick_Message/ajax.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -26,10 +26,12 @@
+     die;
+ }
+ 
+-global $table_prefix;
++global $_CORE_CONFIG, $_CLASS;
+ 
+ if (!defined('QUICK_MESSAGE_TABLE'))
+-{
++{
++	global $table_prefix;
++		
+ 	define('QUICK_MESSAGE_TABLE', $table_prefix.'quick_message');
+ }
+ 
+@@ -52,7 +54,7 @@
+ 			die;
+ 		}
+ 
+-		$message = trim(get_variable('message', 'POST', false));
++		$message = trim(get_variable('message', 'POST', ''));
+ 
+ 		if (!$message)
+ 		{
+@@ -139,8 +141,6 @@
+ 	break;
+ 
+ 	case 'delete':
+-		global $_CORE_CONFIG, $_CLASS;
+-
+ 		$id = get_variable('id', 'GET', false, 'integer');
+ 
+ 		if (!$id)
+
+Modified: cms/trunk/modules/Quick_Message/index.php
+===================================================================
+--- cms/trunk/modules/Quick_Message/index.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/modules/Quick_Message/index.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -26,10 +26,12 @@
+     die;
+ }
+ 
+-global $table_prefix;
++global $_CLASS, $_CORE_CONFIG;
+ 
+ if (!defined('QUICK_MESSAGE_TABLE'))
+-{
++{
++	global $table_prefix;
++
+ 	define('QUICK_MESSAGE_TABLE', $table_prefix.'quick_message');
+ }
+ 
+
+Modified: cms/trunk/modules/articles/index.php
+===================================================================
+--- cms/trunk/modules/articles/index.php	2005-10-06 18:22:34 UTC (rev 162)
++++ cms/trunk/modules/articles/index.php	2005-10-17 19:31:14 UTC (rev 163)
+@@ -28,9 +28,13 @@
+ 
+ if (!defined('ARTICLES_TABLE'))
+ {
++	global $table_prefix;
++
+ 	define('ARTICLES_TABLE', $table_prefix.'articles');
+ }
+ 
++global $_CLASS;
++
+ $_CLASS['core_user']-&gt;user_setup();
+ 
+ if (isset($_GET['mode']))
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000082.html">[Viperals-svncheckins] r162 - in cms/trunk: . blocks images includes includes/display includes/forums includes/forums/admin includes/forums/mcp includes/templates includes/templates/installer includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List install modules/Control_Panel/ucp modules/Forums themes/viperal/style
+</A></li>
+	<LI>Next message: <A HREF="000084.html">[Viperals-svncheckins] r164 - in cms/trunk: . admin blocks includes includes/display includes/forums install javascript
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#83">[ date ]</a>
+              <a href="thread.html#83">[ thread ]</a>
+              <a href="subject.html#83">[ subject ]</a>
+              <a href="author.html#83">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

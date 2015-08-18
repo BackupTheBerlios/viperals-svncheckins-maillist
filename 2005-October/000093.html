@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r174 - cms/trunk/blocks
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r174%20-%20cms/trunk/blocks&In-Reply-To=%3C200510311857.j9VIv6U5009082%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000092.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r174 - cms/trunk/blocks</H1>
+    <B>Jonathan Steele at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r174%20-%20cms/trunk/blocks&In-Reply-To=%3C200510311857.j9VIv6U5009082%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r174 - cms/trunk/blocks">masternoles at berlios.de
+       </A><BR>
+    <I>Mon Oct 31 19:57:06 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000092.html">[Viperals-svncheckins] r172 - cms/trunk
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: masternoles
+Date: 2005-10-31 19:57:04 +0100 (Mon, 31 Oct 2005)
+New Revision: 174
+
+Modified:
+   cms/trunk/blocks/block-User.php
+Log:
+
+
+Modified: cms/trunk/blocks/block-User.php
+===================================================================
+--- cms/trunk/blocks/block-User.php	2005-10-31 03:36:49 UTC (rev 173)
++++ cms/trunk/blocks/block-User.php	2005-10-31 18:57:04 UTC (rev 174)
+@@ -53,12 +53,11 @@
+ 	
+ 	}
+ 	
+-	$this-&gt;content .= '&lt;br /&gt;'.$_CLASS['core_user']-&gt;lang['WELCOME'].'&lt;br /&gt;' . $_CLASS['core_user']-&gt;data['username'].'&lt;br /&gt;&lt;hr /&gt;&lt;/div&gt;&lt;b&gt;Your Info&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;'
+-	.'&lt;div style=&quot;margin-left: 12px;&quot;&gt;&lt;a href=&quot;'.generate_link('control_panel&amp;i=2').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['PRIVATE_MESSAGE'].'&lt;/a&gt;&lt;hr /&gt;'.sprintf($_CLASS['core_user']-&gt;lang['NEW_PMS'], $_CLASS['core_user']-&gt;data['user_new_privmsg']) . '&lt;br /&gt;'
+-	.sprintf($_CLASS['core_user']-&gt;lang['UNREAD_PM'], $_CLASS['core_user']-&gt;data['user_unread_privmsg']) . '&lt;br /&gt;&lt;br /&gt;'
+-	//.$_CLASS['core_user']-&gt;format_date($_CLASS['core_user']-&gt;data['user_lastvisit'])
+-	.'&lt;a href=&quot;'.generate_link('control_panel').'&quot;&gt;Control Panel&lt;/a&gt;&lt;br /&gt;'
+-	.'&lt;a href=&quot;'.generate_link('control_panel&amp;mode=logout').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['LOGOUT'].'&lt;/a&gt;&lt;br /&gt;&lt;/div&gt;';
++	$this-&gt;content .= '&lt;br /&gt;'.$_CLASS['core_user']-&gt;lang['WELCOME'].'&lt;br /&gt;' . $_CLASS['core_user']-&gt;data['username'].'&lt;br /&gt;&lt;hr /&gt;&lt;/div&gt;&lt;b&gt;Your Info&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
++	&lt;div style=&quot;margin-left: 12px;&quot;&gt;&lt;a href=&quot;'.generate_link('control_panel&amp;i=2').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['PRIVATE_MESSAGE'].'&lt;/a&gt;&lt;hr /&gt;'.sprintf($_CLASS['core_user']-&gt;lang['NEW_PMS'], $_CLASS['core_user']-&gt;data['user_new_privmsg']) . '&lt;br /&gt;
++	'.sprintf($_CLASS['core_user']-&gt;lang['UNREAD_PM'], $_CLASS['core_user']-&gt;data['user_unread_privmsg']) . '&lt;br /&gt;&lt;br /&gt;
++	&lt;a href=&quot;'.generate_link('control_panel').'&quot;&gt;Control Panel&lt;/a&gt;&lt;br /&gt;
++	&lt;a href=&quot;'.generate_link('control_panel&amp;mode=logout').'&quot;&gt;'.$_CLASS['core_user']-&gt;lang['LOGOUT'].'&lt;/a&gt;&lt;br /&gt;&lt;/div&gt;';
+ }
+ else
+ {
+@@ -74,7 +73,7 @@
+ 	&lt;/tr&gt;
+ 	&lt;tr&gt;
+ 		&lt;td colspan=&quot;2&quot;&gt;
+-			&lt;input name=&quot;autologin&quot; type=&quot;checkbox&quot; /&gt;&lt;span class=&quot;gensmall&quot;&gt;Remmeber me&lt;/span&gt;
++			&lt;input name=&quot;autologin&quot; type=&quot;checkbox&quot; /&gt;&lt;span class=&quot;gensmall&quot;&gt;Remember me&lt;/span&gt;
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;/table&gt;
+@@ -165,9 +164,11 @@
+ 	}
+ }
+ 
+-unset($session_users);
+-unset($prev_id);
+-unset($prev_ip);
++if (isset($session_users))
++{
++    unset($session_users);
++}
++unset($prev_id,$prev_ip);
+ 
+ $this-&gt;content .= '
+ &lt;hr /&gt;&lt;table &gt;
+@@ -210,7 +211,6 @@
+ 	&lt;hr /&gt;&lt;b&gt;Members&lt;/b&gt;&lt;br /&gt;
+ '.(($who_where['user']) ? $who_where['user'] : '&lt;em&gt;&lt;b&gt;&nbsp;None Online&lt;/b&gt;&lt;/em&gt;').'&lt;br /&gt;&lt;b&gt;Guests&lt;/b&gt;&lt;br /&gt;
+ '.(($who_where['guest']) ? $who_where['guest'] : '&lt;em&gt;&lt;b&gt;&nbsp;None Online&lt;/b&gt;&lt;/em&gt;').'
+-		
+ 	&lt;/td&gt;
+   &lt;/tr&gt;
+ &lt;/table&gt;';
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000092.html">[Viperals-svncheckins] r172 - cms/trunk
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

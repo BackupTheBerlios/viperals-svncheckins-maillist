@@ -1,0 +1,364 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r77 - trunk/includes
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r77%20-%20trunk/includes&In-Reply-To=%3C200508081645.j78GjUjr028279%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000002.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r77 - trunk/includes</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r77%20-%20trunk/includes&In-Reply-To=%3C200508081645.j78GjUjr028279%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r77 - trunk/includes">viperal at berlios.de
+       </A><BR>
+    <I>Mon Aug  8 18:45:30 CEST 2005</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000002.html">[Viperals-svncheckins] r78 - trunk/includes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-08-08 18:44:56 +0200 (Mon, 08 Aug 2005)
+New Revision: 77
+
+Modified:
+   trunk/includes/mailer.php
+Log:
+
+
+Modified: trunk/includes/mailer.php
+===================================================================
+--- trunk/includes/mailer.php	2005-08-08 05:03:17 UTC (rev 76)
++++ trunk/includes/mailer.php	2005-08-08 16:44:56 UTC (rev 77)
+@@ -4,7 +4,7 @@
+ //**************************************************************//
+ //																//
+ //  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal )								//
++//  By Ryan Marshall ( Viperal&#169;	)								//
+ //																//
+ //  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+ //																//
+@@ -15,15 +15,14 @@
+ 
+ class core_mailer
+ {
+-	var $from;
+-	var $reply_to;
+ 	var $message;
+ 	var $subject;
+-	var $bcc;
+-	var $to;
++	var $address_arrays;
+ 	var $extra_headers;
+ 
+-	function setup()
++	var $encoding = 'UTF-8';
++
++	function core_mailer()
+ 	{	
+ 		$this-&gt;html = false;
+ 		$this-&gt;message = $this-&gt;subject = '';
+@@ -33,7 +32,7 @@
+ 	function to($address, $name = '')
+ 	{
+ 		$this-&gt;address_arrays['to'][] = array(
+-				'address'	=&gt; $address
++				'address'	=&gt; $address,
+ 				'name'		=&gt; $name
+ 			);
+ 	}
+@@ -41,7 +40,7 @@
+ 	function cc($address, $name = '')
+ 	{
+ 		$this-&gt;address_arrays['cc'][] = array(
+-				'address'	=&gt; $address
++				'address'	=&gt; $address,
+ 				'name'		=&gt; $name
+ 			);
+ 	}
+@@ -49,7 +48,7 @@
+ 	function bcc($address, $name = '')
+ 	{
+ 		$this-&gt;address_arrays['bcc'][] = array(
+-				'address'	=&gt; $address
++				'address'	=&gt; $address,
+ 				'name'		=&gt; $name
+ 			);
+ 	}
+@@ -57,7 +56,7 @@
+ 	function reply_to($address, $name = '')
+ 	{
+ 		$this-&gt;address_arrays['reply_to'] = array(
+-			'address'	=&gt; $address
++			'address'	=&gt; $address,
+ 			'name'		=&gt; $name
+ 		);
+ 	}
+@@ -65,7 +64,7 @@
+ 	function from($address, $name = '')
+ 	{
+ 		$this-&gt;address_arrays['from'] = array(
+-			'address'	=&gt; $address
++			'address'	=&gt; $address,
+ 			'name'		=&gt; $name
+ 		);
+ 	}
+@@ -96,14 +95,14 @@
+ 	{
+ 		global $_CLASS, $_CORE_CONFIG;
+ 
+-		$to = $cc = $bcc = $reply_to = $from = '';
++		$to = $cc = $bcc = $reply_to = $from = false;
+ 
+ 		foreach ($this-&gt;address_arrays as $type =&gt; $address)
+ 		{
+-			$$type = format_address($address);
++			$$type = $this-&gt;format_address($address);
+ 		}
+ 
+-		$_CORE_CONFIG['email']['site_mail'] = trim($_CORE_CONFIG['email']['site_mail'])
++		$_CORE_CONFIG['email']['site_mail'] = trim($_CORE_CONFIG['email']['site_mail']);
+ 
+ 		if (!$from)
+ 		{
+@@ -111,24 +110,42 @@
+ 			$from = '&lt;' . $_CORE_CONFIG['email']['site_mail'] . '&gt;';
+ 		}
+ 
+-		$headers = &quot;From: $from \n&quot;;
+-		$headers .= 'Date: ' . gmdate('D, d M Y H:i:s T')) . &quot;\n&quot;;
+-		$headers .= isset($cc) ? &quot;Cc: $cc\n&quot; : '';
+-		$headers .= isset($bcc) ? &quot;Bcc: $bcc\n&quot; : ''; 
+-		$headers .= isset($reply_to) ? &quot;Reply-to: $reply_to \n&quot; : '';
+-		$headers .= 'Return-Path: &lt;' . $_CORE_CONFIG['email']['site_mail'] . &quot;&gt;\n&quot;;
+-		$headers .= 'Sender: &lt;' .  . &quot;&gt;\n&quot;;
+-		$headers .= &quot;MIME-Version: 1.0\n&quot;;
+-		$headers .= 'Message-ID: &lt;' . ((function_exists('sha1')) ? sha1(uniqid(mt_rand(), true)) : md5(uniqid(mt_rand(), true))) . &quot;@&quot; . $_CORE_CONFIG['global']['site_name'] . &quot;&gt;\n&quot;;
++		$headers[] = &quot;From: $from&quot;;
++		$headers[] = 'Date: ' . gmdate('D, d M Y H:i:s T');
+ 
++		if (!$_CORE_CONFIG['email']['smtp'])
++		{
++			if ($cc)
++			{
++				$headers[] = &quot;Cc: $cc&quot;;
++			}
++
++			if ($bcc)
++			{
++				$headers[] = &quot;Bcc: $bcc&quot;;
++			}
++		}
++
++		if ($reply_to)
++		{
++			$headers[] = &quot;Reply-to: $reply_to&quot;;
++		}
++
++		$headers[] = 'Return-Path: &lt;' . $_CORE_CONFIG['email']['site_mail'] . &quot;&gt;&quot;;
++		$headers[] = 'Sender: &lt;' . $_CORE_CONFIG['email']['site_mail'] . &quot;&gt;&quot;;
++		$headers[] = &quot;MIME-Version: 1.0&quot;;
++		$headers[] = 'Message-ID: &lt;' . ((function_exists('sha1')) ? sha1(uniqid(mt_rand(), true)) : md5(uniqid(mt_rand(), true))) . &quot;@&quot; . $_CORE_CONFIG['global']['site_name'] . &quot;&gt;&quot;;
++
+ 		if ($this-&gt;html)
+ 		{
+ 			// multipart
+-			$text_boundary = trim('----part_'.((function_exists('sha1')) ? sha1(uniqid(mt_rand(), true)) : md5(uniqid(mt_rand(), true)));
++			$text_boundary = trim('----part_'.((function_exists('sha1')) ? sha1(uniqid(mt_rand(), true)) : md5(uniqid(mt_rand(), true))));
+ 
+-			$headers .= &quot;Content-Type: multipart/alternative;\nboundary=$text_boundary\n&quot;; 
+-			$headers .= 'Content-Type: text/html; charset='.$this-&gt;encoding.&quot;\n&quot;;
++			$headers[] = 'Content-Type: multipart/alternative;'; 
++			$headers[] = 'boundary=&quot;'.$text_boundary.'&quot;';
+ 			
++			//$message = 'This is a multi-part message in MIME format'.
++
+ 			// Plain text
+ 			$message = &quot;\n$text_boundary\n&quot;;
+ 			$message .= 'Content-type: text/plain; charset='.$this-&gt;encoding.&quot;\n&quot;; //format=
+@@ -145,15 +162,44 @@
+ 		}
+ 		else
+ 		{
+-			$headers .= 'Content-type: text/plain; charset='.$this-&gt;encoding.&quot;\n&quot;;
+-			$headers .= &quot;Content-transfer-encoding: 8bit\n&quot;;
+-			$message .= &quot;\n&quot;.strip_tags(preg_replace('/&lt;br[/]?&gt;/', &quot;/n&quot;, $this-&gt;message).&quot;\n&quot;;
++			$headers[] = 'Content-type: text/plain; charset='.$this-&gt;encoding;
++			$headers[] = 'Content-transfer-encoding: 8bit';
++			$message = &quot;\n&quot;.strip_tags(preg_replace('#&lt;br */?&gt;#i', &quot;/n&quot;, $this-&gt;message)).&quot;\n&quot;;
+ 		}
+ 
+-		if (function_exists($_CORE_CONFIG['email']['email_function_name'])
++		if ($_CORE_CONFIG['email']['smtp'])
+ 		{
+-			$result = $_CORE_CONFIG['email']['email_function_name']($to, $this-&gt;subject, $message, $headers);
++			$smtp = new smtp_mailer;
+ 
++			if ($connect = $smtp-&gt;connect($_CORE_CONFIG['email']['smtp_host'], $_CORE_CONFIG['email']['smtp_port']))
++			{
++				$login = $smtp-&gt;login($_CORE_CONFIG['email']['smtp_username'], $_CORE_CONFIG['email']['smtp_password']);
++			}
++
++			if (!$connect || !$login)
++			{
++				$this-&gt;error = $smtp-&gt;error;
++				return false;
++			}
++		
++			$smtp-&gt;subject = $this-&gt;subject;
++			$smtp-&gt;headers = $headers;
++			$smtp-&gt;message = $message;
++			$this-&gt;recipients = array_merge($this-&gt;address_arrays['to'], $this-&gt;address_arrays['cc'] , $this-&gt;address_arrays['bcc']);
++
++			if (!$smtp-&gt;send_mail())
++			{
++				$this-&gt;error = $smtp-&gt;error;
++				return false;
++			}
++
++			return true;			
++		}
++
++		if (function_exists($_CORE_CONFIG['email']['email_function_name']))
++		{
++			$result = $_CORE_CONFIG['email']['email_function_name']($to, $this-&gt;subject, $message, implode(&quot;\n&quot;, $headers));
++
+ 			if (!$result)
+ 			{
+ 				return false;
+@@ -177,6 +223,7 @@
+ 	var $connection;
+ 	var $host;
+ 	var $port;
++	var $error;
+ 
+ 	/*
+ 		PHP5 destructor
+@@ -190,7 +237,7 @@
+ 	{
+ 		$port = ((int) $port) ? (int) $port : 25;
+ 
+-		$this-&gt;connection = fsockopen($host, $port, $errno, $errstr, 15)
++		$this-&gt;connection = fsockopen($host, $port, $errno, $errstr, 15);
+ 
+ 		if (!$this-&gt;connection)
+ 		{
+@@ -236,6 +283,7 @@
+ 			if (!$this-&gt;check_response(250))
+ 			{
+ 				$this-&gt;disconnect();
++				$this-&gt;error = &quot;Server doesn't like you&quot;;
+ 				return false;
+ 			}
+ 		}
+@@ -251,6 +299,7 @@
+ 			}
+ 
+ 			$this-&gt;disconnect();
++			$this-&gt;error = &quot;Auth not supported&quot;;
+ 			return false;
+ 		}
+ 
+@@ -259,6 +308,7 @@
+ 		if (!$this-&gt;check_response(334))
+ 		{
+ 			$this-&gt;disconnect();
++			$this-&gt;error = &quot;User name denied&quot;;
+ 			return false;
+ 		}
+ 
+@@ -267,6 +317,7 @@
+ 		if (!$this-&gt;check_response(235))
+ 		{
+ 			$this-&gt;disconnect();
++			$this-&gt;error = &quot;Password denied&quot;;
+ 			return false;
+ 		}
+ 
+@@ -323,23 +374,22 @@
+ 			return false;
+ 		}
+ 
+-		//fwrite($this-&gt;connection, &quot;To: &quot;.implode(', ', $to_header).&quot;\r\n&quot;);
+-		$sending_header = ($this-&gt;subject) ? 'Subject: '.$this-&gt;subject.&quot;\r\n&quot; : ''; // should add something here
+-		$sending_header .= &quot;To: &quot;.implode(', ', $to_header).&quot;\r\n&quot;;
+-		$sending_header .= $this-&gt;headers.&quot;\r\n\r\n&quot;;
++		fwrite($this-&gt;connection, 'Subject: '.$this-&gt;subject.&quot;\r\n&quot;);
++		fwrite($this-&gt;connection, 'To: '.implode(', ', $to_header).&quot;\r\n&quot;);
++		fwrite($this-&gt;connection, implode(&quot;\r\n&quot;, $this-&gt;headers).&quot;\r\n\r\n&quot;);
+ 
+ // Do my html and plain text mail thing, change it to a function maybe ?
+-		fwrite($this-&gt;connection, $sending_header.$this-&gt;message.&quot;\r\n&quot;);
++		fwrite($this-&gt;connection, $this-&gt;message.&quot;\r\n&quot;);
+ 
+ 		fwrite($this-&gt;connection, '.'.&quot;\r\n&quot;);
+ 
+-		$status = $this-&gt;check_response(250)
++		$status = $this-&gt;check_response(250);
+ 		$this-&gt;disconnect();
+ 
+ 		return $status;
+ 	}
+ 
+-	function check_response($code, $full = false)
++	function check_response($code, $full = true)
+ 	{
+ 		$this-&gt;response = '';
+ 
+@@ -355,6 +405,7 @@
+ 		}
+ 
+ 		$this-&gt;response = trim($this-&gt;response);
++		echo $this-&gt;response.'&lt;br/&gt;';
+ 
+ 		if ($code &amp;&amp; substr($this-&gt;response, 0, 3) != $code)
+ 		{
+@@ -364,4 +415,5 @@
+ 		return true;
+ 	}
+ }
++
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000002.html">[Viperals-svncheckins] r78 - trunk/includes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,649 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r141 - in cms/trunk: includes includes/forums includes/templates/modules/Forums install javascript/forums modules/Forums
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r141%20-%20in%20cms/trunk%3A%20includes%20includes/forums%20includes/templates/modules/Forums%20install%20javascript/forums%20modules/Forums&In-Reply-To=%3C200509220421.j8M4Lpka028653%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000060.html">
+   <LINK REL="Next"  HREF="000062.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r141 - in cms/trunk: includes includes/forums includes/templates/modules/Forums install javascript/forums modules/Forums</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r141%20-%20in%20cms/trunk%3A%20includes%20includes/forums%20includes/templates/modules/Forums%20install%20javascript/forums%20modules/Forums&In-Reply-To=%3C200509220421.j8M4Lpka028653%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r141 - in cms/trunk: includes includes/forums includes/templates/modules/Forums install javascript/forums modules/Forums">viperal at berlios.de
+       </A><BR>
+    <I>Thu Sep 22 06:21:51 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000060.html">[Viperals-svncheckins] r140 - in cms/trunk: includes includes/forums includes/forums/mcp includes/templates/modules/Forums install modules/Control_Panel modules/Control_Panel/ucp modules/Forums modules/Quick_Message modules/articles
+</A></li>
+        <LI>Next message: <A HREF="000062.html">[Viperals-svncheckins] r142 - in cms/trunk: includes includes/forums includes/templates/modules/Control_Panel modules/Control_Panel/ucp modules/Forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-22 06:21:44 +0200 (Thu, 22 Sep 2005)
+New Revision: 141
+
+Modified:
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/functions_user.php
+   cms/trunk/includes/templates/modules/Forums/index_body.html
+   cms/trunk/includes/templates/modules/Forums/viewforum_body.html
+   cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html
+   cms/trunk/install/build_data.php
+   cms/trunk/javascript/forums/forum_view.js
+   cms/trunk/modules/Forums/ajax.php
+   cms/trunk/modules/Forums/viewforum.php
+Log:
+Topic and forum locking via ajax,
+updated topic title ajax edit to check for permission.
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/includes/forums/functions_display.php	2005-09-22 04:21:44 UTC (rev 141)
+@@ -319,6 +319,9 @@
+ 			//'FORUM_FOLDER_IMG_SRC'	=&gt; ($row['forum_image']) ? $row['forum_image'] : $_CLASS['core_user']-&gt;img($folder_image, $folder_alt, false, '', 'src'),
+ 			'FORUM_NAME'		=&gt; $row['forum_name'],
+ 			'FORUM_DESC'		=&gt; $row['forum_desc'], 
++			'FORUM_LOCKED' 		=&gt; ($row['forum_status'] == ITEM_LOCKED) ? 1 : 0,
++
++			
+ 			$l_post_click_count	=&gt; $post_click_count,
+ 			'TOPICS'			=&gt; $row['forum_topics'],
+ 			'LAST_POST_TIME'	=&gt; $last_post_time,
+@@ -346,27 +349,27 @@
+ 	return $active_forum_ary;
+ }
+ 
+-function topic_status(&amp;$topic_row, $replies, $mark_time, &amp;$folder_img, &amp;$folder_alt, &amp;$topic_type)
++function topic_status(&amp;$topic_row, $replies, $mark_time, &amp;$unread, &amp;$folder_img, &amp;$folder_alt, &amp;$topic_type)
+ {
+ 	global $_CLASS, $config;
+-	
++
+ 	$folder = $folder_new = '';
+-	$unread_topic = false;
++	$unread = ($mark_time &lt; $topic_row['topic_last_post_time']);
+ 
+ 	if ($topic_row['topic_status'] == ITEM_MOVED)
+ 	{
+ 		$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_MOVED'];
+ 		$folder_img = 'folder_moved';
+ 		$folder_alt = 'VIEW_TOPIC_MOVED';
++		$status = 9;
+ 	}
+ 	else
+ 	{
+ 		if ($topic_row['topic_status'] == ITEM_LOCKED)
+ 		{
+ 			$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_LOCKED'];
+-			$folder = 'folder_locked';
+-			$folder_new = 'folder_locked_new';
+-			
++			$folder_img = ($unread) ? 'folder_locked_new' :'folder_locked';
++			$status = ($unread) ? 11 : 10;
+ 		}
+ 		else
+ 		{
+@@ -375,40 +378,32 @@
+ 				case POST_GLOBAL:
+ 				case POST_ANNOUNCE:
+ 					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_ANNOUNCEMENT'];
+-					$folder = 'folder_announce';
+-					$folder_new = 'folder_announce_new';
+-					break;
++					$folder_img = ($unread) ? 'folder_announce_new' : 'folder_announce';
++					$status = ($unread) ? 8 : 7;
++				break;
+ 	
+ 				case POST_STICKY:
+ 					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_STICKY'];
+-					$folder = 'folder_sticky';
+-					$folder_new = 'folder_sticky_new';
+-					break;
++					$folder_img = ($unread) ? 'folder_sticky_new' : 'folder_sticky';
++					$status = ($unread) ? 6 : 5;
++				break;
+ 	
+ 				default:
+ 					if ($replies &gt;= $config['hot_threshold'])
+ 					{
+-						$folder = 'folder_hot';
+-						$folder_new = 'folder_hot_new';
++						$folder_img = ($unread) ? 'folder_hot_new': 'folder_hot';
++						$status = ($unread) ? 4 : 3;
+ 					}
+ 					else
+ 					{
+-						$folder = 'folder';
+-						$folder_new = 'folder_new';
++						$folder_img = ($unread) ? 'folder_new' : 'folder';
++						$status = ($unread) ? 2 : 1;
+ 					}
+-					break;
++				break;
+ 			}
+ 		}
+ 
+-		$unread_topic = true;
+-
+-		if ($mark_time &gt;= $topic_row['topic_last_post_time'])
+-		{
+-			$unread_topic = false;
+-		}
+-
+-		$folder_img = ($unread_topic) ? $folder_new : $folder;
+-		$folder_alt = ($unread_topic) ? 'NEW_POSTS' : (($topic_row['topic_status'] == ITEM_LOCKED) ? 'TOPIC_LOCKED' : 'NO_NEW_POSTS');
++		$folder_alt = ($unread) ? 'NEW_POSTS' : (($topic_row['topic_status'] == ITEM_LOCKED) ? 'TOPIC_LOCKED' : 'NO_NEW_POSTS');
+ 	}
+ 
+ 	if ($topic_row['poll_start'])
+@@ -416,7 +411,7 @@
+ 		$topic_type .= $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POLL'];
+ 	}
+ 
+-	return $unread_topic;
++	return $status;
+ }
+ 
+ // Display Attachments
+
+Modified: cms/trunk/includes/functions_user.php
+===================================================================
+--- cms/trunk/includes/functions_user.php	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/includes/functions_user.php	2005-09-22 04:21:44 UTC (rev 141)
+@@ -153,6 +153,21 @@
+ 		'user_allow_email'		=&gt; 1,
+ 	);
+ 
++	$default_data['user_data'] = serialize(array(
++		'viewimg' =&gt; 1,
++		'viewflash' =&gt; 1,
++		'viewsmilies' =&gt; 1,
++		'viewsigs'	=&gt; 1,
++		'viewavatars' =&gt; 1,
++		'viewcensors' =&gt; 1,
++
++		'bbcode' =&gt; 1,
++		'html'	=&gt; 1,
++		'smilies' =&gt; 1,
++		'attachsig' =&gt; 1,
++		'html'	=&gt; 1,
++	));
++
+ 	$data = array_merge($default_data, $data);
+ 
+ // add a required array here, then find feilds that are not in the data array
+
+Modified: cms/trunk/includes/templates/modules/Forums/index_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/index_body.html	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/includes/templates/modules/Forums/index_body.html	2005-09-22 04:21:44 UTC (rev 141)
+@@ -35,7 +35,7 @@
+ 	&lt;/tr&gt;
+ 	&lt;!-- ELSE --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot; id=&quot;forum_folder_status_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;lock_unlock_init('{ $forumrow:FORUM_ID }', 'forum', { $forumrow:FORUM_LOCKED });&quot; &lt;!-- ENDIF --&gt;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;td class=&quot;row1&quot; height=&quot;40&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
+ 			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;
+ 			&lt;p class=&quot;forumdesc&quot;&gt;{ $forumrow:FORUM_DESC }&lt;/p&gt;
+@@ -157,10 +157,10 @@
+ 		&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FORUM_NEW_IMG }&lt;/td&gt;
+ 		&lt;td&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS }&lt;/span&gt;&lt;/td&gt;
+ 		&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-		&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FORUM_IMG }&lt;/td&gt;
++		&lt;td width=&quot;20&quot; align=&quot;center&quot; id=&quot;forum_unlocked_status&quot;&gt;{ $FORUM_IMG }&lt;/td&gt;
+ 		&lt;td&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS }&lt;/span&gt;&lt;/td&gt;
+ 		&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-		&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FORUM_LOCKED_IMG }&lt;/td&gt;
++		&lt;td width=&quot;20&quot; align=&quot;center&quot; id=&quot;forum_locked_status&quot;&gt;{ $FORUM_LOCKED_IMG }&lt;/td&gt;
+ 		&lt;td&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_FORUM_LOCKED }&lt;/span&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+
+Modified: cms/trunk/includes/templates/modules/Forums/viewforum_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-22 04:21:44 UTC (rev 141)
+@@ -35,7 +35,7 @@
+ 
+ 	&lt;!-- LOOP $topicrow --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot; id=&quot;topic_folder_status_{ $topicrow:TOPIC_ID }&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;!-- IF { $S_TOPIC_ICONS } --&gt;
+ 		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;&lt;img src=&quot;{ $T_ICONS_PATH }{ $topicrow:TOPIC_ICON_IMG }&quot; width=&quot;{ $topicrow:TOPIC_ICON_IMG_WIDTH }&quot; height=&quot;{ $topicrow:TOPIC_ICON_IMG_HEIGHT }&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;/td&gt;
+ 		&lt;!-- ENDIF --&gt;
+@@ -159,11 +159,11 @@
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDIF --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot; id=&quot;topic_folder_status_{ $topicrow:TOPIC_ID }&quot; &lt;!-- IF { $MOD_TOPIC_LOCK } --&gt; onmouseover=&quot;lock_unlock_init('{ $topicrow:TOPIC_ID }', 'topic', { $topicrow:TOPIC_LOCKED });&quot; &lt;!-- ENDIF --&gt;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;!-- IF { $S_TOPIC_ICONS } --&gt;
+ 		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;&lt;!-- IF { $topicrow:TOPIC_ICON_IMG } --&gt;&lt;img src=&quot;{ $T_ICONS_PATH }{ $topicrow:TOPIC_ICON_IMG }&quot; width=&quot;{ $topicrow:TOPIC_ICON_IMG_WIDTH }&quot; height=&quot;{ $topicrow:TOPIC_ICON_IMG_HEIGHT }&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ 		&lt;!-- ENDIF --&gt;
+-		&lt;td class=&quot;row1&quot; id=&quot;topic_{ $topicrow:TOPIC_ID }&quot; onmouseover=&quot;tite_edit_init('{ $topicrow:TOPIC_ID }', 'topic');&quot;&gt;
++		&lt;td class=&quot;row1&quot; id=&quot;topic_{ $topicrow:TOPIC_ID }&quot; &lt;!-- IF { $MOD_TOPIC_TITLE } --&gt; onmouseover=&quot;tite_edit_init('{ $topicrow:TOPIC_ID }', 'topic');&quot; &lt;!-- ENDIF --&gt;&gt;
+ 			&lt;!-- IF { $topicrow:S_TOPIC_UNAPPROVED } --&gt;
+ 				&lt;a href=&quot;{ $topicrow:U_MCP_QUEUE }&quot;&gt;{ $UNAPPROVED_IMG }&lt;/a&gt;&nbsp;
+ 			&lt;!-- ENDIF --&gt;
+@@ -258,40 +258,58 @@
+ 
+ &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td align=&quot;left&quot; valign=&quot;top&quot;&gt;&lt;table cellspacing=&quot;3&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
+-			&lt;tr&gt;
+-				&lt;td width=&quot;20&quot; align=&quot;left&quot;&gt;{ $FOLDER_NEW_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS }&lt;/td&gt;
+-				&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-				&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FOLDER_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS }&lt;/td&gt;
+-				&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-				&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FOLDER_ANNOUNCE_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_ICON_ANNOUNCEMENT }&lt;/td&gt;
+-			&lt;/tr&gt;
+-			&lt;tr&gt;
+-				&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FOLDER_HOT_NEW_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS_HOT }&lt;/td&gt;
+-				&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-				&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FOLDER_HOT_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS_HOT }&lt;/td&gt;
+-				&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-				&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FOLDER_STICKY_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_ICON_STICKY }&lt;/td&gt;
+-			&lt;/tr&gt;
+-			&lt;tr&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $FOLDER_LOCKED_NEW_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS_LOCKED }&lt;/td&gt;
+-				&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $FOLDER_LOCKED_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS_LOCKED }&lt;/td&gt;
+-				&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
+-				&lt;td width=&quot;20&quot; align=&quot;center&quot;&gt;{ $FOLDER_MOVED_IMG }&lt;/td&gt;
+-				&lt;td class=&quot;gensmall&quot;&gt;{ $L_MOVED_TOPIC }&lt;/td&gt;
+-			&lt;/tr&gt;
+-		&lt;/table&gt;
++		&lt;td align=&quot;left&quot; valign=&quot;top&quot;&gt;
++			&lt;table cellspacing=&quot;3&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot;&gt;{ $FOLDER_NEW_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td align=&quot;center&quot; id=&quot;topic_unlocked_status&quot;&gt;{ $FOLDER_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td align=&quot;center&quot;&gt;{ $FOLDER_ANNOUNCE_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_ICON_ANNOUNCEMENT }&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot;&gt;{ $FOLDER_HOT_NEW_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS_HOT }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td align=&quot;center&quot;&gt;{ $FOLDER_HOT_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS_HOT }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td align=&quot;center&quot;&gt;{ $FOLDER_STICKY_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_ICON_STICKY }&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td class=&quot;gensmall&quot; align=&quot;center&quot;&gt;{ $FOLDER_LOCKED_NEW_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS_LOCKED }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot; align=&quot;center&quot; id=&quot;topic_locked_status&quot;&gt;{ $FOLDER_LOCKED_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS_LOCKED }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td align=&quot;center&quot;&gt;{ $FOLDER_MOVED_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_MOVED_TOPIC }&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;!-- IF { $S_HAS_SUBFORUM } --&gt;
++				&lt;tr&gt;
++					&lt;td colspan=&quot;8&quot; align=&quot;center&quot;&gt;
++						&lt;br/&gt;&lt;b&gt;Forums Status Legend&lt;/b&gt;
++					&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;tr&gt;
++					&lt;td align=&quot;center&quot;&gt;{ $FORUM_NEW_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NEW_POSTS }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td align=&quot;center&quot; id=&quot;forum_unlocked_status&quot;&gt;{ $FORUM_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_NO_NEW_POSTS }&lt;/td&gt;
++					&lt;td&gt;&nbsp;&nbsp;&lt;/td&gt;
++					&lt;td align=&quot;center&quot; id=&quot;forum_locked_status&quot;&gt;{ $FORUM_LOCKED_IMG }&lt;/td&gt;
++					&lt;td class=&quot;gensmall&quot;&gt;{ $L_FORUM_LOCKED }&lt;/td&gt;
++				&lt;/tr&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/table&gt;
+ 		&lt;/td&gt;
+-		&lt;td align=&quot;right&quot;&gt;
++		&lt;td valign=&quot;top&quot; align=&quot;right&quot;&gt;
+ 			&lt;span class=&quot;gensmall&quot;&gt;
+ 			&lt;!-- LOOP $rules --&gt;{ $rules:RULE }&lt;br /&gt;&lt;!-- ENDLOOP --&gt;
+ 			&lt;/span&gt;
+@@ -299,6 +317,8 @@
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ &lt;!-- ENDIF --&gt;
++
++
+ &lt;br clear=&quot;all&quot; /&gt;
+ 
+ &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot;&gt;
+
+Modified: cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html	2005-09-22 04:21:44 UTC (rev 141)
+@@ -10,8 +10,7 @@
+ 		&lt;th width=&quot;50&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;{ $L_POSTS }&nbsp;&lt;/th&gt;
+ 		&lt;th nowrap=&quot;nowrap&quot;&gt;&nbsp;{ $L_LAST_POST }&nbsp;&lt;/th&gt;
+ 	&lt;/tr&gt;
+-	&lt;!-- LOOP $forumrow --&gt;
+-	
++&lt;!-- LOOP $forumrow --&gt;
+ 	&lt;!-- IF { $forumrow:S_IS_CAT } --&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;cat&quot; colspan=&quot;2&quot;&gt;&lt;a class=&quot;cattitle&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;/td&gt;
+@@ -34,7 +33,7 @@
+ 	&lt;/tr&gt;
+ 	&lt;!-- ELSE --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot; id=&quot;forum_folder_status_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;lock_unlock_init('{ $forumrow:FORUM_ID }', 'forum', { $forumrow:FORUM_LOCKED });&quot; &lt;!-- ENDIF --&gt;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;100%&quot; height=&quot;40&quot;  id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt;&gt;
+ 			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;br /&gt;
+ 			&lt;!-- IF { $forumrow:FORUM_DESC } --&gt;
+@@ -58,7 +57,7 @@
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDIF --&gt;
+-	&lt;!-- ENDLOOP $forumrow --&gt;
++&lt;!-- ENDLOOP $forumrow --&gt;
+ &lt;/table&gt;
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/install/build_data.php
+===================================================================
+--- cms/trunk/install/build_data.php	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/install/build_data.php	2005-09-22 04:21:44 UTC (rev 141)
+@@ -159,10 +159,23 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':|', 'neutral.png', 'Neutral', 19, 19, 21, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':mrgreen:', 'mrgreen.png', 'Mr. Green', 19, 19, 22, 0)&quot;);
+ 
+-$admin_data = $_CLASS['core_db']-&gt;escape('a:6:{s:7:&quot;viewimg&quot;;b:1;s:9:&quot;viewflash&quot;;b:1;s:11:&quot;viewsmilies&quot;;b:1;s:8:&quot;viewsigs&quot;;b:1;s:11:&quot;viewavatars&quot;;b:1;s:11:&quot;viewcensors&quot;;b:1;}');
+-$guest_data = $_CLASS['core_db']-&gt;escape('a:6:{s:7:&quot;viewimg&quot;;b:1;s:9:&quot;viewflash&quot;;b:1;s:11:&quot;viewsmilies&quot;;b:1;s:8:&quot;viewsigs&quot;;b:1;s:11:&quot;viewavatars&quot;;b:1;s:11:&quot;viewcensors&quot;;b:1;}');
+-$bot_data = $_CLASS['core_db']-&gt;escape('a:6:{s:7:&quot;viewimg&quot;;b:1;s:9:&quot;viewflash&quot;;b:1;s:11:&quot;viewsmilies&quot;;b:1;s:8:&quot;viewsigs&quot;;b:1;s:11:&quot;viewavatars&quot;;b:1;s:11:&quot;viewcensors&quot;;b:1;}');
++$data = serialize(array(
++	'viewimg' =&gt; 1,
++	'viewflash' =&gt; 1,
++	'viewsmilies' =&gt; 1,
++	'viewsigs'	=&gt; 1,
++	'viewavatars' =&gt; 1,
++	'viewcensors' =&gt; 1,
+ 
++	'bbcode' =&gt; 1,
++	'html'	=&gt; 1,
++	'smilies' =&gt; 1,
++	'attachsig' =&gt; 1,
++	'html'	=&gt; 1,
++));
++
++$admin_data = $guest_data = $bot_data = $_CLASS['core_db']-&gt;escape($data);
++
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0, '$guest_data')&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', '', 1, 1, 1, 1, 1, '$admin_data')&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
+
+Modified: cms/trunk/javascript/forums/forum_view.js
+===================================================================
+--- cms/trunk/javascript/forums/forum_view.js	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/javascript/forums/forum_view.js	2005-09-22 04:21:44 UTC (rev 141)
+@@ -1,12 +1,65 @@
+ // By Ryan Marshall ( <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A> )
+ //svn checkout <A HREF="svn://svn.berlios.de/viperals/cms/trunk">svn://svn.berlios.de/viperals/cms/trunk</A> /net/pork/export/nfs/home/groups/viperals/htdocs
++
++function lock_unlock_init(id, mode, status)
++{
++	var area = document.getElementById(mode + '_folder_status_' + id);
++
++	if (!area)
++	{
++		return;
++	}
++
++	area.onmouseover = '';
++	area.ondblclick = function()
++	{
++		lock_unlock(id, mode, status);
++	}
++}
++
++// make this support more than 1 id
++function lock_unlock(id, mode, status)
++{
++	var area = document.getElementById(mode + '_folder_status_' + id);
++
++	ajax = new core_ajax();
++	var lock = (status) ? 0 : 1;
++
++	var onreadystatechange = function()
++	{
++		if (ajax.state_ready() &amp;&amp; ajax.responseText())
++		{
++			if (ajax.responseText() == 'unlock')
++			{ 
++				var new_status = 0;
++				var status = document.getElementById(mode +'_unlocked_status');
++			}
++			else
++			{
++				var new_status = 1;
++				var status = document.getElementById(mode +'_locked_status');
++			}
++
++			area.innerHTML = status.innerHTML;
++			area.ondblclick = function()
++			{
++				lock_unlock(id, mode, new_status);
++			}
++		}
++	}
++
++	ajax.onreadystatechange(onreadystatechange);
++
++	ajax.send('ajax.php?mod=Forums', '&amp;mode=' + mode + '_lock_unlock&amp;lock=' + lock + '&amp;id=' + id);
++}
++
+ function tite_edit_init(id, mode)
+ {
+-	var area = document.getElementById(mode + '_' + id)
++	var area = document.getElementById(mode + '_' + id);
+ 
+ 	if (!area)
+ 	{
+-		return
++		return;
+ 	}
+ 
+ 	area.onmouseover = '';
+
+Modified: cms/trunk/modules/Forums/ajax.php
+===================================================================
+--- cms/trunk/modules/Forums/ajax.php	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/modules/Forums/ajax.php	2005-09-22 04:21:44 UTC (rev 141)
+@@ -79,6 +79,55 @@
+ 
+ 		echo $title;
+ 	break;
++	
++	case 'topic_lock_unlock':
++		$topic_id = get_variable('id', 'POST', false, 'int');
++		$lock = get_variable('lock', 'POST', 0, 'int');
++
++		if (!$topic_id)
++		{
++			die;
++		}
++
++		$result = $_CLASS['core_db']-&gt;query('SELECT forum_id FROM ' . FORUMS_TOPICS_TABLE . ' WHERE topic_id = '.$topic_id);
++		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		if (!$row || !$_CLASS['auth']-&gt;acl_get('m_lock', $row['forum_id']))
++		{
++			die;
++		}
++
++		$status = ($lock) ? ITEM_LOCKED : ITEM_UNLOCKED;
++		//	WHERE topic_id IN (&quot; . implode(', ', $topic_id) . &quot;)&quot;;
++
++		$sql = 'UPDATE '. FORUMS_TOPICS_TABLE .&quot; 
++			SET topic_status = $status
++			WHERE topic_id = $topic_id&quot;;
++		$_CLASS['core_db']-&gt;query($sql);
++
++		echo ($lock) ? 'lock' : 'unlock';
++	break;
++	
++	case 'forum_lock_unlock':
++		$forum_id = get_variable('id', 'POST', false, 'int');
++		$lock = get_variable('lock', 'POST', 0, 'int');
++
++		if (!$forum_id || !$_CLASS['auth']-&gt;acl_get('a_forum', $forum_id))
++		{
++			die;
++		}
++
++		$status = ($lock) ? ITEM_LOCKED : ITEM_UNLOCKED;
++		//	WHERE topic_id IN (&quot; . implode(', ', $topic_id) . &quot;)&quot;;
++
++		$sql = 'UPDATE '. FORUMS_FORUMS_TABLE .&quot; 
++			SET forum_status = $status
++			WHERE forum_id = $forum_id&quot;;
++		$_CLASS['core_db']-&gt;query($sql);
++
++		echo ($lock) ? 'lock' : 'unlock';
++	break;
+ }
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/Forums/viewforum.php
+===================================================================
+--- cms/trunk/modules/Forums/viewforum.php	2005-09-21 23:22:59 UTC (rev 140)
++++ cms/trunk/modules/Forums/viewforum.php	2005-09-22 04:21:44 UTC (rev 141)
+@@ -202,7 +202,8 @@
+ /*
+ Need test this first
+ // Do the forum Prune thang - cron type job ...
+-if ($forum_data['prune_next'] &lt; time() &amp;&amp; $forum_data['enable_prune'])
++
++if ($forum_data['enable_prune'] &amp;&amp; $forum_data['prune_next'] &lt; $_CLASS['core_user']-&gt;time)
+ {
+ 	require_once(SITE_FILE_ROOT.'includes/forums/functions_admin.php');
+ 
+@@ -220,7 +221,7 @@
+ 
+ if ($_CLASS['auth']-&gt;acl_get('f_subscribe', $forum_id))
+ {
+-	$notify_status = (isset($forum_data['notify_status'])) ? $forum_data['notify_status'] : NULL;
++	$notify_status = isset($forum_data['notify_status']) ? $forum_data['notify_status'] : null;
+ 	$s_watching_forum = watch_topic_forum('forum', $_CLASS['core_user']-&gt;data['user_id'], $forum_id, 0, $notify_status);
+ }
+ else
+@@ -244,7 +245,7 @@
+ // Limit topics to certain time frame, obtain correct topic count
+ if ($sort_days)
+ {
+-	$min_post_time = time() - ($sort_days * 86400);
++	$min_post_time = $_CLASS['core_user']-&gt;time - ($sort_days * 86400);
+ 
+ 	$sql = 'SELECT COUNT(topic_id) AS num_topics
+ 		FROM ' . FORUMS_TOPICS_TABLE . &quot;
+@@ -288,6 +289,14 @@
+ 	'MODERATORS'		=&gt; empty($moderators[$forum_id]) ? '' : implode(', ', $moderators[$forum_id]),
+ 
+ 	'POST_IMG' 				=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;img('btn_locked', $post_alt) : $_CLASS['core_user']-&gt;img('btn_post', $post_alt),
++
++	'MOD_TOPIC_LOCK'	=&gt;	$_CLASS['auth']-&gt;acl_get('m_lock', $forum_id),
++	'MOD_TOPIC_TITLE'	=&gt;	$_CLASS['auth']-&gt;acl_get('m_', $forum_id),
++
++	'FORUM_IMG'			=&gt;	$_CLASS['core_user']-&gt;img('forum', 'NO_NEW_POSTS'),
++	'FORUM_NEW_IMG'		=&gt;	$_CLASS['core_user']-&gt;img('forum_new', 'NEW_POSTS'),
++	'FORUM_LOCKED_IMG'	=&gt;	$_CLASS['core_user']-&gt;img('forum_locked', 'NO_NEW_POSTS_LOCKED'),
++
+ 	'FOLDER_IMG' 			=&gt; $_CLASS['core_user']-&gt;img('folder', 'NO_NEW_POSTS'),
+ 	'FOLDER_NEW_IMG' 		=&gt; $_CLASS['core_user']-&gt;img('folder_new', 'NEW_POSTS'),
+ 	'FOLDER_HOT_IMG' 		=&gt; $_CLASS['core_user']-&gt;img('folder_hot', 'NO_NEW_POSTS_HOT'),
+@@ -466,13 +475,15 @@
+ 
+ 		if ($row['topic_status'] == ITEM_MOVED)
+ 		{
++// currently no marking supported
+ 			$topic_id = $row['topic_moved_id'];
+ 		}
+ 
+ 		// Get folder img, topic status/type related informations
+ 		$folder_img = $folder_alt = $topic_type = '';
+-		$unread_topic = topic_status($row, $replies, $mark_time, $folder_img, $folder_alt, $topic_type);
+-		
++	//	$status = topic_status($row, $replies, $mark_time, $unread_topic, $folder_img, $folder_alt, $topic_type);
++		topic_status($row, $replies, $mark_time, $unread_topic, $folder_img, $folder_alt, $topic_type);
++
+ 		$newest_post_img = ($unread_topic) ? '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=unread#unread&quot;) . '&quot;&gt;' . $_CLASS['core_user']-&gt;img('icon_post_newest', 'VIEW_NEWEST_POST') . '&lt;/a&gt; ' : '';
+ 
+ 		// Generate all the URIs ...
+@@ -501,6 +512,8 @@
+ 			'TOPIC_TITLE' 		=&gt; censor_text($row['topic_title']),
+ 			'TOPIC_TYPE' 		=&gt; $topic_type,
+ 
++			'TOPIC_LOCKED' 		=&gt; ($row['topic_status'] == ITEM_LOCKED) ? 1 : 0,
++
+ 			'LAST_POST_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'),
+ 			'NEWEST_POST_IMG' 	=&gt; $newest_post_img,
+ 			'TOPIC_FOLDER_IMG' 	=&gt; $_CLASS['core_user']-&gt;img($folder_img, $folder_alt),
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000060.html">[Viperals-svncheckins] r140 - in cms/trunk: includes includes/forums includes/forums/mcp includes/templates/modules/Forums install modules/Control_Panel modules/Control_Panel/ucp modules/Forums modules/Quick_Message modules/articles
+</A></li>
+	<LI>Next message: <A HREF="000062.html">[Viperals-svncheckins] r142 - in cms/trunk: includes includes/forums includes/templates/modules/Control_Panel modules/Control_Panel/ucp modules/Forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

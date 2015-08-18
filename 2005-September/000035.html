@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r114 - in cms/trunk: . includes/display themes/viperal themes/viperal/images themes/viperal/template themes_admin/viperal_admin themes_admin/viperal_admin/images themes_admin/viperal_admin/template
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r114%20-%20in%20cms/trunk%3A%20.%20includes/display%20themes/viperal%20themes/viperal/images%20themes/viperal/template%20themes_admin/viperal_admin%20themes_admin/viperal_admin/images%20themes_admin/viperal_admin/template&In-Reply-To=%3C200509112013.j8BKD1Se018061%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000034.html">
+   <LINK REL="Next"  HREF="000036.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r114 - in cms/trunk: . includes/display themes/viperal themes/viperal/images themes/viperal/template themes_admin/viperal_admin themes_admin/viperal_admin/images themes_admin/viperal_admin/template</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r114%20-%20in%20cms/trunk%3A%20.%20includes/display%20themes/viperal%20themes/viperal/images%20themes/viperal/template%20themes_admin/viperal_admin%20themes_admin/viperal_admin/images%20themes_admin/viperal_admin/template&In-Reply-To=%3C200509112013.j8BKD1Se018061%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r114 - in cms/trunk: . includes/display themes/viperal themes/viperal/images themes/viperal/template themes_admin/viperal_admin themes_admin/viperal_admin/images themes_admin/viperal_admin/template">viperal at berlios.de
+       </A><BR>
+    <I>Sun Sep 11 22:13:01 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000034.html">[Viperals-svncheckins] r113 - in cms/trunk: . images includes/templates
+</A></li>
+        <LI>Next message: <A HREF="000036.html">[Viperals-svncheckins] r115 - cms/trunk/themes/viperal/style
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#35">[ date ]</a>
+              <a href="thread.html#35">[ thread ]</a>
+              <a href="subject.html#35">[ subject ]</a>
+              <a href="author.html#35">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-11 22:12:59 +0200 (Sun, 11 Sep 2005)
+New Revision: 114
+
+Added:
+   cms/trunk/themes_admin/viperal_admin/images/Viperal_Logo.gif
+   cms/trunk/themes_admin/viperal_admin/images/cellpic1.gif
+   cms/trunk/themes_admin/viperal_admin/images/cellpic2.jpg
+   cms/trunk/themes_admin/viperal_admin/images/mail.png
+   cms/trunk/themes_admin/viperal_admin/images/print.png
+Removed:
+   cms/trunk/themes/viperal/images/Thumbs.db
+   cms/trunk/themes_admin/viperal_admin/images/Thumbs.db
+Modified:
+   cms/trunk/feed.php
+   cms/trunk/includes/display/display.php
+   cms/trunk/themes/viperal/index.php
+   cms/trunk/themes/viperal/template/header.html
+   cms/trunk/themes_admin/viperal_admin/index.php
+   cms/trunk/themes_admin/viperal_admin/template/header.html
+Log:
+domain path for trunk, stupid me forgot to fix it again :-(
+
+Modified: cms/trunk/feed.php
+===================================================================
+--- cms/trunk/feed.php	2005-09-11 19:31:33 UTC (rev 113)
++++ cms/trunk/feed.php	2005-09-11 20:12:59 UTC (rev 114)
+@@ -33,7 +33,7 @@
+ 
+ if (!defined('ARTICLES_TABLE'))
+ {
+-	define('ARTICLES_TABLE', $prefix.'articles');
++	define('ARTICLES_TABLE', $table_prefix.'articles');
+ }
+ 
+ $result = $_CLASS['core_db']-&gt;query_limit('SELECT articles_id, articles_title, articles_intro, articles_text, articles_posted, articles_starts, poster_name FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC', 10);
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-09-11 19:31:33 UTC (rev 113)
++++ cms/trunk/includes/display/display.php	2005-09-11 20:12:59 UTC (rev 114)
+@@ -167,7 +167,7 @@
+ 			$this-&gt;header['regular'] .= '&lt;link rel=&quot;shortcut icon&quot; href=&quot;favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;';
+ 		}
+ 
+-		$this-&gt;header['regular'] .= '&lt;link rel=&quot;alternate&quot; type=&quot;application/xml&quot; title=&quot;RSS&quot; href=&quot;'.generate_base_url().'backend.php?feed=rdf&quot; /&gt;';
++		$this-&gt;header['regular'] .= '&lt;link rel=&quot;alternate&quot; type=&quot;application/xml&quot; title=&quot;RSS&quot; href=&quot;'.generate_base_url().'feed.php?feed=rdf&quot; /&gt;';
+ 
+ 		if ($_CORE_CONFIG['maintenance']['active'] &amp;&amp; $_CORE_CONFIG['maintenance']['start'] &lt; time())
+ 		{
+
+Deleted: cms/trunk/themes/viperal/images/Thumbs.db
+===================================================================
+(Binary files differ)
+
+Modified: cms/trunk/themes/viperal/index.php
+===================================================================
+--- cms/trunk/themes/viperal/index.php	2005-09-11 19:31:33 UTC (rev 113)
++++ cms/trunk/themes/viperal/index.php	2005-09-11 20:12:59 UTC (rev 114)
+@@ -39,7 +39,7 @@
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'A_TABLE_OPEN'	=&gt; $this-&gt;table_open,
+ 			'A_TABLE_CLOSE'	=&gt; $this-&gt;table_close,
+-			'A_STYLESHEET'	=&gt; '/themes/viperal/style/style.css',
++			'A_STYLESHEET'	=&gt; 'themes/viperal/style/style.css',
+ 		));
+ 	}
+ 
+
+Modified: cms/trunk/themes/viperal/template/header.html
+===================================================================
+--- cms/trunk/themes/viperal/template/header.html	2005-09-11 19:31:33 UTC (rev 113)
++++ cms/trunk/themes/viperal/template/header.html	2005-09-11 20:12:59 UTC (rev 114)
+@@ -11,7 +11,7 @@
+ { $HEADER_REGULAR }
+ 
+ { $HEADER_JS }
+-&lt;script type=&quot;text/javascript&quot; src=&quot;/javascript/collapse.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/collapse.js&quot;&gt;&lt;/script&gt;
+ 
+ &lt;!--[if IE]&gt;
+ &lt;style&gt;
+
+Deleted: cms/trunk/themes_admin/viperal_admin/images/Thumbs.db
+===================================================================
+(Binary files differ)
+
+Added: cms/trunk/themes_admin/viperal_admin/images/Viperal_Logo.gif
+===================================================================
+(Binary files differ)
+
+
+Property changes on: cms/trunk/themes_admin/viperal_admin/images/Viperal_Logo.gif
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: cms/trunk/themes_admin/viperal_admin/images/cellpic1.gif
+===================================================================
+(Binary files differ)
+
+
+Property changes on: cms/trunk/themes_admin/viperal_admin/images/cellpic1.gif
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: cms/trunk/themes_admin/viperal_admin/images/cellpic2.jpg
+===================================================================
+(Binary files differ)
+
+
+Property changes on: cms/trunk/themes_admin/viperal_admin/images/cellpic2.jpg
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: cms/trunk/themes_admin/viperal_admin/images/mail.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: cms/trunk/themes_admin/viperal_admin/images/mail.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: cms/trunk/themes_admin/viperal_admin/images/print.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: cms/trunk/themes_admin/viperal_admin/images/print.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Modified: cms/trunk/themes_admin/viperal_admin/index.php
+===================================================================
+--- cms/trunk/themes_admin/viperal_admin/index.php	2005-09-11 19:31:33 UTC (rev 113)
++++ cms/trunk/themes_admin/viperal_admin/index.php	2005-09-11 20:12:59 UTC (rev 114)
+@@ -30,7 +30,7 @@
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'A_TABLE_OPEN'	=&gt; $this-&gt;table_open,
+ 			'A_TABLE_CLOSE'	=&gt; $this-&gt;table_close,
+-			'A_STYLESHEET'	=&gt; '/themes_admin/viperal_admin/style/style.css',
++			'A_STYLESHEET'	=&gt; 'themes_admin/viperal_admin/style/style.css',
+ 		));
+ 	}
+ 
+
+Modified: cms/trunk/themes_admin/viperal_admin/template/header.html
+===================================================================
+--- cms/trunk/themes_admin/viperal_admin/template/header.html	2005-09-11 19:31:33 UTC (rev 113)
++++ cms/trunk/themes_admin/viperal_admin/template/header.html	2005-09-11 20:12:59 UTC (rev 114)
+@@ -12,8 +12,8 @@
+ { $HEADER_REGULAR }
+ { $HEADER_JS }
+ 
+-&lt;script type=&quot;text/javascript&quot; src=&quot;/javascript/collapse.js&quot;&gt;&lt;/script&gt;
+-&lt;script type=&quot;text/javascript&quot; src=&quot;/javascript/menu.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/collapse.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/menu.js&quot;&gt;&lt;/script&gt;
+ 
+ &lt;!--[if IE]&gt;
+ &lt;style&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000034.html">[Viperals-svncheckins] r113 - in cms/trunk: . images includes/templates
+</A></li>
+	<LI>Next message: <A HREF="000036.html">[Viperals-svncheckins] r115 - cms/trunk/themes/viperal/style
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#35">[ date ]</a>
+              <a href="thread.html#35">[ thread ]</a>
+              <a href="subject.html#35">[ subject ]</a>
+              <a href="author.html#35">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

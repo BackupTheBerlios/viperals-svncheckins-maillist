@@ -1,0 +1,1048 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r118 - in cms/trunk: . install
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r118%20-%20in%20cms/trunk%3A%20.%20install&In-Reply-To=%3C200509130342.j8D3gWex029130%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000038.html">
+   <LINK REL="Next"  HREF="000040.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r118 - in cms/trunk: . install</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r118%20-%20in%20cms/trunk%3A%20.%20install&In-Reply-To=%3C200509130342.j8D3gWex029130%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r118 - in cms/trunk: . install">viperal at berlios.de
+       </A><BR>
+    <I>Tue Sep 13 05:42:32 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000038.html">[Viperals-svncheckins] r117 - cms/branches/1.0alpha1
+</A></li>
+        <LI>Next message: <A HREF="000040.html">[Viperals-svncheckins] r119 - in cms/trunk: . includes/templates/installer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-13 05:42:19 +0200 (Tue, 13 Sep 2005)
+New Revision: 118
+
+Added:
+   cms/trunk/installer.php
+Removed:
+   cms/trunk/install/installer.php
+Log:
+
+
+Deleted: cms/trunk/install/installer.php
+===================================================================
+--- cms/trunk/install/installer.php	2005-09-11 20:23:58 UTC (rev 117)
++++ cms/trunk/install/installer.php	2005-09-13 03:42:19 UTC (rev 118)
+@@ -1,481 +0,0 @@
+-&lt;?php
+-/*
+-||**************************************************************||
+-||  Viperal CMS &#169; :												||
+-||**************************************************************||
+-||																||
+-||	Copyright (C) 2004, 2005									||
+-||  By Ryan Marshall ( Viperal )								||
+-||																||
+-||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
+-||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
+-||																||
+-||**************************************************************||
+-||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
+-||**************************************************************||
+-||  Viperal CMS is released under the terms and conditions		||
+-||  of the GNU General Public License version 2					||
+-||																||
+-||**************************************************************||
+-
+-$Id$
+-*/
+-define('VIPERAL', 'INSTALLER');
+-
+-error_reporting(E_ALL);
+-
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '../';
+-
+-if (!extension_loaded('mbstring'))
+-{
+-	require_once($site_file_root.'includes/compatiblity/mbstring.php');
+-}
+-
+-set_magic_quotes_runtime(0);
+-mb_internal_encoding('UTF-8');
+-
+-define('STRIP_SLASHES', get_magic_quotes_gpc());
+-
+-// Remove registered globals
+-if ((bool) ini_get('register_globals'))
+-{
+-	foreach ($_REQUEST as $var_name =&gt; $value)
+-	{
+-		unset($$var_name);
+-	}
+-}
+-
+-require_once($site_file_root.'includes/functions.php');
+-require_once($site_file_root.'includes/display/template.php');
+-
+-load_class(false, 'core_template');
+-
+-$holding_array = array(
+-	'mysql'		=&gt; array(
+-		'lang'			=&gt; 'MySQL',
+-		'extension'		=&gt; 'mysql', 
+-	),
+-	'mysql3'			=&gt; array(
+-		'lang'			=&gt; 'MySQL3',
+-		'extension'		=&gt; 'mysql',
+-	),
+-	'mysqli'	=&gt; array(
+-		'lang'			=&gt; 'MySQL 4.1.x',
+-		'extension'		=&gt; 'mysqli', 
+-	),
+-	'mssql'		=&gt; array(
+-		'lang'			=&gt; 'MS SQL Server 7/2000',
+-		'extension'		=&gt; 'mssql', 
+-	),
+-	'postgres' =&gt; array(
+-		'lang'			=&gt; 'PostgreSQL',
+-		'extension'		=&gt; 'pgsql', 
+-	),
+-	'sqlite'		=&gt; array(
+-		'lang'			=&gt; 'SQLite',
+-		'extension'		=&gt; 'sqlite', 
+-	),
+-	'sqlite_pdo'		=&gt; array(
+-		'lang'			=&gt; 'SQLite 3 (PDO)',
+-		'extension'		=&gt; 'pdo_sqlite', 
+-	)
+-);
+-
+-$database_array = array();
+-$database_options = '';
+-$db_layer = isset($_POST['layer']) ? $_POST['layer'] : false;
+-
+-foreach ($holding_array as $name =&gt; $setting)
+-{
+-	if (extension_loaded($setting['extension']))
+-	{
+-		$database_options .= '&lt;option value=&quot;' . $name . '&quot;'.(($db_layer == $name) ? ' selected=&quot;selected&quot;' : '').'&gt;' . $setting['lang'] . '&lt;/option&gt;';
+-		$database_array[$name] = $setting;
+-	}
+-}
+-
+-$error = array();
+-$stage = isset($_POST['stage']) ? (int) $_POST['stage'] : 0;
+-
+-if ($stage &amp;&amp; !$_POST['agreement_signed'])
+-{
+-	$stage = 0;
+-}
+-
+-if ($stage === 3)
+-{
+-	if (file_exists($site_file_root.'config.php'))
+-	{
+-		require_once($site_file_root.'config.php');
+-	}
+-
+-	$site_name		= get_variable('site_name', 'POST');
+-	$site_domain	= get_variable('site_domain', 'POST');
+-	$site_path		= get_variable('site_path', 'POST');
+-	$site_port		= get_variable('site_port', 'POST');
+-
+-	$cookie_domain	= get_variable('cookie_domain', 'POST');
+-	$cookie_path	= get_variable('cookie_path', 'POST');
+-	$cookie_name	= get_variable('cookie_name', 'POST');
+-
+-	$username		= get_variable('username', 'POST');
+-	$password		= get_variable('password', 'POST');
+-	$password_confirm= get_variable('password_confirm', 'POST');
+-	$email			= get_variable('email', 'POST');
+-	$email_confirm	= get_variable('email_confirm', 'POST');
+-
+-	if (!$username)
+-	{
+-		$error[] = 'Invalid Username';
+-	}
+-
+-	if (!$password || ($password !== $password_confirm))
+-	{
+-		$error[] = 'Passwords do not match.';
+-	}
+-
+-	if (!$email || ($email !== $email_confirm))
+-	{
+-		$error[] = 'Emails Address do not match.';
+-	}
+-
+-	if (!$site_domain)
+-	{
+-		$error[] = 'Site Domain is empty.';
+-	}
+-
+-	if (!$site_domain)
+-	{
+-		$error[] = 'Site Domain is empty.';
+-	}
+-
+-	if (isset($site_db))
+-	{
+-		load_class($site_file_root.'includes/db/'.$site_db['type'].'.php', 'core_db', 'db_'.$site_db['type']);
+-
+-		$_CLASS['core_db']-&gt;connect($site_db);
+-		$config_content = '';
+-	}
+-	else
+-	{
+-		$error[] = '&lt;b&gt;Please upload the content listed in the &quot;Config.php Content&quot; Section&lt;/b&gt;';
+-		$config_content = get_variable('config_content', 'POST');
+-	}
+-
+-	if (empty($error))
+-	{
+-		require_once($site_file_root.'includes/tables.php');
+-		require_once($site_file_root.'includes/cache/cache.php');
+-		require_once($site_file_root.'includes/cache/cache_' . $acm_type . '.php');
+-
+-		load_class(false, 'core_cache', 'cache_'.$acm_type);
+-
+-		set_core_config('global', 'site_name', $site_name, false);
+-		set_core_config('server', 'site_domain', $site_domain, false);
+-		set_core_config('server', 'site_path', $site_path, false);
+-		set_core_config('server', 'site_port', $site_port, false);
+-		set_core_config('server', 'cookie_domain', $cookie_domain, false);
+-		set_core_config('server', 'cookie_path', $cookie_path, false);
+-		set_core_config('server', 'cookie_name', $cookie_name, false);
+-		set_core_config('server', 'site_secure', 0, false);
+-
+-		set_core_config('user', 'newest_username', $username, true);
+-		
+-		$user_update = array(
+-			'username'				=&gt; $username,
+-			'user_password'			=&gt; encode_password($password, 'md5'),
+-			'user_password_encoding'=&gt; 'md5',
+-			'user_email'			=&gt; $email
+-		);
+-
+-		$_CLASS['core_db']-&gt;query('UPDATE ' . USERS_TABLE . ' SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $user_update). ' WHERE user_id = 2');
+-
+-		$_CLASS['core_template']-&gt;assign_array(array(
+-			'admin_link'		=&gt; generate_link(false, array('full' =&gt; true, 'sid' =&gt; false, 'admin' =&gt; true)),
+-			'username'			=&gt; $username,
+-		));
+-
+-		$_CLASS['core_template']-&gt;display('installer/complete.html');
+-		
+-		script_close();
+-	}
+-
+-	$_CLASS['core_template']-&gt;assign_array(array(
+-		'site_name'			=&gt; $site_name,
+-		'site_domain'		=&gt; $site_domain,
+-		'site_path'			=&gt; $site_path,
+-		'site_port'			=&gt; $site_port,
+-		'cookie_domain'		=&gt; $cookie_domain,
+-		'cookie_path'		=&gt; $cookie_path,
+-		'cookie_name'		=&gt; $cookie_name,
+-		'username'			=&gt; $username,
+-		'password'			=&gt; $password,
+-		'password_confirm'	=&gt; $password_confirm,
+-		'email'				=&gt; $email,
+-		'email_confirm'		=&gt; $email_confirm,
+-		'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
+-		'config_content'	=&gt; $config_content
+-	));
+-
+-	$_CLASS['core_template']-&gt;display('installer/stage2.html');
+-
+-	script_close();
+-}
+-
+-if ($stage === 2)
+-{
+-	if ($db_layer &amp;&amp; in_array($db_layer, array_keys($database_array)))
+-	{
+-		load_class($site_file_root.'includes/db/'.$db_layer.'.php', 'core_db', 'db_'.$db_layer);
+-
+-		$site_db = array();
+-		$site_db['type']		= $db_layer;
+-		$site_db['persistent']	= false;
+-
+-		$_CLASS['core_db']-&gt;report_error(false);
+-
+-		if (strpos($db_layer, 'sqlite') === false)
+-		{
+-			$site_db['server']		= get_variable('server', 'POST');
+-			$site_db['port']		= get_variable('port', 'POST');
+-			$site_db['database']	= get_variable('database', 'POST');
+-			$site_db['username']	= get_variable('username', 'POST');
+-			$site_db['password']	= get_variable('password', 'POST');
+-			
+-			if (!$site_db['username'] || !$site_db['database'])
+-			{
+-				$error[] = 'Required Information missing';
+-			}
+-		}
+-		else
+-		{
+-			$site_db['file'] = get_variable('file_'.$db_layer, 'POST');
+-
+-			if (!$site_db['file'])
+-			{
+-				$error[] = 'Required Information missing';
+-			}
+-		}
+-	}
+-	else
+-	{
+-		$error[] = 'Database not supported on your system';
+-	}
+-
+-	if (empty($error) &amp;&amp; !$_CLASS['core_db']-&gt;connect($site_db))
+-	{
+-		if (!$_CLASS['core_db']-&gt;link_identifier)
+-		{
+-			$db_error = $_CLASS['core_db']-&gt;sql_error(false, true);
+-			$error[] = 'Could not connect to the database'.(($db_error['message']) ? '&lt;br/&gt;'.$db_error['message'] : '');
+-		}
+-		else
+-		{
+-			if (isset($_POST['test']))
+-			{
+-				$error[] = 'Database Selection fail, will attempt to create in next step';
+-			}
+-			else
+-			{
+-				switch ($db_layer)
+-				{
+-					case 'mysql':
+-					case 'mysqli':
+-						$_CLASS['core_db']-&gt;query('CREATE DATABASE '.$site_db['database'].' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
+-					break;
+-
+-					case 'mysql3':
+-						$_CLASS['core_db']-&gt;query('CREATE DATABASE  '.$site_db['database']);
+-					break;
+-
+-					case 'postgres':
+-						if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
+-						{
+-							$_CLASS['core_db']-&gt;query('CREATE DATABASE '.$site_db['database'] .' WITH ENCODING UNICODE');
+-						}
+-						else
+-						{
+-							$_CLASS['core_db']-&gt;query('CREATE DATABASE '.$site_db['database']);
+-						}
+-					break;
+-				}
+-
+-				$_CLASS['core_db']-&gt;disconnect();
+-				$_CLASS['core_db']-&gt;connect($site_db);
+-
+-				if (!$_CLASS['core_db']-&gt;connect($site_db))
+-				{
+-					$error[] = 'Database Creation Failed';
+-				}
+-			}
+-		}
+-	}
+-	
+-	if (empty($error))
+-	{
+-		$user_prefix	= get_variable('user_prefix', 'POST');
+-		$table_prefix	= get_variable('table_prefix', 'POST');
+-		
+-		require_once($site_file_root.'includes/tables.php');
+-	
+-		$sql = 'SELECT * FROM ' . CORE_CONFIG_TABLE;
+-		$result = $_CLASS['core_db']-&gt;query($sql);
+-		$_CLASS['core_db']-&gt;free_result($result);
+-	
+-		if ($result)
+-		{
+-			$error[] = 'Creation Failed: Current installation found';
+-		}
+-	}
+-
+-	if (isset($_POST['test']) || !empty($error))
+-	{
+-		$stage = 1;
+-	}
+-	else
+-	{
+-		$_CLASS['core_db']-&gt;transaction();
+-		require($site_file_root.'install/build_tables.php');
+-		$_CLASS['core_db']-&gt;transaction('commit');
+-	
+-		$_CLASS['core_db']-&gt;transaction();
+-		require($site_file_root.'install/build_data.php');
+-		$_CLASS['core_db']-&gt;transaction('commit');
+-		
+-		$_CLASS['core_db']-&gt;optimize_tables();
+-		
+-		$_CLASS['core_db']-&gt;report_error(true);
+-	
+-		$config_data = &quot;&lt;?php\n\n&quot;;
+-
+-		foreach ($site_db as $name =&gt; $value)
+-		{
+-			if (is_bool($value))
+-			{
+-				$value = ($value) ? 'true' : 'false';
+-			}
+-			elseif (!is_int($value))
+-			{
+-				$value = &quot;'$value'&quot;;
+-			}
+-
+-			$config_data .= &quot;\$site_db['$name'] = $value;\n&quot;;
+-		}
+-
+-		$config_data .= &quot;\n&quot;;
+-		$config_data .= &quot;\$table_prefix\t= '$table_prefix';\n&quot;;
+-		$config_data .= &quot;\$user_prefix\t= '$user_prefix';\n\n&quot;;
+-		$config_data .= &quot;\$acm_type\t\t= 'file';\n\n&quot;;
+-		$config_data .= &quot;if (!defined('INDEX_PAGE'))\n{\n\tdefine('INDEX_PAGE', 'index.php');\n}\n\n&quot;;
+-		$config_data .= &quot;if (!defined('ADMIN_PAGE'))\n{\n\tdefine('ADMIN_PAGE', 'admin.php');\n}\n\n&quot;;
+-		$config_data .= '?&gt;';
+-
+-		if (file_put_contents($site_file_root.'config.php', $config_data))
+-		{
+-			$config_data = false;
+-		}
+-		else
+-		{
+-			$error[] = 'Failed to write to your config.php file&lt;br/&gt;Please upload the content listed in the &quot;Config.php Content&quot; Section';
+-		}
+-		
+-		$path = dirname(getenv('SCRIPT_NAME'));
+-
+-		if (substr($path, -1) != '/')
+-		{
+-			$path .= '/';
+-		}
+-
+-		$path = str_replace('install/', '', $path);
+-		$domain = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
+-
+-		$_CLASS['core_template']-&gt;assign_array(array(
+-			'site_name'			=&gt; 'New CMS Site',
+-			'site_domain'		=&gt; $domain,
+-			'site_path'			=&gt; $path,
+-			'site_port'			=&gt; ($_SERVER['SERVER_PORT'] == 80) ? '' : $_SERVER['SERVER_PORT'],
+-			'cookie_domain'		=&gt; $domain,
+-			'cookie_path'		=&gt; $path,
+-			'cookie_name'		=&gt; 'cms',
+-			'username'			=&gt; '',
+-			'password'			=&gt; '',
+-			'password_confirm'	=&gt; '',
+-			'email'				=&gt; '',
+-			'email_confirm'		=&gt; '',
+-			'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
+-			'config_content'	=&gt; $config_data
+-		));
+-
+-		$_CLASS['core_template']-&gt;display('installer/stage2.html');
+-
+-		script_close();
+-	}
+-}
+-
+-if ($stage === 1)
+-{
+-	$php_config = array(
+-		/*array(
+-			'lang'	=&gt; 'PHP version',
+-			'recommended'	=&gt; '4.2.3 +',
+-			'current'		=&gt; PHP_VERSION
+-		),*/
+-		array(
+-			'lang'	=&gt; 'Safe Mode',
+-			'ini'	=&gt; 'safe_mode',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('safe_mode')
+-		),
+-		array(
+-			'lang'	=&gt; 'Magic Quotes GPC',
+-			'ini'	=&gt; 'magic_quotes_gpc',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('magic_quotes_gpc')
+-		),
+-		array(
+-			'lang'	=&gt; 'Register Globals',
+-			'ini'	=&gt; 'register_globals',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('register_globals')
+-		),
+-		array(
+-			'lang'	=&gt; 'Output Buffering',
+-			'ini'	=&gt; 'output_buffering',
+-			'recommended'	=&gt; false,
+-			'current'		=&gt; (bool) ini_get('output_buffering')
+-		),
+-	);
+-
+-	if (isset($_POST['test']) &amp;&amp; empty($error))
+-	{
+-		$error[] = 'Database Setting Perfect :-)';
+-	}
+-
+-	$_CLASS['core_template']-&gt;assign_array(array(
+-		'database_options'	=&gt; $database_options,
+-		'php_config'		=&gt; $php_config,
+-		'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
+-
+-		'server'		=&gt; isset($site_db['server']) ? $site_db['server'] : 'localhost',
+-		'port'			=&gt; isset($site_db['port']) ? $site_db['port'] : '',
+-		'database'		=&gt; isset($site_db['database']) ? $site_db['database'] : '',
+-		'username'		=&gt; isset($site_db['username']) ? $site_db['username'] : '',
+-		'password'		=&gt; isset($site_db['password']) ? $site_db['password'] : '',
+-		'file'			=&gt; isset($site_db['file']) ? $site_db['file'] : '',
+-		'table_prefix'	=&gt; get_variable('table_prefix', 'POST', 'cms_'),
+-		'user_prefix'	=&gt; get_variable('user_prefix', 'POST', 'cms_'),
+-	));
+-
+-	$_CLASS['core_template']-&gt;display('installer/stage1.html');
+-
+-	script_close();
+-}
+-
+-if (!$stage)
+-{
+-	$_CLASS['core_template']-&gt;display('installer/agreement.html');
+-	script_close();
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+Added: cms/trunk/installer.php
+===================================================================
+--- cms/trunk/installer.php	2005-09-11 20:23:58 UTC (rev 117)
++++ cms/trunk/installer.php	2005-09-13 03:42:19 UTC (rev 118)
+@@ -0,0 +1,481 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++define('VIPERAL', 'INSTALLER');
++
++error_reporting(E_ALL);
++
++//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
++$site_file_root = '../';
++
++if (!extension_loaded('mbstring'))
++{
++	require_once($site_file_root.'includes/compatiblity/mbstring.php');
++}
++
++set_magic_quotes_runtime(0);
++mb_internal_encoding('UTF-8');
++
++define('STRIP_SLASHES', get_magic_quotes_gpc());
++
++// Remove registered globals
++if ((bool) ini_get('register_globals'))
++{
++	foreach ($_REQUEST as $var_name =&gt; $value)
++	{
++		unset($$var_name);
++	}
++}
++
++require_once($site_file_root.'includes/functions.php');
++require_once($site_file_root.'includes/display/template.php');
++
++load_class(false, 'core_template');
++
++$holding_array = array(
++	'mysql'		=&gt; array(
++		'lang'			=&gt; 'MySQL',
++		'extension'		=&gt; 'mysql', 
++	),
++	'mysql3'			=&gt; array(
++		'lang'			=&gt; 'MySQL3',
++		'extension'		=&gt; 'mysql',
++	),
++	'mysqli'	=&gt; array(
++		'lang'			=&gt; 'MySQL 4.1.x',
++		'extension'		=&gt; 'mysqli', 
++	),
++	'mssql'		=&gt; array(
++		'lang'			=&gt; 'MS SQL Server 7/2000',
++		'extension'		=&gt; 'mssql', 
++	),
++	'postgres' =&gt; array(
++		'lang'			=&gt; 'PostgreSQL',
++		'extension'		=&gt; 'pgsql', 
++	),
++	'sqlite'		=&gt; array(
++		'lang'			=&gt; 'SQLite',
++		'extension'		=&gt; 'sqlite', 
++	),
++	'sqlite_pdo'		=&gt; array(
++		'lang'			=&gt; 'SQLite 3 (PDO)',
++		'extension'		=&gt; 'pdo_sqlite', 
++	)
++);
++
++$database_array = array();
++$database_options = '';
++$db_layer = isset($_POST['layer']) ? $_POST['layer'] : false;
++
++foreach ($holding_array as $name =&gt; $setting)
++{
++	if (extension_loaded($setting['extension']))
++	{
++		$database_options .= '&lt;option value=&quot;' . $name . '&quot;'.(($db_layer == $name) ? ' selected=&quot;selected&quot;' : '').'&gt;' . $setting['lang'] . '&lt;/option&gt;';
++		$database_array[$name] = $setting;
++	}
++}
++
++$error = array();
++$stage = isset($_POST['stage']) ? (int) $_POST['stage'] : 0;
++
++if ($stage &amp;&amp; !$_POST['agreement_signed'])
++{
++	$stage = 0;
++}
++
++if ($stage === 3)
++{
++	if (file_exists($site_file_root.'config.php'))
++	{
++		require_once($site_file_root.'config.php');
++	}
++
++	$site_name		= get_variable('site_name', 'POST');
++	$site_domain	= get_variable('site_domain', 'POST');
++	$site_path		= get_variable('site_path', 'POST');
++	$site_port		= get_variable('site_port', 'POST');
++
++	$cookie_domain	= get_variable('cookie_domain', 'POST');
++	$cookie_path	= get_variable('cookie_path', 'POST');
++	$cookie_name	= get_variable('cookie_name', 'POST');
++
++	$username		= get_variable('username', 'POST');
++	$password		= get_variable('password', 'POST');
++	$password_confirm= get_variable('password_confirm', 'POST');
++	$email			= get_variable('email', 'POST');
++	$email_confirm	= get_variable('email_confirm', 'POST');
++
++	if (!$username)
++	{
++		$error[] = 'Invalid Username';
++	}
++
++	if (!$password || ($password !== $password_confirm))
++	{
++		$error[] = 'Passwords do not match.';
++	}
++
++	if (!$email || ($email !== $email_confirm))
++	{
++		$error[] = 'Emails Address do not match.';
++	}
++
++	if (!$site_domain)
++	{
++		$error[] = 'Site Domain is empty.';
++	}
++
++	if (!$site_domain)
++	{
++		$error[] = 'Site Domain is empty.';
++	}
++
++	if (isset($site_db))
++	{
++		load_class($site_file_root.'includes/db/'.$site_db['type'].'.php', 'core_db', 'db_'.$site_db['type']);
++
++		$_CLASS['core_db']-&gt;connect($site_db);
++		$config_content = '';
++	}
++	else
++	{
++		$error[] = '&lt;b&gt;Please upload the content listed in the &quot;Config.php Content&quot; Section&lt;/b&gt;';
++		$config_content = get_variable('config_content', 'POST');
++	}
++
++	if (empty($error))
++	{
++		require_once($site_file_root.'includes/tables.php');
++		require_once($site_file_root.'includes/cache/cache.php');
++		require_once($site_file_root.'includes/cache/cache_' . $acm_type . '.php');
++
++		load_class(false, 'core_cache', 'cache_'.$acm_type);
++
++		set_core_config('global', 'site_name', $site_name, false);
++		set_core_config('server', 'site_domain', $site_domain, false);
++		set_core_config('server', 'site_path', $site_path, false);
++		set_core_config('server', 'site_port', $site_port, false);
++		set_core_config('server', 'cookie_domain', $cookie_domain, false);
++		set_core_config('server', 'cookie_path', $cookie_path, false);
++		set_core_config('server', 'cookie_name', $cookie_name, false);
++		set_core_config('server', 'site_secure', 0, false);
++
++		set_core_config('user', 'newest_username', $username, true);
++		
++		$user_update = array(
++			'username'				=&gt; $username,
++			'user_password'			=&gt; encode_password($password, 'md5'),
++			'user_password_encoding'=&gt; 'md5',
++			'user_email'			=&gt; $email
++		);
++
++		$_CLASS['core_db']-&gt;query('UPDATE ' . USERS_TABLE . ' SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $user_update). ' WHERE user_id = 2');
++
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'admin_link'		=&gt; generate_link(false, array('full' =&gt; true, 'sid' =&gt; false, 'admin' =&gt; true)),
++			'username'			=&gt; $username,
++		));
++
++		$_CLASS['core_template']-&gt;display('installer/complete.html');
++		
++		script_close();
++	}
++
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'site_name'			=&gt; $site_name,
++		'site_domain'		=&gt; $site_domain,
++		'site_path'			=&gt; $site_path,
++		'site_port'			=&gt; $site_port,
++		'cookie_domain'		=&gt; $cookie_domain,
++		'cookie_path'		=&gt; $cookie_path,
++		'cookie_name'		=&gt; $cookie_name,
++		'username'			=&gt; $username,
++		'password'			=&gt; $password,
++		'password_confirm'	=&gt; $password_confirm,
++		'email'				=&gt; $email,
++		'email_confirm'		=&gt; $email_confirm,
++		'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
++		'config_content'	=&gt; $config_content
++	));
++
++	$_CLASS['core_template']-&gt;display('installer/stage2.html');
++
++	script_close();
++}
++
++if ($stage === 2)
++{
++	if ($db_layer &amp;&amp; in_array($db_layer, array_keys($database_array)))
++	{
++		load_class($site_file_root.'includes/db/'.$db_layer.'.php', 'core_db', 'db_'.$db_layer);
++
++		$site_db = array();
++		$site_db['type']		= $db_layer;
++		$site_db['persistent']	= false;
++
++		$_CLASS['core_db']-&gt;report_error(false);
++
++		if (strpos($db_layer, 'sqlite') === false)
++		{
++			$site_db['server']		= get_variable('server', 'POST');
++			$site_db['port']		= get_variable('port', 'POST');
++			$site_db['database']	= get_variable('database', 'POST');
++			$site_db['username']	= get_variable('username', 'POST');
++			$site_db['password']	= get_variable('password', 'POST');
++			
++			if (!$site_db['username'] || !$site_db['database'])
++			{
++				$error[] = 'Required Information missing';
++			}
++		}
++		else
++		{
++			$site_db['file'] = get_variable('file_'.$db_layer, 'POST');
++
++			if (!$site_db['file'])
++			{
++				$error[] = 'Required Information missing';
++			}
++		}
++	}
++	else
++	{
++		$error[] = 'Database not supported on your system';
++	}
++
++	if (empty($error) &amp;&amp; !$_CLASS['core_db']-&gt;connect($site_db))
++	{
++		if (!$_CLASS['core_db']-&gt;link_identifier)
++		{
++			$db_error = $_CLASS['core_db']-&gt;sql_error(false, true);
++			$error[] = 'Could not connect to the database'.(($db_error['message']) ? '&lt;br/&gt;'.$db_error['message'] : '');
++		}
++		else
++		{
++			if (isset($_POST['test']))
++			{
++				$error[] = 'Database Selection fail, will attempt to create in next step';
++			}
++			else
++			{
++				switch ($db_layer)
++				{
++					case 'mysql':
++					case 'mysqli':
++						$_CLASS['core_db']-&gt;query('CREATE DATABASE '.$site_db['database'].' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
++					break;
++
++					case 'mysql3':
++						$_CLASS['core_db']-&gt;query('CREATE DATABASE  '.$site_db['database']);
++					break;
++
++					case 'postgres':
++						if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
++						{
++							$_CLASS['core_db']-&gt;query('CREATE DATABASE '.$site_db['database'] .' WITH ENCODING UNICODE');
++						}
++						else
++						{
++							$_CLASS['core_db']-&gt;query('CREATE DATABASE '.$site_db['database']);
++						}
++					break;
++				}
++
++				$_CLASS['core_db']-&gt;disconnect();
++				$_CLASS['core_db']-&gt;connect($site_db);
++
++				if (!$_CLASS['core_db']-&gt;connect($site_db))
++				{
++					$error[] = 'Database Creation Failed';
++				}
++			}
++		}
++	}
++	
++	if (empty($error))
++	{
++		$user_prefix	= get_variable('user_prefix', 'POST');
++		$table_prefix	= get_variable('table_prefix', 'POST');
++		
++		require_once($site_file_root.'includes/tables.php');
++	
++		$sql = 'SELECT * FROM ' . CORE_CONFIG_TABLE;
++		$result = $_CLASS['core_db']-&gt;query($sql);
++		$_CLASS['core_db']-&gt;free_result($result);
++	
++		if ($result)
++		{
++			$error[] = 'Creation Failed: Current installation found';
++		}
++	}
++
++	if (isset($_POST['test']) || !empty($error))
++	{
++		$stage = 1;
++	}
++	else
++	{
++		$_CLASS['core_db']-&gt;transaction();
++		require($site_file_root.'install/build_tables.php');
++		$_CLASS['core_db']-&gt;transaction('commit');
++	
++		$_CLASS['core_db']-&gt;transaction();
++		require($site_file_root.'install/build_data.php');
++		$_CLASS['core_db']-&gt;transaction('commit');
++		
++		$_CLASS['core_db']-&gt;optimize_tables();
++		
++		$_CLASS['core_db']-&gt;report_error(true);
++	
++		$config_data = &quot;&lt;?php\n\n&quot;;
++
++		foreach ($site_db as $name =&gt; $value)
++		{
++			if (is_bool($value))
++			{
++				$value = ($value) ? 'true' : 'false';
++			}
++			elseif (!is_int($value))
++			{
++				$value = &quot;'$value'&quot;;
++			}
++
++			$config_data .= &quot;\$site_db['$name'] = $value;\n&quot;;
++		}
++
++		$config_data .= &quot;\n&quot;;
++		$config_data .= &quot;\$table_prefix\t= '$table_prefix';\n&quot;;
++		$config_data .= &quot;\$user_prefix\t= '$user_prefix';\n\n&quot;;
++		$config_data .= &quot;\$acm_type\t\t= 'file';\n\n&quot;;
++		$config_data .= &quot;if (!defined('INDEX_PAGE'))\n{\n\tdefine('INDEX_PAGE', 'index.php');\n}\n\n&quot;;
++		$config_data .= &quot;if (!defined('ADMIN_PAGE'))\n{\n\tdefine('ADMIN_PAGE', 'admin.php');\n}\n\n&quot;;
++		$config_data .= '?&gt;';
++
++		if (file_put_contents($site_file_root.'config.php', $config_data))
++		{
++			$config_data = false;
++		}
++		else
++		{
++			$error[] = 'Failed to write to your config.php file&lt;br/&gt;Please upload the content listed in the &quot;Config.php Content&quot; Section';
++		}
++		
++		$path = dirname(getenv('SCRIPT_NAME'));
++
++		if (substr($path, -1) != '/')
++		{
++			$path .= '/';
++		}
++
++		$path = str_replace('install/', '', $path);
++		$domain = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
++
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'site_name'			=&gt; 'New CMS Site',
++			'site_domain'		=&gt; $domain,
++			'site_path'			=&gt; $path,
++			'site_port'			=&gt; ($_SERVER['SERVER_PORT'] == 80) ? '' : $_SERVER['SERVER_PORT'],
++			'cookie_domain'		=&gt; $domain,
++			'cookie_path'		=&gt; $path,
++			'cookie_name'		=&gt; 'cms',
++			'username'			=&gt; '',
++			'password'			=&gt; '',
++			'password_confirm'	=&gt; '',
++			'email'				=&gt; '',
++			'email_confirm'		=&gt; '',
++			'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
++			'config_content'	=&gt; $config_data
++		));
++
++		$_CLASS['core_template']-&gt;display('installer/stage2.html');
++
++		script_close();
++	}
++}
++
++if ($stage === 1)
++{
++	$php_config = array(
++		/*array(
++			'lang'	=&gt; 'PHP version',
++			'recommended'	=&gt; '4.2.3 +',
++			'current'		=&gt; PHP_VERSION
++		),*/
++		array(
++			'lang'	=&gt; 'Safe Mode',
++			'ini'	=&gt; 'safe_mode',
++			'recommended'	=&gt; false,
++			'current'		=&gt; (bool) ini_get('safe_mode')
++		),
++		array(
++			'lang'	=&gt; 'Magic Quotes GPC',
++			'ini'	=&gt; 'magic_quotes_gpc',
++			'recommended'	=&gt; false,
++			'current'		=&gt; (bool) ini_get('magic_quotes_gpc')
++		),
++		array(
++			'lang'	=&gt; 'Register Globals',
++			'ini'	=&gt; 'register_globals',
++			'recommended'	=&gt; false,
++			'current'		=&gt; (bool) ini_get('register_globals')
++		),
++		array(
++			'lang'	=&gt; 'Output Buffering',
++			'ini'	=&gt; 'output_buffering',
++			'recommended'	=&gt; false,
++			'current'		=&gt; (bool) ini_get('output_buffering')
++		),
++	);
++
++	if (isset($_POST['test']) &amp;&amp; empty($error))
++	{
++		$error[] = 'Database Setting Perfect :-)';
++	}
++
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'database_options'	=&gt; $database_options,
++		'php_config'		=&gt; $php_config,
++		'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
++
++		'server'		=&gt; isset($site_db['server']) ? $site_db['server'] : 'localhost',
++		'port'			=&gt; isset($site_db['port']) ? $site_db['port'] : '',
++		'database'		=&gt; isset($site_db['database']) ? $site_db['database'] : '',
++		'username'		=&gt; isset($site_db['username']) ? $site_db['username'] : '',
++		'password'		=&gt; isset($site_db['password']) ? $site_db['password'] : '',
++		'file'			=&gt; isset($site_db['file']) ? $site_db['file'] : '',
++		'table_prefix'	=&gt; get_variable('table_prefix', 'POST', 'cms_'),
++		'user_prefix'	=&gt; get_variable('user_prefix', 'POST', 'cms_'),
++	));
++
++	$_CLASS['core_template']-&gt;display('installer/stage1.html');
++
++	script_close();
++}
++
++if (!$stage)
++{
++	$_CLASS['core_template']-&gt;display('installer/agreement.html');
++	script_close();
++}
++
++?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000038.html">[Viperals-svncheckins] r117 - cms/branches/1.0alpha1
+</A></li>
+	<LI>Next message: <A HREF="000040.html">[Viperals-svncheckins] r119 - in cms/trunk: . includes/templates/installer
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

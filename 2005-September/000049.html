@@ -1,0 +1,2616 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r128 - in cms/trunk: . includes includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums modules/Quick_Message themes/viperal/style themes/viperal/template themes_admin/viperal_admin/template
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r128%20-%20in%20cms/trunk%3A%20.%20includes%20includes/display%20includes/forums%20includes/templates/modules/Forums%20javascript%20javascript/forums%20modules/Forums%20modules/Quick_Message%20themes/viperal/style%20themes/viperal/template%20themes_admin/viperal_admin/template&In-Reply-To=%3C200509161922.j8GJMc1l001729%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000048.html">
+   <LINK REL="Next"  HREF="000050.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r128 - in cms/trunk: . includes includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums modules/Quick_Message themes/viperal/style themes/viperal/template themes_admin/viperal_admin/template</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r128%20-%20in%20cms/trunk%3A%20.%20includes%20includes/display%20includes/forums%20includes/templates/modules/Forums%20javascript%20javascript/forums%20modules/Forums%20modules/Quick_Message%20themes/viperal/style%20themes/viperal/template%20themes_admin/viperal_admin/template&In-Reply-To=%3C200509161922.j8GJMc1l001729%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r128 - in cms/trunk: . includes includes/display includes/forums includes/templates/modules/Forums javascript javascript/forums modules/Forums modules/Quick_Message themes/viperal/style themes/viperal/template themes_admin/viperal_admin/template">viperal at berlios.de
+       </A><BR>
+    <I>Fri Sep 16 21:22:38 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000048.html">[Viperals-svncheckins] r127 - in cms/trunk: blocks javascript modules/Quick_Message
+</A></li>
+        <LI>Next message: <A HREF="000050.html">[Viperals-svncheckins] r129 - in cms/trunk/themes/viperal/template/modules: . articles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-16 21:22:36 +0200 (Fri, 16 Sep 2005)
+New Revision: 128
+
+Added:
+   cms/trunk/ajax.php
+   cms/trunk/modules/Quick_Message/ajax.php
+Removed:
+   cms/trunk/includes/templates/modules/Forums/images/
+   cms/trunk/includes/templates/modules/Forums/theme/
+   cms/trunk/includes/templates/modules/Forums/viewtopic_attach_body.html
+Modified:
+   cms/trunk/core.php
+   cms/trunk/includes/display/display.php
+   cms/trunk/includes/display/template.php
+   cms/trunk/includes/forums/functions.php
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/functions.php
+   cms/trunk/includes/session.php
+   cms/trunk/includes/user.php
+   cms/trunk/installer.php
+   cms/trunk/javascript/collapse.js
+   cms/trunk/javascript/common.js
+   cms/trunk/javascript/forums/forum_view.js
+   cms/trunk/modules/Forums/ajax.php
+   cms/trunk/modules/Forums/index.php
+   cms/trunk/modules/Forums/posting.php
+   cms/trunk/modules/Forums/viewforum.php
+   cms/trunk/modules/Forums/viewtopic.php
+   cms/trunk/modules/Quick_Message/index.php
+   cms/trunk/themes/viperal/style/style.css
+   cms/trunk/themes/viperal/template/header.html
+   cms/trunk/themes_admin/viperal_admin/template/header.html
+Log:
+
+
+Added: cms/trunk/ajax.php
+===================================================================
+--- cms/trunk/ajax.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/ajax.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -0,0 +1,78 @@
++&lt;?php
++//**************************************************************//
++//  Vipeal CMS:													//
++//**************************************************************//
++//																//
++//  Copyright 2004 - 2005										//
++//  By Ryan Marshall ( Viperal&#169;	)								//
++//																//
++//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
++//																//
++//  Viperal CMS is released under the terms and conditions		//
++//  of the GNU General Public License version 2					//
++//																//
++//**************************************************************//
++define('VIPERAL', 'AJAX');
++
++if (empty($_GET['sid']))
++{
++	die;
++}
++
++//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
++$site_file_root = '';
++
++require($site_file_root.'core.php');
++
++$mod = get_variable('mod', 'REQUEST', false);
++
++if (!$mod)
++{
++	die;
++}
++else
++{
++	/*
++	if ($mod === 'system')
++	{
++		include_once($site_file_root.'includes/system.php');
++
++		$mode = get_variable('mode', 'REQUEST', false);
++		if (!$mode || !function_exists($mode))
++		{
++			script_close(false);
++		}
++
++		$mode();
++		script_close(false);
++	}
++	*/
++
++	$sql = 'SELECT * FROM '.CORE_MODULES_TABLE.'
++				WHERE module_type = ' . MODULE_NORMAL . &quot;
++				AND module_name = '&quot; . $_CLASS['core_db']-&gt;escape($mod) . &quot;'&quot;;
++
++	//Grab module data if it exsits
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++	$_CLASS['core_db']-&gt;free_result($result);
++
++	$status = $_CLASS['core_display']-&gt;add_module($row);
++
++	if ($status !== true)
++	{
++		header(&quot;HTTP/1.0 503 Service Unavailable&quot;);
++		script_close(false);
++	}
++
++	$_CORE_MODULE = $_CLASS['core_display']-&gt;get_module();
++}
++
++$path = $site_file_root.'modules/'.$_CORE_MODULE['module_name'].'/ajax.php';
++$_CLASS['core_user']-&gt;page = $_CORE_MODULE['module_name'];
++
++require_once($path);
++
++script_close(false);
++
++?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/core.php
+===================================================================
+--- cms/trunk/core.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/core.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -26,18 +26,15 @@
+     die;
+ }
+ 
+-error_reporting(E_ALL);
+-//error_reporting(0);
++set_magic_quotes_runtime(0);
+ 
+-if (!extension_loaded('mbstring'))
+-{
+-	require_once($site_file_root.'includes/compatiblity/mbstring.php');
+-}
++//Error reporting tyoe
++define('ERROR_NONE', 0);
++define('ERROR_ONPAGE', 1);
++define('ERROR_DEBUGGER', 2);
++define('SERVER_LOCAL', (strpos($_SERVER['HTTP_HOST'], 'localhost') === 0 || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === 0));
++define('STRIP_SLASHES', get_magic_quotes_gpc());
+ 
+-set_magic_quotes_runtime(0);
+-mb_internal_encoding('UTF-8');
+-//mb_http_output('UTF-8');
+-
+ // Remove registered globals
+ if ((bool) ini_get('register_globals'))
+ {
+@@ -47,8 +44,20 @@
+ 	}
+ }
+ 
+-define('STRIP_SLASHES', get_magic_quotes_gpc());
++//change $site_file_root to a defined
++if (!$site_file_root)
++{
++	$site_file_root = str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/';
++}
+ 
++if (!extension_loaded('mbstring'))
++{
++	require_once($site_file_root.'includes/compatiblity/mbstring.php');
++}
++
++mb_internal_encoding('UTF-8');
++//mb_http_output('UTF-8');
++
+ $starttime = explode(' ', microtime());
+ $starttime = $starttime[1] + $starttime[0];
+ $base_memory_usage = get_memory_usage();
+@@ -64,11 +73,6 @@
+ 	}
+ }
+ 
+-//Error reporting tyoe
+-define('ERROR_NONE', 0);
+-define('ERROR_ONPAGE', 1);
+-define('ERROR_DEBUGGER', 2);
+-
+ require_once($site_file_root.'includes/display/template.php');
+ require_once($site_file_root.'includes/functions.php');
+ require_once($site_file_root.'includes/handler.php');
+@@ -85,7 +89,13 @@
+ 
+ if (empty($site_db))
+ {
+-	trigger_error('&lt;p style=&quot;text-align:center&quot;&gt;Site isn\'t Installed&lt;br/&gt;&lt;a href=&quot;installer.php&quot;&gt;Click here to install&lt;/a&gt;&lt;/p&gt;', E_USER_ERROR);
++	if (VIPERAL === 'FEED' || VIPERAL === 'AJAX')
++	{
++		header('HTTP/1.0 503 Service Unavailable');
++		die;
++	}
++
++	trigger_error('503:&lt;p style=&quot;text-align:center&quot;&gt;Site isn\'t Installed&lt;br/&gt;&lt;a href=&quot;installer.php&quot;&gt;Click here to install&lt;/a&gt;&lt;/p&gt;', E_USER_ERROR);
+ }
+ 
+ require_once($site_file_root.'includes/tables.php');
+@@ -107,7 +117,7 @@
+ $_CLASS['core_db']-&gt;report_error(false);
+ 
+ // Error messages just incase we can't get our configs
+-$config_error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB3&lt;/center&gt;';
++$config_error = '503:&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB3&lt;/center&gt;';
+ 
+ if (is_null($_CORE_CONFIG = $_CLASS['core_cache']-&gt;get('core_config')))
+ {
+@@ -117,6 +127,12 @@
+ 		
+ 	if (!$result = $_CLASS['core_db']-&gt;query($sql))
+ 	{
++		if (VIPERAL === 'FEED' || VIPERAL === 'AJAX')
++		{
++			header('HTTP/1.0 503 Service Unavailable');
++			die;
++		}
++
+ 		trigger_error($config_error, E_USER_ERROR);
+ 	}
+ 	
+@@ -136,15 +152,23 @@
+ else
+ {
+ 	$sql = 'SELECT * FROM ' . CORE_CONFIG_TABLE . ' WHERE config_cache = 0';
+-		
+-	if ($result = $_CLASS['core_db']-&gt;query($sql))
++	
++	if (!$result = $_CLASS['core_db']-&gt;query($sql))
+ 	{
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++		if (VIPERAL === 'FEED' || VIPERAL === 'AJAX')
+ 		{
+-			$_CORE_CONFIG[$row['config_section']][$row['config_name']] = $row['config_value'];
++			header('HTTP/1.0 503 Service Unavailable');
++			die;
+ 		}
+-		$_CLASS['core_db']-&gt;free_result($result);
++
++		trigger_error($config_error, E_USER_ERROR);
+ 	}
++
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		$_CORE_CONFIG[$row['config_section']][$row['config_name']] = $row['config_value'];
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
+ }
+ 
+ $_CLASS['core_db']-&gt;report_error(true);
+@@ -153,13 +177,17 @@
+ $_CLASS['core_cache']-&gt;remove('core_config');
+ $_CLASS['core_cache']-&gt;remove('config');
+ 
+-if (VIPERAL == 'FEED')
++if (VIPERAL === 'FEED' || VIPERAL === 'AJAX')
+ {
+ 	if (check_maintance_status(true) === true || check_load_status(true) === true)
+ 	{
+-		header(&quot;HTTP/1.0 503 Service Unavailable&quot;);
++		header('HTTP/1.0 503 Service Unavailable');
+ 		die;
+ 	}
++}
++
++if (VIPERAL === 'FEED')
++{
+ 	return;
+ }
+ 
+@@ -182,7 +210,7 @@
+ 	// conformation image 
+ 	login_box(array('full_screen'	=&gt; true));
+ }
+-		
++
+ if ($_CLASS['core_user']-&gt;is_admin)
+ {
+ 	$_CLASS['core_error_handler']-&gt;report = $_CORE_CONFIG['server']['error_options'];	
+@@ -204,19 +232,6 @@
+ 	// error here
+ }
+ 
+-$install_prefix = 'test_';
+-$time = gmtime();
+-
+-if (!function_exists('field_unix_time'))
+-{
+-	function field_unix_time($name, $null = false)
+-	{
+-		global $_CLASS;
+-	
+-		$_CLASS['core_db']-&gt;add_table_field_int($name, array('max' =&gt; 200000000, 'null' =&gt; $null));
+-	}
+-}
+-
+ function get_memory_usage()
+ {
+ 	if (function_exists('memory_get_usage'))
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/display/display.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -23,7 +23,7 @@
+ 
+ class core_display
+ {
+-	var $header = array('js'=&gt;'', 'regular'=&gt;'', 'meta'=&gt;'', 'body'=&gt;'');
++	var $header = array('js' =&gt; array(), 'regular' =&gt; array(), 'meta' =&gt; array());
+ 	var $displayed = array('header'=&gt; false, 'footer'=&gt; false);
+ 	var $message = '';
+ 
+@@ -156,36 +156,37 @@
+ 
+ 		if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $_CLASS['core_user']-&gt;data['user_new_privmsg'] &amp;&amp; $_CLASS['core_user']-&gt;user_data_get('popuppm'))
+ 		{
+-			$this-&gt;header['js'] .= '&lt;script type=&quot;text/javascript&quot;&gt;window.open(\''. preg_replace('/&amp;/', '&amp;', generate_link('Control_Panel&amp;i=pm&amp;mode=popup', array('full' =&gt; true))).&quot;', '_phpbbprivmsg','height=135,resizable=yes,status=no,width=400');&lt;/script&gt;&quot;;
++			$this-&gt;header['js'][] = '&lt;script type=&quot;text/javascript&quot;&gt;window.open(\''. preg_replace('/&amp;/', '&amp;', generate_link('Control_Panel&amp;i=pm&amp;mode=popup', array('full' =&gt; true))).&quot;', '_phpbbprivmsg','height=135,resizable=yes,status=no,width=400');&lt;/script&gt;&quot;;
+ 			$_CLASS['core_db']-&gt;sql_query('UPDATE ' . USERS_TABLE . ' SET user_new_privmsg = 0 WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id']);
+ 		}
+ 
+-		$this-&gt;header['regular'] .= '&lt;meta name=&quot;generator&quot; content=&quot;Viperal CMS ( www.viperal.com ) Copyright(c) '.date('Y').'&quot; /&gt;';
++		$this-&gt;header['regular'][] = '&lt;meta name=&quot;generator&quot; content=&quot;Viperal CMS ( www.viperal.com ) Copyright(c) '.date('Y').'&quot; /&gt;';
+ 
+ 		if (file_exists('favicon.ico'))
+ 		{
+-			$this-&gt;header['regular'] .= '&lt;link rel=&quot;shortcut icon&quot; href=&quot;favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;';
++			$this-&gt;header['regular'][] = '&lt;link rel=&quot;shortcut icon&quot; href=&quot;favicon.ico&quot; type=&quot;image/x-icon&quot; /&gt;';
+ 		}
+ 
+-		$this-&gt;header['regular'] .= '&lt;link rel=&quot;alternate&quot; type=&quot;application/xml&quot; title=&quot;RSS&quot; href=&quot;'.generate_base_url().'feed.php?feed=rdf&quot; /&gt;';
++		$this-&gt;header['regular'][] = '&lt;link rel=&quot;alternate&quot; type=&quot;application/xml&quot; title=&quot;RSS&quot; href=&quot;'.generate_base_url().'feed.php?feed=rdf&quot; /&gt;';
+ 
+ 		if ($_CORE_CONFIG['maintenance']['active'] &amp;&amp; $_CORE_CONFIG['maintenance']['start'] &lt; time())
+ 		{
+ 			$this-&gt;message = '&lt;b&gt;System is in maintenance mode&lt;/b&gt;&lt;br /&gt;';
+ 		}
+ 
+-		$this-&gt;header['js'] = '&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/common.js&quot;&gt;&lt;/script&gt;';
++		$this-&gt;header['js'][] = '&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/common.js&quot;&gt;&lt;/script&gt;';
++		$this-&gt;header['js'][] = &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;\nvar cms_session_id = '{$_CLASS['core_user']-&gt;data['session_id']}';\nvar cms_cookie_path = '{$_CORE_CONFIG['server']['cookie_path']}';\nvar cms_cookie_domain = '{$_CORE_CONFIG['server']['cookie_domain']}';\n&lt;/script&gt;&quot;;
+ 
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'SITE_LANG'			=&gt;	$_CLASS['core_user']-&gt;lang['LANG'],
+ 			'SITE_TITLE'		=&gt;	$_CORE_CONFIG['global']['site_name'].': '.(is_array($_CORE_MODULE['module_title']) ? implode(' &gt; ', $_CORE_MODULE['module_title']) : $_CORE_MODULE['module_title']),
+ 			'SITE_BASE'			=&gt;	generate_base_url(),
+-			'SITE_CHARSET'		=&gt;	'UTF-8',
++			'SID'				=&gt;	empty($_CLASS['core_user']-&gt;data['session_id']) ? '' : $_CLASS['core_user']-&gt;data['session_id'],
+ 			'SITE_NAME'			=&gt;	$_CORE_CONFIG['global']['site_name'],
+ 			'HEADER_MESSAGE'	=&gt;	$this-&gt;message,
+-			'HEADER_REGULAR'	=&gt;	$this-&gt;header['meta'].$this-&gt;header['regular'],
+-			'HEADER_JS' 		=&gt;	$this-&gt;header['js'],
+-			'HEADER_BODY' 		=&gt;	$this-&gt;header['body']				
++			'HEADER_META'		=&gt;	empty($this-&gt;header['meta']) ? '' : implode(&quot;\n&quot;, $this-&gt;header['meta']),
++			'HEADER_REGULAR'	=&gt;	empty($this-&gt;header['regular']) ? '' : implode(&quot;\n&quot;, $this-&gt;header['regular']),
++			'HEADER_JS' 		=&gt;	empty($this-&gt;header['js']) ? '' : implode(&quot;\n&quot;, $this-&gt;header['js']),
+ 		));
+ 
+ 		$_CLASS['core_blocks']-&gt;display(BLOCK_MESSAGE_TOP);
+@@ -299,7 +300,7 @@
+ 	{
+ 		global $_CLASS;
+ 
+-		$this-&gt;header['meta'] .= '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $time . ';url=' . (($url) ? $url : generate_link(false, array('full' =&gt; true))) . '&quot;&gt;';
++		$this-&gt;header['meta'][] = '&lt;meta http-equiv=&quot;refresh&quot; content=&quot;' . $time . ';url=' . (($url) ? $url : generate_link(false, array('full' =&gt; true))) . '&quot;&gt;';
+ 	}
+ }
+ 
+
+Modified: cms/trunk/includes/display/template.php
+===================================================================
+--- cms/trunk/includes/display/template.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/display/template.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -164,7 +164,7 @@
+ 
+ 		$set = false;
+ 
+-		if (!empty($_CLASS['core_display']) &amp;&amp; file_exists($_CLASS['core_display']-&gt;theme_path.'/template/'.$name))
++		if (!empty($_CLASS['core_display']-&gt;theme_path) &amp;&amp; file_exists($_CLASS['core_display']-&gt;theme_path.'/template/'.$name))
+ 		{
+ 			$this-&gt;template_dir = $_CLASS['core_display']-&gt;theme_path.'/template/';
+ 			$this-&gt;theme_themplate = true;
+
+Modified: cms/trunk/includes/forums/functions.php
+===================================================================
+--- cms/trunk/includes/forums/functions.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/forums/functions.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -609,7 +609,7 @@
+ 	}
+ 
+ 	// Default tracking type
+-	$time = ($marktime) ? $marktime : gmtime();
++	$time = ($marktime) ? $marktime : $_CLASS['core_user']-&gt;time;
+ 
+ 	switch ($mode)
+ 	{
+@@ -725,22 +725,23 @@
+ 				{
+ 					$tracking = array();
+ 				}
+-					/*
+-					// If the cookie grows larger than 2000 characters we will remove
+-					// the smallest value
+-					if (strlen($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track']) &gt; 2000)
++
++				/*
++				// If the cookie grows larger than 2000 characters we will remove
++				// the smallest value
++				if (strlen($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track']) &gt; 2000)
++				{
++					foreach ($tracking as $f =&gt; $t_ary)
+ 					{
+-						foreach ($tracking as $f =&gt; $t_ary)
++						if (!isset($m_value) || min($t_ary) &lt; $m_value)
+ 						{
+-							if (!isset($m_value) || min($t_ary) &lt; $m_value)
+-							{
+-								$m_value = min($t_ary);
+-								$m_tkey = array_search($m_value, $t_ary);
+-								$m_fkey = $f;
+-							}
++							$m_value = min($t_ary);
++							$m_tkey = array_search($m_value, $t_ary);
++							$m_fkey = $f;
+ 						}
+-						unset($tracking[$m_fkey][$m_tkey]);
+-					}*/
++					}
++					unset($tracking[$m_fkey][$m_tkey]);
++				}*/
+ 
+ 				$topic_id36 = base_convert($topic_id, 10, 36);
+ 				$forum_id36 = base_convert($forum_id, 10, 36);
+@@ -754,7 +755,6 @@
+ 				elseif (!isset($tracking[$forum_id36][$topic_id36]))
+ 				{
+ 					$tracking[$forum_id36][$topic_id36] = base_convert($time, 10, 36);
+-
+ 					$_CLASS['core_user']-&gt;set_cookie('track', serialize($tracking), time() + 31536000);
+ 				}
+ 				unset($tracking);
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/forums/functions_display.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -1,540 +1,550 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright &#169; 2004 by Viperal									//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-
+-// -------------------------------------------------------------
+-//
+-// $Id: functions_display.php,v 1.59 2004/09/17 09:11:47 acydburn Exp $
+-//
+-// FILENAME  : functions_display.php
+-// STARTED   : Thu Nov 07, 2002
+-// COPYRIGHT : &#169; 2001, 2003 phpBB Group
+-// WWW		 : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+-// LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+-// 
+-// -------------------------------------------------------------
+-
+-function display_forums($root_data = '', $display_moderators = true)
+-{
+-	global $config, $_CLASS, $_CORE_CONFIG;
+-
+-	// Get posted/get info
+-	$mark_read = request_var('mark', '');
+-
+-	$forum_id_ary = $active_forum_ary = $forum_rows = $subforums = $forum_moderators = $mark_forums = array();
+-	$visible_forums = 0;
+-
+-	if (!$root_data)
+-	{
+-		$root_data = array('forum_id' =&gt; 0);
+-		$sql_where = '';
+-	}
+-	else
+-	{
+-		$sql_where = 'AND left_id &gt; ' . $root_data['left_id'] . ' AND left_id &lt; ' . $root_data['right_id'];
+-	}
+-
+-	// Display list of active topics for this category?
+-	$show_active = (isset($root_data['forum_flags']) &amp;&amp; $root_data['forum_flags'] &amp; 16) ? true : false;
+-
+-	if ($_CLASS['core_user']-&gt;is_user &amp;&amp;  $config['load_db_lastread'])
+-	{
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++// -------------------------------------------------------------
++//
++// $Id: functions_display.php,v 1.59 2004/09/17 09:11:47 acydburn Exp $
++//
++// FILENAME  : functions_display.php
++// STARTED   : Thu Nov 07, 2002
++// COPYRIGHT : 2001, 2003 phpBB Group
++// WWW		 : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
++// LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
++// 
++// -------------------------------------------------------------
++
++function display_forums($root_data = '', $display_moderators = true)
++{
++	global $config, $_CLASS, $_CORE_CONFIG;
++
++	// Get posted/get info
++	$mark_read = request_var('mark', '');
++
++	$forum_id_ary = $active_forum_ary = $forum_rows = $subforums = $forum_moderators = $mark_forums = array();
++	$visible_forums = 0;
++
++	if (!$root_data)
++	{
++		$root_data = array('forum_id' =&gt; 0);
++		$sql_where = '';
++	}
++	else
++	{
++		$sql_where = 'AND left_id &gt; ' . $root_data['left_id'] . ' AND left_id &lt; ' . $root_data['right_id'];
++	}
++
++	// Display list of active topics for this category?
++	$show_active = (isset($root_data['forum_flags']) &amp;&amp; $root_data['forum_flags'] &amp; 16) ? true : false;
++
++	if ($_CLASS['core_user']-&gt;is_user &amp;&amp;  $config['load_db_lastread'])
++	{
+ 		$sql_from = ' LEFT JOIN ' . FORUMS_TRACK_TABLE . ' ft ON (ft.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ' 
+-				AND ft.forum_id = f.forum_id AND ft.topic_id = 0)';
+-		$lastread_select = ', ft.mark_time ';
+-	}
+-	else
+-	{
+-		$sql_from = $lastread_select = $sql_lastread = '';
+-		$tracking_topics = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
+-	}
+-
+-	$sql = &quot;SELECT f.* $lastread_select 
+-		FROM &quot;. FORUMS_FORUMS_TABLE . &quot; f $sql_from
+-		WHERE forum_status &lt;&gt; &quot;.ITEM_DELETING.&quot;
+-		$sql_where
+-		ORDER BY f.left_id&quot;;
+-	$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-	$branch_root_id = $root_data['forum_id'];
+-	$forum_ids		= array($root_data['forum_id']);
+-
+-	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-	{
+-		if ($mark_read == 'forums' &amp;&amp; $_CLASS['core_user']-&gt;is_user)
+-		{
+-			if ($_CLASS['auth']-&gt;acl_get('f_list', $row['forum_id']))
+-			{
+-				$forum_id_ary[] = $row['forum_id'];
+-			}
+-
+-			continue;
+-		}
+-
+-		if (isset($right_id))
+-		{
+-			if ($row['left_id'] &lt; $right_id)
+-			{
+-				continue;
+-			}
+-			unset($right_id);
+-		}
+-
+-		if ($row['forum_type'] == FORUM_CAT &amp;&amp; ($row['left_id'] + 1 == $row['right_id']))
+-		{
+-			// Non-postable forum with no subforums: don't display
+-			continue;
+-		}
+-
+-		$forum_id = $row['forum_id'];
+-
+-		if (!$_CLASS['auth']-&gt;acl_get('f_list', $forum_id))
+-		{
+-			// if the user does not have permissions to list this forum, skip everything until next branch
+-			$right_id = $row['right_id'];
+-			continue;
+-		}
+-
+-		// Display active topics from this forum?
+-		if ($show_active &amp;&amp; $row['forum_type'] == FORUM_POST &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_read', $forum_id) &amp;&amp; ($row['forum_flags'] &amp; 16))
+-		{
+-			$active_forum_ary['forum_id'][]		= $forum_id;
+-			$active_forum_ary['enable_icons'][] = $row['enable_icons'];
+-			$active_forum_ary['forum_topics']	+= ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
+-			$active_forum_ary['forum_posts']	+= $row['forum_posts'];
+-		}
+-
+-		if ($row['parent_id'] == $root_data['forum_id'] || $row['parent_id'] == $branch_root_id)
+-		{
+-			// Direct child
+-			$parent_id = $forum_id;
+-			$forum_rows[$forum_id] = $row;
+-			$forum_ids[] = $forum_id;
+-
+-			if (!$row['parent_id'] &amp;&amp; $row['forum_type'] == FORUM_CAT &amp;&amp; $row['parent_id'] == $root_data['forum_id'])
+-			{
+-				$branch_root_id = $forum_id;
+-			}
+-			$forum_rows[$parent_id]['forum_id_last_post'] = $row['forum_id'];
+-		}
+-		elseif ($row['forum_type'] != FORUM_CAT)
+-		{
+-			$subforums[$parent_id]['display'] = ($row['display_on_index']) ? true : false;;
+-			$subforums[$parent_id]['name'][$forum_id] = $row['forum_name'];
+-
+-			$forum_rows[$parent_id]['forum_topics'] += ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
+-			
+-			// Do not list redirects in LINK Forums as Posts.
+-			if ($row['forum_type'] != FORUM_LINK)
+-			{
+-				$forum_rows[$parent_id]['forum_posts'] += $row['forum_posts'];
+-			}
+-
+-			if (isset($forum_rows[$parent_id]) &amp;&amp; $row['forum_last_post_time'] &gt; $forum_rows[$parent_id]['forum_last_post_time'])
+-			{
+-				$forum_rows[$parent_id]['forum_last_post_id'] = $row['forum_last_post_id'];
+-				$forum_rows[$parent_id]['forum_last_post_time'] = $row['forum_last_post_time'];
+-				$forum_rows[$parent_id]['forum_last_poster_id'] = $row['forum_last_poster_id'];
+-				$forum_rows[$parent_id]['forum_last_poster_name'] = $row['forum_last_poster_name'];
+-				$forum_rows[$parent_id]['forum_id_last_post'] = $forum_id;
+-			}
+-			else
+-			{
+-				$forum_rows[$parent_id]['forum_id_last_post'] = $forum_id;
+-			}
+-		}
+-
+-		if (!$_CLASS['core_user']-&gt;is_user || !$config['load_db_lastread'])
+-		{
+-			$forum_id36 = base_convert($forum_id, 10, 36);
+-			$row['mark_time'] = isset($tracking_topics[$forum_id36][0]) ? (int) base_convert($tracking_topics[$forum_id36][0], 36, 10) : 0;
+-		}
+-
+-		if ($row['mark_time'] &lt; $row['forum_last_post_time'])
+-		{
+-			$forum_unread[$parent_id] = true;
+-		}
+-	}
+-	$_CLASS['core_db']-&gt;free_result($result);
+-
+-	// Handle marking posts
+-	if ($mark_read == 'forums')
+-	{
+-		markread('mark', $forum_id_ary);
+-
+-		$redirect = generate_link('Forums');
+-		$_CLASS['core_display']-&gt;meta_refresh(3, $redirect);
+-
+-		$message = (strpos($redirect, 'viewforum') !== false) ? 'RETURN_FORUM' : 'RETURN_INDEX';
+-		$message = $_CLASS['core_user']-&gt;lang['FORUMS_MARKED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang[$message], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt; ');
+-		trigger_error($message);
+-	}
+-
+-	// Grab moderators ... if necessary
+-	if ($display_moderators)
+-	{
+-		$forum_moderators = get_moderators($forum_ids);
+-	}
+-
+-	// Loop through the forums
+-	$root_id = $root_data['forum_id'];
+-
+-	foreach ($forum_rows as $row)
+-	{
+-		if ($row['parent_id'] == $root_id &amp;&amp; !$row['parent_id'])
+-		{
+-			if ($row['forum_type'] == FORUM_CAT)
+-			{
+-				$hold = $row;
+-				continue;
+-			}
+-			else
+-			{
+-				unset($hold);
+-			}
+-		}
+-		else if (!empty($hold))
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('forumrow', array(
+-				'S_IS_CAT'			=&gt;	TRUE,
+-				'FORUM_ID'			=&gt;	$hold['forum_id'],
+-				'FORUM_NAME'		=&gt;	$hold['forum_name'],
+-				'FORUM_DESC'		=&gt;	$hold['forum_desc'],
+-				'U_VIEWFORUM'		=&gt;	generate_link('Forums&amp;file=viewforum&amp;f=' . $hold['forum_id']))
+-			);
+-			unset($hold);
+-		}
+-
+-		$visible_forums++;
+-		$forum_id = $row['forum_id'];
+-
+-		$subforums_list = $l_subforums = '';
+-		
+-		// Generate list of subforums if we need to
+-		if (isset($subforums[$forum_id]))
+-		{
+-			if ($subforums[$forum_id]['display'])
+-			{
+-				$links = array();
+-
+-				foreach ($subforums[$forum_id]['name'] as $subforum_id =&gt; $subforum_name)
+-				{
+-					if (!empty($subforum_name))
+-					{
+-						$links[] = '&lt;a href=&quot;' .generate_link('Forums&amp;file=viewforum&amp;f='.$subforum_id).'&quot;&gt;' . $subforum_name . '&lt;/a&gt;';
+-					}
+-				}
+-
+-				if (!empty($links))
+-				{
+-					$subforums_list = implode(', ', $links);
+-					$l_subforums = (count($subforums[$forum_id]) == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] . ': ' : $_CLASS['core_user']-&gt;lang['SUBFORUMS'] . ': ';
+-				}
+-
+-				unset($links);
+-			}
+-
+-			$folder_image = (!empty($forum_unread[$forum_id])) ? 'sub_forum_new' : 'sub_forum';
+-		}
+-		else
+-		{
+-			switch ($row['forum_type'])
+-			{
+-				case FORUM_POST:
+-					$folder_image = (!empty($forum_unread[$forum_id])) ? 'forum_new' : 'forum';
+-					break;
+-
+-				case FORUM_LINK:
+-					$folder_image = 'forum_link';
+-					break;
+-			}
+-		}
+-
+-
+-		// Which folder should we display?
+-		if ($row['forum_status'] == ITEM_LOCKED)
+-		{
+-			$folder_image = 'forum_locked';
+-			$folder_alt = 'FORUM_LOCKED';
+-		}
+-		else
+-		{
+-			$folder_alt = (!empty($forum_unread[$forum_id])) ? 'NEW_POSTS' : 'NO_NEW_POSTS';
+-		}
+-
+-		// Create last post link information, if appropriate
+-		if ($row['forum_last_post_id'])
+-		{
+-			$last_post_time = $_CLASS['core_user']-&gt;format_date($row['forum_last_post_time']);
+-
+-			$last_poster = ($row['forum_last_poster_name'] != '') ? $row['forum_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'];
+-			$last_poster_url = ($row['forum_last_poster_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u='  . $row['forum_last_poster_id']);
+-			
+-			$last_post_url = generate_link('Forums&amp;file=viewtopic&amp;f='.$row['forum_id_last_post'].'&amp;p='.$row['forum_last_post_id'].'#'.$row['forum_last_post_id'], false, false, false);
+-		}
+-		else
+-		{
+-			$last_post_time = $last_poster = $last_poster_url = $last_post_url = '';
+-		}
+-
+-
+-		// Output moderator listing ... if applicable
+-		$l_moderator = $moderators_list = '';
+-		if ($display_moderators &amp;&amp; !empty($forum_moderators[$forum_id]))
+-		{
+-			$l_moderator = (count($forum_moderators[$forum_id]) == 1) ? $_CLASS['core_user']-&gt;lang['MODERATOR'] : $_CLASS['core_user']-&gt;lang['MODERATORS'];
+-			$moderators_list = implode(', ', $forum_moderators[$forum_id]);
+-		}
+-
+-		$l_post_click_count = ($row['forum_type'] == FORUM_LINK) ? 'CLICKS' : 'POSTS';
+-		$post_click_count = ($row['forum_type'] != FORUM_LINK || $row['forum_flags'] &amp; 1) ? $row['forum_posts'] : '';
+-
+-		$_CLASS['core_template']-&gt;assign_vars_array('forumrow', array(
+-			'S_IS_CAT'			=&gt; false, 
+-			'S_IS_LINK'			=&gt; ($row['forum_type'] == FORUM_LINK), 
+-
+-			'LAST_POST_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'), 
+-
+-			'FORUM_ID'			=&gt; $row['forum_id'], 
+-			'FORUM_FOLDER_IMG'	=&gt; ($row['forum_image']) ? '&lt;img src=&quot;' . $row['forum_image'] . '&quot; alt=&quot;' . $folder_alt . '&quot; /&gt;' : $_CLASS['core_user']-&gt;img($folder_image, $folder_alt),
+-			//'FORUM_FOLDER_IMG_SRC'	=&gt; ($row['forum_image']) ? $row['forum_image'] : $_CLASS['core_user']-&gt;img($folder_image, $folder_alt, false, '', 'src'),
+-			'FORUM_NAME'		=&gt; $row['forum_name'],
+-			'FORUM_DESC'		=&gt; $row['forum_desc'], 
+-			$l_post_click_count	=&gt; $post_click_count,
+-			'TOPICS'			=&gt; $row['forum_topics'],
+-			'LAST_POST_TIME'	=&gt; $last_post_time,
+-			'LAST_POSTER'		=&gt; $last_poster,
+-			'MODERATORS'		=&gt; $moderators_list,
+-			'SUBFORUMS'			=&gt; $subforums_list,
+-
+-			'L_SUBFORUM_STR'	=&gt; $l_subforums,
+-			'L_MODERATOR_STR'	=&gt; $l_moderator,
+-			'L_FORUM_FOLDER_ALT'=&gt; $folder_alt,
+-			
+-			'U_LAST_POSTER'		=&gt; $last_poster_url, 
+-			'U_LAST_POST'		=&gt; $last_post_url, 
+-			'U_VIEWFORUM'		=&gt; ($row['forum_type'] != FORUM_LINK || $row['forum_flags'] &amp; 1) ? generate_link('Forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : $row['forum_link'])
+-		);
+-	}
+-
+-	$_CLASS['core_template']-&gt;assign_array(array(
+-		'MODIFY_FORUM'		=&gt; $_CLASS['auth']-&gt;acl_get('a_forum'),
+-		'U_MARK_FORUMS'		=&gt; generate_link('Forums&amp;file=viewforum&amp;f=' . $root_data['forum_id'] . '&amp;mark=Forums'), 
+-		'S_HAS_SUBFORUM'	=&gt; ($visible_forums) ? true : false,
+-		'L_SUBFORUM'		=&gt; ($visible_forums == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] : $_CLASS['core_user']-&gt;lang['SUBFORUMS']
+-	));
+-
+-	return $active_forum_ary;
+-}
+-
+-function topic_topic_author(&amp;$topic_row)
+-{
+-	global $_CLASS;
+-
+-	$topic_author = ($topic_row['topic_poster'] != ANONYMOUS) ? '&lt;a href=&quot;'.generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $topic_row['topic_poster']) . '&quot;&gt;' : '';
+-	$topic_author .= ($topic_row['topic_poster'] != ANONYMOUS) ? $topic_row['topic_first_poster_name'] : (($topic_row['topic_first_poster_name'] != '') ? $topic_row['topic_first_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST']);
+-	$topic_author .= ($topic_row['topic_poster'] != ANONYMOUS) ? '&lt;/a&gt;' : '';
+-
+-	return $topic_author;
+-}
+-
+-function topic_status(&amp;$topic_row, $replies, $mark_time, &amp;$folder_img, &amp;$folder_alt, &amp;$topic_type)
+-{
+-	global $_CLASS, $config;
+-	
+-	$folder = $folder_new = '';
+-	$unread_topic = false;
+-
+-	if ($topic_row['topic_status'] == ITEM_MOVED)
+-	{
+-		$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_MOVED'];
+-		$folder_img = 'folder_moved';
+-		$folder_alt = 'VIEW_TOPIC_MOVED';
+-	}
+-	else
+-	{
+-		if ($topic_row['topic_status'] == ITEM_LOCKED)
+-		{
+-			$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_LOCKED'];
+-			$folder = 'folder_locked';
+-			$folder_new = 'folder_locked_new';
+-			
+-		}
+-		else
+-		{
+-			switch ($topic_row['topic_type'])
+-			{
+-				case POST_GLOBAL:
+-				case POST_ANNOUNCE:
+-					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_ANNOUNCEMENT'];
+-					$folder = 'folder_announce';
+-					$folder_new = 'folder_announce_new';
+-					break;
+-	
+-				case POST_STICKY:
+-					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_STICKY'];
+-					$folder = 'folder_sticky';
+-					$folder_new = 'folder_sticky_new';
+-					break;
+-	
+-				default:
+-					if ($replies &gt;= $config['hot_threshold'])
+-					{
+-						$folder = 'folder_hot';
+-						$folder_new = 'folder_hot_new';
+-					}
+-					else
+-					{
+-						$folder = 'folder';
+-						$folder_new = 'folder_new';
+-					}
+-					break;
+-			}
+-		}
+-
+-		$unread_topic = true;
+-
+-		if ($mark_time &gt;= $topic_row['topic_last_post_time'])
+-		{
+-			$unread_topic = false;
+-		}
+-
+-		$folder_img = ($unread_topic) ? $folder_new : $folder;
+-		$folder_alt = ($unread_topic) ? 'NEW_POSTS' : (($topic_row['topic_status'] == ITEM_LOCKED) ? 'TOPIC_LOCKED' : 'NO_NEW_POSTS');
+-	}
+-
+-	if ($topic_row['poll_start'])
+-	{
+-		$topic_type .= $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POLL'];
+-	}
+-
+-	return $unread_topic;
+-}
+-
+-// Display Attachments
+-function display_attachments($forum_id, $attachment_data, &amp;$update_count, $force_physical = false, $parse = false)
+-{
+-	global $config, $_CLASS;
+-
+-	$return_tpl = array();
+-
+-	$extensions = obtain_attach_extensions();
+-
+-	foreach ($attachment_data as $attachment)
+-	{
+-		$attachment['extension'] = strtolower(trim($attachment['extension']));
+-		$filename = $config['upload_path'] . '/' . basename($attachment['physical_filename']);
+-		// to easy isn't it ?
+-		$thumbnail_filename = $config['upload_path'] . '/thumb_' . basename($attachment['physical_filename']);
+-
+-		$data['lang_size'] = ($attachment['filesize'] &gt;= 1048576) ? round((round($attachment['filesize'] / 1048576 * 100) / 100), 2) .$_CLASS['core_user']-&gt;lang['MB'] : (($attachment['filesize'] &gt;= 1024) ? round((round($attachment['filesize'] / 1024 * 100) / 100), 2)  . $_CLASS['core_user']-&gt;lang['KB']: $attachment['filesize'] . $_CLASS['core_user']-&gt;lang['BYTES']);
+-		$data['lang_views'] = (!$attachment['download_count']) ? $_CLASS['core_user']-&gt;lang['DOWNLOAD_NONE'] : (($attachment['download_count'] == 1) ? sprintf($_CLASS['core_user']-&gt;lang['DOWNLOAD_COUNT'], $attachment['download_count']) : sprintf($_CLASS['core_user']-&gt;lang['DOWNLOAD_COUNTS'], $attachment['download_count']));
+-
+-		$data['icon'] = ($extensions[$attachment['extension']]['upload_icon']) ? $config['upload_icons_path'] . '/' . trim($extensions[$attachment['extension']]['upload_icon']) : false;
+-		$data['name'] = basename($attachment['real_filename']);
+-		$data['comment'] = str_replace(&quot;\n&quot;, '&lt;br /&gt;', censor_text($attachment['comment']));
+-
+-		$denied = false;
+-			
+-		if (!extension_allowed($forum_id, $attachment['extension'], $extensions))
+-		{
+-			$data['category'] = 'DENIED';
+-			$data['lang'] = sprintf($_CLASS['core_user']-&gt;get_lang('EXTENSION_DISABLED_AFTER_POSTING'), $attachment['extension']);
+-
+-			continue;
+-		}
+-		else
+-		{
+-			$display_cat = $extensions[$attachment['extension']]['display_cat'];
+-	
+-			if ($display_cat == ATTACHMENT_CATEGORY_IMAGE)
+-			{
+-				if ($attachment['thumbnail'])
+-				{
+-					$display_cat = ATTACHMENT_CATEGORY_THUMB;
+-				}
+-				else
+-				{
+-					if ($config['img_display_inlined'])
+-					{
+-						if ($config['img_link_width'] || $config['img_link_height'])
+-						{
+-							list($width, $height) = getimagesize($filename);
+-	
+-							$display_cat = (!$width &amp;&amp; !$height) ? ATTACHMENT_CATEGORY_IMAGE : (($width &lt;= $config['img_link_width'] &amp;&amp; $height &lt;= $config['img_link_height']) ? ATTACHMENT_CATEGORY_IMAGE : ATTACHMENT_CATEGORY_NONE);
+-						}
+-					}
+-					else
+-					{
+-						$display_cat = ATTACHMENT_CATEGORY_NONE;
+-					}
+-				}
+-			}
+-	
+-			switch ($display_cat)
+-			{
+-				// Images
+-				case ATTACHMENT_CATEGORY_IMAGE:
+-					$data['category'] = 'IMAGE';
+-					$data['image_src'] = $filename;
+-	
+-					$update_count[] = $attachment['attach_id'];
+-				break;
+-					
+-				// Images, but display Thumbnail
+-				case ATTACHMENT_CATEGORY_THUMB:
+-					$data['category'] = 'THUMBNAIL';
+-	
+-					$data['image_src'] = $thumbnail_filename;
+-					$data['link'] = (!$force_physical) ? generate_link('Forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
+-				break;
+-	
+-				// Windows Media Streams
+-				case ATTACHMENT_CATEGORY_WM:
+-					$data['category'] = 'WM_STREAM';
+-					$data['link'] = $filename;
+-	
+-					// Viewed/Heared File ... update the download count (download.php is not called here)
+-					$update_count[] = $attachment['attach_id'];
+-				break;
+-	
+-				// Real Media Streams
+-				case ATTACHMENT_CATEGORY_RM:
+-					$data['category'] = 'RM_STREAM';
+-					$data['link'] = $filename;
+-	
+-					// Viewed/Heared File ... update the download count (download.php is not called here)
+-					$update_count[] = $attachment['attach_id'];
+-				break;
+-	
+-				default:
+-					$data['category'] = 'FILE';
+-					$data['link'] = (!$force_physical) ? generate_link('Forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
+-				break;
+-			}
+-		}
+-
+-		if ($parse)
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('attachments', $data);
+-			$datas[] = $_CLASS['core_template']-&gt;display('modules/Forums/attachments.html', true);
+-		}
+-		else
+-		{
+-			$datas[] = $data;
+-		}
+-	}
+-
+-	return $datas;
+-}
+-
++				AND ft.forum_id = f.forum_id AND ft.topic_id = 0)';
++		$lastread_select = ', ft.mark_time ';
++	}
++	else
++	{
++		$sql_from = $lastread_select = $sql_lastread = '';
++		$tracking_topics = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
++	}
++
++	$sql = &quot;SELECT f.* $lastread_select 
++		FROM &quot;. FORUMS_FORUMS_TABLE . &quot; f $sql_from
++		WHERE forum_status &lt;&gt; &quot;.ITEM_DELETING.&quot;
++		$sql_where
++		ORDER BY f.left_id&quot;;
++	$result = $_CLASS['core_db']-&gt;query($sql);
++
++	$branch_root_id = $root_data['forum_id'];
++	$forum_ids		= array($root_data['forum_id']);
++
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		if ($mark_read == 'forums' &amp;&amp; $_CLASS['core_user']-&gt;is_user)
++		{
++			if ($_CLASS['auth']-&gt;acl_get('f_list', $row['forum_id']))
++			{
++				$forum_id_ary[] = $row['forum_id'];
++			}
++
++			continue;
++		}
++
++		if (isset($right_id))
++		{
++			if ($row['left_id'] &lt; $right_id)
++			{
++				continue;
++			}
++			unset($right_id);
++		}
++
++		if ($row['forum_type'] == FORUM_CAT &amp;&amp; ($row['left_id'] + 1 == $row['right_id']))
++		{
++			// Non-postable forum with no subforums: don't display
++			continue;
++		}
++
++		$forum_id = $row['forum_id'];
++
++		if (!$_CLASS['auth']-&gt;acl_get('f_list', $forum_id))
++		{
++			// if the user does not have permissions to list this forum, skip everything until next branch
++			$right_id = $row['right_id'];
++			continue;
++		}
++
++		// Display active topics from this forum?
++		if ($show_active &amp;&amp; $row['forum_type'] == FORUM_POST &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_read', $forum_id) &amp;&amp; ($row['forum_flags'] &amp; 16))
++		{
++			$active_forum_ary['forum_id'][]		= $forum_id;
++			$active_forum_ary['enable_icons'][] = $row['enable_icons'];
++			$active_forum_ary['forum_topics']	+= ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
++			$active_forum_ary['forum_posts']	+= $row['forum_posts'];
++		}
++
++		if ($row['parent_id'] == $root_data['forum_id'] || $row['parent_id'] == $branch_root_id)
++		{
++			// Direct child
++			$parent_id = $forum_id;
++			$forum_rows[$forum_id] = $row;
++			$forum_ids[] = $forum_id;
++
++			if (!$row['parent_id'] &amp;&amp; $row['forum_type'] == FORUM_CAT &amp;&amp; $row['parent_id'] == $root_data['forum_id'])
++			{
++				$branch_root_id = $forum_id;
++			}
++			$forum_rows[$parent_id]['forum_id_last_post'] = $row['forum_id'];
++		}
++		elseif ($row['forum_type'] != FORUM_CAT)
++		{
++			$subforums[$parent_id]['display'] = ($row['display_on_index']) ? true : false;;
++			$subforums[$parent_id]['name'][$forum_id] = $row['forum_name'];
++
++			$forum_rows[$parent_id]['forum_topics'] += ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $row['forum_topics_real'] : $row['forum_topics'];
++			
++			// Do not list redirects in LINK Forums as Posts.
++			if ($row['forum_type'] != FORUM_LINK)
++			{
++				$forum_rows[$parent_id]['forum_posts'] += $row['forum_posts'];
++			}
++
++			if (isset($forum_rows[$parent_id]) &amp;&amp; $row['forum_last_post_time'] &gt; $forum_rows[$parent_id]['forum_last_post_time'])
++			{
++				$forum_rows[$parent_id]['forum_last_post_id'] = $row['forum_last_post_id'];
++				$forum_rows[$parent_id]['forum_last_post_time'] = $row['forum_last_post_time'];
++				$forum_rows[$parent_id]['forum_last_poster_id'] = $row['forum_last_poster_id'];
++				$forum_rows[$parent_id]['forum_last_poster_name'] = $row['forum_last_poster_name'];
++				$forum_rows[$parent_id]['forum_id_last_post'] = $forum_id;
++			}
++			else
++			{
++				$forum_rows[$parent_id]['forum_id_last_post'] = $forum_id;
++			}
++		}
++
++		if (!$_CLASS['core_user']-&gt;is_user || !$config['load_db_lastread'])
++		{
++			$forum_id36 = base_convert($forum_id, 10, 36);
++			$row['mark_time'] = isset($tracking_topics[$forum_id36][0]) ? (int) base_convert($tracking_topics[$forum_id36][0], 36, 10) : 0;
++		//echo $forum_id36.' - '.$row['mark_time'].'&lt;br/&gt;';
++		}
++
++		if ($row['mark_time'] &lt; $row['forum_last_post_time'])
++		{//echo $parent_id.' - '.$row['mark_time'] .' - '. $row['forum_last_post_time'].'&lt;br/&gt;';
++			$forum_unread[$parent_id] = true;
++		}
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
++
++	// Handle marking posts
++	if ($mark_read == 'forums')
++	{
++		markread('mark', $forum_id_ary);
++
++		$redirect = generate_link('Forums');
++		$_CLASS['core_display']-&gt;meta_refresh(3, $redirect);
++
++		$message = (strpos($redirect, 'viewforum') !== false) ? 'RETURN_FORUM' : 'RETURN_INDEX';
++		$message = $_CLASS['core_user']-&gt;lang['FORUMS_MARKED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang[$message], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt; ');
++		trigger_error($message);
++	}
++
++	// Grab moderators ... if necessary
++	if ($display_moderators)
++	{
++		$forum_moderators = get_moderators($forum_ids);
++	}
++
++	// Loop through the forums
++	$root_id = $root_data['forum_id'];
++
++	foreach ($forum_rows as $row)
++	{
++		if ($row['parent_id'] == $root_id &amp;&amp; !$row['parent_id'])
++		{
++			if ($row['forum_type'] == FORUM_CAT)
++			{
++				$hold = $row;
++				continue;
++			}
++			else
++			{
++				unset($hold);
++			}
++		}
++		else if (!empty($hold))
++		{
++			$_CLASS['core_template']-&gt;assign_vars_array('forumrow', array(
++				'S_IS_CAT'			=&gt;	TRUE,
++				'FORUM_ID'			=&gt;	$hold['forum_id'],
++				'FORUM_NAME'		=&gt;	$hold['forum_name'],
++				'FORUM_DESC'		=&gt;	$hold['forum_desc'],
++				'U_VIEWFORUM'		=&gt;	generate_link('Forums&amp;file=viewforum&amp;f=' . $hold['forum_id']))
++			);
++			unset($hold);
++		}
++
++		$visible_forums++;
++		$forum_id = $row['forum_id'];
++
++		$subforums_list = $l_subforums = '';
++		
++		// Generate list of subforums if we need to
++		if (isset($subforums[$forum_id]))
++		{
++			if ($subforums[$forum_id]['display'])
++			{
++				$links = array();
++
++				foreach ($subforums[$forum_id]['name'] as $subforum_id =&gt; $subforum_name)
++				{
++					if (!empty($subforum_name))
++					{
++						$links[] = '&lt;a href=&quot;' .generate_link('Forums&amp;file=viewforum&amp;f='.$subforum_id).'&quot;&gt;' . $subforum_name . '&lt;/a&gt;';
++					}
++				}
++
++				if (!empty($links))
++				{
++					$subforums_list = implode(', ', $links);
++					$l_subforums = (count($subforums[$forum_id]) == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] . ': ' : $_CLASS['core_user']-&gt;lang['SUBFORUMS'] . ': ';
++				}
++
++				unset($links);
++			}
++
++			$folder_image = (!empty($forum_unread[$forum_id])) ? 'sub_forum_new' : 'sub_forum';
++		}
++		else
++		{
++			switch ($row['forum_type'])
++			{
++				case FORUM_POST:
++					$folder_image = (!empty($forum_unread[$forum_id])) ? 'forum_new' : 'forum';
++					break;
++
++				case FORUM_LINK:
++					$folder_image = 'forum_link';
++					break;
++			}
++		}
++
++
++		// Which folder should we display?
++		if ($row['forum_status'] == ITEM_LOCKED)
++		{
++			$folder_image = 'forum_locked';
++			$folder_alt = 'FORUM_LOCKED';
++		}
++		else
++		{
++			$folder_alt = (!empty($forum_unread[$forum_id])) ? 'NEW_POSTS' : 'NO_NEW_POSTS';
++		}
++
++		// Create last post link information, if appropriate
++		if ($row['forum_last_post_id'])
++		{
++			$last_post_time = $_CLASS['core_user']-&gt;format_date($row['forum_last_post_time']);
++
++			$last_poster = ($row['forum_last_poster_name'] != '') ? $row['forum_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'];
++			$last_poster_url = ($row['forum_last_poster_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u='  . $row['forum_last_poster_id']);
++			
++			$last_post_url = generate_link('Forums&amp;file=viewtopic&amp;f='.$row['forum_id_last_post'].'&amp;p='.$row['forum_last_post_id'].'#'.$row['forum_last_post_id'], false, false, false);
++		}
++		else
++		{
++			$last_post_time = $last_poster = $last_poster_url = $last_post_url = '';
++		}
++
++
++		// Output moderator listing ... if applicable
++		$l_moderator = $moderators_list = '';
++		if ($display_moderators &amp;&amp; !empty($forum_moderators[$forum_id]))
++		{
++			$l_moderator = (count($forum_moderators[$forum_id]) == 1) ? $_CLASS['core_user']-&gt;lang['MODERATOR'] : $_CLASS['core_user']-&gt;lang['MODERATORS'];
++			$moderators_list = implode(', ', $forum_moderators[$forum_id]);
++		}
++
++		$l_post_click_count = ($row['forum_type'] == FORUM_LINK) ? 'CLICKS' : 'POSTS';
++		$post_click_count = ($row['forum_type'] != FORUM_LINK || $row['forum_flags'] &amp; 1) ? $row['forum_posts'] : '';
++
++		$_CLASS['core_template']-&gt;assign_vars_array('forumrow', array(
++			'S_IS_CAT'			=&gt; false, 
++			'S_IS_LINK'			=&gt; ($row['forum_type'] == FORUM_LINK), 
++
++			'LAST_POST_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'), 
++
++			'FORUM_ID'			=&gt; $row['forum_id'], 
++			'FORUM_FOLDER_IMG'	=&gt; ($row['forum_image']) ? '&lt;img src=&quot;' . $row['forum_image'] . '&quot; alt=&quot;' . $folder_alt . '&quot; /&gt;' : $_CLASS['core_user']-&gt;img($folder_image, $folder_alt),
++			//'FORUM_FOLDER_IMG_SRC'	=&gt; ($row['forum_image']) ? $row['forum_image'] : $_CLASS['core_user']-&gt;img($folder_image, $folder_alt, false, '', 'src'),
++			'FORUM_NAME'		=&gt; $row['forum_name'],
++			'FORUM_DESC'		=&gt; $row['forum_desc'], 
++			$l_post_click_count	=&gt; $post_click_count,
++			'TOPICS'			=&gt; $row['forum_topics'],
++			'LAST_POST_TIME'	=&gt; $last_post_time,
++			'LAST_POSTER'		=&gt; $last_poster,
++			'MODERATORS'		=&gt; $moderators_list,
++			'SUBFORUMS'			=&gt; $subforums_list,
++
++			'L_SUBFORUM_STR'	=&gt; $l_subforums,
++			'L_MODERATOR_STR'	=&gt; $l_moderator,
++			'L_FORUM_FOLDER_ALT'=&gt; $folder_alt,
++			
++			'U_LAST_POSTER'		=&gt; $last_poster_url, 
++			'U_LAST_POST'		=&gt; $last_post_url, 
++			'U_VIEWFORUM'		=&gt; ($row['forum_type'] != FORUM_LINK || $row['forum_flags'] &amp; 1) ? generate_link('Forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : $row['forum_link'])
++		);
++	}
++
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'MODIFY_FORUM'		=&gt; $_CLASS['auth']-&gt;acl_get('a_forum'),
++		'U_MARK_FORUMS'		=&gt; generate_link('Forums&amp;file=viewforum&amp;f=' . $root_data['forum_id'] . '&amp;mark=Forums'), 
++		'S_HAS_SUBFORUM'	=&gt; ($visible_forums) ? true : false,
++		'L_SUBFORUM'		=&gt; ($visible_forums == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] : $_CLASS['core_user']-&gt;lang['SUBFORUMS']
++	));
++
++	return $active_forum_ary;
++}
++
++function topic_topic_author(&amp;$topic_row)
++{
++	global $_CLASS;
++
++	$topic_author = ($topic_row['topic_poster'] != ANONYMOUS) ? '&lt;a href=&quot;'.generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $topic_row['topic_poster']) . '&quot;&gt;' : '';
++	$topic_author .= ($topic_row['topic_poster'] != ANONYMOUS) ? $topic_row['topic_first_poster_name'] : (($topic_row['topic_first_poster_name'] != '') ? $topic_row['topic_first_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST']);
++	$topic_author .= ($topic_row['topic_poster'] != ANONYMOUS) ? '&lt;/a&gt;' : '';
++
++	return $topic_author;
++}
++
++function topic_status(&amp;$topic_row, $replies, $mark_time, &amp;$folder_img, &amp;$folder_alt, &amp;$topic_type)
++{
++	global $_CLASS, $config;
++	
++	$folder = $folder_new = '';
++	$unread_topic = false;
++
++	if ($topic_row['topic_status'] == ITEM_MOVED)
++	{
++		$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_MOVED'];
++		$folder_img = 'folder_moved';
++		$folder_alt = 'VIEW_TOPIC_MOVED';
++	}
++	else
++	{
++		if ($topic_row['topic_status'] == ITEM_LOCKED)
++		{
++			$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_LOCKED'];
++			$folder = 'folder_locked';
++			$folder_new = 'folder_locked_new';
++			
++		}
++		else
++		{
++			switch ($topic_row['topic_type'])
++			{
++				case POST_GLOBAL:
++				case POST_ANNOUNCE:
++					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_ANNOUNCEMENT'];
++					$folder = 'folder_announce';
++					$folder_new = 'folder_announce_new';
++					break;
++	
++				case POST_STICKY:
++					$topic_type = $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_STICKY'];
++					$folder = 'folder_sticky';
++					$folder_new = 'folder_sticky_new';
++					break;
++	
++				default:
++					if ($replies &gt;= $config['hot_threshold'])
++					{
++						$folder = 'folder_hot';
++						$folder_new = 'folder_hot_new';
++					}
++					else
++					{
++						$folder = 'folder';
++						$folder_new = 'folder_new';
++					}
++					break;
++			}
++		}
++
++		$unread_topic = true;
++
++		if ($mark_time &gt;= $topic_row['topic_last_post_time'])
++		{
++			$unread_topic = false;
++		}
++
++		$folder_img = ($unread_topic) ? $folder_new : $folder;
++		$folder_alt = ($unread_topic) ? 'NEW_POSTS' : (($topic_row['topic_status'] == ITEM_LOCKED) ? 'TOPIC_LOCKED' : 'NO_NEW_POSTS');
++	}
++
++	if ($topic_row['poll_start'])
++	{
++		$topic_type .= $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POLL'];
++	}
++
++	return $unread_topic;
++}
++
++// Display Attachments
++function display_attachments($forum_id, $attachment_data, &amp;$update_count, $force_physical = false, $parse = false)
++{
++	global $config, $_CLASS;
++
++	$return_tpl = array();
++
++	$extensions = obtain_attach_extensions();
++
++	foreach ($attachment_data as $attachment)
++	{
++		$attachment['extension'] = strtolower(trim($attachment['extension']));
++		$filename = $config['upload_path'] . '/' . basename($attachment['physical_filename']);
++		// to easy isn't it ?
++		$thumbnail_filename = $config['upload_path'] . '/thumb_' . basename($attachment['physical_filename']);
++
++		$data['lang_size'] = ($attachment['filesize'] &gt;= 1048576) ? round((round($attachment['filesize'] / 1048576 * 100) / 100), 2) .$_CLASS['core_user']-&gt;lang['MB'] : (($attachment['filesize'] &gt;= 1024) ? round((round($attachment['filesize'] / 1024 * 100) / 100), 2)  . $_CLASS['core_user']-&gt;lang['KB']: $attachment['filesize'] . $_CLASS['core_user']-&gt;lang['BYTES']);
++		$data['lang_views'] = (!$attachment['download_count']) ? $_CLASS['core_user']-&gt;lang['DOWNLOAD_NONE'] : (($attachment['download_count'] == 1) ? sprintf($_CLASS['core_user']-&gt;lang['DOWNLOAD_COUNT'], $attachment['download_count']) : sprintf($_CLASS['core_user']-&gt;lang['DOWNLOAD_COUNTS'], $attachment['download_count']));
++
++		$data['icon'] = ($extensions[$attachment['extension']]['upload_icon']) ? $config['upload_icons_path'] . '/' . trim($extensions[$attachment['extension']]['upload_icon']) : false;
++		$data['name'] = basename($attachment['real_filename']);
++		$data['comment'] = str_replace(&quot;\n&quot;, '&lt;br /&gt;', censor_text($attachment['comment']));
++
++		$denied = false;
++			
++		if (!extension_allowed($forum_id, $attachment['extension'], $extensions))
++		{
++			$data['category'] = 'DENIED';
++			$data['lang'] = sprintf($_CLASS['core_user']-&gt;get_lang('EXTENSION_DISABLED_AFTER_POSTING'), $attachment['extension']);
++
++			continue;
++		}
++		else
++		{
++			$display_cat = $extensions[$attachment['extension']]['display_cat'];
++	
++			if ($display_cat == ATTACHMENT_CATEGORY_IMAGE)
++			{
++				if ($attachment['thumbnail'])
++				{
++					$display_cat = ATTACHMENT_CATEGORY_THUMB;
++				}
++				else
++				{
++					if ($config['img_display_inlined'])
++					{
++						if ($config['img_link_width'] || $config['img_link_height'])
++						{
++							list($width, $height) = getimagesize($filename);
++	
++							$display_cat = (!$width &amp;&amp; !$height) ? ATTACHMENT_CATEGORY_IMAGE : (($width &lt;= $config['img_link_width'] &amp;&amp; $height &lt;= $config['img_link_height']) ? ATTACHMENT_CATEGORY_IMAGE : ATTACHMENT_CATEGORY_NONE);
++						}
++					}
++					else
++					{
++						$display_cat = ATTACHMENT_CATEGORY_NONE;
++					}
++				}
++			}
++	
++			switch ($display_cat)
++			{
++				// Images
++				case ATTACHMENT_CATEGORY_IMAGE:
++					$data['category'] = 'IMAGE';
++					$data['image_src'] = $filename;
++	
++					$update_count[] = $attachment['attach_id'];
++				break;
++					
++				// Images, but display Thumbnail
++				case ATTACHMENT_CATEGORY_THUMB:
++					$data['category'] = 'THUMBNAIL';
++	
++					$data['image_src'] = $thumbnail_filename;
++					$data['link'] = (!$force_physical) ? generate_link('Forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
++				break;
++	
++				// Windows Media Streams
++				case ATTACHMENT_CATEGORY_WM:
++					$data['category'] = 'WM_STREAM';
++					$data['link'] = $filename;
++	
++					// Viewed/Heared File ... update the download count (download.php is not called here)
++					$update_count[] = $attachment['attach_id'];
++				break;
++	
++				// Real Media Streams
++				case ATTACHMENT_CATEGORY_RM:
++					$data['category'] = 'RM_STREAM';
++					$data['link'] = $filename;
++	
++					// Viewed/Heared File ... update the download count (download.php is not called here)
++					$update_count[] = $attachment['attach_id'];
++				break;
++	
++				default:
++					$data['category'] = 'FILE';
++					$data['link'] = (!$force_physical) ? generate_link('Forums&amp;file=download&amp;id=' . $attachment['attach_id']) : $filename;
++				break;
++			}
++		}
++
++		if ($parse)
++		{
++			$_CLASS['core_template']-&gt;assign_vars_array('attachments', $data);
++			$datas[] = $_CLASS['core_template']-&gt;display('modules/Forums/attachments.html', true);
++		}
++		else
++		{
++			$datas[] = $data;
++		}
++	}
++
++	return $datas;
++}
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/functions.php
+===================================================================
+--- cms/trunk/includes/functions.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/functions.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -116,8 +116,10 @@
+ 	return $load_status;
+ }
+ 
+-function get_server_load()
++function get_server_load($return = true)
+ {
++	global $_CORE_CONFIG, $_CLASS;
++
+ 	$load = 0;
+ 
+ 	if (file_exists('/proc/loadavg'))
+@@ -134,7 +136,17 @@
+ 		list($load) = explode(',', $load);
+ 	}*/
+ 
++	if (!$return &amp;&amp; $load)
++	{
++		if (VIPERAL === 'FEED' || VIPERAL === 'AJAX')
++		{
++			header('HTTP/1.0 503 Service Unavailable');
++			trigger_error('503:'.$_CORE_CONFIG['maintenance']['text'], E_USER_ERROR);
++		}
++	}
++
+ 	return $load;
++
+ }
+ 
+ function check_maintance_status($return = false)
+@@ -167,6 +179,11 @@
+ 				return $maintance_status = true;
+ 			}
+ 
++			if (VIPERAL === 'FEED' || VIPERAL === 'AJAX')
++			{	
++				header('HTTP/1.0 503 Service Unavailable');
++			}
++
+ 			trigger_error('503:'.$_CORE_CONFIG['maintenance']['text'], E_USER_ERROR);
+ 		}
+ 
+@@ -189,7 +206,7 @@
+ 
+ function display_confirmation($message = '', $hidden = '', $image = false)
+ {
+-	global $_CLASS, $SID;
++	global $_CLASS;
+ // Add user entered confirmation code as a choose, maybe ...
+ 	if (isset($_POST['cancel']))
+ 	{
+@@ -391,7 +408,7 @@
+ 	{
+ 		$link = $file;
+ 
+-		if ($options['force_sid'] || ($options['sid'] &amp;&amp; $_CLASS['core_user']-&gt;sid_link))
++		if ($options['force_sid'] || ($options['sid'] &amp;&amp; $_CLASS['core_user']-&gt;need_sid))
+ 		{
+ 			$link .= '?'.$_CLASS['core_user']-&gt;sid_link;
+ 		}
+@@ -405,7 +422,7 @@
+ 
+ 		$link = $file.'?mod='.$link;
+ 
+-		if ($options['force_sid'] || ($options['sid'] &amp;&amp; $_CLASS['core_user']-&gt;sid_link))
++		if ($options['force_sid'] || ($options['sid'] &amp;&amp; $_CLASS['core_user']-&gt;need_sid))
+ 		{
+ 			$link .= '&amp;'.$_CLASS['core_user']-&gt;sid_link;
+ 		}
+
+Modified: cms/trunk/includes/session.php
+===================================================================
+--- cms/trunk/includes/session.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/session.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -29,6 +29,7 @@
+ 
+ 	var $sid_link_prefex = 'sid';
+ 	var $sid_link = false;
++	var $need_sid = true;
+ 
+ 	var $autologin_code = false;
+ 
+@@ -36,8 +37,6 @@
+ 	{
+ 		global $_CLASS, $_CORE_CONFIG, $SID, $mod;
+ 
+-		$this-&gt;server_local = ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') ? true : false;
+-
+ 		$session_id = get_variable($_CORE_CONFIG['server']['cookie_name'] . '_sid', 'COOKIE');
+ 		$session_id_url = get_variable('sid', 'GET');
+ 
+@@ -47,12 +46,11 @@
+ 			if (!$session_id || $session_id !== $session_id_url)
+ 			{
+ 				$session_id = $session_id_url;
+-				$this-&gt;sid_link = 'sid='.$session_id;
+ 			}
+ 		}
+-		else
++		elseif (!defined('NEED_SID'))
+ 		{
+-			$this-&gt;sid_link = defined('NEED_SID') ? 'sid='.$session_id : false;
++			$this-&gt;need_sid = false;
+ 		}
+ 
+ 		if ($session_id)
+@@ -104,7 +102,14 @@
+ 					$this-&gt;is_admin = ($this-&gt;data['session_admin'] == ADMIN_IS_ADMIN);
+ 
+ 					check_maintance_status();
++					
++					if ($this-&gt;is_bot)
++					{
++						$this-&gt;need_sid = false;
++					}
++
+ 					$this-&gt;load = check_load_status();
++					$this-&gt;sid_link = 'sid='.$this-&gt;data['session_id'];
+ 
+ 					return true;
+ 				}
+@@ -209,7 +214,8 @@
+ 			$this-&gt;set_cookie('sid', $session_id, 0);
+ 		}
+ 
+-		$this-&gt;sid_link = ($this-&gt;is_bot) ? false : 'sid='.$this-&gt;data['session_id'];
++		$this-&gt;need_sid = ($this-&gt;is_bot) ? false : true;
++		$this-&gt;sid_link = 'sid='.$this-&gt;data['session_id'];
+ 
+ 		$this-&gt;data['sessions'] = array();
+ 
+
+Deleted: cms/trunk/includes/templates/modules/Forums/viewtopic_attach_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewtopic_attach_body.html	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/templates/modules/Forums/viewtopic_attach_body.html	2005-09-16 19:22:36 UTC (rev 128)
+@@ -1,70 +0,0 @@
+-&lt;br /&gt;&lt;br /&gt;
+-&lt;!-- BEGIN attachment --&gt;
+-&lt;hr /&gt;
+-	&lt;!-- IF postrow.attachment.IS_DENIED --&gt;
+-		&lt;span class=&quot;postbody&quot;&gt;[{postrow.attachment.L_DENIED}]&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
+-	&lt;!-- ENDIF --&gt;
+-	&lt;!-- IF postrow.attachment.IS_WM_STREAM --&gt;
+-		&lt;span class=&quot;postbody&quot;&gt;{postrow.attachment.COMMENT}&lt;/span&gt;&lt;br /&gt;
+-		&lt;object id=&quot;wmp&quot; classid=&quot;CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95&quot; codebase=&quot;<A HREF="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,0,0,0">http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,0,0,0</A>&quot; standby=&quot;Loading Microsoft Windows Media Player components...&quot; type=&quot;application/x-oleobject&quot;&gt; 
+-		&lt;param name=&quot;FileName&quot; value=&quot;{postrow.attachment.U_DOWNLOAD_LINK}&quot;&gt; 
+-		&lt;param name=&quot;ShowControls&quot; value=&quot;1&quot;&gt; 
+-		&lt;param name=&quot;ShowDisplay&quot; value=&quot;0&quot;&gt; 
+-		&lt;param name=&quot;ShowStatusBar&quot; value=&quot;1&quot;&gt; 
+-		&lt;param name=&quot;AutoSize&quot; value=&quot;1&quot;&gt; 
+-		&lt;param name=&quot;AutoStart&quot; value=&quot;0&quot;&gt; 
+-		&lt;param name=&quot;Visible&quot; value=&quot;1&quot;&gt; 
+-		&lt;param name=&quot;AnimationStart&quot; value=&quot;0&quot;&gt; 
+-		&lt;param name=&quot;Loop&quot; value=&quot;0&quot;&gt; 
+-		&lt;embed type=&quot;application/x-mplayer2&quot; pluginspage=&quot;<A HREF="http://www.microsoft.com/windows95/downloads/contents/wurecommended/s_wufeatured/mediaplayer/default.asp">http://www.microsoft.com/windows95/downloads/contents/wurecommended/s_wufeatured/mediaplayer/default.asp</A>&quot; src=&quot;{postrow.attachment.U_DOWNLOAD_LINK}&quot; name=MediaPlayer2 showcontrols=1 showdisplay=0 showstatusbar=1 autosize=1 autostart=0 visible=1 animationatstart=0 loop=0&gt;&lt;/embed&gt; 
+-		&lt;/object&gt;
+-		&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;{postrow.attachment.DOWNLOAD_NAME} - {postrow.attachment.L_DOWNLOADED_VIEWED} {postrow.attachment.L_DOWNLOAD_COUNT}&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
+-	&lt;!-- ELSEIF postrow.attachment.IS_RM_STREAM --&gt;
+-		&lt;span class=&quot;postbody&quot;&gt;{postrow.attachment.COMMENT}&lt;/span&gt;&lt;br /&gt;
+-
+-		&lt;object id=rmstream_{postrow.attachment.ATTACH_ID} classid=&quot;clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA&quot; width=&quot;0&quot; height=&quot;0&quot;&gt;
+-		&lt;param name=&quot;src&quot; value=&quot;{postrow.attachment.U_FORUM}/{postrow.attachment.U_DOWNLOAD_LINK}&quot;&gt;
+-		&lt;param name=&quot;autostart&quot; value=&quot;false&quot;&gt;
+-		&lt;param name=&quot;controls&quot; value=&quot;ImageWindow&quot;&gt;
+-		&lt;param name=&quot;console&quot; value=&quot;{postrow.attachment.U_DOWNLOAD_LINK}&quot;&gt;
+-		&lt;param name=&quot;prefetch&quot; value=&quot;true&quot;&gt;
+-		&lt;embed name=rmstream_{postrow.attachment.ATTACH_ID} type=&quot;audio/x-pn-realaudio-plugin&quot; src=&quot;{postrow.attachment.U_FORUM}/{postrow.attachment.U_DOWNLOAD_LINK}&quot; width=&quot;0&quot; height=&quot;0&quot; autostart=&quot;false&quot; controls=&quot;ImageWindow&quot; console=&quot;video&quot; prefetch=&quot;true&quot;&gt;&lt;/embed&gt;
+-		&lt;/object&gt;
+-		&lt;br /&gt;
+-		&lt;object id=ctrls_{postrow.attachment.ATTACH_ID} classid=&quot;clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA&quot; width=&quot;0&quot; height=&quot;36&quot;&gt;
+-		&lt;param name=&quot;controls&quot; value=&quot;ControlPanel&quot;&gt;
+-		&lt;param name=&quot;console&quot; value=&quot;{postrow.attachment.U_DOWNLOAD_LINK}&quot;&gt;
+-		&lt;embed name=ctrls_{postrow.attachment.ATTACH_ID} type=&quot;audio/x-pn-realaudio-plugin&quot; width=&quot;0&quot; height=&quot;36&quot; controls=&quot;ControlPanel&quot; console=&quot;video&quot;&gt;&lt;/embed&gt;
+-		&lt;/object&gt;
+-
+-		&lt;script language=&quot;Javascript&quot;&gt;
+-		&lt;!--
+-
+- 	    while (!document.rmstream_{postrow.attachment.ATTACH_ID}.GetClipWidth())
+-		{
+-		}
+-
+-		var width = document.rmstream_{postrow.attachment.ATTACH_ID}.GetClipWidth();
+-		var height = document.rmstream_{postrow.attachment.ATTACH_ID}.GetClipHeight();
+-
+-		document.rmstream_{postrow.attachment.ATTACH_ID}.width = width;
+-		document.rmstream_{postrow.attachment.ATTACH_ID}.height = height;
+-		document.ctrls_{postrow.attachment.ATTACH_ID}.width = width;
+-		//--&gt;
+-		&lt;/script&gt;
+-		&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;{postrow.attachment.DOWNLOAD_NAME} - {postrow.attachment.L_DOWNLOADED_VIEWED} {postrow.attachment.L_DOWNLOAD_COUNT}&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
+-	&lt;!-- ELSEIF postrow.attachment.IS_IMAGE --&gt;
+-		&lt;span class=&quot;postbody&quot;&gt;{postrow.attachment.COMMENT}&lt;br /&gt;
+-		&lt;img src=&quot;{postrow.attachment.U_DOWNLOAD_LINK}&quot; alt=&quot;{postrow.attachment.DOWNLOAD_NAME}&quot; /&gt;&lt;/span&gt;
+-		&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;{postrow.attachment.DOWNLOAD_NAME} - {postrow.attachment.L_DOWNLOADED_VIEWED} {postrow.attachment.L_DOWNLOAD_COUNT}&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
+-	&lt;!-- ELSEIF postrow.attachment.IS_THUMBNAIL --&gt;
+-		&lt;span class=&quot;postbody&quot;&gt;{postrow.attachment.COMMENT}&lt;br /&gt;
+-		&lt;a href=&quot;{postrow.attachment.U_DOWNLOAD_LINK}&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;{postrow.attachment.THUMB_IMG}&quot; alt=&quot;{postrow.attachment.DOWNLOAD_NAME}&quot; border=&quot;0&quot; /&gt;&lt;/a&gt;&lt;/span&gt;
+-		&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;{postrow.attachment.DOWNLOAD_NAME} - {postrow.attachment.L_DOWNLOADED_VIEWED} {postrow.attachment.L_DOWNLOAD_COUNT}&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
+-	&lt;!-- ELSE --&gt;
+-		&lt;span class=&quot;postbody&quot;&gt;{postrow.attachment.COMMENT}&lt;/span&gt;&lt;br /&gt;
+-		&lt;span class=&quot;postbody&quot;&gt;{postrow.attachment.UPLOAD_IMG}
+-		&lt;a href=&quot;{postrow.attachment.U_DOWNLOAD_LINK}&quot; target=&quot;_blank&quot;&gt;{postrow.attachment.DOWNLOAD_NAME}&lt;/a&gt; - {postrow.attachment.FILESIZE} {postrow.attachment.SIZE_VAR}&lt;br /&gt;&lt;/span&gt;
+-		&lt;span class=&quot;gensmall&quot;&gt;{postrow.attachment.L_DOWNLOADED_VIEWED} {postrow.attachment.L_DOWNLOAD_COUNT}&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
+-	&lt;!-- ENDIF --&gt;
+-&lt;!-- END attachment --&gt;
+
+Modified: cms/trunk/includes/user.php
+===================================================================
+--- cms/trunk/includes/user.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/includes/user.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -406,14 +406,14 @@
+ 			$name = $_CORE_CONFIG['server']['cookie_name'] . '_' . $name;
+ 		}
+ 
+-		if ($this-&gt;server_local)
+-		{
+-			setcookie($name, $cookie_data, $cookie_time, $_CORE_CONFIG['server']['cookie_path']);
++		if (SERVER_LOCAL)
++		{
++			setcookie($name, $cookie_data, $cookie_time, $_CORE_CONFIG['server']['cookie_path']);
++		}
++		else
++		{
++			setcookie($name, $cookie_data, $cookie_time, $_CORE_CONFIG['server']['cookie_path'], $_CORE_CONFIG['server']['cookie_domain'], $_CORE_CONFIG['server']['site_secure']);
+ 		}
+-		else
+-		{
+-			setcookie($name, $cookie_data, $cookie_time, $_CORE_CONFIG['server']['cookie_path'], $_CORE_CONFIG['server']['cookie_domain'], $_CORE_CONFIG['server']['site_secure']);
+-		}
+ 	}
+ 
+ ///////////////////
+
+Modified: cms/trunk/installer.php
+===================================================================
+--- cms/trunk/installer.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/installer.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -354,7 +354,7 @@
+ 		$sql = 'SELECT * FROM ' . CORE_CONFIG_TABLE;
+ 		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 		$_CLASS['core_db']-&gt;free_result($result);
+-	
++
+ 		if (!$result)
+ 		{
+ 			$stage = 2;
+@@ -375,7 +375,7 @@
+ 	
+ 				$config_data .= &quot;\$site_db['$name'] = $value;\n&quot;;
+ 			}
+-	
++
+ 			$config_data .= &quot;\n&quot;;
+ 			$config_data .= &quot;\$table_prefix\t= '$table_prefix';\n&quot;;
+ 			$config_data .= &quot;\$user_prefix\t= '$user_prefix';\n\n&quot;;
+@@ -383,7 +383,7 @@
+ 			$config_data .= &quot;if (!defined('INDEX_PAGE'))\n{\n\tdefine('INDEX_PAGE', 'index.php');\n}\n\n&quot;;
+ 			$config_data .= &quot;if (!defined('ADMIN_PAGE'))\n{\n\tdefine('ADMIN_PAGE', 'admin.php');\n}\n\n&quot;;
+ 			$config_data .= '?&gt;';
+-	
++
+ 			if (file_put_contents($site_file_root.'config.php', $config_data))
+ 			{
+ 				$config_data = false;
+@@ -392,17 +392,17 @@
+ 			{
+ 				$error[] = 'Failed to write to your config.php file&lt;br/&gt;Please upload the content listed in the &quot;Config.php Content&quot; Section';
+ 			}
+-			
++
+ 			$path = dirname(getenv('SCRIPT_NAME'));
+-	
++
+ 			if (substr($path, -1) != '/')
+ 			{
+ 				$path .= '/';
+ 			}
+-	
++
+ 			$path = str_replace('install/', '', $path);
+-			$domain = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST'];
+-	
++			$domain = empty($_SERVER['SERVER_NAME']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
++
+ 			$_CLASS['core_template']-&gt;assign_array(array(
+ 				'site_name'			=&gt; 'New CMS Site',
+ 				'site_domain'		=&gt; $domain,
+@@ -419,7 +419,7 @@
+ 				'error'				=&gt; empty($error) ? false : implode('&lt;br/&gt;', $error),
+ 				'config_content'	=&gt; $config_data
+ 			));
+-	
++
+ 			$_CLASS['core_template']-&gt;display('installer/stage3.html');
+ 	
+ 			script_close();
+
+Modified: cms/trunk/javascript/collapse.js
+===================================================================
+--- cms/trunk/javascript/collapse.js	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/javascript/collapse.js	2005-09-16 19:22:36 UTC (rev 128)
+@@ -12,42 +12,6 @@
+ 	var slider_height = new Array();
+ }
+ 
+-function get_cookie(cookie_name)
+-{
+-	var cookie_prefix = cookie_name + &quot;=&quot;;
+-	var cookie_length = document.cookie.length;
+-
+-	if (cookie_length &gt; 0)
+-	{
+-		var start = document.cookie.indexOf(cookie_prefix);
+-
+-		if (start != -1)
+-		{
+-			start += cookie_prefix.length;
+-			var end = document.cookie.indexOf(';', start);
+-
+-			if (end == -1)
+-			{
+-				end = cookie_length;
+-			}
+-
+-			return unescape(document.cookie.substring(start, end));
+-		}
+-	}
+-
+-	return null;
+-}
+-
+-function set_cookie(cookie_name, value, expires)
+-{
+-	document.cookie = cookie_name + '=' + escape(value) + '; path=/; expires=' + expires.toGMTString();
+-}
+-
+-function delete_cookie(cookie_name)
+-{
+-	document.cookie = cookie_name + '=' + '; expires=Thu, 01-Jan-70 00:00:01 GMT' +  '; path=/';
+-}
+-
+ function switch_collapse(identifier, no_slide, cookie)
+ {
+ 	var area = document.getElementById(identifier);
+
+Modified: cms/trunk/javascript/common.js
+===================================================================
+--- cms/trunk/javascript/common.js	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/javascript/common.js	2005-09-16 19:22:36 UTC (rev 128)
+@@ -1,5 +1,41 @@
+ // By Ryan Marshall ( <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A> )
+ 
++function get_cookie(cookie_name)
++{
++	var cookie_prefix = cookie_name + &quot;=&quot;;
++	var cookie_length = document.cookie.length;
++
++	if (cookie_length &gt; 0)
++	{
++		var start = document.cookie.indexOf(cookie_prefix);
++
++		if (start != -1)
++		{
++			start += cookie_prefix.length;
++			var end = document.cookie.indexOf(';', start);
++
++			if (end == -1)
++			{
++				end = cookie_length;
++			}
++
++			return unescape(document.cookie.substring(start, end));
++		}
++	}
++
++	return null;
++}
++
++function set_cookie(cookie_name, value, expires)
++{
++	document.cookie = cookie_name + '=' + escape(value) + '; path='+cms_cookie_path+'; expires=' + expires.toGMTString();
++}
++
++function delete_cookie(cookie_name)
++{
++	document.cookie = cookie_name + '=' + '; expires=Thu, 01-Jan-70 00:00:01 GMT' +  '; path='+cms_cookie_path+'';
++}
++
+ function array_search(needle, haystack, strict)
+ {
+ 	for (var i in haystack)
+@@ -49,6 +85,8 @@
+ 		this.init();
+ 	}
+ 
++	url += '&amp;sid='+cms_session_id;
++
+ 	this.request.open('POST', url, this.async);
+ 	this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+ 
+
+Modified: cms/trunk/javascript/forums/forum_view.js
+===================================================================
+--- cms/trunk/javascript/forums/forum_view.js	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/javascript/forums/forum_view.js	2005-09-16 19:22:36 UTC (rev 128)
+@@ -1,5 +1,5 @@
+ // By Ryan Marshall ( <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A> )
+-
++//svn checkout <A HREF="svn://svn.berlios.de/viperals/cms/trunk">svn://svn.berlios.de/viperals/cms/trunk</A> /net/pork/export/nfs/home/groups/viperals/htdocs
+ function tite_edit_init(id, mode)
+ {
+ 	var area = document.getElementById(mode + '_' + id)
+@@ -59,7 +59,7 @@
+ 
+ 				var input = document.getElementById(mode + '_input_' + id);
+ 
+-				ajax.send('index.php?mod=Forums&amp;file=ajax', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
++				ajax.send('ajax.php?mod=Forums', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
+ 
+ 				tite_edit_remove(id, mode);
+ 			}
+@@ -126,7 +126,7 @@
+ 
+ 	var input = document.getElementById(mode + '_input_' + id);
+ 
+-	ajax.send('index.php?mod=Forums&amp;file=ajax', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
++	ajax.send('ajax.php?mod=Forums', '&amp;mode=' + mode + '_edit_title&amp;title=' + input.value + '&amp;id=' + id);
+ 
+ 	tite_edit_remove(id, mode);
+ }
+\ No newline at end of file
+
+Modified: cms/trunk/modules/Forums/ajax.php
+===================================================================
+--- cms/trunk/modules/Forums/ajax.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/modules/Forums/ajax.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -28,6 +28,11 @@
+ 
+ header('Content-Type: text/html');
+ 
++require_once($site_file_root.'includes/forums/functions.php');
++load_class($site_file_root.'includes/forums/auth.php', 'auth');
++
++$_CLASS['auth']-&gt;acl($_CLASS['core_user']-&gt;data);
++
+ Switch (get_variable('mode', 'POST', false))
+ {
+ 	case 'forum_edit_title':
+
+Modified: cms/trunk/modules/Forums/index.php
+===================================================================
+--- cms/trunk/modules/Forums/index.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/modules/Forums/index.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -23,7 +23,7 @@
+ 
+ $file = get_variable('file', 'REQUEST', false);
+ 
+-$approved_files = array('ajax', 'viewforum', 'viewtopic', 'report', 'faq', 'posting', 'download', 'mcp', 'search');
++$approved_files = array('viewforum', 'viewtopic', 'report', 'faq', 'posting', 'download', 'mcp', 'search');
+ 
+ if (!$file || !in_array($file, $approved_files))
+ {
+
+Modified: cms/trunk/modules/Forums/posting.php
+===================================================================
+--- cms/trunk/modules/Forums/posting.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/modules/Forums/posting.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -315,7 +315,7 @@
+ 		trigger_error('USER_CANNOT_EDIT');
+ 	}
+ 
+-	if (!($posting_data['post_time'] &gt; time() - $config['edit_time'] || !$config['edit_time']))
++	if ($config['edit_time'] &amp;&amp; $posting_data['post_time'] &gt; ($current_time - $config['edit_time']))
+ 	{
+ 		trigger_error('CANNOT_EDIT_TIME');
+ 	}
+@@ -437,7 +437,7 @@
+ 
+ 	$_CLASS['core_db']-&gt;transaction('commit');
+ 
+-	markread('topic', $forum_id, $topic_id, $current_time);
++	//markread('topic', $forum_id, $topic_id, $current_time);
+ 
+ 	add_log('mod', $forum_id, $topic_id, sprintf($_CLASS['core_user']-&gt;lang['LOGM_BUMP'], $posting_data['topic_title']));
+ 
+@@ -1363,7 +1363,7 @@
+ 		return;
+ 	}
+ 
+-	$current_time = gmtime();
++	$current_time = $_CLASS['core_user']-&gt;time;
+ 
+ 	if ($mode == 'post')
+ 	{
+@@ -1862,7 +1862,7 @@
+ 	}
+ 
+ 	// Mark this topic as read and posted to.
+-	markread('topic', $data['forum_id'], $data['topic_id'], $data['post_time']);
++	//markread('topic', $data['forum_id'], $data['topic_id'], $data['post_time']);
+ 
+ 	// Send Notifications
+ 	if ($mode != 'edit' &amp;&amp; $mode != 'delete' &amp;&amp; (!$_CLASS['auth']-&gt;acl_get('f_moderate', $data['forum_id']) || $_CLASS['auth']-&gt;acl_get('m_approve')))
+
+Modified: cms/trunk/modules/Forums/viewforum.php
+===================================================================
+--- cms/trunk/modules/Forums/viewforum.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/modules/Forums/viewforum.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -87,7 +87,7 @@
+ 	{
+ 		$sql_lastread = $lastread_select = '';
+ 		$tracking_topics = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
+-	
++
+ 		if (!is_array($tracking_topics))
+ 		{
+ 			$tracking_topics = array();
+@@ -444,7 +444,8 @@
+ 		{
+ 			if ($mark_forum_read)
+ 			{
+-				$mark_forum_read = ($row['topic_last_post_time'] &lt; $mark_time_topic) ? (int) $mark_time_topic : false;
++				$mark_forum_read = ($row['topic_last_post_time'] &gt; $mark_time_topic) ? false : max((int)$mark_forum_read, $mark_time_topic);
++			//echo $row['topic_last_post_time']. ' - '.$mark_time_topic.' :';
+ 			}
+ 			$mark_time = $mark_time_topic;
+ 		}
+
+Modified: cms/trunk/modules/Forums/viewtopic.php
+===================================================================
+--- cms/trunk/modules/Forums/viewtopic.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/modules/Forums/viewtopic.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -1269,13 +1269,14 @@
+ 	}
+ 	else
+ 	{
++		
+ 		$tracking = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
+ 
+ 		if (!is_array($tracking))
+ 		{
+ 			$tracking = array();
+ 		}
+-		
++
+ 		$forum_id36 = base_convert($forum_id, 10, 36);
+ 		$mark_time_forum = isset($tracking[$forum_id36][0]) ? (int) base_convert($tracking[$forum_id36][0], 36, 10) : 0;
+ 
+@@ -1287,33 +1288,29 @@
+ 
+ 	$result = $_CLASS['core_db']-&gt;query_limit($sql, $config['topics_per_page']);
+ 	$update_forum_mark = true;
++	$last_forum_post = 0;
+ 
+-	if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		// DESC order so the first post is the last post
+-		$last_forum_post = $row['topic_last_post_time'];
++		$last_forum_post = max($last_forum_post, $row['topic_last_post_time']);
+ 
+-// add user view options
+-		do
++		if (!$_CLASS['core_user']-&gt;is_user || !$config['load_db_lastread'])
+ 		{
+-			if (!$_CLASS['core_user']-&gt;is_user || !$config['load_db_lastread'])
+-			{
+-				$topic_id36 = base_convert($topic_id, 10, 36);
+-				$row['mark_time'] = isset($tracking[$forum_id36][$topic_id36]) ? (int) base_convert($tracking[$forum_id36][$topic_id36], 36, 10) : 0;
+-			}
++			$topic_id36 = base_convert($topic_id, 10, 36);
++			$row['mark_time'] = isset($tracking[$forum_id36][$topic_id36]) ? (int) base_convert($tracking[$forum_id36][$topic_id36], 36, 10) : 0;
++		}
+ 
+-			$last_mark_time = max($row['mark_time'], $mark_time_forum);
++		$last_mark_time = max($row['mark_time'], $mark_time_forum);
+ 
+-			if ($row['topic_last_post_time'] &gt; $last_mark_time &amp;&amp; $row['topic_id'] != $topic_id)
+-			{
+-				// We have a winner/loser
+-				// Set so the forum isn't marked
+-				$update_forum_mark = false;
+-echo 'test';
+-				break;
+-			}
++		if ($row['topic_last_post_time'] &gt; $last_mark_time &amp;&amp; $row['topic_id'] != $topic_id)
++		{
++			// We have a winner/loser
++			// Set so the forum isn't marked
++			$update_forum_mark = false;
++
++			break;
+ 		}
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+@@ -1349,6 +1346,7 @@
+ 		return gmtime();
+ 	}
+ 
++
+ 	if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['load_db_lastread'])
+ 	{
+ 		$sql = 'SELECT MAX(mark_time) as mark_time
+
+Added: cms/trunk/modules/Quick_Message/ajax.php
+===================================================================
+--- cms/trunk/modules/Quick_Message/ajax.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/modules/Quick_Message/ajax.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -0,0 +1,188 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++global $table_prefix;
++
++if (!defined('QUICK_MESSAGE_TABLE'))
++{
++	define('QUICK_MESSAGE_TABLE', $table_prefix.'quick_message');
++}
++
++$_CLASS['core_user']-&gt;user_setup();
++$mode = get_variable('mode', 'REQUEST', false);
++
++switch ($mode)
++{
++	case 'ajax_refresh':
++		require_once($site_file_root.'modules/Quick_Message/functions.php');
++
++		echo qm_block_content();
++
++		script_close();
++	break;
++
++	case 'ajax_add':
++		if ($_CLASS['core_user']-&gt;is_bot)
++		{
++			die;
++		}
++
++		$message = trim(get_variable('message', 'POST', false));
++
++		if (!$message)
++		{
++			die;
++		}
++
++		$length = mb_strlen($message);
++
++		if ($length &gt; $_CORE_CONFIG['quick_message']['length_max'])
++		{ 
++			die;
++		}
++
++	// use limit
++		$result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) as count FROM '.QUICK_MESSAGE_TABLE.&quot; WHERE message_text='&quot;.$_CLASS['core_db']-&gt;escape($message).&quot;' AND message_time &gt;= &quot;.($_CLASS['core_user']-&gt;time - $_CORE_CONFIG['quick_message']['last_post_check']));
++		$count = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++	// add a count check here so it admin ajustable
++		if ($count['count'] &gt; 0)
++		{
++			die;
++		}
++
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		if ($_CLASS['core_user']-&gt;is_user)
++		{
++			$user_id =  $_CLASS['core_user']-&gt;data['user_id'];
++			$user_name = $_CLASS['core_user']-&gt;data['username'];
++		}
++		else
++		{
++			$user_id = 0;
++			$user_name = get_variable('poster_name', 'POST', false);
++
++			if (!$user_name)
++			{
++				if ($_CORE_CONFIG['quick_message']['anonymous_posting'] != '2')
++				{
++					die;
++				}
++			}
++			else
++			{
++				$length = mb_strlen($user_name);
++
++				if ($length &lt; 2)
++				{
++					die;
++				}
++
++				if ($length &gt; 10)
++				{
++					die;
++				}
++
++				require($site_file_root.'includes/functions_user.php');
++				$status = validate_username($user_name);
++
++				if ($status !== true)
++				{
++					die;
++				}
++			}
++		}
++
++		$sql = 'INSERT INTO '.QUICK_MESSAGE_TABLE.' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
++			'poster_name'	=&gt; (string) $user_name,
++			'poster_id'		=&gt; (int) $user_id,
++			'poster_ip'		=&gt; (string) $_CLASS['core_user']-&gt;ip,
++			'message_text'	=&gt; (string) $message,
++			'message_time'	=&gt; (int) $_CLASS['core_user']-&gt;time,
++		));
++
++		$_CLASS['core_db']-&gt;query($sql);
++
++		require_once($site_file_root.'modules/Quick_Message/functions.php');
++
++		echo qm_block_content();
++
++		script_close();
++
++	break;
++
++	case 'delete':
++		global $_CORE_CONFIG, $_CLASS;
++
++		$id = get_variable('id', 'GET', false, 'integer');
++
++		if (!$id)
++		{
++			die;
++		}
++
++		$result = $_CLASS['core_db']-&gt;query_limit('SELECT message_id, poster_id, poster_name, poster_ip, message_time FROM '.QUICK_MESSAGE_TABLE.' ORDER BY message_time DESC', 1);
++		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++		
++		if (!$row)
++		{
++			trigger_error('NO_MESSAGE');
++		}
++
++		$return = true;
++
++		if ($row['message_id'] == $id)
++		{
++			if ($row['message_time'] &gt; ($_CLASS['core_user']-&gt;time - $_CORE_CONFIG['quick_message']['delete_time']))
++			{
++				if (($row['poster_id'] &amp;&amp; $row['poster_id'] == $_CLASS['core_user']-&gt;data['user_id']) || (!$row['poster_id'] &amp;&amp; $row['poster_ip'] == $_CLASS['core_user']-&gt;ip))
++				{
++					$return = false;
++				}
++			}
++		}
++
++		if ($return)
++		{
++			trigger_error('MESSAGE_NOT_DELETABLE');
++		}
++
++		$sql = 'DELETE FROM ' . QUICK_MESSAGE_TABLE . ' WHERE message_id = '.$id;
++		$_CLASS['core_db']-&gt;query($sql);
++
++		//trigger_error('MESSAGE_DELETED');
++		redirect(($_CLASS['core_user']-&gt;data['session_url']) ? generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)) : '');
++	break;
++}
++
++script_close(false);
++
++?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/Quick_Message/index.php
+===================================================================
+--- cms/trunk/modules/Quick_Message/index.php	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/modules/Quick_Message/index.php	2005-09-16 19:22:36 UTC (rev 128)
+@@ -39,16 +39,7 @@
+ {
+ 	switch ($mode)
+ 	{
+-		case 'ajax_refresh':
+-			require_once($site_file_root.'modules/Quick_Message/functions.php');
+-	
+-			echo qm_block_content();
+-	
+-			script_close();
+-		break;
+-	
+ 		case 'add':
+-		case 'ajax_add':
+ 			if ($_CLASS['core_user']-&gt;is_bot)
+ 			{
+ 				redirect(generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)));
+@@ -58,11 +49,6 @@
+ 	
+ 			if (!$message)
+ 			{
+-				if ($mode === 'ajax_add')
+-				{
+-					die;
+-				}
+-	
+ 				trigger_error('NO_MESSAGE');
+ 			}
+ 	
+@@ -70,11 +56,6 @@
+ 	
+ 			if ($length &gt; $_CORE_CONFIG['quick_message']['length_max'])
+ 			{ 
+-				if ($mode === 'ajax_add')
+-				{
+-					die;
+-				}
+-	
+ 				trigger_error('LONG_MESSAGE');
+ 			}
+ 	
+@@ -86,11 +67,6 @@
+ 		// add a count check here so it admin ajustable
+ 			if ($count['count'] &gt; 0)
+ 			{
+-				if ($mode === 'ajax_add')
+-				{
+-					die;
+-				}
+-	
+ 				trigger_error(sprintf($_CLASS['core_user']-&gt;lang['SAME_MESSAGE'], $_CORE_CONFIG['quick_message']['last_post_check'] / 60));
+ 			}
+ 	
+@@ -110,10 +86,6 @@
+ 				{
+ 					if ($_CORE_CONFIG['quick_message']['anonymous_posting'] != '2')
+ 					{
+-						if ($mode === 'ajax_add')
+-						{
+-							die;
+-						}
+ 						trigger_error('NO_NAME');
+ 					}
+ 				}
+@@ -123,19 +95,11 @@
+ 	
+ 					if ($length &lt; 2)
+ 					{
+-						if ($mode === 'ajax_add')
+-						{
+-							die;
+-						}
+ 						trigger_error('SHORT_NAME');
+ 					}
+ 	
+ 					if ($length &gt; 10)
+ 					{
+-						if ($mode = 'ajax_add')
+-						{
+-							die;
+-						}
+ 						trigger_error('LONG_NAME');
+ 					}
+ 	
+@@ -144,10 +108,6 @@
+ 
+ 					if ($status !== true)
+ 					{
+-						if ($mode === 'ajax_add')
+-						{
+-							die;
+-						}
+ 						trigger_error($error);
+ 					}
+ 				}
+@@ -162,16 +122,7 @@
+ 			));
+ 	
+ 			$_CLASS['core_db']-&gt;query($sql);
+-	
+-			if ($mode === 'ajax_add')
+-			{
+-				require_once($site_file_root.'modules/Quick_Message/functions.php');
+-	
+-				echo qm_block_content();
+-	
+-				script_close();
+-			}
+-	
++
+ 			redirect(generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)));
+ 		break;
+ 	
+
+Modified: cms/trunk/themes/viperal/style/style.css
+===================================================================
+--- cms/trunk/themes/viperal/style/style.css	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/themes/viperal/style/style.css	2005-09-16 19:22:36 UTC (rev 128)
+@@ -18,7 +18,7 @@
+ 	z-index: 1;
+ }
+ 
+-#nav li a, .active
++#nav li a, .active
+ {
+ 	display: block;
+ 	padding: 5px 10px 5px 5px; 
+@@ -296,7 +296,14 @@
+ p.forumdesc { margin: 0px 4px 0px 0px; padding: 4px; font-size: 100%; }
+ a.forumlink { color: #069; font-size: 120%; font-weight: bold; }
+ 
+-p.topictitle { margin: 1px 0px; display: inline; font-size: 100%; font-weight: bold; }
++.topictitle
++{
++	margin: 1px 0px;
++	display: inline;
++	font-size: 100%;
++	font-weight: bold;
++}
++
+ p.topicauthor { margin: 1px 0px; font-size: 100%; }
+ p.topicdetails { margin: 1px 0px; font-size: 95%; }
+ 
+@@ -412,11 +419,6 @@
+ 	color: #000000; text-decoration: none;
+ }
+ 
+-a.topictitle:visited
+-{
+-	color: #5493B4; text-decoration: none;
+-}
+-
+ a.th:link, a.th:active, a.th:visited
+ {
+ 	color: #FFA34F; text-decoration: none;
+
+Modified: cms/trunk/themes/viperal/template/header.html
+===================================================================
+--- cms/trunk/themes/viperal/template/header.html	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/themes/viperal/template/header.html	2005-09-16 19:22:36 UTC (rev 128)
+@@ -6,10 +6,9 @@
+ &lt;meta name=&quot;author&quot; content=&quot;{ $SITE_NAME }&quot; /&gt;&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
+ &lt;meta name=&quot;copyright&quot; content=&quot;Copyright { $SITE_NAME } { $SITE_URL }&quot; /&gt;
+ &lt;meta name=&quot;robots&quot; content=&quot;index, follow&quot; /&gt;
+-&lt;!-- &lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt; --&gt;
+-&lt;style type=&quot;text/css&quot;&gt;@import &quot;{ $A_STYLESHEET }&quot;;&lt;/style&gt;
++{ $HEADER_META }
++&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
+ { $HEADER_REGULAR }
+-
+ { $HEADER_JS }
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/collapse.js&quot;&gt;&lt;/script&gt;
+ 
+@@ -23,7 +22,6 @@
+ &lt;![endif]--&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+-{ $HEADER_BODY }
+ 
+ &lt;a name=&quot;Top&quot;&gt;&lt;/a&gt;
+ 
+
+Modified: cms/trunk/themes_admin/viperal_admin/template/header.html
+===================================================================
+--- cms/trunk/themes_admin/viperal_admin/template/header.html	2005-09-15 19:32:21 UTC (rev 127)
++++ cms/trunk/themes_admin/viperal_admin/template/header.html	2005-09-16 19:22:36 UTC (rev 128)
+@@ -5,13 +5,12 @@
+ &lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset={ $SITE_CHARSET }&quot; /&gt;
+ &lt;meta name=&quot;author&quot; content=&quot;{ $SITE_NAME }&quot; /&gt;&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
+ &lt;meta name=&quot;copyright&quot; content=&quot;Copyright { $SITE_NAME } { $SITE_URL }&quot; /&gt;
+-&lt;meta name=&quot;robots&quot; content=&quot;noindex, nofollow&quot; /&gt;
+-&lt;!-- &lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt; --&gt;
+-&lt;style type=&quot;text/css&quot;&gt;@import &quot;{ $A_STYLESHEET }&quot;;&lt;/style&gt;
+-
++&lt;!-- &lt;meta name=&quot;robots&quot; content=&quot;noindex, nofollow&quot; /&gt; --&gt;
++&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
++{ $HEADER_META }
++&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
+ { $HEADER_REGULAR }
+ { $HEADER_JS }
+-
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/collapse.js&quot;&gt;&lt;/script&gt;
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/menu.js&quot;&gt;&lt;/script&gt;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000048.html">[Viperals-svncheckins] r127 - in cms/trunk: blocks javascript modules/Quick_Message
+</A></li>
+	<LI>Next message: <A HREF="000050.html">[Viperals-svncheckins] r129 - in cms/trunk/themes/viperal/template/modules: . articles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

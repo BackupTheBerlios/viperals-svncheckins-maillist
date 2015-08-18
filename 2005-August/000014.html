@@ -1,0 +1,736 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r90 - in trunk: . admin blocks includes includes/templates/admin includes/templates/admin/users
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r90%20-%20in%20trunk%3A%20.%20admin%20blocks%20includes%20includes/templates/admin%20includes/templates/admin/users&In-Reply-To=%3C200508241926.j7OJQASj029728%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000013.html">
+   <LINK REL="Next"  HREF="000015.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r90 - in trunk: . admin blocks includes includes/templates/admin includes/templates/admin/users</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r90%20-%20in%20trunk%3A%20.%20admin%20blocks%20includes%20includes/templates/admin%20includes/templates/admin/users&In-Reply-To=%3C200508241926.j7OJQASj029728%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r90 - in trunk: . admin blocks includes includes/templates/admin includes/templates/admin/users">viperal at berlios.de
+       </A><BR>
+    <I>Wed Aug 24 21:26:10 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000013.html">[Viperals-svncheckins] r89 - in trunk: blocks includes includes/db includes/forums includes/forums/admin javascript modules/Control_Panel/ucp
+</A></li>
+        <LI>Next message: <A HREF="000015.html">[Viperals-svncheckins] r92 - in trunk: . admin admin/functions includes includes/db includes/display install modules modules/Contact modules/Forums modules/Quick_Message themes_admin themes_admin/viperal_admin themes_admin/viperal_admin/images themes_admin/viperal_admin/images/modules themes_admin/viperal_admin/images/modules/Forums themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#14">[ date ]</a>
+              <a href="thread.html#14">[ thread ]</a>
+              <a href="subject.html#14">[ subject ]</a>
+              <a href="author.html#14">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-08-24 21:26:07 +0200 (Wed, 24 Aug 2005)
+New Revision: 90
+
+Added:
+   trunk/includes/templates/admin/users/add.html
+   trunk/includes/templates/admin/users/disabled.html
+Modified:
+   trunk/admin.php
+   trunk/admin/index.php
+   trunk/admin/users.php
+   trunk/blocks/block-Quick_Message.php
+   trunk/includes/functions_user.php
+   trunk/includes/templates/admin/index.html
+   trunk/includes/templates/admin/users/bots.html
+   trunk/includes/templates/admin/users/header.html
+   trunk/includes/templates/admin/users/index.html
+Log:
+
+
+Modified: trunk/admin/index.php
+===================================================================
+--- trunk/admin/index.php	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/admin/index.php	2005-08-24 19:26:07 UTC (rev 90)
+@@ -80,16 +80,41 @@
+ if ($_CLASS['core_auth']-&gt;admin_power('users'))
+ {
+ 	$user_status = array(STATUS_PENDING, STATUS_DISABLED);
+-	$count = 0;
++	$last_count = 0;
+ 
+ 	foreach ($user_status as $status)
+ 	{
++		$limit = ($last_count) ? 10 : 20 - $last_count;
++
++		$sql = 'SELECT COUNT(*)	FROM ' . USERS_TABLE . '
++					WHERE user_type = '.USER_NORMAL.'
++					AND user_status = '.$status;
++		$result = $_CLASS['core_db']-&gt;query($sql);
++		list($count) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++
++		$last_count = $last_count + min($count, $limit);
++
++		if ($status === STATUS_PENDING)
++		{
++			$more = 'MORE_PENDING';
++			$link = generate_link('users&amp;mode=unactivated', array('admin' =&gt; true));
++		}
++		else
++		{
++			$more = 'MORE_DISABLED';
++			$link = generate_link('users&amp;mode=disabled', array('admin' =&gt; true));
++		}
++	
++		$_CLASS['core_template']-&gt;assign_array(array(
++			$more			=&gt; ($count &gt; $limit),
++			'LINK_'.$more	=&gt; $link,
++		));
++		
+ 		$sql = 'SELECT user_id, username, user_regdate
+ 			FROM ' . USERS_TABLE . '
+ 				WHERE user_type = '.USER_NORMAL.'
+ 				AND user_status = '.$status;
+ 		
+-		$limit = ($count) ? 10 : 20 - $count;
+ 		$result = $_CLASS['core_db']-&gt;query_limit($sql, $limit);
+ 
+ 		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+@@ -106,8 +131,6 @@
+ 					'link_remind'	=&gt; generate_link('&amp;user_mode=remind&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
+ 					'link_details'	=&gt; '',
+ 			));
+-			
+-			$count ++;
+ 		}
+ 		$_CLASS['core_db']-&gt;free_result($result);
+ 	}
+
+Modified: trunk/admin/users.php
+===================================================================
+--- trunk/admin/users.php	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/admin/users.php	2005-08-24 19:26:07 UTC (rev 90)
+@@ -48,13 +48,110 @@
+ 	'LINK_VIEW_UNACTIVATED'	=&gt; generate_link('users&amp;mode=unactivated', array('admin' =&gt; true)),
+ ));
+ 
++$id = (int) get_variable('id', 'GET', false);
++
+ if (isset($_REQUEST['mode']))
+ {
+ 	switch ($_REQUEST['mode'])
+ 	{
++		case 'add_user':
++			if (isset($_POST['submit']))
++			{
++				require_once($site_file_root.'includes/functions_user.php');
++	
++				$error = array();
++	
++				$username	= get_variable('username', 'POST', false);
++				$password	= get_variable('password', 'POST', false);
++				$email		= get_variable('email', 'POST', false);
++				$tz			= get_variable('tz', 'POST', false);
++				$error		= array();
++
++				//when we add this make sure to confirm that it's one of the installed langs
++				$lang		= $_CORE_CONFIG['global']['default_lang'];
++	
++				if (strpos($username, &quot;\n&quot;))
++				{
++					die;
++				}
++
++				$username_validate = validate_username($username);
++	
++				if ($username_validate !== true)
++				{
++					$error[] = $_CLASS['core_user']-&gt;get_lang($username_validate);
++				}
++	
++				if (!$password || $password !== get_variable('password_confirm', 'POST', ''))
++				{
++					$error[] = $_CLASS['core_user']-&gt;get_lang('PASSWORD_ERROR');
++				}
++	
++				if (!$email)
++				{
++					$error[] = $_CLASS['core_user']-&gt;get_lang('EMAIL_ERROR');
++				}
++				elseif (!check_email($email)) // we can maybe remove this check
++				{
++					$error[] = $_CLASS['core_user']-&gt;get_lang('EMAIL_INVALID');
++				}
++	
++				if (!$tz || !in_array($tz, tz_array()))
++				{
++					$tz = null;
++				}
++
++				if (empty($error))
++				{
++					$password = encode_password($password, $_CORE_CONFIG['user']['password_encoding']);
++		
++					if (!$password)
++					{
++						//do some admin contact thing here
++						die('Try again later');
++					}
++
++					$data = array(
++						'username'		=&gt; (string) $username,
++						'user_email'	=&gt; (string) $email,
++						'user_group'	=&gt; (int) ($coppa) ? 3 : 2,
++						'user_reg_date'	=&gt; (int) gmtime(),
++						'user_timezone'	=&gt; $tz,
++	
++						'user_password'			=&gt; (string) $password,
++						'user_password_encoding'=&gt; (string) $_CORE_CONFIG['user']['password_encoding'],
++	
++						'user_lang'			=&gt; ($lang == $_CORE_CONFIG['global']['default_lang']) ? null : $lang,
++						'user_type'			=&gt; USER_NORMAL,
++						'user_status'		=&gt; STATUS_ACTIVE,
++						'user_act_key'		=&gt; null,
++						'user_ip'			=&gt; '',
++					);
++	
++					user_add($data);
++					
++					set_core_config('user', 'newest_user_id', $row['user_id'], false);
++					set_core_config('user', 'newest_username', $row['username'], false);
++					set_core_config('user', 'num_users', $_CORE_CONFIG['user']['num_users'] + 1, false);
++				}
++			}
++
++			$_CLASS['core_template']-&gt;assign_array(array(
++				'COPPA'			=&gt; isset($coppa) ? $coppa : false, 
++				'EMAIL'			=&gt; isset($email) ? $email : '',
++				'ERROR'			=&gt; empty($error) ? false : implode('&lt;br /&gt;', $error),
++
++				'PASSWORD'		=&gt; isset($password) ? $password : '',
++				'USERNAME'		=&gt; isset($username) ? $username : '',
++
++				'SELECT_TZ'		=&gt; select_tz(isset($tz) ? $tz : $_CORE_CONFIG['global']['default_timezone']),
++				'S_ACTION'		=&gt; generate_link('users&amp;mode=add_user', array('admin' =&gt; true))
++			));
++	
++			$_CLASS['core_display']-&gt;display(false, 'admin/users/add.html');
++		break;
++
+ 		case 'bots':
+-			$id = (int) get_variable('id', 'GET', false);
+-			
+ 			if ($id &amp;&amp; isset($_REQUEST['option']))
+ 			{
+ 				require_once($site_file_root.'includes/functions_user.php');
+@@ -119,6 +216,40 @@
+ 
+ 		case 'disabled':
+ 		case 'unactivated':
++			if ($id &amp;&amp; isset($_REQUEST['option']))
++			{
++				require_once($site_file_root.'includes/functions_user.php');
++
++				switch ($_REQUEST['option'])
++				{
++					case 'activate':
++						user_activate($id);
++					break;
++			
++					case 'delete':
++						if (display_confirmation())
++						{
++							$sql = 'SELECT user_id, user_type
++								FROM ' . USERS_TABLE . ' 
++								WHERE user_id = '.$id;
++				
++							$result = $_CLASS['core_db']-&gt;query($sql);
++							$row = $_CLASS['core_db']&gt;fetch_row_assoc($result);
++							$_CLASS['core_db']-&gt;free_result($result);
++				
++							if ($row['user_type'] != USER_BOT)
++							{
++								break;
++							}
++				
++							user_delete($id);
++				
++							trigger_error($_CLASS['core_user']-&gt;lang['BOT_DELETED']);
++						}
++					break;
++				}
++			}
++
+ 			if ($_REQUEST['mode'] == 'unactivated')
+ 			{
+ 				$status = STATUS_PENDING;
+@@ -131,7 +262,7 @@
+ 				$template = 'admin/users/disabled.html';
+ 				$link = 'users&amp;mode=disabled';
+ 			}
+-$status = STATUS_DISABLED;
++
+ 			$start = get_variable('start', 'GET', false, 'integer');
+ 
+ 			$sql = 'SELECT user_id, username, user_regdate
+@@ -148,9 +279,9 @@
+ 						'user_name'		=&gt; $row['username'],
+ 						'registered'	=&gt; $_CLASS['core_user']-&gt;format_time($row['user_regdate']),
+ 						'link_profile'	=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']),
+-						'link_activate'	=&gt; generate_link('&amp;user_mode=activate&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
+-						'link_remove'	=&gt; generate_link('&amp;user_mode=remove&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
+-						'link_remind'	=&gt; generate_link('&amp;user_mode=remind&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
++						'link_activate'	=&gt; generate_link($link.'&amp;option=activate&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
++						'link_remove'	=&gt; generate_link($link.'&amp;option=delete&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
++						'link_remind'	=&gt; generate_link($link.'&amp;option=remind&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
+ 						'link_details'	=&gt; '',
+ 				));
+ 			}
+@@ -173,17 +304,42 @@
+ }
+ 
+ $user_status = array(STATUS_PENDING, STATUS_DISABLED);
+-$count = 0;
++$last_count = 0;
+ 
+ // needed view more
+ foreach ($user_status as $status)
+ {
++	$limit = ($last_count) ? 10 : 20 - $last_count;
++
++	$sql = 'SELECT COUNT(*)	FROM ' . USERS_TABLE . '
++				WHERE user_type = '.USER_NORMAL.'
++				AND user_status = '.$status;
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	list($count) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++
++	$last_count = $last_count + min($count, $limit);
++
++	if ($status === STATUS_PENDING)
++	{
++		$more = 'MORE_PENDING';
++		$link = generate_link('users&amp;mode=unactivated', array('admin' =&gt; true));
++	}
++	else
++	{
++		$more = 'MORE_DISABLED';
++		$link = generate_link('users&amp;mode=disabled', array('admin' =&gt; true));
++	}
++
++	$_CLASS['core_template']-&gt;assign_array(array(
++		$more			=&gt; ($count &gt; $limit),
++		'LINK_'.$more	=&gt; $link,
++	));
++
+ 	$sql = 'SELECT user_id, username, user_regdate
+ 		FROM ' . USERS_TABLE . '
+ 			WHERE user_type = '.USER_NORMAL.'
+ 			AND user_status = '.$status;
+ 
+-	$limit = ($count) ? 10 : 20 - $count;
+ 	$result = $_CLASS['core_db']-&gt;query_limit($sql, $limit);
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+@@ -200,8 +356,6 @@
+ 				'link_remind'	=&gt; generate_link('&amp;user_mode=remind&amp;id=' . $row['user_id'], array('admin' =&gt; true)),
+ 				'link_details'	=&gt; '',
+ 		));
+-		
+-		$count ++;
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ }
+
+Modified: trunk/admin.php
+===================================================================
+--- trunk/admin.php	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/admin.php	2005-08-24 19:26:07 UTC (rev 90)
+@@ -20,7 +20,9 @@
+ 
+ require($site_file_root.'core.php');
+ 
+-$_CLASS['core_user']-&gt;user_setup();
++$_CLASS['core_user']-&gt;user_setup(null);
++$_CLASS['core_display']-&gt;load_theme('viperal_admin', $site_file_root.'themes_admin/viperal_admin');
++
+ $_CLASS['core_user']-&gt;add_lang('admin/common.php');
+ 
+ $_CORE_MODULE['title'] = $_CLASS['core_user']-&gt;lang['ADMIN'];
+@@ -90,12 +92,19 @@
+ $_CORE_MODULE['title'] = $_CLASS['core_user']-&gt;lang['ADMIN'].' &gt; '.$_CORE_MODULE['title'];
+ $_CORE_MODULE['sides'] = BLOCK_ALL;
+ 	
+-$_CLASS['core_blocks']-&gt;add_block(array(
+-		'block_title'		=&gt; 'Administration',
+-		'block_position'	=&gt; BLOCK_LEFT,
+-		'block_file'		=&gt; 'block-Admin.php',
+-	));
++require($site_file_root.'admin/menu.php');
+ 
++$main_menu = build_menu($menu);
++
++$_CLASS['core_template']-&gt;assign_array(array(
++		'LINK_HOME'		=&gt; generate_link(),
++		'LINK_ADMIN'	=&gt; generate_link(false, array('admin' =&gt; true)),
++
++		'MENU_MAIN'			=&gt; $main_menu['content'],
++		'MENU_MAIN_ITEMS'	=&gt; $main_menu['menu'],
++));
++
++
+ //load_class($site_file_root.'includes/core_editor.php', 'core_editor');
+ //$_CLASS['core_editor']-&gt;setup();
+ require($file_path);
+
+Modified: trunk/blocks/block-Quick_Message.php
+===================================================================
+--- trunk/blocks/block-Quick_Message.php	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/blocks/block-Quick_Message.php	2005-08-24 19:26:07 UTC (rev 90)
+@@ -17,6 +17,8 @@
+ ||  of the GNU General Public License version 2					||
+ ||																||
+ ||**************************************************************||
++
++$Id$
+ */
+ 
+ if (!defined('VIPERAL'))
+@@ -54,7 +56,7 @@
+ 		}
+     }
+ 
+-	htmlentities($row['message_text'], ENT_QUOTES, 'UTF-8');
++	$row['message_text'] = htmlentities($row['message_text'], ENT_QUOTES, 'UTF-8');
+ 
+ 	unset($words_array, $words);
+ 	
+
+Modified: trunk/includes/functions_user.php
+===================================================================
+--- trunk/includes/functions_user.php	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/includes/functions_user.php	2005-08-24 19:26:07 UTC (rev 90)
+@@ -29,7 +29,9 @@
+ 	$user_id = array_unique($user_id);
+ 
+ 	// array map should make 0 values for notint values
+-	if (($key = array_search(0, $user_id)) === false)
++	$key = array_search(0, $user_id);
++
++	if ($key !== false &amp;&amp; !is_null($key))
+ 	{
+ 		unset($user_id[$key]);
+ 	}
+
+Modified: trunk/includes/templates/admin/index.html
+===================================================================
+--- trunk/includes/templates/admin/index.html	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/includes/templates/admin/index.html	2005-08-24 19:26:07 UTC (rev 90)
+@@ -176,7 +176,14 @@
+ 			&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- IF { $MORE_PENDING } --&gt;
+ 		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; align=&quot;center&quot; class=&quot;row1&quot;&gt;
++				&lt;a href=&quot;{ $LINK_MORE_PENDING }&quot;&gt;&lt;b&gt;{ $L_VIEW_MORE_PENDING }&lt;/b&gt;&lt;/a&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;tr&gt;
+ 			&lt;td colspan=&quot;6&quot; class=&quot;row2&quot;&gt;{ $L_DISABLED_USERS }&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- LOOP $users_disabled --&gt;
+@@ -210,7 +217,14 @@
+ 			&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- IF { $MORE_DISABLED } --&gt;
+ 		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; align=&quot;center&quot; class=&quot;row1&quot;&gt;
++				&lt;a href=&quot;{ $LINK_MORE_DISABLED }&quot;&gt;&lt;b&gt;{ $L_VIEW_MORE_DISABLED }&lt;/b&gt;&lt;/a&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;tr&gt;
+ 			&lt;td colspan=&quot;6&quot; class=&quot;cat&quot; align=&quot;right&quot;&gt;&lt;select name=&quot;mark_option&quot;&gt;&lt;option value=&quot;activate&quot;&gt;{ $L_ACTIVATE }&lt;/option&gt;&lt;option value=&quot;remove&quot;&gt;{ $L_REMOVE }&lt;/option&gt;&lt;/select&gt;&nbsp;&lt;input class=&quot;bottom&quot; name=&quot;submit&quot; value=&quot;{ $L_SUBMIT }&quot; type=&quot;submit&quot;&gt;&nbsp;&lt;/td&gt;
+ 		&lt;/tr&gt;
+     &lt;/tbody&gt;
+
+Added: trunk/includes/templates/admin/users/add.html
+===================================================================
+--- trunk/includes/templates/admin/users/add.html	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/includes/templates/admin/users/add.html	2005-08-24 19:26:07 UTC (rev 90)
+@@ -0,0 +1,45 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++{ $A_TABLE_OPEN }
++
++&lt;!-- INCLUDE admin/users/header.html --&gt;
++&lt;form method=&quot;post&quot; action=&quot;{ $S_ACTION }&quot;&gt;
++	&lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; width=&quot;100%&quot;&gt;
++		&lt;!-- IF { $ERROR } --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row3&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot; style=&quot;color:red&quot;&gt;{ $ERROR }&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;row1&quot; width=&quot;38%&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_USERNAME }: &lt;/b&gt;&lt;/td&gt;
++			&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot;  name=&quot;username&quot; size=&quot;25&quot; maxlength=&quot;40&quot; value=&quot;{ $USERNAME }&quot; /&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_PASSWORD }: &lt;/b&gt;&lt;/td&gt;
++			&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password&quot; size=&quot;25&quot; maxlength=&quot;100&quot; value=&quot;{ $PASSWORD }&quot; /&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_CONFIRM_PASSWORD }: &lt;/b&gt;&lt;/td&gt;
++			&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;password&quot; name=&quot;password_confirm&quot; size=&quot;25&quot; maxlength=&quot;100&quot; value=&quot;&quot; /&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_EMAIL_ADDRESS }: &lt;/b&gt;&lt;/td&gt;
++			&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;email&quot; size=&quot;25&quot; maxlength=&quot;255&quot; value=&quot;{ $EMAIL }&quot; /&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_COPPA }: &lt;/b&gt;&lt;/td&gt;
++			&lt;td class=&quot;row2&quot;&gt;&lt;input name=&quot;coppa&quot; value=&quot;1&quot; &lt;!-- IF { $COPPA } --&gt;checked=&quot;checked&quot;&lt;!-- ENDIF --&gt; type=&quot;radio&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_YES }&lt;/span&gt;&nbsp;&nbsp;&lt;input name=&quot;coppa&quot; value=&quot;0&quot; &lt;!-- IF !{ $COPPA } --&gt;checked=&quot;checked&quot;&lt;!-- ENDIF --&gt; type=&quot;radio&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_NO }&lt;/span&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_TIMEZONE }: &lt;/b&gt;&lt;/td&gt;
++			&lt;td class=&quot;row2&quot;&gt;&lt;select name=&quot;tz&quot;&gt;{ $SELECT_TZ }&lt;/select&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;2&quot; align=&quot;center&quot; height=&quot;28&quot;&gt;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;{ $L_SUBMIT }&quot; /&gt;&nbsp;&nbsp;&lt;input class=&quot;button&quot; type=&quot;reset&quot; value=&quot;{ $L_RESET }&quot; name=&quot;reset&quot; /&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;/table&gt;
++&lt;/form&gt;
++
++{ $A_TABLE_CLOSE }
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/templates/admin/users/bots.html
+===================================================================
+--- trunk/includes/templates/admin/users/bots.html	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/includes/templates/admin/users/bots.html	2005-08-24 19:26:07 UTC (rev 90)
+@@ -4,7 +4,7 @@
+ 
+ &lt;!-- INCLUDE admin/users/header.html --&gt;
+ 
+-&lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot;&gt;
++&lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; width=&quot;100%&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;th nowrap=&quot;nowrap&quot;&gt;Bot name&lt;/th&gt;
+ 		&lt;th nowrap=&quot;nowrap&quot;&gt;Last visit&lt;/th&gt;
+@@ -13,12 +13,17 @@
+ 	&lt;/tr&gt;
+ 	&lt;!-- LOOP $admin_bots --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;25%&quot;&gt;{ $admin_bots:NAME }&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;15%&quot; align=&quot;center&quot; nowrap=&quot;nowrap&quot;&gt;{ $admin_bots:LAST_VISIT }&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;1%&quot;align=&quot;center&quot;&gt;&nbsp;&lt;a href=&quot;{ $admin_bots:LINK_STATUS }&quot;&gt;{ $admin_bots:L_STATUS }&lt;/a&gt;&nbsp;&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;1%&quot; align=&quot;center&quot;&gt;&nbsp;&lt;a href=&quot;{ $admin_bots:LINK_EDIT }&quot;&gt;{ $L_EDIT }&lt;/a&gt;&nbsp;&lt;/td&gt;
+-
+-		&lt;td class=&quot;row1&quot; width=&quot;1%&quot; align=&quot;center&quot;&gt;&nbsp;&lt;a href=&quot;{ $admin_bots:LINK_DELETE }&quot;&gt;{ $L_DELETE }&lt;/a&gt;&nbsp;&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;&quot;&gt;{ $admin_bots:NAME }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;200&quot; align=&quot;center&quot; nowrap=&quot;nowrap&quot;&gt;{ $admin_bots:LAST_VISIT }&lt;/td&gt;
++		&lt;td width=&quot;80&quot; align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $admin_bots:LINK_STATUS }'; return false;&quot;&gt;
++			&lt;a href=&quot;{ $admin_bots:LINK_STATUS }&quot;&gt;{ $admin_bots:L_STATUS }&lt;/a&gt;
++		&lt;/td&gt;
++		&lt;td width=&quot;80&quot; align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $admin_bots:LINK_EDIT }'; return false;&quot;&gt;
++			&lt;a href=&quot;{ $admin_bots:LINK_EDIT }&quot;&gt;{ $L_EDIT }&lt;/a&gt;
++		&lt;/td&gt;
++		&lt;td width=&quot;80&quot; align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $admin_bots:LINK_DELETE }'; return false;&quot;&gt;
++			&lt;a href=&quot;{ $admin_bots:LINK_DELETE }&quot;&gt;{ $L_DELETE }&lt;/a&gt; 
++		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDLOOP $admin_bots --&gt;
+ &lt;/table&gt;
+
+Added: trunk/includes/templates/admin/users/disabled.html
+===================================================================
+--- trunk/includes/templates/admin/users/disabled.html	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/includes/templates/admin/users/disabled.html	2005-08-24 19:26:07 UTC (rev 90)
+@@ -0,0 +1,69 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++{ $A_TABLE_OPEN }
++
++&lt;!-- INCLUDE admin/users/header.html --&gt;
++
++&lt;table class=&quot;tablebg&quot; border=&quot;0&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
++    &lt;tbody&gt;
++		&lt;tr&gt;
++			&lt;th colspan=&quot;6&quot; align=&quot;center&quot;&gt;{ $L_INACTIVE_USERS }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; class=&quot;row2&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;th width=&quot;20px&quot;&gt;&lt;/th&gt;
++			&lt;th&gt;{ $L_USERNAME }&lt;/th&gt;
++			&lt;th&gt;{ $L_REGISTED }&lt;/th&gt;
++			&lt;th colspan=&quot;3&quot; &gt;{ $L_OPTIONS }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; class=&quot;row2&quot;&gt;{ $L_UNACTIVATED_USERS }&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOP $users_admin --&gt;
++		&lt;tr&gt;
++			&lt;td height=&quot;25&quot; class=&quot;row1&quot;&gt;
++				&lt;input name=&quot;mark_id[]&quot; value=&quot;{ $users_admin:user_id }&quot; type=&quot;checkbox&quot;&gt;
++			&lt;/td&gt;
++			&lt;td height=&quot;25&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $users_admin:link_profile }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $users_admin:link_profile }&quot;&gt;{ $users_admin:user_name }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td width=&quot;150&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;
++				{ $users_admin:registered }
++			&lt;/td&gt;
++			&lt;td width=&quot;60&quot; align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $users_admin:link_activate }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $users_admin:link_activate }&quot;&gt;{ $L_ACTIVATE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td width=&quot;60&quot; align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $users_admin:link_remove }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $users_admin:link_remove }&quot;&gt;{ $L_REMOVE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td width=&quot;60&quot; align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $users_admin:link_remind }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $users_admin:link_remind }&quot;&gt;{ $L_REMIND }&lt;/a&gt; 
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;6&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOPELSE --&gt;
++		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; align=&quot;center&quot; class=&quot;row1&quot;&gt;
++				{ $L_NO_UNACTIVATED_USERS }
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDLOOP --&gt;
++		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; class=&quot;cat&quot; align=&quot;right&quot;&gt;&lt;select name=&quot;mark_option&quot;&gt;&lt;option value=&quot;activate&quot;&gt;{ $L_ACTIVATE }&lt;/option&gt;&lt;option value=&quot;remove&quot;&gt;{ $L_REMOVE }&lt;/option&gt;&lt;option value=&quot;remind&quot;&gt;{ $L_REMIND }&lt;/option&gt;&lt;/select&gt;&nbsp;&lt;input class=&quot;bottom&quot; name=&quot;submit&quot; value=&quot;{ $L_SUBMIT }&quot; type=&quot;submit&quot;&gt;&nbsp;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- IF { $USERS_PAGINATION } --&gt;
++		&lt;tr class=&quot;row2&quot;&gt;
++			&lt;td style=&quot;padding: 5px;&quot; valign=&quot;middle&quot; colspan=&quot;6&quot;&gt;
++				&lt;div&gt;{ $USERS_PAGINATION }&lt;/div&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++    &lt;/tbody&gt;
++&lt;/table&gt;
++{ $A_TABLE_CLOSE }
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/templates/admin/users/header.html
+===================================================================
+--- trunk/includes/templates/admin/users/header.html	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/includes/templates/admin/users/header.html	2005-08-24 19:26:07 UTC (rev 90)
+@@ -37,7 +37,8 @@
+ 						&lt;/tr&gt;
+ 						&lt;tr class=&quot;row1&quot;&gt;
+ 							&lt;td colspan=&quot;4&quot;&gt;
+-								&lt;img src=&quot;images/add_user.png&quot; alt=&quot;{ $L_ADD_USER }&quot; title=&quot;{ $L_ADD_USER }&quot; border=&quot;0&quot;&gt;
++&lt;!-- NEED A IMAGE BUTTOM CLASS --&gt;
++								&lt;a href=&quot;{ $LINK_ADD_USER }&quot; title=&quot;{ $L_VIEW_BOTS }&quot;&gt;&lt;img src=&quot;images/add_user.png&quot; alt=&quot;{ $L_ADD_USER }&quot; title=&quot;{ $L_ADD_USER }&quot; /&gt;&lt;/a&gt;
+ 							&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 					&lt;/tbody&gt;
+@@ -55,7 +56,7 @@
+ 							&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;tr&gt;
+-							&lt;td align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $LINK_BOTS }'; return false;&quot;&gt;
++							&lt;td align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $LINK_VIEW_BOTS }'; return false;&quot;&gt;
+ 								&lt;a href=&quot;{ $LINK_VIEW_BOTS }&quot; title=&quot;{ $L_VIEW_BOTS }&quot;&gt;{ $L_VIEW_BOTS }&lt;/a&gt;
+ 							&lt;/td&gt;
+ 						&lt;/tr&gt;
+@@ -70,8 +71,11 @@
+ 							&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 						&lt;tr&gt;
++							&lt;td class=&quot;row2&quot; nowrap=&quot;nowrap&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
+ 							&lt;td align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $LINK_ADD_USER }'; return false;&quot;&gt;
+-								&lt;a href=&quot;{ $LINK_ADD_USER }&quot; title=&quot;{ $L_VIEW_BOTS }&quot;&gt;{ $L_VIEW_BOTS }&lt;/a&gt;
++								&lt;a href=&quot;{ $LINK_ADD_USER }&quot; title=&quot;{ $L_VIEW_BOTS }&quot;&gt;{ $L_ADD_USER }&lt;/a&gt;
+ 							&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 					&lt;/tbody&gt;
+
+Modified: trunk/includes/templates/admin/users/index.html
+===================================================================
+--- trunk/includes/templates/admin/users/index.html	2005-08-24 15:00:26 UTC (rev 89)
++++ trunk/includes/templates/admin/users/index.html	2005-08-24 19:26:07 UTC (rev 90)
+@@ -39,7 +39,7 @@
+ 				&lt;a href=&quot;{ $users_unactivated:link_remove }&quot;&gt;{ $L_REMOVE }&lt;/a&gt;
+ 			&lt;/td&gt;
+ 			&lt;td width=&quot;60&quot; align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $users_unactivated:link_remind }'; return false;&quot;&gt;
+-				&lt;a href=&quot;{ $users_unactivated:link_remind }&quot;&gt;{ $L_REMIND }&lt;/a&gt; 
++				&lt;a href=&quot;{ $users_unactivated:link_remind }&quot;&gt;{ $L_REMIND }&lt;/a&gt;
+ 			&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;tr&gt;
+@@ -52,7 +52,14 @@
+ 			&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- IF { $MORE_PENDING } --&gt;
+ 		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; align=&quot;center&quot; class=&quot;row1&quot;&gt;
++				&lt;a href=&quot;{ $LINK_MORE_PENDING }&quot;&gt;&lt;b&gt;{ $L_VIEW_MORE_PENDING }&lt;/b&gt;&lt;/a&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;tr&gt;
+ 			&lt;td colspan=&quot;6&quot; class=&quot;row2&quot;&gt;{ $L_DISABLED_USERS }&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- LOOP $users_disabled --&gt;
+@@ -86,7 +93,14 @@
+ 			&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- IF { $MORE_DISABLED } --&gt;
+ 		&lt;tr&gt;
++			&lt;td colspan=&quot;6&quot; align=&quot;center&quot; class=&quot;row1&quot;&gt;
++				&lt;a href=&quot;{ $LINK_MORE_DISABLED }&quot;&gt;&lt;b&gt;{ $L_VIEW_MORE_DISABLED }&lt;/b&gt;&lt;/a&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;tr&gt;
+ 			&lt;td colspan=&quot;6&quot; class=&quot;cat&quot; align=&quot;right&quot;&gt;&lt;select name=&quot;mark_option&quot;&gt;&lt;option value=&quot;activate&quot;&gt;{ $L_ACTIVATE }&lt;/option&gt;&lt;option value=&quot;remove&quot;&gt;{ $L_REMOVE }&lt;/option&gt;&lt;/select&gt;&nbsp;&lt;input class=&quot;bottom&quot; name=&quot;submit&quot; value=&quot;{ $L_SUBMIT }&quot; type=&quot;submit&quot;&gt;&nbsp;&lt;/td&gt;
+ 		&lt;/tr&gt;
+     &lt;/tbody&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000013.html">[Viperals-svncheckins] r89 - in trunk: blocks includes includes/db includes/forums includes/forums/admin javascript modules/Control_Panel/ucp
+</A></li>
+	<LI>Next message: <A HREF="000015.html">[Viperals-svncheckins] r92 - in trunk: . admin admin/functions includes includes/db includes/display install modules modules/Contact modules/Forums modules/Quick_Message themes_admin themes_admin/viperal_admin themes_admin/viperal_admin/images themes_admin/viperal_admin/images/modules themes_admin/viperal_admin/images/modules/Forums themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#14">[ date ]</a>
+              <a href="thread.html#14">[ thread ]</a>
+              <a href="subject.html#14">[ subject ]</a>
+              <a href="author.html#14">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

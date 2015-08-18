@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r159 - in cms/trunk/includes: auth forums
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r159%20-%20in%20cms/trunk/includes%3A%20auth%20forums&In-Reply-To=%3C200510011433.j91EXk32008311%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000078.html">
+   <LINK REL="Next"  HREF="000080.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r159 - in cms/trunk/includes: auth forums</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r159%20-%20in%20cms/trunk/includes%3A%20auth%20forums&In-Reply-To=%3C200510011433.j91EXk32008311%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r159 - in cms/trunk/includes: auth forums">viperal at berlios.de
+       </A><BR>
+    <I>Sat Oct  1 16:33:46 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000078.html">[Viperals-svncheckins] r158 - cms/trunk/modules/Control_Panel/ucp
+</A></li>
+        <LI>Next message: <A HREF="000080.html">[Viperals-svncheckins] r160 - in cms/branches/1.0alpha2: . includes/db
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-10-01 16:33:45 +0200 (Sat, 01 Oct 2005)
+New Revision: 159
+
+Modified:
+   cms/trunk/includes/auth/auth.php
+   cms/trunk/includes/forums/functions_posting.php
+Log:
+
+
+Modified: cms/trunk/includes/auth/auth.php
+===================================================================
+--- cms/trunk/includes/auth/auth.php	2005-10-01 13:31:35 UTC (rev 158)
++++ cms/trunk/includes/auth/auth.php	2005-10-01 14:33:45 UTC (rev 159)
+@@ -144,17 +144,17 @@
+ 			'full_login'	=&gt; true,
+ 			'full_screen'	=&gt; false,
+ 		);
+-	
++
+ 		if (is_array($login_options))
+ 		{
+ 			$login_array = array_merge($login_array, $login_options);
+ 		}
+ 
++		$user_name		= get_variable('username', 'POST', '');
++		$user_password	= get_variable('password', 'POST', '');
++
+ 		if (isset($_POST['login']))
+ 		{
+-			$user_name		= get_variable('username', 'POST');
+-			$user_password	= get_variable('password', 'POST');
+-
+ 			if (!$user_name || !$user_password)
+ 			{
+ 				$error = 'INCOMPLETE_LOGIN_INFO';
+@@ -187,7 +187,8 @@
+ 					trigger_error($message);
+ 				}
+ 
+-				$error = (is_string($result)) ? $result : 'LOGIN_ERROR';
++				$error = is_string($result) ? $result : 'LOGIN_ERROR';
++				$user_name = $user_password = '';
+ 			}
+ 		}
+ 
+@@ -209,9 +210,12 @@
+ 		}
+ 
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+-			'LOGIN_ERROR'			=&gt; $_CLASS['core_user']-&gt;get_lang($error),
+-			'LOGIN_EXPLAIN'			=&gt; $_CLASS['core_user']-&gt;get_lang($login_array['explain']), 
++			'LOGIN_ERROR'			=&gt; ($error) ? $_CLASS['core_user']-&gt;get_lang($error) : false,
++			'LOGIN_EXPLAIN'			=&gt; ($login_array['explain']) ? $_CLASS['core_user']-&gt;get_lang($login_array['explain']) : '', 
+ 
++			'USERNAME'				=&gt;	$user_name,
++			'PASSWORD'				=&gt;	$user_password,
++
+ 			'U_SEND_PASSWORD'	 	=&gt; ($_CORE_CONFIG['email']['email_enable']) ? generate_link('Control_Panel&amp;mode=sendpassword') : '',
+ 			'U_RESEND_ACTIVATION'   =&gt; ($_CORE_CONFIG['user']['activation'] != USER_ACTIVATION_NONE &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Control_Panel&amp;mode=resend_act') : '',
+ 			'U_TERMS_USE'			=&gt; generate_link('Control_Panel&amp;mode=terms'), 
+@@ -219,8 +223,6 @@
+ 			'U_REGISTER'			=&gt; generate_link('Control_Panel&amp;mode=register'),
+ 			'U_CONFIRM_IMAGE'		=&gt; $confirm_image,
+ 
+-			'USERNAME'				=&gt; isset($data['user_name']) ? $data['user_name'] : '',
+-
+ 			'S_DISPLAY_FULL_LOGIN'  =&gt; ($login_array['full_login']),
+ 			'S_LOGIN_ACTION'		=&gt; (!$login_array['admin_login']) ? generate_link($_CLASS['core_user']-&gt;url) : generate_link(false, array('admin' =&gt; true)),
+ 			'S_HIDDEN_FIELDS' 		=&gt; $s_hidden_fields,
+
+Modified: cms/trunk/includes/forums/functions_posting.php
+===================================================================
+--- cms/trunk/includes/forums/functions_posting.php	2005-10-01 13:31:35 UTC (rev 158)
++++ cms/trunk/includes/forums/functions_posting.php	2005-10-01 14:33:45 UTC (rev 159)
+@@ -877,6 +877,8 @@
+ 		return;
+ 	}
+ 
++	unset($holding[$_CLASS['core_user']-&gt;data['user_id']], $ignore_array[$_CLASS['core_user']-&gt;data['user_id']]);
++
+ 	// Now we remove the users that aren't allowed to read the forum
+ 	$acl_list = $_CLASS['auth']-&gt;acl_get_list(array_keys($ignore_array), 'f_read', $forum_id);
+ 
+@@ -889,6 +891,7 @@
+ 	}
+ 	$processed = $delete_array = $update_array = array();
+ 
++
+ 	foreach ($holding as $user)
+ 	{
+ 		if (!in_array($user['user_id'], $ignore_array))
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000078.html">[Viperals-svncheckins] r158 - cms/trunk/modules/Control_Panel/ucp
+</A></li>
+	<LI>Next message: <A HREF="000080.html">[Viperals-svncheckins] r160 - in cms/branches/1.0alpha2: . includes/db
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

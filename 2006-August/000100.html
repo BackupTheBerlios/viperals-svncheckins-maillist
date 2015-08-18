@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r181 - cms/trunk/includes/db
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r181%20-%20cms/trunk/includes/db&In-Reply-To=%3C200608062026.k76KQnkQ032716%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000099.html">
+   <LINK REL="Next"  HREF="000101.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r181 - cms/trunk/includes/db</H1>
+    <B>viperal at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r181%20-%20cms/trunk/includes/db&In-Reply-To=%3C200608062026.k76KQnkQ032716%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r181 - cms/trunk/includes/db">viperal at mail.berlios.de
+       </A><BR>
+    <I>Sun Aug  6 22:26:49 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000099.html">[Viperals-svncheckins] r180 - in cms/trunk: includes	includes/forums includes/forums/mcp modules/forums
+</A></li>
+        <LI>Next message: <A HREF="000101.html">[Viperals-svncheckins] r182 - in cms/trunk/includes: db	templates/modules/forums templates/modules/members_list
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#100">[ date ]</a>
+              <a href="thread.html#100">[ thread ]</a>
+              <a href="subject.html#100">[ subject ]</a>
+              <a href="author.html#100">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2006-08-06 22:26:49 +0200 (Sun, 06 Aug 2006)
+New Revision: 181
+
+Modified:
+   cms/trunk/includes/db/mysqli.php
+Log:
+
+
+Modified: cms/trunk/includes/db/mysqli.php
+===================================================================
+--- cms/trunk/includes/db/mysqli.php	2006-08-06 20:19:46 UTC (rev 180)
++++ cms/trunk/includes/db/mysqli.php	2006-08-06 20:26:49 UTC (rev 181)
+@@ -245,11 +245,7 @@
+ 		{
+ 			case 'MULTI_INSERT':
+ 			case 'INSERT':
+-				return $this-&gt;query('INSERT INTO ' . $table . ' '. $values');
+-				/*foreach ($array as $array2)
+-				{
+-					return $this-&gt;query('INSERT INTO ' . $table . ' '. $values');
+-				}*/
++				return $this-&gt;query('INSERT INTO ' . $table . ' '. $values);
+ 			break;
+ 
+ 			case 'UPDATE':
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000099.html">[Viperals-svncheckins] r180 - in cms/trunk: includes	includes/forums includes/forums/mcp modules/forums
+</A></li>
+	<LI>Next message: <A HREF="000101.html">[Viperals-svncheckins] r182 - in cms/trunk/includes: db	templates/modules/forums templates/modules/members_list
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#100">[ date ]</a>
+              <a href="thread.html#100">[ thread ]</a>
+              <a href="subject.html#100">[ subject ]</a>
+              <a href="author.html#100">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

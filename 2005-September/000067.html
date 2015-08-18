@@ -1,0 +1,1339 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r147 - in cms/trunk: . includes/forums
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r147%20-%20in%20cms/trunk%3A%20.%20includes/forums&In-Reply-To=%3C200509281944.j8SJipKS032529%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000066.html">
+   <LINK REL="Next"  HREF="000068.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r147 - in cms/trunk: . includes/forums</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r147%20-%20in%20cms/trunk%3A%20.%20includes/forums&In-Reply-To=%3C200509281944.j8SJipKS032529%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r147 - in cms/trunk: . includes/forums">viperal at berlios.de
+       </A><BR>
+    <I>Wed Sep 28 21:44:51 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000066.html">[Viperals-svncheckins] r146 - cms/branches
+</A></li>
+        <LI>Next message: <A HREF="000068.html">[Viperals-svncheckins] r148 - in cms/branches/1.0alpha2: . includes includes/templates/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#67">[ date ]</a>
+              <a href="thread.html#67">[ thread ]</a>
+              <a href="subject.html#67">[ subject ]</a>
+              <a href="author.html#67">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-28 21:44:51 +0200 (Wed, 28 Sep 2005)
+New Revision: 147
+
+Removed:
+   cms/trunk/includes/forums/functions_messenger.php
+Modified:
+   cms/trunk/config.php
+Log:
+
+
+Modified: cms/trunk/config.php
+===================================================================
+--- cms/trunk/config.php	2005-09-28 19:27:25 UTC (rev 146)
++++ cms/trunk/config.php	2005-09-28 19:44:51 UTC (rev 147)
+@@ -1,26 +0,0 @@
+-&lt;?php
+-
+-$site_db['type'] = 'postgres';
+-$site_db['persistent'] = false;
+-$site_db['server'] = 'localhost';
+-$site_db['port'] = '';
+-$site_db['database'] = 'trunck';
+-$site_db['username'] = 'postgres';
+-$site_db['password'] = 'viper83';
+-
+-$table_prefix	= 'cms_';
+-$user_prefix	= 'cms_';
+-
+-$acm_type		= 'file';
+-
+-if (!defined('INDEX_PAGE'))
+-{
+-	define('INDEX_PAGE', 'index.php');
+-}
+-
+-if (!defined('ADMIN_PAGE'))
+-{
+-	define('ADMIN_PAGE', 'admin.php');
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+Deleted: cms/trunk/includes/forums/functions_messenger.php
+===================================================================
+--- cms/trunk/includes/forums/functions_messenger.php	2005-09-28 19:27:25 UTC (rev 146)
++++ cms/trunk/includes/forums/functions_messenger.php	2005-09-28 19:44:51 UTC (rev 147)
+@@ -1,1227 +0,0 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright &#169; 2004 by Viperal									//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-
+-// -------------------------------------------------------------
+-//
+-// $Id: functions_messenger.php,v 1.20 2004/09/05 09:54:47 acydburn Exp $
+-//
+-// FILENAME  : functions_messenger.php 
+-// STARTED   : Sat Feb 13, 2001
+-// COPYRIGHT : &#169; 2001, 2003 phpBB Group
+-// WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+-// LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+-// 
+-// -------------------------------------------------------------
+-//jab_package_size  missing in $config
+-
+-class messenger
+-{
+-	var $vars, $msg, $extra_headers, $replyto, $from, $subject, $necoding;
+-	var $addresses = array();
+-
+-	var $mail_priority = MAIL_NORMAL_PRIORITY;
+-	var $use_queue = true;
+-	var $tpl_msg = array();
+-
+-	function messenger($use_queue = true)
+-	{
+-		global $config;
+-
+-		if (preg_match('#^[c-z]:\\\#i', getenv('PATH')) &amp;&amp; !$config['smtp_delivery'] &amp;&amp; phpversion() &lt; '4.3')
+-		{
+-			// We are running on windows, force delivery to use our smtp functions since php's are broken by default
+-			$config['smtp_delivery'] = 1;
+-			$config['smtp_host'] = @ini_get('SMTP');
+-		}
+-
+-		$this-&gt;use_queue = $use_queue;
+-		$this-&gt;subject = '';
+-	}
+-
+-	// Resets all the data (address, template file, etc etc) to default
+-	function reset()
+-	{
+-		$this-&gt;addresses = array();
+-		$this-&gt;vars = $this-&gt;msg = $this-&gt;extra_headers = $this-&gt;replyto = $this-&gt;from = $this-&gt;encoding = '';
+-		$this-&gt;mail_priority = MAIL_NORMAL_PRIORITY;
+-	}
+-
+-	// Sets an email address to send to
+-	function to($address, $realname = '')
+-	{
+-		$pos = isset($this-&gt;addresses['to']) ? sizeof($this-&gt;addresses['to']) : 0;
+-		$this-&gt;addresses['to'][$pos]['email'] = trim($address);
+-		$this-&gt;addresses['to'][$pos]['name'] = trim($realname);
+-	}
+-
+-	function cc($address, $realname = '')
+-	{
+-		$pos = isset($this-&gt;addresses['cc']) ? sizeof($this-&gt;addresses['cc']) : 0;
+-		$this-&gt;addresses['cc'][$pos]['email'] = trim($address);
+-		$this-&gt;addresses['cc'][$pos]['name'] = trim($realname);
+-	}
+-
+-	function bcc($address, $realname = '')
+-	{
+-		$pos = isset($this-&gt;addresses['bcc']) ? sizeof($this-&gt;addresses['bcc']) : 0;
+-		$this-&gt;addresses['bcc'][$pos]['email'] = trim($address);
+-		$this-&gt;addresses['bcc'][$pos]['name'] = trim($realname);
+-	}
+-
+-	function im($address, $realname = '')
+-	{
+-		$pos = isset($this-&gt;addresses['im']) ? sizeof($this-&gt;addresses['im']) : 0;
+-		$this-&gt;addresses['im'][$pos]['uid'] = trim($address);
+-		$this-&gt;addresses['im'][$pos]['name'] = trim($realname);
+-	}
+-
+-	function replyto($address)
+-	{
+-		$this-&gt;replyto = trim($address);
+-	}
+-
+-	function from($address)
+-	{
+-		$this-&gt;from = trim($address);
+-	}
+-
+-	// set up subject for mail
+-	function subject($subject = '')
+-	{
+-		$this-&gt;subject = trim($subject);
+-	}
+-
+-	// set up extra mail headers
+-	function headers($headers)
+-	{
+-		$this-&gt;extra_headers .= trim($headers) . &quot;\n&quot;;
+-	}
+-
+-	function set_mail_priority($priority = MAIL_NORMAL_PRIORITY)
+-	{
+-		$this-&gt;mail_priority = $priority;
+-	}
+-
+-	function template($template_file, $template_lang = '')
+-	{
+-		global $config, $site_file_root;
+-		// temp //
+-		$template_lang = 'en';
+-		// temp //
+-		if (!trim($template_file))
+-		{
+-			trigger_error('No template file set', E_USER_ERROR);
+-		}
+-
+-		if (!trim($template_lang))
+-		{
+-			$template_lang = $config['default_lang'];
+-		}
+-
+-		if (empty($this-&gt;tpl_msg[$template_lang . $template_file]))
+-		{
+-			$tpl_file = $site_file_root.&quot;modules/Forums/language/$template_lang/email/$template_file.txt&quot;;
+-			if (!file_exists($tpl_file))
+-			{
+-				$tpl_file = $site_file_root.&quot;modules/Forums/language/en/email/$template_file.txt&quot;;
+-
+-				if (!file_exists($tpl_file))
+-				{
+-					trigger_error(&quot;Could not find email template file [ $template_file ]&quot;, E_USER_ERROR);
+-				}
+-			}
+-
+-			if (!($fd = @fopen($tpl_file, 'r')))
+-			{
+-				trigger_error(&quot;Failed opening email template file [ $template_file ]&quot;, E_USER_ERROR);
+-			}
+-
+-			$this-&gt;tpl_msg[$template_lang . $template_file] = fread($fd, filesize($tpl_file));
+-			fclose($fd);
+-		}
+-
+-		$this-&gt;msg = $this-&gt;tpl_msg[$template_lang . $template_file];
+-
+-		return true;
+-	}
+-
+-	// assign variables
+-	function assign_vars($vars)
+-	{
+-		$this-&gt;vars = (empty($this-&gt;vars)) ? $vars : $this-&gt;vars . $vars;
+-	}
+-
+-	// Send the mail out to the recipients set previously in var $this-&gt;address
+-	function send($method = NOTIFY_EMAIL, $break = false)
+-	{
+-		global $config, $_CLASS;
+-
+-		// Escape all quotes, else the eval will fail.
+-		$this-&gt;msg = str_replace (&quot;'&quot;, &quot;\'&quot;, $this-&gt;msg);
+-		$this-&gt;msg = preg_replace('#\{([a-z0-9\-_]*?)\}#is', &quot;' . $\\1 . '&quot;, $this-&gt;msg);
+-
+-		// Set vars
+-		foreach ($this-&gt;vars as $key =&gt; $val)
+-		{
+-			$$key = $val;
+-		}
+-
+-		eval(&quot;\$this-&gt;msg = '$this-&gt;msg';&quot;);
+-
+-		// Clear vars
+-		foreach ($this-&gt;vars as $key =&gt; $val)
+-		{
+-			unset($$key);
+-		}
+-
+-		// We now try and pull a subject from the email body ... if it exists,
+-		// do this here because the subject may contain a variable
+-		$drop_header = '';
+-		$match = array();
+-		if (preg_match('#^(Subject:(.*?))$#m', $this-&gt;msg, $match))
+-		{
+-			$this-&gt;subject = (trim($match[2]) != '') ? trim($match[2]) : (($this-&gt;subject != '') ? $this-&gt;subject : $_CLASS['core_user']-&gt;lang['NO_SUBJECT']);
+-			$drop_header .= '[\r\n]*?' . preg_quote($match[1], '#');
+-		}
+-		else
+-		{
+-			$this-&gt;subject = (($this-&gt;subject != '') ? $this-&gt;subject : $_CLASS['core_user']-&gt;lang['NO_SUBJECT']);
+-		}
+-
+-		if (preg_match('#^(Charset:(.*?))$#m', $this-&gt;msg, $match))
+-		{
+-			$this-&gt;encoding = (trim($match[2]) != '') ? trim($match[2]) : trim($_CLASS['core_user']-&gt;lang['ENCODING']);
+-			$drop_header .= '[\r\n]*?' . preg_quote($match[1], '#');
+-		}
+-		else
+-		{
+-			$this-&gt;encoding = trim($_CLASS['core_user']-&gt;lang['ENCODING']);
+-		}
+-
+-		if ($drop_header)
+-		{
+-			$this-&gt;msg = trim(preg_replace('#' . $drop_header . '#s', '', $this-&gt;msg));
+-		}
+-
+-		if ($break)
+-		{
+-			return;
+-		}
+-
+-		switch ($method)
+-		{
+-			case NOTIFY_EMAIL:
+-				$result = $this-&gt;msg_email();
+-				break;
+-			case NOTIFY_IM:
+-				$result = $this-&gt;msg_jabber();
+-				break;
+-			case NOTIFY_BOTH:
+-				$result = $this-&gt;msg_email();
+-				$this-&gt;msg_jabber();
+-				break;
+-		}
+-
+-		$this-&gt;reset();
+-		return $result;
+-	}
+-
+-	function error($type, $msg)
+-	{
+-		global $_CLASS, $site_file_root;
+-
+-		require_once($site_file_root.'includes/forums/functions_admin.php');
+-		add_log('critical', 'LOG_' . $type . '_ERROR', $msg);
+-	}
+-
+-	//
+-	// Messenger methods
+-	//
+-	function save_queue()
+-	{
+-		global $config;
+-
+-		if ($config['email_package_size'] &amp;&amp; $this-&gt;use_queue)
+-		{
+-			$this-&gt;queue-&gt;save();
+-		}
+-	}
+-	
+-	function msg_email()
+-	{
+-		global $config, $_CLASS;
+-
+-		if (empty($config['email_enable']))
+-		{
+-			return false;
+-		}
+-
+-		$use_queue = false;
+-		if ($config['email_package_size'] &amp;&amp; $this-&gt;use_queue)
+-		{
+-			if (empty($this-&gt;queue))
+-			{
+-				$this-&gt;queue = new queue();
+-				$this-&gt;queue-&gt;init('email', $config['email_package_size']);
+-			}
+-			$use_queue = true;
+-		}
+-
+-		$to = $cc = $bcc = '';
+-		// Build to, cc and bcc strings
+-		foreach ($this-&gt;addresses as $type =&gt; $address_ary)
+-		{
+-			if ($type == 'im')
+-			{
+-				continue;
+-			}
+-			
+-			foreach ($address_ary as $which_ary)
+-			{
+-				$$type .= (($$type != '') ? ', ' : '') . (($which_ary['name'] != '') ?  '&quot;' . mail_encode($which_ary['name'], $this-&gt;encoding) . '&quot; &lt;' . $which_ary['email'] . '&gt;' : $which_ary['email']);
+-			}
+-		}
+-
+-		if (empty($this-&gt;replyto))
+-		{
+-			$this-&gt;replyto = '&lt;' . $config['board_email'] . '&gt;';
+-		}
+-
+-		if (empty($this-&gt;from))
+-		{
+-			$this-&gt;from = '&lt;' . $config['board_email'] . '&gt;';
+-		}
+-
+-		// Build header
+-		$headers = 'From: ' . $this-&gt;from . &quot;\n&quot;;
+-		$headers .= ($cc != '') ? &quot;Cc: $cc\n&quot; : '';
+-		$headers .= ($bcc != '') ? &quot;Bcc: $bcc\n&quot; : ''; 
+-		$headers .= 'Reply-to: ' . $this-&gt;replyto . &quot;\n&quot;;
+-		$headers .= 'Return-Path: &lt;' . $config['board_email'] . &quot;&gt;\n&quot;;
+-		$headers .= 'Sender: &lt;' . $config['board_email'] . &quot;&gt;\n&quot;;
+-		$headers .= &quot;MIME-Version: 1.0\n&quot;;
+-		$headers .= 'Message-ID: &lt;' . md5(uniqid(time())) . &quot;@&quot; . $config['server_name'] . &quot;&gt;\n&quot;;
+-		$headers .= 'Date: ' . gmdate('D, d M Y H:i:s T', time()) . &quot;\n&quot;;
+-		$headers .= &quot;Content-type: text/plain; charset={$this-&gt;encoding}\n&quot;;
+-		$headers .= &quot;Content-transfer-encoding: 8bit\n&quot;;
+-		$headers .= &quot;X-Priority: {$this-&gt;mail_priority}\n&quot;;
+-		$headers .= 'X-MSMail-Priority: ' . (($this-&gt;mail_priority == MAIL_LOW_PRIORITY) ? 'Low' : (($this-&gt;mail_priority == MAIL_NORMAL_PRIORITY) ? 'Normal' : 'High')) . &quot;\n&quot;;
+-		$headers .= &quot;X-Mailer: PhpBB\n&quot;;
+-		$headers .= &quot;X-MimeOLE: phpBB\n&quot;;
+-		$headers .= &quot;X-phpBB-Origin: <A HREF="phpbb://">phpbb://</A>&quot; . str_replace(array('<A HREF="http://">http://</A>', '<A HREF="https://">https://</A>'), array('', ''), generate_board_url()) . &quot;\n&quot;;
+-		$headers .= ($this-&gt;extra_headers != '') ? $this-&gt;extra_headers : '';
+-
+-		// Send message ... removed $this-&gt;encode() from subject for time being
+-		if (!$use_queue)
+-		{
+-			$mail_to = ($to == '') ? 'Undisclosed-Recipient:;' : $to;
+-			$err_msg = '';
+-
+-			$result = ($config['smtp_delivery']) ? smtpmail($this-&gt;addresses, $this-&gt;subject, wordwrap($this-&gt;msg), $err_msg, $this-&gt;encoding, $headers) : @$config['email_function_name']($mail_to, $this-&gt;subject, implode(&quot;\n&quot;, preg_split(&quot;/\r?\n/&quot;, wordwrap($this-&gt;msg))), $headers);
+-
+-			if (!$result)
+-			{
+-				$message = '&lt;u&gt;EMAIL ERROR&lt;/u&gt; [ ' . (($config['smtp_delivery']) ? 'SMTP' : 'PHP') . ' ]&lt;br /&gt;&lt;br /&gt;' . $err_msg . '&lt;br /&gt;&lt;br /&gt;&lt;u&gt;CALLING PAGE&lt;/u&gt;&lt;br /&gt;&lt;br /&gt;'  . ((!empty($_SERVER['PHP_SELF'])) ? $_SERVER['PHP_SELF'] : $_ENV['PHP_SELF']) . '&lt;br /&gt;';
+-				
+-				$this-&gt;error('EMAIL', $message);
+-				return false;
+-			}
+-		}
+-		else
+-		{
+-			$this-&gt;queue-&gt;put('email', array(
+-				'to'			=&gt; $to,
+-				'addresses'		=&gt; $this-&gt;addresses,
+-				'subject'		=&gt; $this-&gt;subject,
+-				'msg'			=&gt; $this-&gt;msg,
+-				'encoding'		=&gt; $this-&gt;encoding,
+-				'headers'		=&gt; $headers)
+-			);
+-		}
+-
+-		return true;
+-	}
+-
+-	function msg_jabber()
+-	{
+-		global $config, $site_file_root, $_CLASS;
+-
+-		if (empty($config['jab_enable']) || empty($config['jab_host']) || empty($config['jab_username']) || empty($config['jab_password']))
+-		{
+-			return false;
+-		}
+-
+-		$use_queue = false;
+-		if ($config['jab_package_size'] &amp;&amp; $this-&gt;use_queue)
+-		{
+-			if (empty($this-&gt;queue))
+-			{
+-				$this-&gt;queue = new queue();
+-				$this-&gt;queue-&gt;init('jabber', $config['jab_package_size']);
+-			}
+-			$use_queue = true;
+-		}
+-
+-		$addresses = array();
+-		foreach ($this-&gt;addresses['im'] as $type =&gt; $uid_ary)
+-		{
+-			$addresses[] = $uid_ary['uid'];
+-		}
+-		$addresses = array_unique($addresses);
+-
+-		if (!$use_queue)
+-		{
+-			require_once($site_file_root.'includes/forums/functions_jabber.php');
+-			$this-&gt;jabber = new jabber;
+-
+-			$this-&gt;jabber-&gt;server	= $config['jab_host'];
+-			$this-&gt;jabber-&gt;port		= ($config['jab_port']) ? $config['jab_port'] : 5222;
+-			$this-&gt;jabber-&gt;username = $config['jab_username'];
+-			$this-&gt;jabber-&gt;password = $config['jab_password'];
+-			$this-&gt;jabber-&gt;resource = ($config['jab_resource']) ? $config['jab_resource'] : '';
+-
+-			if (!$this-&gt;jabber-&gt;connect())
+-			{
+-				$this-&gt;error('JABBER', 'Could not connect to Jabber server');
+-				return false;
+-			}
+-
+-			if (!$this-&gt;jabber-&gt;send_auth())
+-			{
+-				$this-&gt;error('JABBER', 'Could not authorise on Jabber server');
+-				return false;
+-			}
+-			$this-&gt;jabber-&gt;send_presence(NULL, NULL, 'online');
+-
+-			foreach ($addresses as $address)
+-			{
+-				$this-&gt;jabber-&gt;send_message($address, 'normal', NULL, array('body' =&gt; $this-&gt;msg));
+-			}
+-
+-			sleep(1);
+-			$this-&gt;jabber-&gt;disconnect();
+-		}
+-		else
+-		{
+-			$this-&gt;queue-&gt;put('jabber', array(
+-				'addresses'		=&gt; $addresses,
+-				'subject'		=&gt; htmlentities($this-&gt;subject),
+-				'msg'			=&gt; htmlentities($this-&gt;msg))
+-			);
+-		}
+-		unset($addresses);
+-		return true;
+-	}
+-}
+-
+-// At the moment it is only handling the email queue
+-class queue
+-{
+-	var $data = array();
+-	var $queue_data = array();
+-	var $package_size = 0;
+-	var $cache_file = '';
+-
+-	function queue()
+-	{
+-		global $site_file_root;
+-
+-		$this-&gt;data = array();
+-		$this-&gt;cache_file = $site_file_root . 'cache/queue.php';
+-	}
+-	
+-	function init($object, $package_size)
+-	{
+-		$this-&gt;data[$object] = array();
+-		$this-&gt;data[$object]['package_size'] = $package_size;
+-		$this-&gt;data[$object]['data'] = array();
+-	}
+-
+-	function put($object, $scope)
+-	{
+-		$this-&gt;data[$object]['data'][] = $scope;
+-	}
+-
+-	// Using lock file...
+-	function process()
+-	{
+-		global $site_file_root, $config;
+-
+-		set_config('last_queue_run', time(), true);
+-
+-		// Delete stale lock file
+-		if (file_exists($this-&gt;cache_file . '.lock') &amp;&amp; !file_exists($this-&gt;cache_file))
+-		{
+-			@unlink($this-&gt;cache_file . '.lock');
+-			return;
+-		}
+-
+-		if (!file_exists($this-&gt;cache_file) || (file_exists($this-&gt;cache_file . '.lock') &amp;&amp; filemtime($this-&gt;cache_file) &gt; time() - $config['queue_interval']))
+-		{
+-			return;
+-		}
+-
+-		$fp = @fopen($this-&gt;cache_file . '.lock', 'wb');
+-		fclose($fp);
+-
+-		include($this-&gt;cache_file);
+-
+-		foreach ($this-&gt;queue_data as $object =&gt; $data_ary)
+-		{
+-			@set_time_limit(60);
+-
+-			$package_size = $data_ary['package_size'];
+-			$num_items = (sizeof($data_ary['data']) &lt; $package_size) ? sizeof($data_ary['data']) : $package_size;
+-
+-			switch ($object)
+-			{
+-				case 'email':
+-					// Delete the email queued objects if mailing is disabled
+-					if (!$config['email_enable'])
+-					{
+-						unset($this-&gt;queue_data['email']);
+-						continue 2;
+-					}
+-					break;
+-
+-				case 'jabber':
+-					if (!$config['jab_enable'])
+-					{
+-						unset($this-&gt;queue_data['jabber']);
+-						continue 2;
+-					}
+-
+-					require_once($site_file_root.'includes/forums/functions_jabber.php');
+-					$this-&gt;jabber = new jabber;
+-
+-					$this-&gt;jabber-&gt;server	= $config['jab_host'];
+-					$this-&gt;jabber-&gt;port		= ($config['jab_port']) ? $config['jab_port'] : 5222;
+-					$this-&gt;jabber-&gt;username = $config['jab_username'];
+-					$this-&gt;jabber-&gt;password = $config['jab_password'];
+-					$this-&gt;jabber-&gt;resource = ($config['jab_resource']) ? $config['jab_resource'] : '';
+-
+-					if (!$this-&gt;jabber-&gt;connect())
+-					{
+-						messenger::error('JABBER', 'Could not connect to Jabber server');
+-						continue 2;
+-					}
+-
+-					if (!$this-&gt;jabber-&gt;send_auth())
+-					{
+-						messenger::error('JABBER', 'Could not authorise on Jabber server');
+-						continue 2;
+-					}
+-					$this-&gt;jabber-&gt;send_presence(NULL, NULL, 'online');
+-					break;
+-
+-				default:
+-					return;
+-			}
+-
+-			for ($i = 0; $i &lt; $num_items; $i++)
+-			{
+-				extract(array_shift($this-&gt;queue_data[$object]['data']));
+-
+-				switch ($object)
+-				{
+-					case 'email':
+-						$err_msg = '';
+-						$to = (!$to) ? 'Undisclosed-Recipient:;' : $to;
+-
+-						$result = ($config['smtp_delivery']) ? smtpmail($addresses, $subject, wordwrap($msg), $err_msg, $encoding, $headers) : @$config['email_function_name']($to, $subject, implode(&quot;\n&quot;, preg_split(&quot;/\r?\n/&quot;, wordwrap($msg))), $headers);
+-
+-						if (!$result)
+-						{
+-							@unlink($this-&gt;cache_file . '.lock');
+-
+-							$message = 'Method: [ ' . (($config['smtp_delivery']) ? 'SMTP' : 'PHP') . ' ]&lt;br /&gt;&lt;br /&gt;' . $err_msg . '&lt;br /&gt;&lt;br /&gt;&lt;u&gt;CALLING PAGE&lt;/u&gt;&lt;br /&gt;&lt;br /&gt;'  . ((!empty($_SERVER['PHP_SELF'])) ? $_SERVER['PHP_SELF'] : $_ENV['PHP_SELF']);
+-							messenger::error('MAIL', $message);
+-							continue 3;
+-						}
+-						break;
+-
+-					case 'jabber':
+-						foreach ($addresses as $address)
+-						{
+-							$this-&gt;jabber-&gt;send_message($address, 'normal', NULL, array('body' =&gt; $msg));
+-						}
+-						break;
+-				}
+-			}
+-
+-			// No more data for this object? Unset it
+-			if (!sizeof($this-&gt;queue_data[$object]['data']))
+-			{
+-				unset($this-&gt;queue_data[$object]);
+-			}
+-
+-			// Post-object processing
+-			switch ($object)
+-			{
+-				case 'jabber':
+-					// Hang about a couple of secs to ensure the messages are
+-					// handled, then disconnect
+-					sleep(1);
+-					$this-&gt;jabber-&gt;disconnect();
+-					break;
+-			}
+-		}
+-	
+-		if (!sizeof($this-&gt;queue_data))
+-		{
+-			@unlink($this-&gt;cache_file);
+-		}
+-		else
+-		{
+-			$file = '&lt;?php $this-&gt;queue_data=' . $this-&gt;format_array($this-&gt;queue_data) . '; ?&gt;';
+-
+-			if ($fp = @fopen($this-&gt;cache_file, 'w'))
+-			{
+-				@flock($fp, LOCK_EX);
+-				fwrite($fp, $file);
+-				@flock($fp, LOCK_UN);
+-				fclose($fp);
+-			}
+-		}
+-
+-		@unlink($this-&gt;cache_file . '.lock');
+-	}
+-
+-	function save()
+-	{
+-		if (!sizeof($this-&gt;data))
+-		{
+-			return;
+-		}
+-		
+-		if (file_exists($this-&gt;cache_file))
+-		{
+-			include($this-&gt;cache_file);
+-			
+-			foreach ($this-&gt;queue_data as $object =&gt; $data_ary)
+-			{
+-				if (isset($this-&gt;data[$object]) &amp;&amp; sizeof($this-&gt;data[$object]))
+-				{
+-					$this-&gt;data[$object]['data'] = array_merge($data_ary['data'], $this-&gt;data[$object]['data']);
+-				}
+-				else
+-				{
+-					$this-&gt;data[$object]['data'] = $data_ary['data'];
+-				}
+-			}
+-		}
+-		
+-		$file = '&lt;?php $this-&gt;queue_data = ' . $this-&gt;format_array($this-&gt;data) . '; ?&gt;';
+-
+-		if ($fp = fopen($this-&gt;cache_file, 'w'))
+-		{
+-			@flock($fp, LOCK_EX);
+-			fwrite($fp, $file);
+-			@flock($fp, LOCK_UN);
+-			fclose($fp);
+-		}
+-	}
+-
+-	function format_array($array)
+-	{
+-		$lines = array();
+-		foreach ($array as $k =&gt; $v)
+-		{
+-			if (is_array($v))
+-			{
+-				$lines[] = &quot;'$k'=&gt;&quot; . $this-&gt;format_array($v);
+-			}
+-			elseif (is_int($v))
+-			{
+-				$lines[] = &quot;'$k'=&gt;$v&quot;;
+-			}
+-			elseif (is_bool($v))
+-			{
+-				$lines[] = &quot;'$k'=&gt;&quot; . (($v) ? 'TRUE' : 'FALSE');
+-			}
+-			else
+-			{
+-				$lines[] = &quot;'$k'=&gt;'&quot; . str_replace(&quot;'&quot;, &quot;\'&quot;, str_replace('\\', '\\\\', $v)) . &quot;'&quot;;
+-			}
+-		}
+-
+-		return 'array(' . implode(',', $lines) . ')';
+-	}
+-
+-}
+-
+-// Replacement or substitute for PHP's mail command
+-function smtpmail($addresses, $subject, $message, &amp;$err_msg, $encoding, $headers = '')
+-{
+-	global $config, $_CLASS;
+-
+-	// Fix any bare linefeeds in the message to make it RFC821 Compliant.
+-	$message = preg_replace(&quot;#(?&lt;!\r)\n#si&quot;, &quot;\r\n&quot;, $message);
+-
+-	if ($headers != '')
+-	{
+-		if (is_array($headers))
+-		{
+-			$headers = (sizeof($headers) &gt; 1) ? join(&quot;\n&quot;, $headers) : $headers[0];
+-		}
+-		$headers = chop($headers);
+-
+-		// Make sure there are no bare linefeeds in the headers
+-		$headers = preg_replace('#(?&lt;!\r)\n#si', &quot;\r\n&quot;, $headers);
+-
+-		// Ok this is rather confusing all things considered,
+-		// but we have to grab bcc and cc headers and treat them differently
+-		// Something we really didn't take into consideration originally
+-		$header_array = explode(&quot;\r\n&quot;, $headers);
+-		$headers = '';
+-		
+-		foreach ($header_array as $header)
+-		{
+-			if (preg_match('#^cc:#si', $header) || preg_match('#^bcc:#si', $header))
+-			{
+-				$header = '';
+-			}
+-			$headers .= ($header != '') ? $header . &quot;\r\n&quot; : '';
+-		}
+-
+-		$headers = chop($headers);
+-	}
+-
+-	if (trim($subject) == '')
+-	{
+-		$err_msg = 'No email Subject specified';
+-		return false;
+-	}
+-
+-	if (trim($message) == '')
+-	{
+-		$err_msg = 'Email message was blank';
+-		return false;
+-	}
+-
+-	$mail_rcpt = $mail_to = $mail_cc = array();
+-
+-	// Build correct addresses for RCPT TO command and the client side display (TO, CC)
+-	foreach ($addresses['to'] as $which_ary)
+-	{
+-		$mail_to[] = ($which_ary['name'] != '') ? mail_encode(trim($which_ary['name']), $encoding) . ' &lt;' . trim($which_ary['email']) . '&gt;' : '&lt;' . trim($which_ary['email']) . '&gt;';
+-		$mail_rcpt['to'][] = '&lt;' . trim($which_ary['email']) . '&gt;';
+-	}
+-
+-	if (isset($addresses['bcc']) &amp;&amp; sizeof($addresses['bcc']))
+-	{
+-		foreach ($addresses['bcc'] as $which_ary)
+-		{
+-			$mail_rcpt['bcc'][] = '&lt;' . trim($which_ary['email']) . '&gt;';
+-		}
+-	}
+-
+-	if (isset($addresses['cc']) &amp;&amp; sizeof($addresses['cc']))
+-	{
+-		foreach ($addresses['cc'] as $which_ary)
+-		{
+-			$mail_cc[] = ($which_ary['name'] != '') ? mail_encode(trim($which_ary['name']), $encoding) . ' &lt;' . trim($which_ary['email']) . '&gt;' : '&lt;' . trim($which_ary['email']) . '&gt;';
+-			$mail_rcpt['cc'][] = '&lt;' . trim($which_ary['email']) . '&gt;';
+-		}
+-	}
+-
+-	$smtp = new smtp_class;
+-
+-	// Ok we have error checked as much as we can to this point let's get on
+-	// it already.
+-	if (!$smtp-&gt;socket = fsockopen($config['smtp_host'], $config['smtp_port'], $errno, $errstr, 20))
+-	{
+-		$err_msg = &quot;Could not connect to smtp host : $errno : $errstr&quot;;
+-		return false;
+-	}
+-
+-	// Wait for reply
+-	if ($err_msg = $smtp-&gt;server_parse('220', __LINE__))
+-	{
+-		$smtp-&gt;close_session();
+-		return false;
+-	}
+-
+-	// Let me in. This function handles the complete authentication process
+-	if ($err_msg = $smtp-&gt;log_into_server($config['smtp_host'], $config['smtp_username'], $config['smtp_password'], $config['smtp_auth_method']))
+-	{
+-		$smtp-&gt;close_session();
+-		return false;
+-	}
+-
+-	// From this point onward most server response codes should be 250
+-	// Specify who the mail is from....
+-	$smtp-&gt;server_send('MAIL FROM:&lt;' . $config['board_email'] . '&gt;');
+-	if ($err_msg = $smtp-&gt;server_parse('250', __LINE__))
+-	{
+-		$smtp-&gt;close_session();
+-		return false;
+-	}
+-
+-	// Specify each user to send to and build to header.
+-	$to_header = implode(', ', $mail_to);
+-	$cc_header = implode(', ', $mail_cc);
+-
+-	// Now tell the MTA to send the Message to the following people... [TO, BCC, CC]
+-	$rcpt = false;
+-	foreach ($mail_rcpt as $type =&gt; $mail_to_addresses)
+-	{
+-		foreach ($mail_to_addresses as $mail_to_address)
+-		{
+-			// Add an additional bit of error checking to the To field.
+-			if (preg_match('#[^ ]+\@[^ ]+#', $mail_to_address))
+-			{
+-				$smtp-&gt;server_send(&quot;RCPT TO:$mail_to_address&quot;);
+-				if ($err_msg = $smtp-&gt;server_parse('250', __LINE__))
+-				{
+-					// We continue... if users are not resolved we do not care
+-					if ($smtp-&gt;numeric_response_code != 550)
+-					{
+-						$smtp-&gt;close_session();
+-						return false;
+-					}
+-				}
+-				else
+-				{
+-					$rcpt = true;
+-				}
+-			}
+-		}
+-	}
+-
+-	// We try to send messages even if a few people do not seem to have valid email addresses, but if no one has, we have to exit here.
+-	if (!$rcpt)
+-	{
+-		$err_msg .= '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['INVALID_EMAIL_LOG'], htmlspecialchars($mail_to_address));
+-		$smtp-&gt;close_session();
+-		return false;
+-	}
+-
+-	// Ok now we tell the server we are ready to start sending data
+-	$smtp-&gt;server_send('DATA');
+-
+-	// This is the last response code we look for until the end of the message.
+-	if ($err_msg = $smtp-&gt;server_parse('354', __LINE__))
+-	{
+-		$smtp-&gt;close_session();
+-		return false;
+-	}
+-
+-	// Send the Subject Line...
+-	$smtp-&gt;server_send(&quot;Subject: $subject&quot;);
+-
+-	// Now the To Header.
+-	$to_header = ($to_header == '') ? 'Undisclosed-Recipients:;' : $to_header;
+-	$smtp-&gt;server_send(&quot;To: $to_header&quot;);
+-
+-	// Now the CC Header.
+-	if ($cc_header != '')
+-	{
+-		$smtp-&gt;server_send(&quot;CC: $cc_header&quot;);
+-	}
+-
+-	// Now any custom headers....
+-	$smtp-&gt;server_send(&quot;$headers\r\n&quot;);
+-
+-	// Ok now we are ready for the message...
+-	$smtp-&gt;server_send($message);
+-
+-	// Ok the all the ingredients are mixed in let's cook this puppy...
+-	$smtp-&gt;server_send('.');
+-	if ($err_msg = $smtp-&gt;server_parse('250', __LINE__))
+-	{
+-		$smtp-&gt;close_session();
+-		return false;
+-	}
+-
+-	// Now tell the server we are done and close the socket...
+-	$smtp-&gt;server_send('QUIT');
+-	$smtp-&gt;close_session();
+-
+-	return true;
+-}
+-
+-// SMTP Class
+-// Auth Mechanisms originally taken from the AUTH Modules found within the PHP Extension and Application Repository (PEAR)
+-// See docs/AUTHORS for more details
+-class smtp_class
+-{
+-	var $server_response = '';
+-	var $socket = 0;
+-	var $responses = array();
+-	var $commands = array();
+-	var $numeric_response_code = 0;
+-
+-	// Send command to smtp server
+-	function server_send($command)
+-	{
+-		fputs($this-&gt;socket, $command . &quot;\r\n&quot;);
+-
+-		// We could put additional code here
+-	}
+-	
+-	// We use the line to give the support people an indication at which command the error occurred
+-	function server_parse($response, $line)
+-	{
+-		$this-&gt;server_response = '';
+-		$this-&gt;responses = array();
+-		$this-&gt;numeric_response_code = 0;
+-
+-		while (substr($this-&gt;server_response, 3, 1) != ' ')
+-		{
+-			if (!($this-&gt;server_response = fgets($this-&gt;socket, 256)))
+-			{
+-				return 'Could not get mail server response codes';
+-			}
+-			$this-&gt;responses[] = substr(rtrim($this-&gt;server_response), 4);
+-			$this-&gt;numeric_response_code = (int) substr($this-&gt;server_response, 0, 3);
+-		}
+-
+-		if (!(substr($this-&gt;server_response, 0, 3) == $response))
+-		{
+-			$this-&gt;numeric_response_code = (int) substr($this-&gt;server_response, 0, 3);
+-			return &quot;Ran into problems sending Mail at &lt;b&gt;Line $line&lt;/b&gt;. Response: $this-&gt;server_response&quot;;
+-		}
+-
+-		return 0;
+-	}
+-
+-	function close_session()
+-	{
+-		fclose($this-&gt;socket);
+-	}
+-	
+-	// Log into server and get possible auth codes if neccessary
+-	function log_into_server($hostname, $username, $password, $default_auth_method)
+-	{
+-		$err_msg = '';
+-
+-		// If we are authenticating through pop-before-smtp, we
+-		// have to login ones before we get authenticated
+-		if ($default_auth_method == 'POP-BEFORE-SMTP' &amp;&amp; $username &amp;&amp; $password)
+-		{
+-			$result = $this-&gt;pop_before_smtp($hostname, $username, $password);
+-			$username = $password = $default_auth_method = '';
+-		}
+-
+-		// Try EHLO first
+-		$this-&gt;server_send(&quot;EHLO [$hostname]&quot;);
+-		if ($err_msg = $this-&gt;server_parse('250', __LINE__))
+-		{
+-			// a 503 response code means that we're already authenticated
+-			if ($this-&gt;numeric_response_code == 503)
+-			{
+-				return false;
+-			}
+-
+-			// If EHLO fails, we try HELO			
+-			$this-&gt;server_send(&quot;HELO [$hostname]&quot;);
+-			if ($err_msg = $this-&gt;server_parse('250', __LINE__))
+-			{
+-				return ($this-&gt;numeric_response_code == 503) ? false : $err_msg;
+-			}
+-		}
+-
+-		foreach ($this-&gt;responses as $response)
+-		{
+-			$response = explode(' ', $response);
+-			$response_code = $response[0];
+-			unset($response[0]);
+-			$this-&gt;commands[$response_code] = implode(' ', $response);
+-		}
+-
+-		// If we are not authenticated yet, something might be wrong if no username and passwd passed
+-		if (!$username || !$password)
+-		{
+-			return false;
+-		}
+-		
+-		if (!isset($this-&gt;commands['AUTH']))
+-		{
+-			return 'SMTP server does not support authentication';
+-		}
+-
+-		// Get best authentication method
+-		$available_methods = explode(' ', $this-&gt;commands['AUTH']);
+-
+-		// Define the auth ordering if the default auth method was not found
+-		$auth_methods = array('PLAIN', 'LOGIN', 'CRAM-MD5');
+-		if (function_exists('posix_uname'))
+-		{
+-			$auth_methods[] = 'DIGEST-MD5';
+-		}
+-
+-		$method = '';
+-
+-		if (in_array($default_auth_method, $available_methods))
+-		{
+-			$method = $default_auth_method;
+-		}
+-		else
+-		{
+-			foreach ($auth_methods as $_method)
+-			{
+-				if (in_array($_method, $available_methods))
+-				{
+-					$method = $_method;
+-					break;
+-				}
+-			}
+-		}
+-
+-		if (!$method)
+-		{
+-			return 'No supported authentication methods';
+-		}
+-
+-		$method = strtolower(str_replace('-', '_', $method));
+-		return $this-&gt;$method($username, $password);
+-	}
+-
+-	function pop_before_smtp($hostname, $username, $password)
+-	{
+-		$old_socket = $this-&gt;socket;
+-		
+-		if (!$this-&gt;socket = fsockopen($hostname, 110, $errno, $errstr, 20))
+-		{
+-			$this-&gt;socket = $old_socket;
+-			return &quot;Could not connect to smtp host : $errno : $errstr&quot;;
+-		}
+-		
+-		$this-&gt;server_parse('0', __LINE__);
+-		if (substr($this-&gt;server_response, 0, 3) == '+OK')
+-		{
+-			fputs($this-&gt;socket, &quot;USER $username\r\n&quot;);
+-			fputs($this-&gt;socket, &quot;PASS $password\r\n&quot;);
+-		}
+-		else
+-		{
+-			$this-&gt;socket = $old_socket;
+-			return $this-&gt;responses[0];
+-		}
+-
+-		$this-&gt;server_send('QUIT');
+-		$this-&gt;server_parse('0', __LINE__);
+-		fclose($this-&gt;socket);
+-
+-		$this-&gt;socket = $old_socket;
+-
+-		return false;
+-	}
+-	
+-	function plain($username, $password)
+-	{
+-		$this-&gt;server_send('AUTH PLAIN');
+-		if ($err_msg = $this-&gt;server_parse('334', __LINE__))
+-		{
+-			return ($this-&gt;numeric_response_code == 503) ? false : $err_msg;
+-		}
+-
+-		$base64_method_plain = base64_encode(&quot;\0&quot; . $username . &quot;\0&quot; . $password);
+-		$this-&gt;server_send($base64_method_plain);
+-		if ($err_msg = $this-&gt;server_parse('235', __LINE__))
+-		{
+-			return $err_msg;
+-		}
+-
+-		return false;
+-	}
+-
+-	function login($username, $password)
+-	{
+-		$this-&gt;server_send('AUTH LOGIN');
+-		if ($err_msg = $this-&gt;server_parse('334', __LINE__))
+-		{
+-			return ($this-&gt;numeric_response_code == 503) ? false : $err_msg;
+-		}
+-
+-		$this-&gt;server_send(base64_encode($username));
+-		if ($err_msg = $this-&gt;server_parse('334', __LINE__))
+-		{
+-			return $err_msg;
+-		}
+-
+-		$this-&gt;server_send(base64_encode($password));
+-		if ($err_msg = $this-&gt;server_parse('235', __LINE__))
+-		{
+-			return $err_msg;
+-		}
+-
+-		return false;
+-	}
+-
+-	// The last two authentication mechanisms are a little bit tricky...
+-	function cram_md5($username, $password)
+-	{
+-		$this-&gt;server_send('AUTH CRAM-MD5');
+-		if ($err_msg = $this-&gt;server_parse('334', __LINE__))
+-		{
+-			return ($this-&gt;numeric_response_code == 503) ? false : $err_msg;
+-		}
+-
+-		$md5_challenge = base64_decode($this-&gt;responses[0]);
+-		$password = (strlen($password) &gt; 64) ? pack('H32', md5($password)) : ((strlen($password) &lt; 64) ? str_pad($password, 64, chr(0)) : $password);
+-		$md5_digest = md5((substr($password, 0, 64) ^ str_repeat(chr(0x5C), 64)) . (pack('H32', md5((substr($password, 0, 64) ^ str_repeat(chr(0x36), 64)) . $md5_challenge))));
+-
+-		$base64_method_cram_md5 = base64_encode($username . ' ' . $md5_digest);
+-
+-		$this-&gt;server_send($base64_method_cram_md5);
+-		if ($err_msg = $this-&gt;server_parse('235', __LINE__))
+-		{
+-			return $err_msg;
+-		}
+-
+-		return false;
+-	}
+-
+-	// A real pain in the ***
+-	function digest_md5($username, $password)
+-	{
+-		global $config;
+-
+-		$this-&gt;server_send('AUTH DIGEST-MD5');
+-		if ($err_msg = $this-&gt;server_parse('334', __LINE__))
+-		{
+-			return ($this-&gt;numeric_response_code == 503) ? false : $err_msg;
+-		}
+-
+-		$md5_challenge = base64_decode($this-&gt;responses[0]);
+-		
+-		// Parse the md5 challenge - from AUTH_SASL (PEAR)
+-		$tokens = array();
+-		while (preg_match('/^([a-z-]+)=(&quot;[^&quot;]+(?&lt;!\\\)&quot;|[^,]+)/i', $md5_challenge, $matches))
+-		{
+-			// Ignore these as per rfc2831
+-			if ($matches[1] == 'opaque' || $matches[1] == 'domain')
+-			{
+-				$md5_challenge = substr($md5_challenge, strlen($matches[0]) + 1);
+-				continue;
+-			}
+-
+-			// Allowed multiple &quot;realm&quot; and &quot;auth-param&quot;
+-			if (!empty($tokens[$matches[1]]) &amp;&amp; ($matches[1] == 'realm' || $matches[1] == 'auth-param'))
+-			{
+-				if (is_array($tokens[$matches[1]]))
+-				{
+-					$tokens[$matches[1]][] = preg_replace('/^&quot;(.*)&quot;$/', '\\1', $matches[2]);
+-				}
+-				else
+-				{
+-					$tokens[$matches[1]] = array($tokens[$matches[1]], preg_replace('/^&quot;(.*)&quot;$/', '\\1', $matches[2]));
+-				}
+-			} 
+-			else if (!empty($tokens[$matches[1]])) // Any other multiple instance = failure
+-			{
+-				$tokens = array();
+-				break;
+-			}
+-			else
+-			{
+-				$tokens[$matches[1]] = preg_replace('/^&quot;(.*)&quot;$/', '\\1', $matches[2]);
+-			}
+-
+-			// Remove the just parsed directive from the challenge
+-			$md5_challenge = substr($md5_challenge, strlen($matches[0]) + 1);
+-		}
+-
+-		// Realm
+-		if (empty($tokens['realm']))
+-		{
+-			$uname = posix_uname();
+-			$tokens['realm'] = $uname['nodename'];
+-		}
+-        
+-		// Maxbuf
+-		if (empty($tokens['maxbuf']))
+-		{
+-			$tokens['maxbuf'] = 65536;
+-		}
+-
+-		// Required: nonce, algorithm
+-		if (empty($tokens['nonce']) || empty($tokens['algorithm']))
+-		{
+-			$tokens = array();
+-		}
+-		$md5_challenge = $tokens;
+-
+-		if (!empty($md5_challenge))
+-		{
+-			$str = '';
+-			mt_srand( (double) microtime() * 10000000);
+-			for ($i = 0; $i &lt; 32; $i++)
+-			{
+-				$str .= chr(mt_rand(0, 255));
+-			}
+-			$cnonce = base64_encode($str);
+-
+-			$digest_uri = 'smtp/' . $config['smtp_host'];
+-
+-			$auth_1 = sprintf('%s:%s:%s', pack('H32', md5(sprintf('%s:%s:%s', $username, $md5_challenge['realm'], $password))), $md5_challenge['nonce'], $cnonce);
+-			$auth_2 = 'AUTHENTICATE:' . $digest_uri;
+-			$response_value = md5(sprintf('%s:%s:00000001:%s:auth:%s', md5($auth_1), $md5_challenge['nonce'], $cnonce, md5($auth_2)));
+-
+-			$input_string = sprintf('username=&quot;%s&quot;,realm=&quot;%s&quot;,nonce=&quot;%s&quot;,cnonce=&quot;%s&quot;,nc=&quot;00000001&quot;,qop=auth,digest-uri=&quot;%s&quot;,response=%s,%d', $username, $md5_challenge['realm'], $md5_challenge['nonce'], $cnonce, $digest_uri, $response_value, $md5_challenge['maxbuf']);
+-		}
+-		else
+-		{
+-			return 'Invalid digest challenge';
+-		}
+-		
+-		$base64_method_digest_md5 = base64_encode($input_string);
+-		$this-&gt;server_send($base64_method_digest_md5);
+-		if ($err_msg = $this-&gt;server_parse('334', __LINE__))
+-		{
+-			return $err_msg;
+-		}
+-
+-		$this-&gt;server_send(' ');
+-		if ($err_msg = $this-&gt;server_parse('235', __LINE__))
+-		{
+-			return $err_msg;
+-		}
+-		
+-		return false;
+-	}
+-}
+-
+-// Encodes the given string for proper display for this encoding ... nabbed 
+-// from php.net and modified. There is an alternative encoding method which 
+-// may produce less output but it's questionable as to its worth in this 
+-// scenario IMO
+-/*
+-function mail_encode($str, $encoding)
+-{
+-	if ($encoding == '')
+-	{
+-		return $str;
+-	}
+-
+-	// define start delimimter, end delimiter and spacer
+-	$end = &quot;?=&quot;;
+-	$start = &quot;=?$encoding?B?&quot;;
+-	$spacer = &quot;$end\r\n $start&quot;;
+-
+-	// determine length of encoded text within chunks and ensure length is even
+-	$length = 75 - strlen($start) - strlen($end);
+-	$length = floor($length / 2) * 2;
+-
+-	// encode the string and split it into chunks with spacers after each chunk
+-	$str = chunk_split(base64_encode($str), $length, $spacer);
+-
+-	// remove trailing spacer and add start and end delimiters
+-	$str = preg_replace('#' . preg_quote($spacer) . '$#', '', $str);
+-
+-	return $start . $str . $end;
+-}*/
+-
+-?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000066.html">[Viperals-svncheckins] r146 - cms/branches
+</A></li>
+	<LI>Next message: <A HREF="000068.html">[Viperals-svncheckins] r148 - in cms/branches/1.0alpha2: . includes includes/templates/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#67">[ date ]</a>
+              <a href="thread.html#67">[ thread ]</a>
+              <a href="subject.html#67">[ subject ]</a>
+              <a href="author.html#67">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

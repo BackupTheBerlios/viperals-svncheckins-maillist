@@ -1,0 +1,3233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r99 - in trunk: . admin includes includes/compatiblity includes/db includes/display includes/forums/admin includes/templates includes/templates/modules/Forums includes/templates/rss install language/en modules modules/Contact modules/Forums modules/Quick_Message modules/articles themes/viperal/images themes/viperal/images/modules themes/viperal/images/modules/Forums themes/viperal/style
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r99%20-%20in%20trunk%3A%20.%20admin%20includes%20includes/compatiblity%20includes/db%20includes/display%20includes/forums/admin%20includes/templates%20includes/templates/modules/Forums%20includes/templates/rss%20install%20language/en%20modules%20modules/Contact%20modules/Forums%20modules/Quick_Message%20modules/articles%20themes/viperal/images%20themes/viperal/images/modules%20themes/viperal/images/modules/Forums%20themes/viperal/style&In-Reply-To=%3C200509080405.j8845Xb9006874%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000021.html">
+   <LINK REL="Next"  HREF="000023.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r99 - in trunk: . admin includes includes/compatiblity includes/db includes/display includes/forums/admin includes/templates includes/templates/modules/Forums includes/templates/rss install language/en modules modules/Contact modules/Forums modules/Quick_Message modules/articles themes/viperal/images themes/viperal/images/modules themes/viperal/images/modules/Forums themes/viperal/style</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r99%20-%20in%20trunk%3A%20.%20admin%20includes%20includes/compatiblity%20includes/db%20includes/display%20includes/forums/admin%20includes/templates%20includes/templates/modules/Forums%20includes/templates/rss%20install%20language/en%20modules%20modules/Contact%20modules/Forums%20modules/Quick_Message%20modules/articles%20themes/viperal/images%20themes/viperal/images/modules%20themes/viperal/images/modules/Forums%20themes/viperal/style&In-Reply-To=%3C200509080405.j8845Xb9006874%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r99 - in trunk: . admin includes includes/compatiblity includes/db includes/display includes/forums/admin includes/templates includes/templates/modules/Forums includes/templates/rss install language/en modules modules/Contact modules/Forums modules/Quick_Message modules/articles themes/viperal/images themes/viperal/images/modules themes/viperal/images/modules/Forums themes/viperal/style">viperal at berlios.de
+       </A><BR>
+    <I>Thu Sep  8 06:05:33 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000021.html">[Viperals-svncheckins] r98 - in trunk: admin includes/templates/admin/modules install
+</A></li>
+        <LI>Next message: <A HREF="000023.html">[Viperals-svncheckins] r100 - /
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-08 06:05:29 +0200 (Thu, 08 Sep 2005)
+New Revision: 99
+
+Added:
+   trunk/modules/articles/
+   trunk/modules/articles/index.php
+   trunk/modules/articles/install.php
+   trunk/themes/viperal/images/modules/
+   trunk/themes/viperal/images/modules/Forums/
+   trunk/themes/viperal/images/modules/Forums/index.html
+   trunk/themes/viperal/images/modules/Forums/index.php
+   trunk/themes/viperal/images/modules/index.html
+Modified:
+   trunk/admin.php
+   trunk/admin/blocks.php
+   trunk/admin/index.php
+   trunk/admin/users.php
+   trunk/core.php
+   trunk/includes/compatiblity/mbstring.php
+   trunk/includes/db/mssql.php
+   trunk/includes/db/mysql.php
+   trunk/includes/db/mysql3.php
+   trunk/includes/db/mysqli.php
+   trunk/includes/db/postgres.php
+   trunk/includes/db/sqlite.php
+   trunk/includes/db/sqlite_pdo.php
+   trunk/includes/display/blocks.php
+   trunk/includes/display/display.php
+   trunk/includes/display/template.php
+   trunk/includes/forums/admin/admin_forums.php
+   trunk/includes/forums/admin/admin_ranks.php
+   trunk/includes/functions.php
+   trunk/includes/functions_user.php
+   trunk/includes/session.php
+   trunk/includes/templates/message.html
+   trunk/includes/templates/modules/Forums/viewforum_body.html
+   trunk/includes/templates/rss/atom.html
+   trunk/includes/user.php
+   trunk/install/build_data.php
+   trunk/install/build_tables.php
+   trunk/language/en/common.php
+   trunk/language/en/error.php
+   trunk/modules/Contact/index.php
+   trunk/modules/Forums/faq.php
+   trunk/modules/Forums/main.php
+   trunk/modules/Forums/posting.php
+   trunk/modules/Forums/viewforum.php
+   trunk/modules/Forums/viewtopic.php
+   trunk/modules/Quick_Message/index.php
+   trunk/modules/Quick_Message/install.php
+   trunk/themes/viperal/style/style.css
+Log:
+Bug fixes ( thanks xfsunoles )
+Added articles
+Other stuff
+
+Modified: trunk/admin/blocks.php
+===================================================================
+--- trunk/admin/blocks.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/admin/blocks.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -96,8 +96,6 @@
+ 	}
+ }
+ 
+-blocks_block('main');
+-
+ $result = $_CLASS['core_db']-&gt;query('SELECT block_id, block_title, block_type,  block_position, block_order, block_status, block_file, block_auth
+ 	FROM ' . BLOCKS_TABLE . '
+ 	WHERE block_position IN (' . BLOCK_RIGHT . ', ' . BLOCK_TOP . ', ' . BLOCK_BOTTOM . ', ' . BLOCK_LEFT . ') ORDER BY block_position, block_order ASC');
+@@ -222,7 +220,6 @@
+ 		}
+ 
+ 		unset($block_post);
+-		blocks_block();
+ 	}
+ 	else
+ 	{
+@@ -231,7 +228,6 @@
+ 			block_get_data($block, $error, get_variable('type', 'GET', BLOCKTYPE_FILE));
+ 			$error = '';
+ 		}
+-		blocks_block('add');
+ 	}
+ 
+ 	$b_show_content = $b_file = $b_rss_show = $b_rss_rate = $b_rss_url = false;
+@@ -275,49 +271,6 @@
+ 	$_CLASS['core_template']-&gt;display('admin/blocks/edit.html');
+ }
+ 
+-function blocks_block($mode = false)
+-{
+-    global $_CLASS;
+-
+-	$content = '&lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th&gt;Options&lt;/th&gt;	&lt;/tr&gt;';
+-
+-	if ($mode == 'main')
+-	{
+-		$content .= '&lt;tr&gt;&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;phpbbnav&quot;&gt;Main&lt;/b&gt;
+-		&lt;ul class=&quot;phpbbnav&quot; style=&quot;margin: 0px; padding: 0px; list-style-type: none; line-height: 175%;&quot;&gt;
+-		&lt;li&gt;&#187; &lt;b&gt;Main&lt;/li&gt;&lt;/ul&gt;&lt;/td&gt;&lt;tr&gt;';
+-	}
+-	else
+-	{
+-		$content .= '&lt;tr&gt;&lt;td class=&quot;row2&quot; onmouseover=&quot;this.className=\'row1\'&quot; onmouseout=&quot;this.className=\'row2\'&quot; onclick=&quot;location.href=\''.generate_link('blocks', array('admin' =&gt; true)).'\'&quot; nowrap=&quot;nowrap&quot;&gt;&lt;a class=&quot;phpbbnav&quot; href=&quot;'.generate_link('blocks', array('admin' =&gt; true)).'&quot;&gt;Main&lt;/a&gt;
+-		&lt;/td&gt;&lt;/tr&gt;';
+-	}
+-
+-	if ($mode == 'add')
+-	{
+-		$content .= '&lt;tr&gt;&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;phpbbnav&quot;&gt;Add&lt;/b&gt;&lt;ul class=&quot;phpbbnav&quot; style=&quot;margin: 0px; padding: 0px; list-style-type: none; line-height: 175%;&quot;&gt;';
+-		$content .= '&lt;li&gt;&#187;&lt;a href=&quot;'.generate_link('blocks&amp;mode=add&amp;type='.BLOCKTYPE_FILE, array('admin' =&gt; true)).'&quot;&gt; New Regular Block&lt;/a&gt;&lt;/li&gt;';
+-		$content .= '&lt;li&gt;&#187;&lt;a href=&quot;'.generate_link('blocks&amp;mode=add&amp;type='.BLOCKTYPE_FEED, array('admin' =&gt; true)).'&quot;&gt; New Feed Block&lt;/a&gt;&lt;/li&gt;';
+-		$content .= '&lt;li&gt;&#187;&lt;a href=&quot;'.generate_link('blocks&amp;mode=add&amp;type='.BLOCKTYPE_HTML, array('admin' =&gt; true)).'&quot;&gt; New HTML Block&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/td&gt;&lt;/tr&gt;';
+-	}
+-	else
+-	{
+-		$content .= '&lt;td class=&quot;row2&quot; onmouseover=&quot;this.className=\'row1\'&quot; onmouseout=&quot;this.className=\'row2\'&quot; onclick=&quot;location.href=\''.generate_link('blocks&amp;mode=add', array('admin' =&gt; true)).'\'&quot; nowrap=&quot;nowrap&quot;&gt;&lt;a class=&quot;phpbbnav&quot; href=&quot;'.generate_link('blocks&amp;mode=add', array('admin' =&gt; true)).'&quot;&gt;Add New Block&lt;/a&gt;
+-		&lt;/td&gt;&lt;/tr&gt;';
+-	}
+-
+-	$content .= '&lt;/tbody&gt;&lt;/table&gt;';
+-
+-	$data = array(
+-		'title' 	=&gt; 'Block Administration',
+-		'position'	=&gt; BLOCK_LEFT,
+-		'type' 		=&gt; BLOCKTYPE_HTML,
+-		'content'	=&gt; $content,
+-	);
+-
+-	$_CLASS['core_blocks']-&gt;add_block($data);
+-}
+-
+ function block_get_data(&amp;$data, &amp;$error, $type = false)
+ {
+ 	global $_CLASS;
+
+Modified: trunk/admin/index.php
+===================================================================
+--- trunk/admin/index.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/admin/index.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -52,7 +52,7 @@
+ 	
+ 	load_class($site_file_root.'includes/core_rss.php', 'core_rss');
+ 	
+-	if ($_CLASS['core_rss']-&gt;get_rss('<A HREF="http://viperal.byethost33.com/feed.php?mode=cms&amp;feed=rss2">http://viperal.byethost33.com/feed.php?mode=cms&amp;feed=rss2</A>', 3))
++	if ($_CLASS['core_rss']-&gt;get_rss('<A HREF="http://www.php.net/news.rss">http://www.php.net/news.rss</A>', 3))
+ 	{
+ 		while ($data = $_CLASS['core_rss']-&gt;get_rss_data())
+ 		{
+
+Modified: trunk/admin/users.php
+===================================================================
+--- trunk/admin/users.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/admin/users.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -61,16 +61,16 @@
+ 				$activation_array = array(USER_ACTIVATION_NONE, USER_ACTIVATION_SELF, USER_ACTIVATION_ADMIN, USER_ACTIVATION_DISABLE);
+ 				$activation = get_variable('activation', 'POST', USER_ACTIVATION_NONE, 'int');
+ 
+-				$data['activation'] = in_array($activation, $activation_array) ? $activation : USER_ACTIVATION_NONE;
+-		 		$data['coppa_enable'] = get_variable('coppa_enable', 'POST') ? 1 : 0;
+-		 		$data['coppa_fax'] = get_variable('coppa_fax', 'POST');
+-		 		$data['coppa_mail'] = get_variable('coppa_mail', 'POST');
+-		 		$data['enable_confirm'] = get_variable('enable_confirm', 'POST') ? 1 : 0;
++				$data['activation']		= in_array($activation, $activation_array) ? $activation : USER_ACTIVATION_NONE;
++		 		$data['coppa_enable']	= get_variable('coppa_enable', 'POST') ? 1 : 0;
++		 		$data['coppa_fax']		= get_variable('coppa_fax', 'POST');
++		 		$data['coppa_mail']		= get_variable('coppa_mail', 'POST');
++		 		$data['enable_confirm']	= get_variable('enable_confirm', 'POST') ? 1 : 0;
++		 		$data['min_name_chars']	= get_variable('min_name_chars', 'POST', 0, 'INT');
++		 		$data['max_name_chars']	= get_variable('max_name_chars', 'POST', 0, 'INT');
++		 		$data['min_pass_chars']	= get_variable('min_pass_chars', 'POST', 0, 'INT');
++		 		$data['max_pass_chars']	= get_variable('max_pass_chars', 'POST', 0, 'INT');
+ 		 		$data['max_reg_attempts'] = get_variable('coppa_fax', 'POST', 0, 'INT');
+-		 		$data['min_name_chars'] = get_variable('min_name_chars', 'POST', 0, 'INT');
+-		 		$data['max_name_chars'] = get_variable('max_name_chars', 'POST', 0, 'INT');
+-		 		$data['min_pass_chars'] = get_variable('min_pass_chars', 'POST', 0, 'INT');
+-		 		$data['max_pass_chars'] = get_variable('max_pass_chars', 'POST', 0, 'INT');
+ 
+ 				foreach ($data as $name =&gt; $setting)
+ 				{
+@@ -187,7 +187,7 @@
+ 						'username'		=&gt; (string) $username,
+ 						'user_email'	=&gt; (string) $email,
+ 						'user_group'	=&gt; (int) ($coppa) ? 3 : 2,
+-						'user_reg_date'	=&gt; (int) gmtime(),
++						'user_reg_date'	=&gt; (int) $_CLASS['core_user']-&gt;time,
+ 						'user_timezone'	=&gt; $tz,
+ 	
+ 						'user_password'			=&gt; (string) $password,
+@@ -202,9 +202,11 @@
+ 	
+ 					user_add($data);
+ 					
+-					set_core_config('user', 'newest_user_id', $row['user_id'], false);
+-					set_core_config('user', 'newest_username', $row['username'], false);
+-					set_core_config('user', 'total_users', $_CORE_CONFIG['user']['total_users'] + 1, false);
++					set_core_config('user', 'newest_user_id', $data['user_id'], false);
++					set_core_config('user', 'newest_username', $data['username'], false);
++					set_core_config('user', 'total_users', $_CORE_CONFIG['user']['total_users'] + 1);
++					
++					trigger_error('USER_ADDED');
+ 				}
+ 			}
+ 
+@@ -262,18 +264,17 @@
+ 						{
+ 							user_delete($id);
+ 				
+-							trigger_error($_CLASS['core_user']-&gt;lang['BOT_DELETED']);
++							trigger_error('BOT_DELETED');
+ 						}
+ 					break;
+ 				}
+ 			}
+-			
++
+ 			$sql = 'SELECT user_id, username, user_status, user_last_visit 
+ 				FROM ' . USERS_TABLE . '
+ 				WHERE user_type = ' . USER_BOT . ' ORDER BY user_last_visit DESC';
+-			
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+-			
++
+ 			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				$_CLASS['core_template']-&gt;assign_vars_array('admin_bots', array(
+@@ -286,9 +287,8 @@
+ 					'L_STATUS'		=&gt; ($row['user_status'] == STATUS_ACTIVE) ? $_CLASS['core_user']-&gt;lang['DEACTIVATE'] : $_CLASS['core_user']-&gt;lang['ACTIVATE'],
+ 				));
+ 			}
+-			
+ 			$_CLASS['core_db']-&gt;free_result($result);
+-			
++
+ 			$_CLASS['core_display']-&gt;display(false, 'admin/users/bots.html');
+ 		break;
+ 
+@@ -301,7 +301,7 @@
+ 				$sql = 'SELECT user_id, user_type, user_status
+ 					FROM ' . USERS_TABLE . ' 
+ 					WHERE user_id = '.$id;
+-				
++
+ 				$result = $_CLASS['core_db']-&gt;query($sql);
+ 				$row = $_CLASS['core_db']&gt;fetch_row_assoc($result);
+ 				$_CLASS['core_db']-&gt;free_result($result);
+@@ -310,7 +310,7 @@
+ 				{
+ 					break;
+ 				}
+-							
++
+ 				switch ($_REQUEST['option'])
+ 				{
+ 					case 'activate':
+@@ -319,7 +319,7 @@
+ 							user_activate($id);
+ 						}
+ 					break;
+-			
++
+ 					case 'delete':
+ 						if (display_confirmation())
+ 						{
+@@ -384,11 +384,11 @@
+ 			$sql = 'SELECT count(*) as count FROM ' . USERS_TABLE . '
+ 				WHERE user_type = '.USER_NORMAL.'
+ 				AND user_status = '.$status;
+-		
++
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+ 			list($count) = $_CLASS['core_db']-&gt;fetch_row_num($result);
+ 			$_CLASS['core_db']-&gt;free_result($result);
+-			
++
+ 			$pagination = generate_pagination($link, $count, 20, $start, true);
+ 			$_CLASS['core_template']-&gt;assign('USERS_PAGINATION', $pagination['formated']);
+ 
+@@ -438,7 +438,7 @@
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$type = ($status == STATUS_DISABLED) ? 'users_disabled' : 'users_unactivated';
+-	
++
+ 		$_CLASS['core_template']-&gt;assign_vars_array($type, array(
+ 				'user_id'		=&gt; $row['user_id'],
+ 				'user_name'		=&gt; $row['username'],
+
+Modified: trunk/admin.php
+===================================================================
+--- trunk/admin.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/admin.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -57,10 +57,6 @@
+ 	$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.CORE_MODULES_TABLE.&quot; WHERE module_name='&quot;.$_CLASS['core_db']-&gt;escape($mod).&quot;'&quot;);
+ 	$_CORE_MODULE = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 	$_CLASS['core_db']-&gt;free_result($result);
+-	
+-// remove this -- just for testing
+-	$_CORE_MODULE['module_name'] = $mod;
+-	$_CORE_MODULE['module_title'] = $mod;
+ }
+ 
+ if (!$mod || !$_CORE_MODULE)
+
+Modified: trunk/core.php
+===================================================================
+--- trunk/core.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/core.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -38,6 +38,7 @@
+ mb_internal_encoding('UTF-8');
+ //mb_http_output('UTF-8');
+ 
++
+ // Remove registered globals
+ if ((bool) ini_get('register_globals'))
+ {
+@@ -53,6 +54,17 @@
+ $starttime = $starttime[1] + $starttime[0];
+ $base_memory_usage = get_memory_usage();
+ 
++//REQUEST_URI not set in IIS
++if (empty($_SERVER['REQUEST_URI']))
++{
++	$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
++
++	if ($_SERVER['QUERY_STRING'])
++	{
++		$_SERVER['REQUEST_URI'] .= '?'.$_SERVER['QUERY_STRING'];
++	}
++}
++
+ require_once($site_file_root.'includes/functions.php');
+ require_once($site_file_root.'config.php');
+ require_once($site_file_root.'includes/tables.php');
+@@ -70,7 +82,7 @@
+ 
+ // Set error handler
+ $_CLASS['core_error_handler']-&gt;start();
+-//$_CLASS['core_error_handler']-&gt;stop();
++$_CLASS['core_error_handler']-&gt;stop();
+ //error_reporting(E_ERROR | E_WARNING | E_PARSE);
+ 
+ if (function_exists('register_shutdown_function'))
+@@ -96,11 +108,15 @@
+ die;
+ */
+ 
++/*
++	Progres need to be optimized after install :-(
++	$_CLASS['core_db']-&gt;optimize_tables();
++*/
++
+ $_CLASS['core_db']-&gt;return_on_error = true;
+ 
+ // Error messages just incase we can't get our configs
+-$config_error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;';
+-$config_error .= 'Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB3&lt;/center&gt;';
++$config_error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB3&lt;/center&gt;';
+ 
+ if (is_null($_CORE_CONFIG = $_CLASS['core_cache']-&gt;get('core_config')))
+ {
+@@ -221,7 +237,7 @@
+ 	This pisses me off, seeing that screen pop up all the time :-(
+ 	Enable it if you want, Will be disabled by default
+ 
+-	if (PHP_OS == 'WINNT')
++	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+ 	{
+ 		exec('tasklist /fi &quot;PID eq ' . getmypid() . '&quot; /fo LIST', $output); 
+ 		//Mem Usage: 24,064 K
+
+Modified: trunk/includes/compatiblity/mbstring.php
+===================================================================
+--- trunk/includes/compatiblity/mbstring.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/compatiblity/mbstring.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -26,6 +26,8 @@
+ 	next your going to say you can't use a database *
+ */
+ 
++define('MB_CASE_TITLE', 0);
++
+ if (!function_exists('mb_internal_encoding'))
+ {
+ 	function mb_internal_encoding()
+@@ -83,5 +85,11 @@
+ 	}
+ }
+ 
+-
++if (!function_exists('mb_strtolower'))
++{
++	function mb_strtolower($string, $encoding = null)
++	{
++		return strtolower($string);
++	}
++}
+ ?&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/db/mssql.php
+===================================================================
+--- trunk/includes/db/mssql.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/db/mssql.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -1,18 +1,26 @@
+ &lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal )								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
+ 
++$Id$
++*/
++
+ class db_mssql
+ {
+ 	var $link_identifier = false;
+@@ -566,46 +574,50 @@
+ 		}
+ 	}
+ 
+-	function add_table_field_int($name, $number_min, $number_max = false, $default = 0, $auto_increment = false)
++//$name, $number_min, $number_max = false, $default = 0, $auto_increment = false
++	function add_table_field_int($name, $setting_sent)
+ 	{
+-		$length = max(strlen($number_min), strlen($number_max));
++		$setting = array('default' =&gt; 0, 'min' =&gt; 0, 'max' =&gt; 0, 'auto_increment' =&gt; false, 'null' =&gt; false);
++		$setting = array_merge($setting, $setting_sent);
+ 
+-		if ($number_min &gt;= -0 &amp;&amp; $number_max &lt;= 255)
++		$length = max(strlen($setting['min']), strlen($setting['max']));
++
++		if ($setting['min'] &gt;= -0 &amp;&amp; $setting['max'] &lt;= 255)
+ 		{
+ 			// TINYINT UNSIGNED ( 0 to 255 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` TINYINT($length) UNSIGNED&quot;;
+ 		}
+-		elseif ($number_min &gt;= -128 &amp;&amp; $number_max &lt;= 128)
++		elseif ($setting['min'] &gt;= -128 &amp;&amp; $setting['max'] &lt;= 128)
+ 		{
+ 			// TINYINT ( -128 to 127 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` TINYINT($length) DEFAULT&quot;;
+ 		}
+-		elseif ($number_min &gt;= 0 &amp;&amp; $number_max &lt;= 65535)
++		elseif ($setting['min'] &gt;= 0 &amp;&amp; $setting['max'] &lt;= 65535)
+ 		{
+ 			// SMALLINT UNSIGNED ( 0 to 65,535 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` SMALLINT($length) UNSIGNED&quot;;
+ 		}
+-		elseif ($number_min &gt;= -32768 &amp;&amp; $number_max &lt;= 32767)
++		elseif ($setting['min'] &gt;= -32768 &amp;&amp; $setting['max'] &lt;= 32767)
+ 		{
+ 			// SMALLINT ( -32,768 to 32,767 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` SMALLINT($length)&quot;;
+ 		}
+-		elseif ($number_min &gt;= 0 &amp;&amp; $number_max &lt;= 16777215)
++		elseif ($setting['min'] &gt;= 0 &amp;&amp; $setting['max'] &lt;= 16777215)
+ 		{
+ 			// MEDIUMINT UNSIGNED ( 0 to 16,777,215 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` MEDIUMINT($length) UNSIGNED&quot;;
+ 		}
+-		elseif ($number_min &gt;= -8388608 &amp;&amp; $number_max &lt;= 8388607)
++		elseif ($setting['min'] &gt;= -8388608 &amp;&amp; $setting['max'] &lt;= 8388607)
+ 		{
+ 			// MEDIUMINT ( -8,388,608 to 8,388,607 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` MEDIUMINT($length)&quot;;
+ 		}
+-		elseif ($number_min &gt;= -2147483647 &amp;&amp; $number_max &lt;= 2147483647)
++		elseif ($setting['min'] &gt;= -2147483647 &amp;&amp; $setting['max'] &lt;= 2147483647)
+ 		{
+ 			// INT ( -2,147,483,647 to 2,147,483,647 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` INT($length)&quot;;
+ 		}
+-		elseif ($number_min &gt;= 0 &amp;&amp; $number_max &lt;= 4294967295) // we'll do this last
++		elseif ($setting['min'] &gt;= 0 &amp;&amp; $setting['max'] &lt;= 4294967295) // we'll do this last
+ 		{
+ 			// INT UNSIGNED ( 0 to 4,294,967,295 )
+ 			$this-&gt;_fields[$name] =  &quot;`$name` INT($length) UNSIGNED&quot;;
+@@ -617,7 +629,8 @@
+ 		}
+ 		else
+ 		{
+-			$this-&gt;_fields[$name] .= (is_null($default)) ? &quot; NULL&quot; : &quot; NOT NULL DEFAULT '&quot;.(int) $default.&quot;'&quot;;
++			$this-&gt;_fields[$name] .= ($setting['null']) ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
++			$this-&gt;_fields[$name] .= &quot; DEFAULT '&quot;.(int) $default.&quot;'&quot;;
+ 		}
+ 	}
+ 
+
+Modified: trunk/includes/db/mysql.php
+===================================================================
+--- trunk/includes/db/mysql.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/db/mysql.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -27,7 +27,7 @@
+ 	var $db_layer = 'mysql';
+ 
+ 	var $last_result;
+-	var $return_on_error;
++	var $report_error = true;
+ 	var $in_transaction;
+ 
+ 	var $queries_time = 0;
+@@ -54,6 +54,7 @@
+ 		}
+ 
+ 		$this-&gt;link_identifier = ($db['persistent']) ? @mysql_pconnect($db['server'], $db['username'], $db['password']) : @mysql_connect($db['server'], $db['username'], $db['password']);
++
+ 		if ($this-&gt;link_identifier)
+ 		{
+ 			if (@mysql_select_db($db['database']))
+@@ -89,16 +90,11 @@
+ 		$this-&gt;link_identifier = false;
+ 	}
+ 
+-	function sql_return_on_error($fail = false)
++	function report_error($report)
+ 	{
+-		$this-&gt;return_on_error = $fail;
++		$this-&gt;report_error = ($report);
+ 	}
+ 
+-	function return_on_error($fail = false)
+-	{
+-		$this-&gt;return_on_error = $fail;
+-	}
+-
+ 	function transaction($option = 'start', $auto_rollback = true)
+ 	{
+ 		if (!$this-&gt;link_identifier)
+@@ -302,7 +298,7 @@
+ 
+ 		$num = mysql_affected_rows($this-&gt;link_identifier);
+ 
+-		return (!$num || $num == -1) ? 0 : $num;
++		return (!$num || $num === -1) ? 0 : $num;
+ 	}
+ 
+ 	function fetch_row_assoc($result = false)
+@@ -418,7 +414,7 @@
+ 
+ 	function _error($sql = '', $backtrace)
+ 	{
+-		if ($this-&gt;return_on_error)
++		if (!$this-&gt;report_error)
+ 		{
+ 			return;
+ 		}
+
+Modified: trunk/includes/db/mysql3.php
+===================================================================
+--- trunk/includes/db/mysql3.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/db/mysql3.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -21,13 +21,13 @@
+ $Id$
+ */
+ 
+-class db_mysql
++class db_mysql3
+ {
+ 	var $link_identifier = false;
+ 	var $db_layer = 'mysql3';
+ 
+ 	var $last_result;
+-	var $return_on_error;
++	var $report_error = true;
+ 	var $in_transaction = false;
+ 
+ 	var $queries_time = 0;
+@@ -53,7 +53,7 @@
+ 			$this-&gt;disconnect();
+ 		}
+ 
+-		$this-&gt;link_identifier = ($db['persistent']) ? @mysql_pconnect($db['server'], $db['username'], $db['password']) : @mysql_connect($db['server'], $db['username'], $db['password']);
++		$this-&gt;link_identifier = ($db['persistent']) ? mysql_pconnect($db['server'], $db['username'], $db['password']) : mysql_connect($db['server'], $db['username'], $db['password']);
+ 
+ 		if ($this-&gt;link_identifier)
+ 		{
+@@ -65,7 +65,7 @@
+ 			$error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB2&lt;/center&gt;';
+ 		}
+ 		
+-		if (!$error)
++		if (!isset($error))
+ 		{
+ 			$error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB1&lt;/center&gt;';
+ 		}
+@@ -86,16 +86,11 @@
+ 		$this-&gt;link_identifier = false;
+ 	}
+ 
+-	function sql_return_on_error($fail = false)
++	function report_error($report)
+ 	{
+-		$this-&gt;return_on_error = $fail;
++		$this-&gt;report_error = ($report);
+ 	}
+ 
+-	function return_on_error($fail = false)
+-	{
+-		$this-&gt;return_on_error = $fail;
+-	}
+-
+ 	function transaction($option = 'start', $auto_rollback = true)
+ 	{
+ 		return true;
+@@ -249,7 +244,7 @@
+ 
+ 		$num = mysql_affected_rows($this-&gt;link_identifier);
+ 
+-		return (!$num || $num == -1) ? 0 : $num;
++		return (!$num || $num === -1) ? 0 : $num;
+ 	}
+ 
+ 	function fetch_row_assoc($result = false)
+@@ -355,7 +350,7 @@
+ 
+ 	function _error($sql = '', $backtrace)
+ 	{
+-		if ($this-&gt;return_on_error)
++		if (!$this-&gt;report_error)
+ 		{
+ 			return;
+ 		}
+@@ -470,7 +465,10 @@
+ 					return $table;
+ 				}
+ 
+-				$this-&gt;sql_query($table);
++				if (!$this-&gt;sql_query($table))
++				{
++					echo $table;
++				}
+ 
+ 			case 'cancel':
+ 				$this-&gt;_table_name = false;
+@@ -481,20 +479,6 @@
+ 
+ 	function add_table_field_int($name, $setting_sent)
+ 	{
+-		if (!$setting_sent || !is_array($setting_sent))
+-		{
+-			global $site_file_root;
+-			
+-			$debug_backtrace = debug_backtrace();
+-			$backtrace = array();
+-			// remove the root directorys
+-			$backtrace['file'] = str_replace('\\','/', $debug_backtrace[0]['file']);
+-			$backtrace['file'] = str_replace($site_file_root, '', str_replace($_SERVER['DOCUMENT_ROOT'],'', $backtrace['file']));
+-
+-			$backtrace['line'] = $debug_backtrace[0]['line'];
+-			print_r($backtrace);echo '&lt;br/&gt;';
+-		}
+-		
+ 		$setting = array('default' =&gt; null, 'min' =&gt; 0, 'max' =&gt; 0, 'auto_increment' =&gt; false, 'null' =&gt; false);
+ 		$setting = array_merge($setting, $setting_sent);
+ 
+@@ -552,7 +536,7 @@
+ 		}
+ 	}
+ 
+-	function add_table_field_text($name, $characters = 60000, $null = false)
++	function add_table_field_text($name, $characters, $null = false)
+ 	{
+ 		if ($characters &lt;= 255)
+ 		{
+@@ -581,7 +565,7 @@
+ 	function add_table_field_char($name, $characters, $null = false, $default = null, $padded = false)
+ 	{
+ 		$this-&gt;_fields[$name] = ($padded) ? &quot;`$name` CHAR($characters)&quot; :  &quot;`$name` VARCHAR($characters)&quot;;
+-		$this-&gt;_fields[$name] .= $null ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
++		$this-&gt;_fields[$name] .= ($null) ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
+ 		$this-&gt;_fields[$name] .= is_null($default) ? '' : &quot;DEFAULT '$default'&quot;;
+ 	}
+ 
+@@ -589,10 +573,6 @@
+ 	{
+ 		$index_name = ($index_name) ? $index_name : $field;
+ 		
+-		/*if (empty($this-&gt;_fields[$field]))
+-		{
+-			return;
+-		}*/
+ 		$field = is_array($field) ? implode('` , `', $field) : $field;
+ 
+ 		switch ($type)
+
+Modified: trunk/includes/db/mysqli.php
+===================================================================
+--- trunk/includes/db/mysqli.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/db/mysqli.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -307,7 +307,7 @@
+ 
+ 		$num = mysqli_affected_rows($this-&gt;link_identifier);
+ 
+-		return (!$num || $num == -1) ? 0 : $num;
++		return (!$num || $num === -1) ? 0 : $num;
+ 	}
+ 
+ 	function fetch_row_assoc($result = false)
+
+Modified: trunk/includes/db/postgres.php
+===================================================================
+--- trunk/includes/db/postgres.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/db/postgres.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -27,7 +27,7 @@
+ 	var $db_layer = 'postgre';
+ 
+ 	var $last_result;
+-	var $return_on_error;
++	var $report_error = true;
+ 	var $in_transaction = false;
+ 
+ 	var $queries_time = 0;
+@@ -106,11 +106,10 @@
+ 		$this-&gt;link_identifier = false;
+ 	}
+ 
+-	function sql_return_on_error($fail = false)
++	function report_error($report)
+ 	{
+-		$this-&gt;return_on_error = $fail;
++		$this-&gt;report_error = ($report);
+ 	}
+-
+ 	function transaction($option = 'start', $auto_rollback = true)
+ 	{
+ 		$result = false;
+@@ -424,7 +423,7 @@
+ 
+ 	function _error($sql = '', $backtrace)
+ 	{
+-		if ($this-&gt;return_on_error)
++		if (!$this-&gt;report_error)
+ 		{
+ 			return;
+ 		}
+@@ -439,15 +438,39 @@
+ 		trigger_error($message, E_USER_ERROR);
+ 	}
+ 
+-	function version()
++	function version($return_dbname = false)
+ 	{
+ 		if (!$this-&gt;link_identifier)
+ 		{
+ 			return false;
+ 		}
+ 
+-		//$version = pg_version($this-&gt;link_identifier);
+-		//return $version['client'];
++		if (function_exists('pg_version'))
++		{
++			$version = pg_version($this-&gt;link_identifier);
++			return $version['server'];	
++		}
++		else
++		{
++			$result = $this-&gt;query('SELECT VERSION() AS version');
++			$row = $this-&gt;fetch_row_assoc($result);
++			$this-&gt;free_result($result);
++
++			if (!$row)
++			{
++				return;
++			}
++
++			if ($return_dbname)
++			{	// should we return the full info ?
++				return $row['version'];
++			}
++			else
++			{
++				$version = explode(' ', $row['version']);
++				return $version[1];
++			}
++		}
+ 	}
+ 
+ 	function _debug($mode, $backtrace)
+
+Modified: trunk/includes/db/sqlite.php
+===================================================================
+--- trunk/includes/db/sqlite.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/db/sqlite.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -33,7 +33,7 @@
+ 	var $db_layer = 'sqlite';
+ 
+ 	var $last_result;
+-	var $return_on_error;
++	var $report_error = true;
+ 	var $in_transaction;
+ 
+ 	var $queries_time = 0;
+@@ -86,9 +86,9 @@
+ 		$this-&gt;link_identifier = false;
+ 	}
+ 
+-	function sql_return_on_error($fail = false)
++	function report_error($report)
+ 	{
+-		$this-&gt;return_on_error = $fail;
++		$this-&gt;report_error = ($report);
+ 	}
+ 
+ 	function transaction($option = 'start')
+@@ -409,7 +409,7 @@
+ 
+ 	function _error($sql = '', $backtrace)
+ 	{
+-		if ($this-&gt;return_on_error)
++		if (!$this-&gt;report_error)
+ 		{
+ 			return;
+ 		}
+
+Modified: trunk/includes/db/sqlite_pdo.php
+===================================================================
+--- trunk/includes/db/sqlite_pdo.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/db/sqlite_pdo.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -29,7 +29,7 @@
+ 	var $db_layer = 'sqlite';
+ 
+ 	var $last_result;
+-	var $return_on_error;
++	var $report_error = true;
+ 	var $in_transaction;
+ 
+ 	var $queries_time = 0;
+@@ -73,9 +73,9 @@
+ 		$this-&gt;link_identifier = false;
+ 	}
+ 
+-	function sql_return_on_error($fail = false)
++	function report_error($report)
+ 	{
+-		$this-&gt;return_on_error = $fail;
++		$this-&gt;report_error = ($report);
+ 	}
+ 
+ 	function transaction($option = 'start')
+@@ -352,7 +352,7 @@
+ 
+ 	function _error($sql = '', $backtrace)
+ 	{
+-		if ($this-&gt;return_on_error)
++		if (!$this-&gt;report_error)
+ 		{
+ 			return;
+ 		}
+@@ -453,13 +453,20 @@
+ 
+ 				// Have to create the table first then do the indexs
+ 				// I guess it's ....
+-				$this-&gt;sql_query($table);
+-
++				if (!$this-&gt;sql_query($table))
++				{
++					echo $table.'&lt;br/&gt;';
++				}
++				
+ 				foreach ($this-&gt;_indexs as $query)
+ 				{
+-					$this-&gt;sql_query($query);
++					if (!$this-&gt;sql_query($query))
++					{
++						echo $query.'&lt;br/&gt;';
++					}
+ 				}
+ 
++
+ 			case 'cancel':
+ 				$this-&gt;_table_name = false;
+ 				$this-&gt;_fields = $this-&gt;_indexs = array();
+@@ -467,60 +474,68 @@
+ 		}
+ 	}
+ 
+-	function add_table_field_int($name, $number_min, $number_max = false, $default = null, $auto_increment = false)
++	function add_table_field_int($name, $setting_sent)
+ 	{
+-		$length = max(strlen($number_min), strlen($number_max));
++		$setting = array('default' =&gt; null, 'auto_increment' =&gt; false, 'null' =&gt; false);
++		$setting = array_merge($setting, $setting_sent);
+ 
+ 		$this-&gt;_fields[$name] =  $name .' INTEGER';
+ 
+-		if ($auto_increment)
++		if ($setting['auto_increment'])
+ 		{
+ 			$this-&gt;_fields[$name] .= ' AUTOINCREMENT';
+ 		}
+ 		else
+ 		{
+-			$this-&gt;_fields[$name] .= (is_null($default)) ? &quot; NULL&quot; : &quot; NOT NULL DEFAULT '&quot;.(int) $default.&quot;'&quot;;
++			$this-&gt;_fields[$name] .= ($setting['null']) ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
++			$this-&gt;_fields[$name] .= is_null($setting['default']) ? '' : &quot; DEFAULT '&quot;.(int) $setting['default'].&quot;'&quot;;
+ 		}
+ 	}
+ 
+-	function add_table_field_text($name, $characters = 60000, $null = true)
++	function add_table_field_text($name, $characters, $null = true)
+ 	{
+-		$this-&gt;_fields[$name] =  $name.' TEXT';
+-		$this-&gt;_fields[$name] .= ($null) ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
++		$this-&gt;_fields[$name] =  &quot;$name TEXT&quot;.(($null) ? &quot; NULL&quot; : &quot; NOT NULL&quot;);
+ 	}
+ 
+-	function add_table_field_char($name, $characters, $default = null, $padded = false)
++	function add_table_field_char($name, $characters, $null = false, $default = null, $padded = false)
+ 	{
+-
+ 		$this-&gt;_fields[$name] =  $name.' TEXT';
+-		$this-&gt;_fields[$name] .= (is_null($default)) ? &quot; NULL&quot; : &quot; NOT NULL DEFAULT '$default'&quot;;
++		$this-&gt;_fields[$name] .= ($null) ? &quot; NULL&quot; : &quot; NOT NULL&quot;;
++		$this-&gt;_fields[$name] .= is_null($default) ? '' : &quot;DEFAULT '$default'&quot;;
+ 	}
+ 
+ 	function add_table_index($field, $type  = 'index', $index_name = false)
+ 	{
+-		if (empty($this-&gt;_fields[$field]))
+-		{
+-			return;
+-		}
++		$index_name = ($index_name) ? $index_name : $field;
+ 
+-		$index_name = $this-&gt;_table_name.'_'.(($index_name) ? $index_name : $field) ;
++		$index_name = is_array($index_name) ? implode('_', $index_name) : $index_name;
++		$index_name = $this-&gt;_table_name . '_' . $index_name;
+ 
+ 		switch ($type)
+ 		{
+ 			case 'index':
+-			case 'unique'://CREATE INDEX group_id ON test_admins ( group_id ) ; 
+-				$this-&gt;_indexs[$index_name] = (($type == 'UNIQUE') ? 'CREATE UNIQUE' : 'CREATE') . &quot; INDEX $index_name ON {$this-&gt;_table_name} ( $field );&quot;;
++			case 'unique':
++				$field = is_array($field) ? implode(', ', $field) : $field;
++				$this-&gt;_indexs[$index_name] = (($type == 'UNIQUE') ? 'CREATE UNIQUE' : 'CREATE') . &quot; INDEX $index_name ON {$this-&gt;_table_name} ($field);&quot;;
+ 			break;
+ 
+-			case 'primary'://13
+-			
+-				if ($pos = stripos($this-&gt;_fields[$field], ' AUTOINCREMENT'))
++			case 'primary':
++// need to check if sqlite even supports 2 pkeys
++				if (is_array($field))
+ 				{
++					// maybe make this regular indexes
++					return;
++				}
++
++				/*
++				if ($pos = strpos($this-&gt;_fields[$field], ' AUTOINCREMENT'))
++				{
+ 					$this-&gt;_fields[$field] = substr($this-&gt;_fields[$field], 0, $pos);
+ 					$this-&gt;_fields[$field] .= ' PRIMARY KEY AUTOINCREMENT'; // AUTOINCREMENT isn't needed
+ 
+ 					break;
+ 				}
++				*/
+ 
+ 				$this-&gt;_fields[$field] .= ' PRIMARY KEY';
+ 			break;
+
+Modified: trunk/includes/display/blocks.php
+===================================================================
+--- trunk/includes/display/blocks.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/display/blocks.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -1,4 +1,4 @@
+-&lt;?php
++&lt;?php
+ /*
+ ||**************************************************************||
+ ||  Viperal CMS &#194;&#169; :												||
+@@ -17,409 +17,410 @@
+ ||  of the GNU General Public License version 2					||
+ ||																||
+ ||**************************************************************||
+-*/
+ 
+-/* to do
+-move Auth, lang, and expire/begin checks to load_blocks
+-*/
+-
+-class core_blocks
+-{
+-	var $blocks_array = array();
+-	var $blocks_loaded;
+-	var $info;
+-	var $content;
+-	var $template;
+-
++$Id$
++*/
++/* to do
++move Auth, lang, and expire/begin checks to load_blocks
++*/
++
++class core_blocks
++{
++	var $blocks_array = array();
++	var $blocks_loaded;
++	var $info;
++	var $content;
++	var $template;
++
+ 	/*
+-		Check to see there's any blocks for the specified side
++		Check to see there's any blocks for the specified side
+ 		should be used to stop themes from displaying blank sides
+-	*/
+-	function check_side($side)
+-	{
+-// expand this for center blocks
+-		static $side_check = array();
+-		
+-		if (isset($side_check[$side]))
+-		{
+-			return $side_check[$side];
+-		}
+-
+-		global $_CORE_MODULE, $_CLASS;
+-
+-		$trueside = $side;
+-
+-		if ($_CLASS['core_user']-&gt;lang['DIRECTION'] == 'rtl')
+-		{
+-			$side = ($side == BLOCK_LEFT) ? BLOCK_RIGHT : BLOCK_LEFT;
+-		}
+-			
+-		if ($_CORE_MODULE['module_sides'] == BLOCK_ALL || ($side == BLOCK_LEFT &amp;&amp; $_CORE_MODULE['module_sides'] == BLOCK_LEFT) || ($side == BLOCK_RIGHT &amp;&amp; $_CORE_MODULE['module_sides'] == BLOCK_RIGHT))
+-		{
+-			$this-&gt;load_blocks();
+-
+-			if (!empty($this-&gt;blocks_array[$side]))
+-			{
+-				return $side_check[$trueside] = $side;
+-			}
+-		}
+-		
+-		return $side_check[$trueside] = false;
+-	}
+-
++	*/
++	function check_side($side)
++	{
++// expand this for center blocks
++		static $side_check = array();
++		
++		if (isset($side_check[$side]))
++		{
++			return $side_check[$side];
++		}
++
++		global $_CORE_MODULE, $_CLASS;
++
++		$trueside = $side;
++
++		if ($_CLASS['core_user']-&gt;lang['DIRECTION'] == 'rtl')
++		{
++			$side = ($side == BLOCK_LEFT) ? BLOCK_RIGHT : BLOCK_LEFT;
++		}
++			
++		if ($_CORE_MODULE['module_sides'] == BLOCK_ALL || ($side == BLOCK_LEFT &amp;&amp; $_CORE_MODULE['module_sides'] == BLOCK_LEFT) || ($side == BLOCK_RIGHT &amp;&amp; $_CORE_MODULE['module_sides'] == BLOCK_RIGHT))
++		{
++			$this-&gt;load_blocks();
++
++			if (!empty($this-&gt;blocks_array[$side]))
++			{
++				return $side_check[$trueside] = $side;
++			}
++		}
++		
++		return $side_check[$trueside] = false;
++	}
++
+ 	/*
+-		Load Blocks from cache or databases, also run needed checks
+-	*/
+-// Add auth check here
+-	function load_blocks($force = false)
+-	{
+-		if ($this-&gt;blocks_loaded &amp;&amp; !$force)
+-		{
+-			return;
+-		}
+-
+-		global $_CLASS;
+-
+-		if (is_null($this-&gt;blocks_array = $_CLASS['core_cache']-&gt;get('blocks')))
+-		{
+-			$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.BLOCKS_TABLE.' WHERE block_status = '.STATUS_ACTIVE.' ORDER BY block_order ASC');
+-
+-			$this-&gt;blocks_array = array();
+-
+-			while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-			{
+-				$row['block_auth'] = ($row['block_auth']) ? unserialize($row['block_auth']) : '';
+-				$this-&gt;blocks_array[$row['block_position']][] = $row;
+-			}
+-
+-			$_CLASS['core_db']-&gt;free_result($result);
+-			$_CLASS['core_cache']-&gt;put('blocks', $this-&gt;blocks_array);
+-
+-			$_CLASS['core_cache']-&gt;save();
+-		}
+-
+-		$_CLASS['core_cache']-&gt;remove('blocks');
+-		$this-&gt;blocks_loaded = true;
+-	}
+-
++		Load Blocks from cache or databases, also run needed checks
++	*/
++// Add auth check here
++	function load_blocks($force = false)
++	{
++		if ($this-&gt;blocks_loaded &amp;&amp; !$force)
++		{
++			return;
++		}
++
++		global $_CLASS;
++
++		if (is_null($this-&gt;blocks_array = $_CLASS['core_cache']-&gt;get('blocks')))
++		{
++			$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.BLOCKS_TABLE.' WHERE block_status = '.STATUS_ACTIVE.' ORDER BY block_order ASC');
++
++			$this-&gt;blocks_array = array();
++
++			while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++			{
++				$row['block_auth'] = ($row['block_auth']) ? unserialize($row['block_auth']) : '';
++				$this-&gt;blocks_array[$row['block_position']][] = $row;
++			}
++
++			$_CLASS['core_db']-&gt;free_result($result);
++			$_CLASS['core_cache']-&gt;put('blocks', $this-&gt;blocks_array);
++
++			$_CLASS['core_cache']-&gt;save();
++		}
++
++		$_CLASS['core_cache']-&gt;remove('blocks');
++		$this-&gt;blocks_loaded = true;
++	}
++
+ 	/*
+-	*/
+-	function add_block($data, $position = false)
+-	{
+-		$option_array = array('block_title','block_position', 'block_content', 'block_file' , 'block_starts' ,'block_expires', 'block_id',	'block_auth',	'block_type');
+-
+-		foreach($option_array as $option)
+-		{
+-			$data_perpared[$option] = (empty($data[$option])) ? '' : $data[$option];
+-		}
+-
+-		$this-&gt;blocks_array[$data_perpared['block_position']][] = $data_perpared;
+-	}
+-
++	*/
++	function add_block($data, $position = false)
++	{
++		$option_array = array('block_status' =&gt; STATUS_ACTIVE, 'block_title' =&gt; '','block_position' =&gt; BLOCK_LEFT, 'block_content' =&gt; '', 'block_file' =&gt; '', 'block_starts' =&gt; 0,'block_expires' =&gt; 0, 'block_id' =&gt; 0,	'block_auth' =&gt; '',	'block_type' =&gt; '');
++
++		foreach ($option_array as $option =&gt; $value)
++		{
++			$data_perpared[$option] = isset($data[$option]) ? $data[$option] : $value ;
++		}
++
++		$this-&gt;blocks_array[$data_perpared['block_position']][] = $data_perpared;
++	}
++
+ 	/*
+-	*/
+-	function display($position)
+-	{
+-		$this-&gt;display_position = $position;
+-
+-		if ($position == BLOCK_LEFT || $position == BLOCK_RIGHT)
+-		{
+-			$position = $this-&gt;check_side($position);
+-			
+-			if ($position == false)
+-			{
+-				return false;
+-			}
+-		}
+-
+-		$this-&gt;load_blocks();
+-
+-		if (empty($this-&gt;blocks_array[$position]))
+-		{
+-			return false;
+-		}
+-
+-		static $expire_updated = false;
+-		global $_CLASS;
+-
+-		$this-&gt;content = '';
+-
+-		foreach($this-&gt;blocks_array[$position] as $this-&gt;block)
+-		{
+-			if ($this-&gt;block['block_auth'] &amp;&amp; !$_CLASS['core_auth']-&gt;auth($this-&gt;block['block_auth']) &amp;&amp; !$_CLASS['core_auth']-&gt;admin_power('blocks'))
+-			{
+-				continue;
+-			}
+-//language check here.
+-			if ($this-&gt;block['block_expires'] &amp;&amp; !$expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $this-&gt;block['block_expires']))
+-			{
+-				$_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET active=0 WHERE expires &gt; 0 AND expires &lt;='.$_CLASS['core_user']-&gt;time);
+-										
+-				$_CLASS['core_cache']-&gt;destroy('blocks');
+-				$expire_updated = true;
+-
+-				continue;
+-			}
+-
+-			if ($this-&gt;block['block_starts'] &amp;&amp; ($this-&gt;block['block_starts'] &gt; $_CLASS['core_user']-&gt;time))
+-			{
+-				continue;
+-			}
+-
+-			/*
+-			if ($this-&gt;block['block_modules'])
+-			{
+-				$this-&gt;block['block_modules'] = unserialize($this-&gt;block['block_modules']);
+-// Homepage needs it's own value
+-				if (!in_array($_CORE_MODULE['module_title'], $this-&gt;block['block_modules']['show'] || in_array($_CORE_MODULE['module_title'], $this-&gt;block['block_modules']['hide'])))
+-				{
+-					continue;
+-				}
+-			}
+-			*/
+-
+-			$this-&gt;display_blocks();
+-			$this-&gt;content = '';
+-		}
+-
+-		unset($this-&gt;blocks_array[$position]);
+-	}
+-
++	*/
++	function display($position)
++	{
++		$this-&gt;display_position = $position;
++
++		if ($position == BLOCK_LEFT || $position == BLOCK_RIGHT)
++		{
++			$position = $this-&gt;check_side($position);
++			
++			if ($position == false)
++			{
++				return false;
++			}
++		}
++
++		$this-&gt;load_blocks();
++
++		if (empty($this-&gt;blocks_array[$position]))
++		{
++			return false;
++		}
++
++		static $expire_updated = false;
++		global $_CLASS;
++
++		$this-&gt;content = '';
++
++		foreach($this-&gt;blocks_array[$position] as $this-&gt;block)
++		{
++			if ($this-&gt;block['block_auth'] &amp;&amp; !$_CLASS['core_auth']-&gt;auth($this-&gt;block['block_auth']) &amp;&amp; !$_CLASS['core_auth']-&gt;admin_power('blocks'))
++			{
++				continue;
++			}
++//language check here.
++			if ($this-&gt;block['block_expires'] &amp;&amp; !$expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $this-&gt;block['block_expires']))
++			{
++				$_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET block_status = ' . STATUS_DISABLED . ' WHERE block_expires &gt; 0 AND block_expires &lt;= ' . $_CLASS['core_user']-&gt;time);
++										
++				$_CLASS['core_cache']-&gt;destroy('blocks');
++				$expire_updated = true;
++
++				continue;
++			}
++
++			if ($this-&gt;block['block_starts'] &amp;&amp; ($this-&gt;block['block_starts'] &gt; $_CLASS['core_user']-&gt;time))
++			{
++				continue;
++			}
++
++			/*
++			if ($this-&gt;block['block_modules'])
++			{
++				$this-&gt;block['block_modules'] = unserialize($this-&gt;block['block_modules']);
++// Homepage needs it's own value
++				if (!in_array($_CORE_MODULE['module_title'], $this-&gt;block['block_modules']['show'] || in_array($_CORE_MODULE['module_title'], $this-&gt;block['block_modules']['hide'])))
++				{
++					continue;
++				}
++			}
++			*/
++
++			$this-&gt;display_blocks();
++			$this-&gt;content = '';
++		}
++
++		unset($this-&gt;blocks_array[$position]);
++	}
++
+ 	/*
+-	*/
+-	function display_blocks()
+-	{
+-		Switch ($this-&gt;block['block_type'])
+-		{
+-			case BLOCKTYPE_FILE:
+-			case BLOCKTYPE_SYSTEM:
+-				$this-&gt;block_file();
+-			break;
+-				
+-			case BLOCKTYPE_MESSAGE:
+-			case BLOCKTYPE_MESSAGE_GLOBAL:
+-				$this-&gt;block_message();
+-			break;
+-					
+-			case BLOCKTYPE_HTML:
+-				$this-&gt;block_html();
+-			break;
+-				
+-			case BLOCKTYPE_FEED;
+-				$this-&gt;block_feed();
+-			break;
+-		}
+-		return;
+-	}
+-
++	*/
++	function display_blocks()
++	{
++		Switch ($this-&gt;block['block_type'])
++		{
++			case BLOCKTYPE_FILE:
++			case BLOCKTYPE_SYSTEM:
++				$this-&gt;block_file();
++			break;
++				
++			case BLOCKTYPE_MESSAGE:
++			case BLOCKTYPE_MESSAGE_GLOBAL:
++				$this-&gt;block_message();
++			break;
++					
++			case BLOCKTYPE_HTML:
++				$this-&gt;block_html();
++			break;
++				
++			case BLOCKTYPE_FEED;
++				$this-&gt;block_feed();
++			break;
++		}
++		return;
++	}
++
+ 	/*
+-	*/
+-	function block_file()
+-	{
+-		global $_CLASS, $site_file_root;
+-
+-		if ($this-&gt;block['block_file'] &amp;&amp; file_exists($site_file_root.'blocks/'.$this-&gt;block['block_file']))
+-		{
+-			$this-&gt;info = false;
+-
+-			//$_CLASS['core_error_handler']-&gt;debug_start($this-&gt;block['block_title']);
+-
+-			include($site_file_root.'blocks/'.$this-&gt;block['block_file']);
+-
+-			//$_CLASS['core_error_handler']-&gt;debug_stop($this-&gt;block['block_title']);
+-
+-			if (!$this-&gt;content &amp;&amp; !$this-&gt;template)
+-			{
+-				if ($_CLASS['core_auth']-&gt;admin_power('blocks'))
+-				{
+-					$this-&gt;content = '&lt;center&gt;&lt;strong&gt;'.(($this-&gt;info) ? $this-&gt;info : $_CLASS['core_user']-&gt;lang['BLOCK_ERROR2']).'&lt;/strong&gt;&lt;/center&gt;';
+-				}
+-				else
+-				{
+-					return;
+-				}
+-			}
+-		}
+-		else
+-		{
+-			if ($_CLASS['core_auth']-&gt;admin_power('blocks'))
+-			{
+-				$this-&gt;content = '&lt;center&gt;&lt;strong&gt;'.$_CLASS['core_user']-&gt;lang['BLOCK_ERROR1'].'&lt;/strong&gt;&lt;/center&gt;';
+-			}
+-			else
+-			{
+-				return;
+-			}		
+-		}
+-
+-		//$this-&gt;content .= '&lt;div style=&quot;text-align: center;&quot;&gt;&lt;br /&gt;'.$_CLASS['core_error_handler']-&gt;debug_get($this-&gt;block['block_title'], 'formated').'&lt;/div&gt;';
+-		//$_CLASS['core_error_handler']-&gt;debug_remove($this-&gt;block['block_title']);
+-
+-		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
+-		{
+-			$this-&gt;block_side();
+-		}
+-		else
+-		{
+-			$this-&gt;block_center();
+-		}
+-	}
+-
+-	function block_message()
+-	{
+-		global $_CLASS;
+-
+-		if (($this-&gt;block['block_type'] == BLOCKTYPE_MESSAGE) &amp;&amp; (!$_CLASS['core_display']-&gt;homepage))
+-		{
+-			return;
+-		}
+-
+-		if ($_CLASS['core_auth']-&gt;admin_power('messages'))
+-		{
+-			$expires = ($this-&gt;block['block_expires']) ? $_CLASS['core_user']-&gt;lang['EXPIRES'].' '.$_CLASS['core_user']-&gt;format_date($this-&gt;block['block_expires']) : false;
+-			$edit_link = generate_link('messages&amp;mode=edit&amp;id='.$this-&gt;block['block_id'], array('admin' =&gt; true));
+-		}
+-		else
+-		{
+-		
+-			$edit_link = $expires = false;
+-		}
+-
+-		$postion = ($this-&gt;display_position == BLOCK_MESSAGE_TOP) ? 'top' : 'bottom';
+-
+-		$_CLASS['core_template']-&gt;assign_vars_array('message_block_'.$postion, array(
+-				//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
+-				'title'		=&gt; $this-&gt;block['block_title'],
+-				'collapsed'	=&gt; check_collapsed_status('block_'.$this-&gt;block['block_id']),
+-				'content'	=&gt; $this-&gt;block['block_content'],
+-				'expires'	=&gt; $expires,
+-				'edit_link'	=&gt; $edit_link,
+-				'id'		=&gt; $this-&gt;block['block_id'],
+-		));
+-	}
+-
+-	function block_side()
+-	{
+-		global $_CLASS;
+-		
+-		$position = ($this-&gt;display_position == BLOCK_RIGHT) ? 'right' : 'left';
+-		
+-		$_CLASS['core_template']-&gt;assign_vars_array('block_'.$position, array(
+-			//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
+-			'title'		=&gt; $this-&gt;block['block_title'],
+-			'content'	=&gt; $this-&gt;content,
+-			'collapsed'	=&gt; check_collapsed_status('block_'.$this-&gt;block['block_id']),
+-			'id'		=&gt; $this-&gt;block['block_id'],
+-		));
+-	}
+-
+-	function block_html()
+-	{
+-		$this-&gt;content = $this-&gt;block['block_content'];
+-
+-		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
+-		{
+-			$this-&gt;block_side();
+-		}
+-		else
+-		{
+-			$this-&gt;block_center();
+-		}
+-	}
+-
+-	function block_feed()
+-	{
+-		global $site_file_root, $_CLASS;
+-// think about disabling the block automatically if there's url problems
+-// update core_rss file
+-		if ($this-&gt;block['block_content'] &amp;&amp; (!$this-&gt;block['block_rss_expires'] || $this-&gt;block['block_rss_expires'] &gt; time()))
+-		{
+-			$this-&gt;content = $this-&gt;block['block_content'];
+-
+-			if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
+-			{
+-				$this-&gt;block_side();
+-			}
+-			else
+-			{
+-				$this-&gt;block_center();
+-			}
+-
+-			return;
+-		}
+-
+-		if ($this-&gt;block['block_file'] &amp;&amp; file_exists($site_file_root.'blocks/rss/'.$this-&gt;block['block_file']))
+-		{
+-			include($site_file_root.'blocks/rss/'.$this-&gt;block['block_file']);
+-			
+-			if (!$this-&gt;content)
+-			{
+-				return;
+-			}
+-		}
+-		else
+-		{
+-			load_class($site_file_root.'includes/core_rss.php', 'core_rss');
+-			$_CLASS['core_rss']-&gt;setup(false, array('title', 'link'));
+-				
+-			if (!$_CLASS['core_rss']-&gt;get_rss($this-&gt;block['block_rss_url']))
+-			{
+-	//admin only message here
+-				return;
+-			}
+-
+-			$this-&gt;content = '&lt;center&gt;&lt;br /&gt;';
+-
+-			while ($data = $_CLASS['core_rss']-&gt;get_rss_data())
+-			{
+-				$this-&gt;content .= '&lt;a href=&quot;'.$data['link'].'&quot; target=&quot;new&quot;&gt;'.$data['title'].'&lt;/a&gt;&lt;hr width=&quot;30%&quot;/&gt;';
+-			}
+-			
+-			if (!empty($_CLASS['core_rss']-&gt;rss_info['link']))
+-			{
+-				$this-&gt;content .= '&lt;br /&gt;&lt;a href=&quot;'.$_CLASS['core_rss']-&gt;rss_info['link'].'&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;Read More&lt;/b&gt;&lt;/a&gt;';
+-			}
+-			
+-			$this-&gt;content .= '&lt;/center&gt;';
+-		}
+-
+-		settype($this-&gt;block['block_rss_rate'], 'integer');
+-
+-		if ($this-&gt;block['block_rss_rate'] !== -1)
+-		{
+-			$this-&gt;block['block_rss_expires'] = ($this-&gt;block['block_rss_rate']) ? gmtime() + (int) $this-&gt;block['block_rss_rate'] : 0;
+-			
+-			$sql = 'UPDATE '.BLOCKS_TABLE.&quot;
+-				SET block_content = '&quot;.$_CLASS['core_db']-&gt;escape($this-&gt;content).&quot;', block_rss_expires = &quot;.$this-&gt;block['block_rss_expires'].&quot; 
+-					WHERE block_id = &quot;.$this-&gt;block['block_id'];
+-				
+-			$_CLASS['core_db']-&gt;query($sql);
+-
+-			$_CLASS['core_cache']-&gt;destroy('blocks');
+-		}
+-
+-		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
+-		{
+-			$this-&gt;block_side();
+-		}
+-		else
+-		{
+-			$this-&gt;block_center();
+-		}
+-	}
+-
+-	function block_center()
+-	{
+-		global $_CLASS;
+-		
+-		$position = ($this-&gt;display_position == BLOCK_TOP) ? 'center' : 'bottom';
+-		
+-		$_CLASS['core_template']-&gt;assign_vars_array('block_'.$position , array(
+-			'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
+-			'CONTENT'	=&gt; $this-&gt;content,
+-			'TEMPLATE'	=&gt; $this-&gt;template
+-		));
+-	}
+-}
+-
++	*/
++	function block_file()
++	{
++		global $_CLASS, $site_file_root;
++
++		if ($this-&gt;block['block_file'] &amp;&amp; file_exists($site_file_root.'blocks/'.$this-&gt;block['block_file']))
++		{
++			$this-&gt;info = false;
++
++			//$_CLASS['core_error_handler']-&gt;debug_start($this-&gt;block['block_title']);
++
++			include($site_file_root.'blocks/'.$this-&gt;block['block_file']);
++
++			//$_CLASS['core_error_handler']-&gt;debug_stop($this-&gt;block['block_title']);
++
++			if (!$this-&gt;content &amp;&amp; !$this-&gt;template)
++			{
++				if ($_CLASS['core_auth']-&gt;admin_power('blocks'))
++				{
++					$this-&gt;content = '&lt;center&gt;&lt;strong&gt;'.(($this-&gt;info) ? $this-&gt;info : $_CLASS['core_user']-&gt;lang['BLOCK_ERROR2']).'&lt;/strong&gt;&lt;/center&gt;';
++				}
++				else
++				{
++					return;
++				}
++			}
++		}
++		else
++		{
++			if ($_CLASS['core_auth']-&gt;admin_power('blocks'))
++			{
++				$this-&gt;content = '&lt;center&gt;&lt;strong&gt;'.$_CLASS['core_user']-&gt;lang['BLOCK_ERROR1'].'&lt;/strong&gt;&lt;/center&gt;';
++			}
++			else
++			{
++				return;
++			}		
++		}
++
++		//$this-&gt;content .= '&lt;div style=&quot;text-align: center;&quot;&gt;&lt;br /&gt;'.$_CLASS['core_error_handler']-&gt;debug_get($this-&gt;block['block_title'], 'formated').'&lt;/div&gt;';
++		//$_CLASS['core_error_handler']-&gt;debug_remove($this-&gt;block['block_title']);
++
++		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++		{
++			$this-&gt;block_side();
++		}
++		else
++		{
++			$this-&gt;block_center();
++		}
++	}
++
++	function block_message()
++	{
++		global $_CLASS;
++
++		if (($this-&gt;block['block_type'] == BLOCKTYPE_MESSAGE) &amp;&amp; (!$_CLASS['core_display']-&gt;homepage))
++		{
++			return;
++		}
++
++		if ($_CLASS['core_auth']-&gt;admin_power('messages'))
++		{
++			$expires = ($this-&gt;block['block_expires']) ? $_CLASS['core_user']-&gt;lang['EXPIRES'].' '.$_CLASS['core_user']-&gt;format_date($this-&gt;block['block_expires']) : false;
++			$edit_link = generate_link('messages&amp;mode=edit&amp;id='.$this-&gt;block['block_id'], array('admin' =&gt; true));
++		}
++		else
++		{
++		
++			$edit_link = $expires = false;
++		}
++
++		$postion = ($this-&gt;display_position == BLOCK_MESSAGE_TOP) ? 'top' : 'bottom';
++
++		$_CLASS['core_template']-&gt;assign_vars_array('message_block_'.$postion, array(
++				//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
++				'title'		=&gt; $this-&gt;block['block_title'],
++				'collapsed'	=&gt; check_collapsed_status('block_'.$this-&gt;block['block_id']),
++				'content'	=&gt; $this-&gt;block['block_content'],
++				'expires'	=&gt; $expires,
++				'edit_link'	=&gt; $edit_link,
++				'id'		=&gt; $this-&gt;block['block_id'],
++		));
++	}
++
++	function block_side()
++	{
++		global $_CLASS;
++		
++		$position = ($this-&gt;display_position == BLOCK_RIGHT) ? 'right' : 'left';
++		
++		$_CLASS['core_template']-&gt;assign_vars_array('block_'.$position, array(
++			//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
++			'title'		=&gt; $this-&gt;block['block_title'],
++			'content'	=&gt; $this-&gt;content,
++			'collapsed'	=&gt; check_collapsed_status('block_'.$this-&gt;block['block_id']),
++			'id'		=&gt; $this-&gt;block['block_id'],
++		));
++	}
++
++	function block_html()
++	{
++		$this-&gt;content = $this-&gt;block['block_content'];
++
++		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++		{
++			$this-&gt;block_side();
++		}
++		else
++		{
++			$this-&gt;block_center();
++		}
++	}
++
++	function block_feed()
++	{
++		global $site_file_root, $_CLASS;
++// think about disabling the block automatically if there's url problems
++// update core_rss file
++		if ($this-&gt;block['block_content'] &amp;&amp; (!$this-&gt;block['block_rss_expires'] || $this-&gt;block['block_rss_expires'] &gt; time()))
++		{
++			$this-&gt;content = $this-&gt;block['block_content'];
++
++			if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++			{
++				$this-&gt;block_side();
++			}
++			else
++			{
++				$this-&gt;block_center();
++			}
++
++			return;
++		}
++
++		if ($this-&gt;block['block_file'] &amp;&amp; file_exists($site_file_root.'blocks/rss/'.$this-&gt;block['block_file']))
++		{
++			include($site_file_root.'blocks/rss/'.$this-&gt;block['block_file']);
++			
++			if (!$this-&gt;content)
++			{
++				return;
++			}
++		}
++		else
++		{
++			load_class($site_file_root.'includes/core_rss.php', 'core_rss');
++			$_CLASS['core_rss']-&gt;setup(false, array('title', 'link'));
++				
++			if (!$_CLASS['core_rss']-&gt;get_rss($this-&gt;block['block_rss_url']))
++			{
++	//admin only message here
++				return;
++			}
++
++			$this-&gt;content = '&lt;center&gt;&lt;br /&gt;';
++
++			while ($data = $_CLASS['core_rss']-&gt;get_rss_data())
++			{
++				$this-&gt;content .= '&lt;a href=&quot;'.$data['link'].'&quot; target=&quot;new&quot;&gt;'.$data['title'].'&lt;/a&gt;&lt;hr width=&quot;30%&quot;/&gt;';
++			}
++			
++			if (!empty($_CLASS['core_rss']-&gt;rss_info['link']))
++			{
++				$this-&gt;content .= '&lt;br /&gt;&lt;a href=&quot;'.$_CLASS['core_rss']-&gt;rss_info['link'].'&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;Read More&lt;/b&gt;&lt;/a&gt;';
++			}
++			
++			$this-&gt;content .= '&lt;/center&gt;';
++		}
++
++		settype($this-&gt;block['block_rss_rate'], 'integer');
++
++		if ($this-&gt;block['block_rss_rate'] !== -1)
++		{
++			$this-&gt;block['block_rss_expires'] = ($this-&gt;block['block_rss_rate']) ? gmtime() + (int) $this-&gt;block['block_rss_rate'] : 0;
++			
++			$sql = 'UPDATE '.BLOCKS_TABLE.&quot;
++				SET block_content = '&quot;.$_CLASS['core_db']-&gt;escape($this-&gt;content).&quot;', block_rss_expires = &quot;.$this-&gt;block['block_rss_expires'].&quot; 
++					WHERE block_id = &quot;.$this-&gt;block['block_id'];
++				
++			$_CLASS['core_db']-&gt;query($sql);
++
++			$_CLASS['core_cache']-&gt;destroy('blocks');
++		}
++
++		if ($this-&gt;display_position == BLOCK_LEFT || $this-&gt;display_position == BLOCK_RIGHT)
++		{
++			$this-&gt;block_side();
++		}
++		else
++		{
++			$this-&gt;block_center();
++		}
++	}
++
++	function block_center()
++	{
++		global $_CLASS;
++		
++		$position = ($this-&gt;display_position == BLOCK_TOP) ? 'center' : 'bottom';
++		
++		$_CLASS['core_template']-&gt;assign_vars_array('block_'.$position , array(
++			'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['block_title']),
++			'CONTENT'	=&gt; $this-&gt;content,
++			'TEMPLATE'	=&gt; $this-&gt;template
++		));
++	}
++}
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/display/display.php
+===================================================================
+--- trunk/includes/display/display.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/display/display.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -17,6 +17,8 @@
+ ||  of the GNU General Public License version 2					||
+ ||																||
+ ||**************************************************************||
++
++$Id$
+ */
+ 
+ class core_display
+@@ -144,6 +146,11 @@
+ 		{
+ 			$_CORE_MODULE['module_title'] = $title;
+ 		}
++		elseif (!$_CORE_MODULE['module_title'])
++		{
++// should move this somewhere else
++			$_CORE_MODULE['module_title'] = $_CORE_MODULE['module_name'];
++		}
+ 
+ 		$this-&gt;headers();
+ 
+@@ -167,6 +174,7 @@
+ 			$this-&gt;message = '&lt;b&gt;System is in maintenance mode&lt;/b&gt;&lt;br /&gt;';
+ 		}
+ 
++
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'SITE_LANG'			=&gt;	$_CLASS['core_user']-&gt;lang['LANG'],
+ 			'SITE_TITLE'		=&gt;	$_CORE_CONFIG['global']['site_name'].': '.(is_array($_CORE_MODULE['module_title']) ? implode(' &gt; ', $_CORE_MODULE['module_title']) : $_CORE_MODULE['module_title']),
+
+Modified: trunk/includes/display/template.php
+===================================================================
+--- trunk/includes/display/template.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/display/template.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -17,6 +17,8 @@
+ ||  of the GNU General Public License version 2					||
+ ||																||
+ ||**************************************************************||
++
++$Id$
+ */
+ 
+ /*
+@@ -364,7 +366,7 @@
+ 				case 'DISPLAY_FOOTER':
+ 					$tag_blocks[0][$loop] = &quot;&lt;?php echo \$_CLASS['core_display']-&gt;display_footer(); ?&gt;&quot;;
+ 				break;
+-	
++
+ 				case 'IGNORE':
+ 					$compile = false;
+ 				break;
+
+Modified: trunk/includes/forums/admin/admin_forums.php
+===================================================================
+--- trunk/includes/forums/admin/admin_forums.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/forums/admin/admin_forums.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -106,7 +106,10 @@
+ 				'prune_announce'		=&gt; request_var('prune_announce', FALSE),
+ 				'prune_sticky'			=&gt; request_var('prune_sticky', FALSE),
+ 				'forum_password'		=&gt; request_var('forum_password', ''),
+-				'forum_password_confirm'=&gt; request_var('forum_password_confirm', '')
++				'forum_password_confirm'=&gt; request_var('forum_password_confirm', ''),
++				'forum_posts'			=&gt; 0,
++				'forum_topics'			=&gt; 0,
++				'forum_topics_real'		=&gt; 0,
+ 			);
+ 
+ 			if ($forum_data['forum_rules'])
+
+Modified: trunk/includes/forums/admin/admin_ranks.php
+===================================================================
+--- trunk/includes/forums/admin/admin_ranks.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/forums/admin/admin_ranks.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -19,11 +19,12 @@
+  *
+  ***************************************************************************/
+ 
++// needs work
+ 
+ // Do we have permission?
+ if (!$_CLASS['auth']-&gt;acl_get('a_ranks'))
+ {
+-	trigger_error($_CLASS['core_user']-&gt;lang['NO_ADMIN']);
++	trigger_error('NO_ADMIN');
+ }
+ 
+ // Check mode
+@@ -38,7 +39,7 @@
+ 	{
+ 		$mode = 'add';
+ 	}
+-	else if (isset($_POST['save']))
++	elseif (isset($_POST['save']))
+ 	{
+ 		$mode = 'save';
+ 	}
+@@ -58,22 +59,26 @@
+ 	case 'add':
+ 
+ 		$data = $ranks = $existing_imgs = array();
+-		$result = $_CLASS['core_db']-&gt;sql_query('SELECT * 
+-			FROM ' . RANKS_TABLE . ' 
++
++		$result = $_CLASS['core_db']-&gt;query('SELECT * 
++			FROM ' . FORUMS_RANKS_TABLE . ' 
+ 			ORDER BY rank_special DESC, rank_min DESC');
+-		if ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+-			do
++			$existing_imgs[] = $row['rank_image'];
++
++			if ($mode == 'edit' &amp;&amp; $rank_id == $row['rank_id'])
+ 			{
+-				$existing_imgs[] = $row['rank_image'];
+-				if ($mode == 'edit' &amp;&amp; $rank_id == $row['rank_id'])
+-				{
+-					$ranks = $row;
+-				}
++				$ranks = $row;
+ 			}
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result));
+ 		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++// temp stuff
++if (empty($ranks))
++{
++$ranks['rank_title'] = $ranks['rank_image'] = $ranks['rank_special'] = $ranks['rank_min'] = '';
++}
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		$imglist = filelist($config['ranks_path'], '');
+ 
+@@ -197,20 +202,20 @@
+ 
+ 		if ($rank_id)
+ 		{
+-			$sql = &quot;UPDATE &quot; . RANKS_TABLE . &quot;
+-				SET rank_title = '&quot; . $_CLASS['core_db']-&gt;sql_escape($rank_title) . &quot;', rank_special = $special_rank, rank_min = $min_posts, rank_image = '&quot; . $_CLASS['core_db']-&gt;sql_escape($rank_image) . &quot;'
++			$sql = &quot;UPDATE &quot; . FORUMS_RANKS_TABLE . &quot;
++				SET rank_title = '&quot; . $_CLASS['core_db']-&gt;escape($rank_title) . &quot;', rank_special = $special_rank, rank_min = $min_posts, rank_image = '&quot; . $_CLASS['core_db']-&gt;escape($rank_image) . &quot;'
+ 				WHERE rank_id = $rank_id&quot;;
+ 
+ 			$message = $_CLASS['core_user']-&gt;lang['RANK_UPDATED'];
+ 		}
+ 		else
+ 		{
+-			$sql = &quot;INSERT INTO &quot; . RANKS_TABLE . &quot; (rank_title, rank_special, rank_min, rank_image)
+-				VALUES ('&quot; . $_CLASS['core_db']-&gt;sql_escape($rank_title) . &quot;', $special_rank, $min_posts, '&quot; . $_CLASS['core_db']-&gt;sql_escape($rank_image) . &quot;')&quot;;
++			$sql = &quot;INSERT INTO &quot; . FORUMS_RANKS_TABLE . &quot; (rank_title, rank_special, rank_min, rank_image)
++				VALUES ('&quot; . $_CLASS['core_db']-&gt;escape($rank_title) . &quot;', $special_rank, $min_posts, '&quot; . $_CLASS['core_db']-&gt;escape($rank_image) . &quot;')&quot;;
+ 
+ 			$message = $_CLASS['core_user']-&gt;lang['RANK_ADDED'];
+ 		}
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		$_CLASS['core_cache']-&gt;destroy('ranks');
+ 
+@@ -225,14 +230,14 @@
+ 
+ 		if ($rank_id)
+ 		{
+-			$sql = &quot;DELETE FROM &quot; . RANKS_TABLE . &quot;
++			$sql = &quot;DELETE FROM &quot; . FORUMS_RANKS_TABLE . &quot;
+ 				WHERE rank_id = $rank_id&quot;;
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			$sql = &quot;UPDATE &quot; . USERS_TABLE . &quot;
+ 				SET user_rank = 0
+ 				WHERE user_rank = $rank_id&quot;;
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			$_CLASS['core_cache']-&gt;destroy('ranks');
+ 
+@@ -265,11 +270,11 @@
+ &lt;?php
+ 
+ 		// Show the default page
+-		$sql = &quot;SELECT * FROM &quot; . RANKS_TABLE . &quot;
++		$sql = &quot;SELECT * FROM &quot; . FORUMS_RANKS_TABLE . &quot;
+ 			ORDER BY rank_min ASC, rank_special ASC&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-		if ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++		if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$row_class = 'row2';
+ 			
+@@ -300,7 +305,7 @@
+ &lt;?php
+ 
+ 			}
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result));
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
+ 		}
+ 
+ ?&gt;
+
+Modified: trunk/includes/functions.php
+===================================================================
+--- trunk/includes/functions.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/functions.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -537,9 +537,9 @@
+ 			'config_cache'	=&gt; (int) $cache,
+ 		);
+ 
+-		$_CLASS['core_db']-&gt;return_on_error(true);
++		$_CLASS['core_db']-&gt;report_error(false);
+ 		$_CLASS['core_db']-&gt;query('INSERT INTO ' . CORE_CONFIG_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_array));
+-		$_CLASS['core_db']-&gt;return_on_error(false);
++		$_CLASS['core_db']-&gt;report_error(true);
+ 	}
+ 
+ 	$_CORE_CONFIG[$section][$name] = $value;
+@@ -831,7 +831,6 @@
+ 	}
+ }
+ 
+-
+ // Should 4.3 be the min, or 4.2 ?
+ // Move seperate file, if someone has a pre 4.3 they'll have to include that file
+ if (!function_exists('debug_backtrace'))
+
+Modified: trunk/includes/functions_user.php
+===================================================================
+--- trunk/includes/functions_user.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/functions_user.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -162,7 +162,7 @@
+ 	$_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$data['user_id'] = $_CLASS['core_db']-&gt;insert_id(USERS_TABLE, 'user_id');
+-				
++
+ 	$sql = 'INSERT INTO ' . USER_GROUP_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
+ 		'group_id'		=&gt; (int) $data['user_group'],
+ 		'user_id'		=&gt; (int) $data['user_id'],
+
+Modified: trunk/includes/session.php
+===================================================================
+--- trunk/includes/session.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/session.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -118,7 +118,7 @@
+ 		$ali = get_variable($_CORE_CONFIG['server']['cookie_name'] . '_ali', 'COOKIE', false, 'int');
+ 		$alc = get_variable($_CORE_CONFIG['server']['cookie_name'] . '_alc', 'COOKIE');
+ 
+-		if ($ali &amp;&amp; $ali)
++		if ($ali &amp;&amp; $alc)
+ 		{
+ 			if ($id = $this-&gt;autologin_retrieve($ali, $alc))
+ 			{
+@@ -305,6 +305,8 @@
+ 					$this-&gt;autologin_destroy($this-&gt;data['user_id'], $this-&gt;autologin_code);
+ 				}
+ 			}
++
++			$this-&gt;save_session = false;
+ 		}
+ 
+ 		$sql = 'DELETE FROM ' . SESSIONS_TABLE . &quot;
+
+Modified: trunk/includes/templates/message.html
+===================================================================
+--- trunk/includes/templates/message.html	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/templates/message.html	2005-09-08 04:05:29 UTC (rev 99)
+@@ -1,22 +1,11 @@
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+-&lt;head&gt;
+-&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+-&lt;title&gt;Error&lt;/title&gt;
+-&lt;/head&gt;
+-&lt;body style=&quot;background: url(/bg.gif);&quot;&gt;
++&lt;!-- DISPLAY_HEADER --&gt;
+ 
+-&lt;table style=&quot;position: absolute; left: 25%; top: 25%;&quot;&gt;
++&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td&gt;
+-			&lt;img src=&quot;/paladin.png&quot; /&gt;
+-		&lt;/td&gt;
+-		&lt;td valign=&quot;top&quot;&gt;
++		&lt;td align=&quot;center&quot;  class=&quot;row1&quot;&gt;
+ 			{ $MESSAGE_TEXT }
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+-
+-
+-&lt;/body&gt;
+-&lt;/html&gt;
+\ No newline at end of file
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/templates/modules/Forums/viewforum_body.html
+===================================================================
+--- trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-08 04:05:29 UTC (rev 99)
+@@ -34,9 +34,9 @@
+ 
+ 	&lt;!-- LOOP $topicrow --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;25&quot; align=&quot;center&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;!-- IF { $S_TOPIC_ICONS } --&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;25&quot; align=&quot;center&quot;&gt;&lt;img src=&quot;{ $T_ICONS_PATH }{ $topicrow:TOPIC_ICON_IMG }&quot; width=&quot;{ $topicrow:TOPIC_ICON_IMG_WIDTH }&quot; height=&quot;{ $topicrow:TOPIC_ICON_IMG_HEIGHT }&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;&lt;img src=&quot;{ $T_ICONS_PATH }{ $topicrow:TOPIC_ICON_IMG }&quot; width=&quot;{ $topicrow:TOPIC_ICON_IMG_WIDTH }&quot; height=&quot;{ $topicrow:TOPIC_ICON_IMG_HEIGHT }&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;/td&gt;
+ 		&lt;!-- ENDIF --&gt;
+ 		&lt;td class=&quot;row1&quot;&gt;
+ 			&lt;!-- IF { $topicrow:S_TOPIC_UNAPPROVED } --&gt;
+@@ -45,15 +45,15 @@
+ 			&lt;!-- IF { $topicrow:S_TOPIC_REPORTED } --&gt;
+ 				&lt;a href=&quot;{$topicrow:U_MCP_REPORT}&quot;&gt;{ $REPORTED_IMG }&lt;/a&gt;&nbsp;
+ 			&lt;!-- ENDIF --&gt;
+-			&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{$topicrow:U_VIEW_TOPIC}&quot;&gt;{$topicrow:TOPIC_TITLE}&lt;/a&gt;&lt;/p&gt;
++			&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{$topicrow:U_VIEW_TOPIC}&quot;&gt;{$topicrow:TOPIC_TITLE}&lt;/a&gt; &lt;/p&gt;
+ 		&lt;!-- IF { $topicrow:PAGINATION } --&gt;
+ 		&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG }{ $L_GOTO_PAGE }: { $topicrow:PAGINATION } ] &lt;/p&gt;
+ 		&lt;!-- ENDIF --&gt;
+ 		&lt;/td&gt;
+-		&lt;td class=&quot;row2&quot; width=&quot;100&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicauthor&quot;&gt;{ $topicrow:TOPIC_AUTHOR }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;50&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:REPLIES }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row2&quot; width=&quot;50&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:VIEWS }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;120&quot; align=&quot;center&quot;&gt;
++		&lt;td class=&quot;row2&quot; align=&quot;center&quot; width=&quot;100&quot;&gt;&lt;p class=&quot;topicauthor&quot;&gt;{ $topicrow:TOPIC_AUTHOR }&lt;/p&gt;&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;50&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:REPLIES }&lt;/p&gt;&lt;/td&gt;
++		&lt;td class=&quot;row2&quot; align=&quot;center&quot; width=&quot;50&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:VIEWS }&lt;/p&gt;&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;120&quot;&gt;
+ 			&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:LAST_POST_TIME }&lt;/p&gt;
+ 			&lt;p class=&quot;topicdetails&quot;&gt;
+ 			&lt;!-- IF { $topicrow:U_LAST_POST_AUTHOR } --&gt;
+@@ -150,9 +150,9 @@
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDIF --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;25&quot; align=&quot;center&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;{ $topicrow:TOPIC_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;!-- IF { $S_TOPIC_ICONS } --&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;25&quot; nowrap=&quot;nowrap&quot; align=&quot;center&quot;&gt;&lt;!-- IF { $topicrow:TOPIC_ICON_IMG } --&gt;&lt;img src=&quot;{ $T_ICONS_PATH }{ $topicrow:TOPIC_ICON_IMG }&quot; width=&quot;{ $topicrow:TOPIC_ICON_IMG_WIDTH }&quot; height=&quot;{ $topicrow:TOPIC_ICON_IMG_HEIGHT }&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;25&quot;&gt;&lt;!-- IF { $topicrow:TOPIC_ICON_IMG } --&gt;&lt;img src=&quot;{ $T_ICONS_PATH }{ $topicrow:TOPIC_ICON_IMG }&quot; width=&quot;{ $topicrow:TOPIC_ICON_IMG_WIDTH }&quot; height=&quot;{ $topicrow:TOPIC_ICON_IMG_HEIGHT }&quot; alt=&quot;&quot; title=&quot;&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ 		&lt;!-- ENDIF --&gt;
+ 		&lt;td class=&quot;row1&quot;&gt;
+ 			&lt;!-- IF { $topicrow:S_TOPIC_UNAPPROVED } --&gt;
+@@ -161,15 +161,15 @@
+ 			&lt;!-- IF { $topicrow:S_TOPIC_REPORTED } --&gt;
+ 				&lt;a href=&quot;{$topicrow:U_MCP_REPORT}&quot;&gt;{ $REPORTED_IMG }&lt;/a&gt;&nbsp;
+ 			&lt;!-- ENDIF --&gt;
+-			&lt;p class=&quot;topictitle&quot;&gt;&nbsp;{ $topicrow:NEWEST_POST_IMG }&nbsp;{ $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt;&nbsp;&lt;/p&gt;
++			&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt; &lt;/p&gt;
+ 			&lt;!-- IF { $topicrow:PAGINATION } --&gt;
+ 			&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG }{ $L_GOTO_PAGE }: { $topicrow:PAGINATION } ] &lt;/p&gt;
+ 			&lt;!-- ENDIF --&gt;
+ 		&lt;/td&gt;
+-		&lt;td class=&quot;row2&quot; width=&quot;80&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicauthor&quot;&gt;{ $topicrow:TOPIC_AUTHOR }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;50&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:REPLIES }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row2&quot; width=&quot;50&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:VIEWS }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;150&quot; nowrap=&quot;nowrap&quot; align=&quot;center&quot;&gt;
++		&lt;td class=&quot;row2&quot; align=&quot;center&quot; width=&quot;100&quot;&gt;&lt;p class=&quot;topicauthor&quot;&gt;{ $topicrow:TOPIC_AUTHOR }&lt;/p&gt;&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;50&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:REPLIES }&lt;/p&gt;&lt;/td&gt;
++		&lt;td class=&quot;row2&quot; align=&quot;center&quot; width=&quot;50&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:VIEWS }&lt;/p&gt;&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;120&quot;&gt;
+ 			&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:LAST_POST_TIME }&lt;/p&gt;
+ 			&lt;p class=&quot;topicdetails&quot;&gt;&lt;!-- IF { $topicrow:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{ $topicrow:U_LAST_POST_AUTHOR }&quot;&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;!-- ENDIF --&gt;
+ 			&lt;a href=&quot;{ $topicrow:U_LAST_POST }&quot;&gt;{ $topicrow:LAST_POST_IMG }&lt;/a&gt;
+@@ -185,12 +185,17 @@
+ 		&lt;!-- ENDIF --&gt;
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDLOOP $topicrow --&gt;
+-
++&lt;/table&gt;
++&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr align=&quot;center&quot;&gt;
+-		&lt;!-- IF { $S_TOPIC_ICONS } --&gt;&lt;td class=&quot;cat&quot; colspan=&quot;7&quot;&gt;&lt;!-- ELSE --&gt;&lt;td class=&quot;cat&quot; colspan=&quot;6&quot; &gt;&lt;!-- ENDIF --&gt;
+-		&lt;form method=&quot;post&quot; action=&quot;{ $S_FORUM_ACTION }&quot;&gt;
+-			&lt;span class=&quot;gensmall&quot;&gt;{ $L_DISPLAY_TOPICS }:&lt;/span&gt;&nbsp;{ $S_SELECT_SORT_DAYS }&nbsp;&lt;span class=&quot;gensmall&quot;&gt;{ $L_SORT_BY }&lt;/span&gt; { $S_SELECT_SORT_KEY } { $S_SELECT_SORT_DIR }&nbsp;&lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;sort&quot; value=&quot;{ $L_GO }&quot; /&gt;
+-		&lt;/form&gt;
++	&lt;!-- IF { $S_TOPIC_ICONS } --&gt;
++		&lt;td class=&quot;cat&quot; colspan=&quot;7&quot;&gt;
++	&lt;!-- ELSE --&gt;
++		&lt;td class=&quot;cat&quot; colspan=&quot;6&quot; &gt;
++	&lt;!-- ENDIF --&gt;
++			&lt;form method=&quot;post&quot; action=&quot;{ $S_FORUM_ACTION }&quot;&gt;
++				&lt;span class=&quot;gensmall&quot;&gt;{ $L_DISPLAY_TOPICS }:&lt;/span&gt;&nbsp;{ $S_SELECT_SORT_DAYS }&nbsp;&lt;span class=&quot;gensmall&quot;&gt;{ $L_SORT_BY }&lt;/span&gt; { $S_SELECT_SORT_KEY } { $S_SELECT_SORT_DIR }&nbsp;&lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;sort&quot; value=&quot;{ $L_GO }&quot; /&gt;
++			&lt;/form&gt;
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+
+Modified: trunk/includes/templates/rss/atom.html
+===================================================================
+--- trunk/includes/templates/rss/atom.html	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/templates/rss/atom.html	2005-09-08 04:05:29 UTC (rev 99)
+@@ -6,7 +6,7 @@
+ &lt;entry&gt;
+ 	&lt;title&gt;{ $items:TITLE }&lt;/title&gt;
+ 	&lt;link href=&quot;{ $items:LINK }&quot; /&gt;
+-	&lt;summary type=&quot;xhtml&quot;&gt;&lt;div xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;&gt;{ $items:DESCRIPTION_HTML }&lt;/summary&gt;
++	&lt;summary type=&quot;xhtml&quot;&gt;&lt;div xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;&gt;{ $items:DESCRIPTION_HTML }&lt;/div&gt;&lt;/summary&gt;
+ 	&lt;updated&gt;{ $items:TIME }&lt;/updated&gt;
+ &lt;/entry&gt;
+ &lt;!-- ENDLOOP --&gt;
+
+Modified: trunk/includes/user.php
+===================================================================
+--- trunk/includes/user.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/includes/user.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -49,7 +49,8 @@
+ 	function core_user()
+ 	{
+ 		$this-&gt;browser = mb_substr((empty($_SERVER['HTTP_USER_AGENT']) ? getenv('HTTP_USER_AGENT') : $_SERVER['HTTP_USER_AGENT']), 0, 255);
+-		$this-&gt;url	= empty($_SERVER['REQUEST_URI']) ? getenv('REQUEST_URI') : $_SERVER['REQUEST_URI'];
++
++		$this-&gt;url	= $_SERVER['REQUEST_URI'];
+ 		$this-&gt;ip	= empty($_SERVER['REMOTE_ADDR']) ? getenv('REMOTE_ADDR') : $_SERVER['REMOTE_ADDR'];
+ 		$this-&gt;time	= (int) gmtime();
+ 
+@@ -85,7 +86,7 @@
+ 
+ 		if (!$gmtime)
+ 		{
+-			return false;;
++			return false;
+ 		}
+ 
+ 		$format = (!$format) ? $this-&gt;time_format : $format;
+@@ -414,7 +415,7 @@
+ 			setcookie($name, $cookie_data, $cookie_time, $_CORE_CONFIG['server']['cookie_path'], $_CORE_CONFIG['server']['cookie_domain'], $_CORE_CONFIG['server']['site_secure']);
+ 		}
+ 	}
+-	
++
+ ///////////////////
+ // TO BE REMOVED //
+ ///////////////////
+
+Modified: trunk/install/build_data.php
+===================================================================
+--- trunk/install/build_data.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/install/build_data.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -120,8 +120,8 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('users', 0, 2, '')&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('groups', 0, 2, '')&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Articles', 1, 2, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Contact', 1, 1, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('articles', 1, 2, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Contact', 1, 2, 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Calender', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Control_Panel', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Forums', 1, 2, 2)&quot;);
+@@ -158,14 +158,14 @@
+ $guest_data = $_CLASS['core_db']-&gt;escape('a:6:{s:7:&quot;viewimg&quot;;b:1;s:9:&quot;viewflash&quot;;b:1;s:11:&quot;viewsmilies&quot;;b:1;s:8:&quot;viewsigs&quot;;b:1;s:11:&quot;viewavatars&quot;;b:1;s:11:&quot;viewcensors&quot;;b:1;}');
+ $bot_data = $_CLASS['core_db']-&gt;escape('a:6:{s:7:&quot;viewimg&quot;;b:1;s:9:&quot;viewflash&quot;;b:1;s:11:&quot;viewsmilies&quot;;b:1;s:8:&quot;viewsigs&quot;;b:1;s:11:&quot;viewavatars&quot;;b:1;s:11:&quot;viewcensors&quot;;b:1;}');
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (1, 0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0, '$guest_data')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', '', 1, 1, 1, 1, 1, '$admin_data')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (3, 2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (4, 2, 2, 5, 'MSN', '', '', '', $time, '65.54.188.', 'msnbot/', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (5, 2, 2, 5, 'Yahoo', '', '', '', $time, '66.196.90.1', 'Yahoo! Slurp', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (6, 2, 2, 5, 'Alexa', '', '', '', $time, '66.28.250.,209.237.238.', 'ia_archiver', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (7, 2, 2, 5, 'NaverBot', '', '', '', $time, '218.145.25.,61.78.61.,61.78.61.', 'NaverBot-', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_id, user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (8, 2, 2, 5, 'Jetbot', '', '', '', $time, '64.71.144.', 'Jetbot/', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0, '$guest_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', '', 1, 1, 1, 1, 1, '$admin_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 2, 5, 'MSN', '', '', '', $time, '65.54.188.', 'msnbot/', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 2, 5, 'Yahoo', '', '', '', $time, '66.196.90.1', 'Yahoo! Slurp', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 2, 5, 'Alexa', '', '', '', $time, '66.28.250.,209.237.238.', 'ia_archiver', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 2, 5, 'NaverBot', '', '', '', $time, '218.145.25.,61.78.61.,61.78.61.', 'NaverBot-', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data) VALUES (2, 2, 5, 'Jetbot', '', '', '', $time, '64.71.144.', 'Jetbot/', '', 1, 0, 0, 0, 0, '$bot_data')&quot;);
+ 
+ // Forums
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_', 1)&quot;);
+
+Modified: trunk/install/build_tables.php
+===================================================================
+--- trunk/install/build_tables.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/install/build_tables.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -763,13 +763,13 @@
+ */
+ $_CLASS['core_db']-&gt;table_create('start', $install_prefix.'forums_ranks');
+ 
+-$_CLASS['core_db']-&gt;add_table_field_int('rank_id', array('max' =&gt; 16000000));
++$_CLASS['core_db']-&gt;add_table_field_int('rank_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_char('rank_title', 50);
+ $_CLASS['core_db']-&gt;add_table_field_int('rank_min', array('min' =&gt; -1, 'max' =&gt; 16000000));
+ $_CLASS['core_db']-&gt;add_table_field_int('rank_special', array('max' =&gt; 1));
+ $_CLASS['core_db']-&gt;add_table_field_char('rank_image', 100);
+ 
+-$_CLASS['core_db']-&gt;add_table_index('rank_id');
++$_CLASS['core_db']-&gt;add_table_index('rank_id', 'primary');
+ 
+ $_CLASS['core_db']-&gt;table_create('commit');
+ 
+
+Modified: trunk/language/en/common.php
+===================================================================
+--- trunk/language/en/common.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/language/en/common.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -1,11 +1,33 @@
+ &lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
+ // -------------------------------------------------------------
+ //
+ // $Id: common.php,v 1.12 2004/07/19 20:13:16 acydburn Exp $
+ //
+ // FILENAME  : common.php [ English ]
+ // STARTED   : Sat Dec 16, 2000
+-// COPYRIGHT : &#169; 2001, 2003 phpBB Group
++// COPYRIGHT : 2001, 2003 phpBB Group
+ // WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+ // LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+ // 
+
+Modified: trunk/language/en/error.php
+===================================================================
+--- trunk/language/en/error.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/language/en/error.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -1,17 +1,26 @@
+ &lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
+ $homepage = '<A HREF="http://www.viperal.com">http://www.viperal.com</A>';
+ 
+ $error = array(
+
+Modified: trunk/modules/Contact/index.php
+===================================================================
+--- trunk/modules/Contact/index.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Contact/index.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -75,7 +75,7 @@
+ $_CLASS['core_template']-&gt;assign_array(array( 
+ 	'ERROR' 				=&gt; $error,
+ 	'MESSAGE' 				=&gt; $message,
+-	'ACTION' 				=&gt; generate_link($_CORE_MODULE['name']),
++	'ACTION' 				=&gt; generate_link($_CORE_MODULE['module_name']),
+ 	'SENDER_EMAIL' 			=&gt; $sender_email,
+ 	'SENDER_NAME' 			=&gt; $sender_name,
+ ));
+
+Modified: trunk/modules/Forums/faq.php
+===================================================================
+--- trunk/modules/Forums/faq.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Forums/faq.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -1,7 +1,7 @@
+ &lt;?php
+ /*
+ ||**************************************************************||
+-||  Viperal CMS &#169; :												||
++||  Viperal CMS &#194;&#169; :												||
+ ||**************************************************************||
+ ||																||
+ ||	Copyright (C) 2004, 2005									||
+
+Modified: trunk/modules/Forums/main.php
+===================================================================
+--- trunk/modules/Forums/main.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Forums/main.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -27,7 +27,7 @@
+ //
+ // FILENAME  : index.php 
+ // STARTED   : Sat Feb 13, 2001
+-// COPYRIGHT : &#169; 2001, 2003 phpBB Group
++// COPYRIGHT : 2001, 2003 phpBB Group
+ // WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+ // LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+ // 
+@@ -52,13 +52,14 @@
+ 		AND group_type &lt;&gt; ' . GROUP_HIDDEN;
+ $result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-$legend = '';
++$legend = array();
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ {
+-	$legend .= (($legend != '') ? ', ' : '') . '&lt;a style=&quot;color:#' . $row['group_colour'] . '&quot; href=&quot;'.generate_link('Members_List&amp;mode=group&amp;g=' . $row['group_id']) . '&quot;&gt;' . (($row['group_type'] == GROUP_SPECIAL) ? $_CLASS['core_user']-&gt;lang['G_' . $row['group_name']] : $row['group_name']) . '&lt;/a&gt;';
++	$legend[] .= '&lt;a style=&quot;color:#' . $row['group_colour'] . '&quot; href=&quot;'.generate_link('Members_List&amp;mode=group&amp;g=' . $row['group_id']) . '&quot;&gt;' . (isset($_CLASS['core_user']-&gt;lang['G_' . $row['group_name']]) ? $_CLASS['core_user']-&gt;lang['G_' . $row['group_name']] : $row['group_name']) . '&lt;/a&gt;';
+ }
+ $_CLASS['core_db']-&gt;free_result($result);
+ 
++$legend = implode(', ', $legend);
+ 
+ // Generate birthday list if required ...
+ $birthday_list = '';
+@@ -107,8 +108,7 @@
+ 	'S_DISPLAY_BIRTHDAY_LIST'	=&gt; ($config['load_birthdays']), 
+ 
+ 	'U_MARK_FORUMS'	=&gt; generate_link('Forums&amp;mark=forums')
+-	)
+-);
++));
+ 
+ page_header();
+ 
+
+Modified: trunk/modules/Forums/posting.php
+===================================================================
+--- trunk/modules/Forums/posting.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Forums/posting.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -27,7 +27,7 @@
+ //
+ // FILENAME  : posting.php
+ // STARTED   : Sat Feb 17, 2001
+-// COPYRIGHT : &#169; 2001, 2003 phpBB Group
++// COPYRIGHT : 2001, 2003 phpBB Group
+ // WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+ // LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+ // 
+@@ -658,10 +658,11 @@
+ 		else
+ 		{
+ 			$sql = 'SELECT post_time AS last_post_time
+-				FROM ' . POSTS_TABLE . &quot;
++				FROM ' . FORUMS_POSTS_TABLE . &quot;
+ 				WHERE poster_ip = '&quot; . $_CLASS['core_user']-&gt;ip . &quot;'
+ 					AND post_time &gt; &quot; . ($current_time - $config['flood_interval']);
+ 			$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
++
+ 			if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				$last_post_time = $row['last_post_time'];
+@@ -1474,17 +1475,20 @@
+ 	{
+ 		case 'post':
+ 			$sql_data[FORUMS_TOPICS_TABLE]['sql'] = array(
+-				'topic_poster'		=&gt; (int) $_CLASS['core_user']-&gt;data['user_id'],
+-				'topic_time'		=&gt; $current_time,
+-				'forum_id' 			=&gt; ($topic_type == POST_GLOBAL) ? 0 : $data['forum_id'],
+-				'icon_id'			=&gt; $data['icon_id'],
+-				'topic_approved'	=&gt; ($_CLASS['auth']-&gt;acl_get('f_moderate', $data['forum_id']) &amp;&amp; !$_CLASS['auth']-&gt;acl_get('m_approve')) ? 0 : 1,
+-				'topic_title' 		=&gt; $subject,
++				'topic_poster'			=&gt; (int) $_CLASS['core_user']-&gt;data['user_id'],
++				'topic_time'			=&gt; $current_time,
++				'forum_id' 				=&gt; ($topic_type == POST_GLOBAL) ? 0 : $data['forum_id'],
++				'icon_id'				=&gt; $data['icon_id'],
++				'topic_approved'		=&gt; ($_CLASS['auth']-&gt;acl_get('f_moderate', $data['forum_id']) &amp;&amp; !$_CLASS['auth']-&gt;acl_get('m_approve')) ? 0 : 1,
++				'topic_title' 			=&gt; $subject,
+ 				'topic_first_poster_name' =&gt; (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $username) ? stripslashes($username) : $_CLASS['core_user']-&gt;data['username'],
+-				'topic_type'		=&gt; $topic_type,
+-				'topic_time_limit'	=&gt; ($topic_type == POST_STICKY || $topic_type == POST_ANNOUNCE) ? ($data['topic_time_limit'] * 86400) : 0,
+-				'topic_status'		=&gt; $data['topic_status'],
+-				'topic_attachment'	=&gt; (isset($data['filename_data']['physical_filename']) &amp;&amp; sizeof($data['filename_data'])) ? 1 : 0
++				'topic_type'			=&gt; $topic_type,
++				'topic_time_limit'		=&gt; ($topic_type == POST_STICKY || $topic_type == POST_ANNOUNCE) ? ($data['topic_time_limit'] * 86400) : 0,
++				'topic_status'			=&gt; $data['topic_status'],
++				'topic_attachment'		=&gt; (isset($data['filename_data']['physical_filename']) &amp;&amp; sizeof($data['filename_data'])) ? 1 : 0,
++				'topic_replies_real'	=&gt; 0,
++				'topic_replies'			=&gt; 0,
++				'topic_views'			=&gt; 0,
+ 			);
+ 
+ 			if (isset($poll['poll_options']) &amp;&amp; !empty($poll['poll_options']))
+@@ -1508,8 +1512,7 @@
+ 				}
+ 				$sql_data[FORUMS_FORUMS_TABLE]['stat'][] = 'forum_topics_real = forum_topics_real + 1' . ((!$_CLASS['auth']-&gt;acl_get('f_moderate', $data['forum_id']) || $_CLASS['auth']-&gt;acl_get('m_approve')) ? ', forum_topics = forum_topics + 1' : '');
+ 			}
+-			
+-			break;
++		break;
+ 
+ 		case 'reply':
+ 			$sql_data[FORUMS_TOPICS_TABLE]['stat'][] = 'topic_replies_real = topic_replies_real + 1, topic_bumped = 0, topic_bumper = 0' . ((!$_CLASS['auth']-&gt;acl_get('f_moderate', $data['forum_id']) || $_CLASS['auth']-&gt;acl_get('m_approve')) ? ', topic_replies = topic_replies + 1' : '');
+@@ -1519,7 +1522,7 @@
+ 			{
+ 				$sql_data[FORUMS_FORUMS_TABLE]['stat'][] = 'forum_posts = forum_posts + 1';
+ 			}
+-			break;
++		break;
+ 
+ 		case 'edit_topic':
+ 		case 'edit_first_post':
+@@ -1577,11 +1580,11 @@
+ 		if ($post_mode == 'post')
+ 		{
+ 			$sql_data[FORUMS_TOPICS_TABLE]['sql'] = array(
+-				'topic_first_post_id' =&gt; $data['post_id'],
+-				'topic_last_post_id' =&gt; $data['post_id'],
+-				'topic_last_post_time' =&gt; $current_time,
+-				'topic_last_poster_id' =&gt; (int) $_CLASS['core_user']-&gt;data['user_id'],
+-				'topic_last_poster_name' =&gt; (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $username) ? stripslashes($username) : $_CLASS['core_user']-&gt;data['username']
++				'topic_first_post_id'	=&gt; $data['post_id'],
++				'topic_last_post_id'	=&gt; $data['post_id'],
++				'topic_last_post_time'	=&gt; $current_time,
++				'topic_last_poster_id'	=&gt; (int) $_CLASS['core_user']-&gt;data['user_id'],
++				'topic_last_poster_name'=&gt; (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $username) ? $username : $_CLASS['core_user']-&gt;data['username']
+ 			);
+ 		}
+ 
+
+Modified: trunk/modules/Forums/viewforum.php
+===================================================================
+--- trunk/modules/Forums/viewforum.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Forums/viewforum.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -27,7 +27,7 @@
+ //
+ // FILENAME  : viewforum.php 
+ // STARTED   : Sat Feb 13, 2001
+-// COPYRIGHT : &#169; 2001, 2003 phpBB Group
++// COPYRIGHT : 2001, 2003 phpBB Group
+ // WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+ // LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+ // 
+@@ -456,7 +456,7 @@
+ 				'PAGINATION'		=&gt; $pagination['formated'],
+ 				'PAGINATION_ARRAY'	=&gt; $pagination['array'],
+ 				'REPLIES' 			=&gt; $replies,
+-				'VIEWS' 			=&gt; $row['topic_views'],
++				'VIEWS' 			=&gt; (int) $row['topic_views'],
+ 				'TOPIC_TITLE' 		=&gt; censor_text($row['topic_title']),
+ 				'TOPIC_TYPE' 		=&gt; $topic_type,
+ 
+
+Modified: trunk/modules/Forums/viewtopic.php
+===================================================================
+--- trunk/modules/Forums/viewtopic.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Forums/viewtopic.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -242,7 +242,7 @@
+ }
+ 
+ // We make this check here because the correct forum_id is determined
+-$topic_replies = ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? $topic_data['topic_replies_real'] : $topic_data['topic_replies'];
++$topic_replies = ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? (int) $topic_data['topic_replies_real'] : (int) $topic_data['topic_replies'];
+ 
+ if (!isset($topic_last_read))
+ {
+@@ -762,6 +762,12 @@
+ 			}
+ 			else
+ 			{
++				$user_cache[$poster_id]['rank_title'] = '';
++				$user_cache[$poster_id]['rank_image'] = '';
++				
++				/*
++				We do this on posting no need to un-needed stuff
++
+ 				if (isset($ranks['normal']) &amp;&amp; !empty($ranks['normal']))
+ 				{
+ 					foreach ($ranks['normal'] as $rank)
+@@ -770,15 +776,12 @@
+ 						{
+ 							$user_cache[$poster_id]['rank_title'] = $rank['rank_title'];
+ 							$user_cache[$poster_id]['rank_image'] = (!empty($rank['rank_image'])) ? '&lt;img src=&quot;' . $config['ranks_path'] . '/' . $rank['rank_image'] . '&quot; border=&quot;0&quot; alt=&quot;' . $rank['rank_title'] . '&quot; title=&quot;' . $rank['rank_title'] . '&quot; /&gt;&lt;br /&gt;' : '';
++
+ 							break;
+ 						}
+ 					}
+ 				}
+-				else
+-				{
+-					$user_cache[$poster_id]['rank_title'] = '';
+-					$user_cache[$poster_id]['rank_image'] = '';
+-				}
++				*/
+ 			}
+ 
+ 			if (!empty($row['user_allow_viewemail']) || $_CLASS['auth']-&gt;acl_get('a_email'))
+@@ -815,11 +818,11 @@
+ 
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-	$update_time = $config['load_online_time'] * 60;
++	$min_online_time = $_CLASS['core_user']-&gt;time - $_CORE_CONFIG['server']['session_length'] * 60;
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$user_cache[$row['session_user_id']]['online'] = (time() - $update_time &lt; $row['online_time'] &amp;&amp; (!$row['session_hidden']));
++		$user_cache[$row['session_user_id']]['online'] = (!$row['session_hidden'] &amp;&amp; $row['online_time'] &gt; $min_online_time);
+ 	}
+ }
+ unset($id_cache);
+
+Modified: trunk/modules/Quick_Message/index.php
+===================================================================
+--- trunk/modules/Quick_Message/index.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Quick_Message/index.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -26,9 +26,11 @@
+     die;
+ }
+ 
++global $prefix;
++
+ if (!defined('QUICK_MESSAGE_TABLE'))
+ {
+-	define('QUICK_MESSAGE_TABLE', 'test_quick_message');
++	define('QUICK_MESSAGE_TABLE', $prefix.'quick_message');
+ }
+ 
+ $_CLASS['core_user']-&gt;user_setup();
+@@ -46,7 +48,7 @@
+ 
+ 		if (!$message)
+ 		{
+-			trigger_error('NO_MESSAGE'); 
++			trigger_error('NO_MESSAGE');
+ 		}
+ 
+ 		$length = mb_strlen($message);
+@@ -132,7 +134,7 @@
+ 			die;
+ 		}
+ 
+-		$result = $_CLASS['core_db']-&gt;query_limit('SELECT message_id, poster_id, poster_name, poster_ip, message_time FROM '.QUICK_MESSAGE_TABLE.' ORDER BY message_time', 1);
++		$result = $_CLASS['core_db']-&gt;query_limit('SELECT message_id, poster_id, poster_name, poster_ip, message_time FROM '.QUICK_MESSAGE_TABLE.' ORDER BY message_time DESC', 1);
+ 		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 		$_CLASS['core_db']-&gt;free_result($result);
+ 		
+@@ -143,7 +145,7 @@
+ 
+ 		$return = true;
+ 
+-		if ($row['message_id'] != $id)
++		if ($row['message_id'] == $id)
+ 		{
+ 			if ($row['message_time'] &gt; ($_CLASS['core_user']-&gt;time - $_CORE_CONFIG['quick_message']['delete_time']))
+ 			{
+@@ -163,7 +165,7 @@
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		//trigger_error('MESSAGE_DELETED');
+-		redirect(generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)));
++		redirect(($_CLASS['core_user']-&gt;data['session_url']) ? generate_link($_CLASS['core_user']-&gt;data['session_url'], array('full' =&gt; true)) : '');
+ 	break;
+ }
+ 
+
+Modified: trunk/modules/Quick_Message/install.php
+===================================================================
+--- trunk/modules/Quick_Message/install.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/Quick_Message/install.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -17,15 +17,29 @@
+ ||  of the GNU General Public License version 2					||
+ ||																||
+ ||**************************************************************||
++
++$Id$
+ */
+ 
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++global $prefix;
++
++if (!defined('QUICK_MESSAGE_TABLE'))
++{
++	define('QUICK_MESSAGE_TABLE', $prefix.'quick_message');
++}
++
+ class Quick_Message_install
+ {
+ 	function install()
+ 	{
+-		global $_CLASS, $prefix;
++		global $_CLASS;
+ 
+-		$_CLASS['core_db']-&gt;table_create('start', $prefix.'quick_message');
++		$_CLASS['core_db']-&gt;table_create('start', QUICK_MESSAGE_TABLE);
+ 		
+ 		$_CLASS['core_db']-&gt;add_table_field_int('message_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+ 		$_CLASS['core_db']-&gt;add_table_field_text('message_text', 200);
+@@ -48,14 +62,29 @@
+ 
+ 		$_CLASS['core_cache']-&gt;destroy('core_config');
+ 
+-		$_CLASS['core_db']-&gt;query('INSERT INTO '.$prefix.&quot;quick_message (poster_id, poster_name, poster_ip, message_text, message_time) VALUES (0, 'Site', '', 'Lets do this !', &quot;.gmtime().&quot;)&quot;);
++		$array = array(
++			'message_text'	=&gt; 'Lets do this !',
++			'message_time'	=&gt; (int) $_CLASS['core_user']-&gt;time,
++			'poster_id'		=&gt; 0,
++			'poster_name'	=&gt; (string) '',
++			'poster_ip'		=&gt; (string) ''
++		);
+ 
++		$_CLASS['core_db']-&gt;query('INSERT INTO ' . QUICK_MESSAGE_TABLE . ' '. $_CLASS['core_db']-&gt;sql_build_array('INSERT', $array));
++
+ 		return true;
+ 	}
+ 
+ 	function uninstall()
+ 	{
++		global $_CLASS;
+ 
++		$_CLASS['core_db']-&gt;report_error(false);
++
++		$_CLASS['core_db']-&gt;query('DROP TABLE ' . QUICK_MESSAGE_TABLE);
++		$_CLASS['core_db']-&gt;query('DELETE FROM ' . CORE_CONFIG_TABLE . &quot; WHERE config_section = 'quick_message'&quot;);
++
++		$_CLASS['core_db']-&gt;report_error(true);
+ 	}
+ }
+ 
+
+Added: trunk/modules/articles/index.php
+===================================================================
+--- trunk/modules/articles/index.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/articles/index.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -0,0 +1,148 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++if (!defined('ARTICLES_TABLE'))
++{
++	define('ARTICLES_TABLE', $prefix.'articles');
++}
++
++$_CLASS['core_user']-&gt;user_setup();
++
++if (isset($_GET['mode']))
++{
++	Switch ($_GET['mode'])
++	{
++		Case 'print':
++			$print = true;
++		Case 'view':
++			$print = isset($print);
++
++			$id = get_variable('id', 'GET', false, 'int');
++		
++			if (!$id)
++			{
++				trigger_error('ARTICLE_NOT_FOUND');
++			}
++		
++			$result = $_CLASS['core_db']-&gt;query('SELECT * FROM ' . ARTICLES_TABLE . ' WHERE articles_id = ' . $id);
++			$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++			$_CLASS['core_db']-&gt;free_result($result);
++
++			if (!$row || $row['articles_status'] != STATUS_ACTIVE)
++			{
++				trigger_error('ARTICLE_NOT_FOUND');
++			}
++
++			$_CLASS['core_template']-&gt;assign(array(
++				'ARTICLES_POSTER' 		=&gt; ($row['poster_name']) ? $row['poster_name'] : $_CLASS['core_user']-&gt;get_lang('ANONYMOUS'),
++				'ARTICLES_POSTER_LINK'	=&gt; ($row['poster_name'] &amp;&amp; $row['poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['poster_id']) : '',
++				'ARTICLES_TEXT'			=&gt; $row['articles_text'],
++				'ARTICLES_CONTENT_LINK' =&gt; generate_link('articles&amp;mode=view&amp;id='.$row['articles_id']),
++				'ARTICLES_TIME'			=&gt; $_CLASS['core_user']-&gt;format_date($row['articles_posted']),
++				'ARTICLES_TITLE'		=&gt; $row['articles_title'],
++				'ARTICLES_ID'       	=&gt; $id,
++				'ARTICLES_LINK_PRINT'	=&gt; generate_link('articles&amp;mode=print&amp;id='.$row['articles_id']),
++				'ARTICLES_LINK_SEND'	=&gt; generate_link('articles&amp;mode=send&amp;id='.$row['articles_id']),
++			));
++
++			$_CLASS['core_display']-&gt;display(false, ($print) ? 'modules/articles/print.html' : 'modules/articles/view.html');	
++
++			script_close();
++		break;
++	}
++}
++
++$start = get_variable('start', 'GET', false, 'int');
++$limit = 10;
++$collapable_holding = array();
++
++$sql = 'SELECT * FROM '.  ARTICLES_TABLE .' WHERE articles_status = ' . STATUS_ACTIVE . ' ORDER BY articles_order DESC';
++$result = $_CLASS['core_db']-&gt;query_limit($sql, $limit, $start);
++
++while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++{
++// this can cause problems, only thing to do is remove the limit query and do a loop until we get the needed articles
++	if ($row['articles_auth'] &amp;&amp; !$_CLASS['core_auth']-&gt;auth(@unserialize($row['articles_auth'])) &amp;&amp; !$_CLASS['core_auth']-&gt;admin_power('articles'))
++	{
++		continue;
++	}
++
++	$_CLASS['core_template']-&gt;assign_vars_array('articles', array(
++		'poster' 		=&gt; ($row['poster_name']) ? $row['poster_name'] : $_CLASS['core_user']-&gt;get_lang('ANONYMOUS'),
++		'content'		=&gt; ($row['articles_intro']) ? $row['articles_intro'] : $row['articles_text'],
++		'time'			=&gt; $_CLASS['core_user']-&gt;format_date($row['articles_posted']),
++		'title'			=&gt; $row['articles_title'],
++		'id'      		=&gt; $row['articles_id'],
++
++		'collapse'  	=&gt; check_collapsed_status('a_'.$row['articles_id']),
++		'full_story'	=&gt; ($row['articles_intro'] &amp;&amp; $row['articles_text']),
++
++		'link_poster'	=&gt; ($row['poster_name'] &amp;&amp; $row['poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['poster_id']) : '',
++		'link_content'  =&gt; generate_link('articles&amp;mode=view&amp;id='.$row['articles_id']),
++		'link_print' 	=&gt; generate_link('articles&amp;mode=print&amp;id='.$row['articles_id']),
++		'link_send' 	=&gt; generate_link('articles&amp;mode=send&amp;id='.$row['articles_id']),
++	));
++
++	$collapable_holding[] = 'a_'.$row['articles_id'];
++}
++$_CLASS['core_db']-&gt;free_result($result);
++
++// Garbage collection, would cause problems with guest/loggin articl views
++if ($cookie_data = get_variable('collapsed_items', 'COOKIE'))
++{
++	$collapsed_items = ($cookie_data) ? explode(':', $cookie_data) : array();
++	$count = count($collapsed_items);
++
++	for($i = 0; $i &lt; $count; $i++)
++	{
++		if (mb_strpos($collapsed_items[$i], 'a_') === 0 &amp;&amp; !in_array($collapsed_items[$i], $collapable_holding))
++		{
++			unset($collapsed_items[$i]);
++		}
++	}
++
++	$collapsed_items = implode(':', $collapsed_items);
++
++	setcookie('collapsed_items', $collapsed_items, (int) $_CLASS['core_user']-&gt;time + 31536000000, '/');
++}
++
++$result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) AS total FROM ' . ARTICLES_TABLE . ' WHERE articles_status = '.STATUS_ACTIVE);
++$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++$_CLASS['core_db']-&gt;free_result($result);
++
++$pagination = generate_pagination('articles', $row['total'], $limit, $start);
++
++$_CLASS['core_template']-&gt;assign_array(array(
++	'articles_pagination' 		=&gt; $pagination['formated'],
++	'articles_pagination_array' =&gt; $pagination['array']
++
++));
++
++$_CLASS['core_template']-&gt;display('modules/articles/index.html');
++
++?&gt;
+\ No newline at end of file
+
+Added: trunk/modules/articles/install.php
+===================================================================
+--- trunk/modules/articles/install.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/modules/articles/install.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -0,0 +1,102 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++global $prefix;
++
++if (!defined('ARTICLES_TABLE'))
++{
++	define('ARTICLES_TABLE', $prefix.'articles');
++}
++
++class articles_install
++{
++	var $error = array();
++	
++	function install()
++	{
++		global $_CLASS;
++
++		$_CLASS['core_db']-&gt;table_create('start', ARTICLES_TABLE);
++		
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_char('articles_title', 80);
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_posted', array('max' =&gt; 200000000));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_start', array('max' =&gt; 200000000, 'null' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_expires', array('max' =&gt; 200000000, 'null' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_text('articles_intro', 60000, true);
++		$_CLASS['core_db']-&gt;add_table_field_text('articles_text', 10000000);
++		$_CLASS['core_db']-&gt;add_table_field_text('articles_notes', 60000, true);
++
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_order', array('max' =&gt; 16000000, 'null' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_type', array('max' =&gt; 10));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_status', array('max' =&gt; 10));
++		$_CLASS['core_db']-&gt;add_table_field_text('articles_auth', 60000, true);
++
++		$_CLASS['core_db']-&gt;add_table_field_int('poster_id', array('max' =&gt; 16000000));
++		$_CLASS['core_db']-&gt;add_table_field_char('poster_name', 80, true);
++		$_CLASS['core_db']-&gt;add_table_field_char('poster_ip', 18);
++		$_CLASS['core_db']-&gt;add_table_field_char('approver_id', 18, true);
++		$_CLASS['core_db']-&gt;add_table_field_char('approver_name', 80, true);
++
++		$_CLASS['core_db']-&gt;add_table_index('articles_id', 'primary');
++		$_CLASS['core_db']-&gt;add_table_index('articles_start');
++		//$_CLASS['core_db']-&gt;add_table_index('articles_type');
++		//$_CLASS['core_db']-&gt;add_table_index('articles_expires');
++		$_CLASS['core_db']-&gt;add_table_index('articles_order');
++		$_CLASS['core_db']-&gt;add_table_index('articles_status');
++
++		$_CLASS['core_db']-&gt;table_create('commit');
++
++		$array = array(
++			'articles_title'	=&gt; 'Welcome Post',
++			'articles_posted'	=&gt; (int) $_CLASS['core_user']-&gt;time,
++			'articles_text'		=&gt; '&lt;p align=&quot;center&quot;&gt;I need something snappy here&lt;/p&gt;',
++			'articles_type'		=&gt; 1,
++			'articles_status'	=&gt; STATUS_ACTIVE,
++			'poster_id'			=&gt; 0,
++			'poster_ip'			=&gt; (string) ''
++		);
++
++		$_CLASS['core_db']-&gt;query('INSERT INTO ' . ARTICLES_TABLE . ' '. $_CLASS['core_db']-&gt;sql_build_array('INSERT', $array));
++
++		return true;
++	}
++
++	function uninstall()
++	{
++		global $_CLASS;
++
++		$_CLASS['core_db']-&gt;report_error(false);
++
++		$_CLASS['core_db']-&gt;query('DROP TABLE ' . ARTICLES_TABLE);
++
++		$_CLASS['core_db']-&gt;report_error(true);
++	}
++}
++
++?&gt;
+\ No newline at end of file
+
+Added: trunk/themes/viperal/images/modules/Forums/index.html
+===================================================================
+
+Added: trunk/themes/viperal/images/modules/Forums/index.php
+===================================================================
+--- trunk/themes/viperal/images/modules/Forums/index.php	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/themes/viperal/images/modules/Forums/index.php	2005-09-08 04:05:29 UTC (rev 99)
+@@ -0,0 +1,87 @@
++&lt;?php
++$this-&gt;img = array(
++	'bbcode_bitfield' =&gt; '6913',
++    'btn_post' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_post.gif*27*97',
++    'btn_post_pm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_post_pm.gif*27*97',
++    'btn_reply' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_reply.gif*27*97',
++    'btn_reply_pm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_reply_pm.gif*20*90',
++    'btn_locked' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_locked.gif*27*97',
++    'btn_profile' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_profile.gif*20*72',
++    'btn_pm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_pm.gif*20*72',
++    'btn_delete' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_delete.gif*20*20',
++    'btn_info' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_info.gif*20*20',
++    'btn_quote' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_quote.gif*20*90',
++    'btn_search' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_search.gif*20*72',
++    'btn_edit' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_edit.gif*20*90',
++    'btn_report' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_report.gif*20*20',
++    'btn_email' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_email.gif*20*72',
++    'btn_www' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_www.gif*20*72',
++    'btn_icq' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_icq.gif*20*72',
++    'btn_aim' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_aim.gif*20*72',
++    'btn_yim' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_yim.gif*20*72',
++    'btn_msnm' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_msnm.gif*20*72',
++    'btn_jabber' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_jabber.gif*20*72',
++    'btn_online' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_online.gif*20*72',
++    'btn_offline' =&gt; 'themes/viperal/template/modules/Forums/images/{LANG}/btn_offline.gif*20*72',
++    'btn_friend' =&gt; '',
++    'btn_foe' =&gt; '',
++    'icon_unapproved' =&gt; 'themes/viperal/template/modules/Forums/images/icon_unapproved.gif*18*19',
++    'icon_reported' =&gt; 'themes/viperal/template/modules/Forums/images/icon_reported.gif*18*19',
++    'icon_attach' =&gt; 'themes/viperal/template/modules/Forums/images/icon_attach.gif*18*14',
++    'icon_post' =&gt; 'themes/viperal/template/modules/Forums/images/icon_minipost.gif*9*12',
++    'icon_post_new' =&gt; 'themes/viperal/template/modules/Forums/images/icon_minipost_new.gif*9*12',
++    'icon_post_latest' =&gt; 'themes/viperal/template/modules/Forums/images/icon_latest_reply.gif*9*18',
++    'icon_post_newest' =&gt; 'themes/viperal/template/modules/Forums/images/icon_newest_reply.gif*9*18',
++    'forum' =&gt; 'themes/viperal/template/modules/Forums/images/folder_big.gif*25*46',
++    'forum_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_big.gif*25*46',
++    'forum_locked' =&gt; 'themes/viperal/template/modules/Forums/images/folder_locked_big.gif*25*46',
++    'forum_link' =&gt; 'themes/viperal/template/modules/Forums/images/folder_link_big.gif*25*46',
++    'sub_forum' =&gt; 'themes/viperal/template/modules/Forums/images/subfolder_big.gif*25*46',
++    'sub_forum_new' =&gt; 'themes/viperal/template/modules/Forums/images/subfolder_new_big.gif*25*46',
++    'folder' =&gt; 'themes/viperal/template/modules/Forums/images/folder.gif*18*19',
++    'folder_moved' =&gt; 'themes/viperal/template/modules/Forums/images/folder_moved.gif*18*19',
++    'folder_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_posted.gif*18*19',
++    'folder_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new.gif*18*19',
++    'folder_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_posted.gif*18*19',
++    'folder_hot' =&gt; 'themes/viperal/template/modules/Forums/images/folder_hot.gif*18*19',
++    'folder_hot_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_hot_posted.gif*18*19',
++    'folder_hot_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_hot.gif*18*19',
++    'folder_hot_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_new_hot_posted.gif*18*19',
++    'folder_locked' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock.gif*18*19',
++    'folder_locked_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock_posted.gif*18*19',
++    'folder_locked_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock_new.gif*18*19',
++    'folder_locked_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_lock_new_posted.gif*18*19',
++    'folder_sticky' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky.gif*18*19',
++    'folder_sticky_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky_posted.gif*18*19',
++    'folder_sticky_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky_new.gif*18*19',
++    'folder_sticky_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_sticky_new_posted.gif*18*19',
++    'folder_announce' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce.gif*18*19',
++    'folder_announce_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce_posted.gif*18*19',
++    'folder_announce_new' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce_new.gif*18*19',
++    'folder_announce_new_posted' =&gt; 'themes/viperal/template/modules/Forums/images/folder_announce_new_posted.gif*18*19',
++    'folder_global' =&gt; '',
++    'folder_global_posted' =&gt; '',
++    'folder_global_new' =&gt; '',
++    'folder_global_new_posted' =&gt; '',
++    'poll_left'		=&gt; 'themes/viperal/template/modules/Forums/images/vote_lcap.gif*12*4',
++    'poll_center'	=&gt; 'themes/viperal/template/modules/Forums/images/voting_bar.gif*12*4',
++    'poll_right'	=&gt; 'themes/viperal/template/modules/Forums/images/vote_rcap.gif*12*4',
++    'attach_progress_bar' =&gt; 'themes/viperal/template/modules/Forums/images/progress_bar.gif*16*280',
++    'karma_left' =&gt; '',
++    'karma_center' =&gt; 'themes/viperal/template/modules/Forums/images/karma/karma{SUFFIX}.gif*6*69',
++    'karma_right' =&gt; '',
++    'pagination_sep' =&gt; ', ',
++    'image_register' =&gt; 'themes/viperal/template/modules/Forums/images/icon_mini_register.gif',
++    'user_icon1' =&gt; '',
++    'user_icon2' =&gt; '',
++    'user_icon3' =&gt; '',
++    'user_icon4' =&gt; '',
++    'user_icon5' =&gt; '',
++    'user_icon6' =&gt; '', 
++    'user_icon7' =&gt; '',
++    'user_icon8' =&gt; '',
++    'user_icon9' =&gt; '',
++    'user_icon10' =&gt; '',
++);
++
++?&gt;
+\ No newline at end of file
+
+Added: trunk/themes/viperal/images/modules/index.html
+===================================================================
+
+Modified: trunk/themes/viperal/style/style.css
+===================================================================
+--- trunk/themes/viperal/style/style.css	2005-09-03 16:26:45 UTC (rev 98)
++++ trunk/themes/viperal/style/style.css	2005-09-08 04:05:29 UTC (rev 99)
+@@ -195,7 +195,7 @@
+ /* 
+ 	NEWS BLOCKS
+ */
+-.newsblock
++.articles_block
+ {
+     background-color: #eee;
+     background: url(images/bg.gif);
+@@ -204,7 +204,7 @@
+     font-size: 110%;
+ }
+ 	
+-.newsblock .title
++.articles_block .title
+ {
+ 	position: relative;
+ 	background: #C7D0D7;
+@@ -213,14 +213,14 @@
+ 	padding: 2px;
+ }
+ 
+-.newsblock .content
++.articles_block .content
+ {
+ 	padding: 10px;
+ 	min-height: 13px;
+ 	color: black;
+ }
+ 
+-.newsblock .numbering
++.articles_block .numbering
+ {
+ 	text-align: center;
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000021.html">[Viperals-svncheckins] r98 - in trunk: admin includes/templates/admin/modules install
+</A></li>
+	<LI>Next message: <A HREF="000023.html">[Viperals-svncheckins] r100 - /
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

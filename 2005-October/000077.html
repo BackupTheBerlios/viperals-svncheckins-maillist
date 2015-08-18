@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r157 - in cms/branches/1.0alpha2: blocks install
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r157%20-%20in%20cms/branches/1.0alpha2%3A%20blocks%20install&In-Reply-To=%3C200510011311.j91DBbCa001207%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000076.html">
+   <LINK REL="Next"  HREF="000078.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r157 - in cms/branches/1.0alpha2: blocks install</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r157%20-%20in%20cms/branches/1.0alpha2%3A%20blocks%20install&In-Reply-To=%3C200510011311.j91DBbCa001207%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r157 - in cms/branches/1.0alpha2: blocks install">viperal at berlios.de
+       </A><BR>
+    <I>Sat Oct  1 15:11:37 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000076.html">[Viperals-svncheckins] r156 - in cms/trunk: blocks includes/display install
+</A></li>
+        <LI>Next message: <A HREF="000078.html">[Viperals-svncheckins] r158 - cms/trunk/modules/Control_Panel/ucp
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#77">[ date ]</a>
+              <a href="thread.html#77">[ thread ]</a>
+              <a href="subject.html#77">[ subject ]</a>
+              <a href="author.html#77">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-10-01 15:11:37 +0200 (Sat, 01 Oct 2005)
+New Revision: 157
+
+Modified:
+   cms/branches/1.0alpha2/blocks/block-User.php
+   cms/branches/1.0alpha2/install/build_data.php
+Log:
+
+
+Modified: cms/branches/1.0alpha2/blocks/block-User.php
+===================================================================
+--- cms/branches/1.0alpha2/blocks/block-User.php	2005-10-01 13:03:04 UTC (rev 156)
++++ cms/branches/1.0alpha2/blocks/block-User.php	2005-10-01 13:11:37 UTC (rev 157)
+@@ -146,7 +146,7 @@
+ 	
+ 	if ($row['user_id'] != ANONYMOUS)
+ 	{
+-		$link = (($row['user_type'] == USER_BOT) ? '&lt;a href=&quot;'.generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']).'&quot;&gt;'.$row['username'].'&lt;/a&gt;' : $row['username']).' &gt;';
++		$link = ($row['user_type'] == USER_BOT) ? $row['username'].' &gt;' : '&lt;a href=&quot;'.generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']).'&quot;&gt;'.$row['username'].'&lt;/a&gt;  &gt;';
+ 		$who_where['user'] .= $online['user'] .': '.$link.' &lt;a href=&quot;'.$row['session_url'].'&quot;&gt;'.$row['session_page'].'&lt;/a&gt;&lt;br /&gt;';
+ 	}
+ 	else
+
+Modified: cms/branches/1.0alpha2/install/build_data.php
+===================================================================
+--- cms/branches/1.0alpha2/install/build_data.php	2005-10-01 13:03:04 UTC (rev 156)
++++ cms/branches/1.0alpha2/install/build_data.php	2005-10-01 13:11:37 UTC (rev 157)
+@@ -25,12 +25,12 @@
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;admins (admin_section, user_id, admin_status) VALUES ('_all_', 2, 2)&quot;);
+ 
+-//$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;blocks (id, title, type, content, position, weight, active, file) VALUES (1, 'Control Panel', , 'block-Control_Panel.php')&quot;);
+-
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'site_name', '', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'start_date', '', 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'default_theme', 'viperal', 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'foot1', '&lt;a href=\&quot;feed.php?feed=rss1\&quot; title=\&quot;RSS 1.0 / RDF Feed\&quot;&gt;&lt;img alt=\&quot;RSS 1.0 / RDF\&quot; src=\&quot;images/rss10_logo.gif\&quot; /&gt;&lt;/a&gt; &lt;a href=\&quot;feed.php?feed=rss2\&quot; title=\&quot;RSS 2.0 Feed\&quot;&gt;&lt;img alt=\&quot;RSS 2.0\&quot; src=\&quot;images/rss20_logo.gif\&quot; /&gt;&lt;/a&gt; &lt;a href=\&quot;feed.php?feed=rss\&quot; title=\&quot;RSS 0.91 Feed\&quot;&gt;&lt;img alt=\&quot;RSS 0.9\&quot; src=\&quot;images/rss090_logo.gif\&quot; /&gt;&lt;/a&gt;', 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'default_theme', 'viperal', 1)&quot;);
++
++$content = $_CLASS['core_db']-&gt;escape('&lt;a href=&quot;feed.php?feed=rss1&quot; title=&quot;RSS 1.0 / RDF Feed&quot;&gt;&lt;img alt=&quot;RSS 1.0 / RDF&quot; src=&quot;images/rss10_logo.gif&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;feed.php?feed=rss2&quot; title=&quot;RSS 2.0 Feed&quot;&gt;&lt;img alt=&quot;RSS 2.0&quot; src=&quot;images/rss20_logo.gif&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;feed.php?feed=rss&quot; title=&quot;RSS 0.91 Feed&quot;&gt;&lt;img alt=&quot;RSS 0.9&quot; src=&quot;images/rss090_logo.gif&quot; /&gt;&lt;/a&gt;');
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'foot1', '$content', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'foot2', '', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'default_lang', 'en', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'default_dst', '0', 1)&quot;);
+@@ -41,8 +41,9 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('global', 'index_page', 'contact', 1)&quot;);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('maintenance', 'active', '1', 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('maintenance', 'start', '', 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('maintenance', 'text', '&lt;p align=\&quot;center\&quot;&gt;&lt;b&gt;Sorry we are currently updating this site.&lt;br&gt;\nPlease try again later&lt;/b&gt;&lt;/p&gt;\n&lt;p align=\&quot;center\&quot;&gt;&lt;b&gt;Viperal&lt;/b&gt;\n&lt;/p&gt;', 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('maintenance', 'start', '', 1)&quot;);
++$content = $_CLASS['core_db']-&gt;escape('&lt;p align=&quot;center&quot;&gt;&lt;b&gt;Sorry we are currently updating this site.&lt;br&gt;Please try again later&lt;/b&gt;&lt;/p&gt;');
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('maintenance', 'text', '$content', 1)&quot;);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('email', 'allow_html_email', '1', 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;config (config_section, config_name, config_value, config_cache) VALUES ('email', 'email_enable', '1', 1)&quot;);
+@@ -177,13 +178,13 @@
+ $admin_data = $guest_data = $bot_data = $_CLASS['core_db']-&gt;escape($data);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (0, 2, 1, 'Anonymous', '', '', '', $time, '', 1, 0, 0, 0, 0, '$guest_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', '', 1, 1, 1, 1, 1, '$admin_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'MSN', '', '', '', $time, '65.54.188.', 'msnbot/', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Yahoo', '', '', '', $time, '66.196.90.1', 'Yahoo! Slurp', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Alexa', '', '', '', $time, '66.28.250.,209.237.238.', 'ia_archiver', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'NaverBot', '', '', '', $time, '218.145.25.,61.78.61.,61.78.61.', 'NaverBot-', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Jetbot', '', '', '', $time, '64.71.144.', 'Jetbot/', '', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (1, 2, 4, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'md5', '', $time, '', 'AA0000', 1, 1, 1, 1, 1, '$admin_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Googlebot', '', '', '', $time, '216.239.46.,64.68.8,66.249.64.', 'Googlebot/', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'MSN', '', '', '', $time, '65.54.188.', 'msnbot/', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Yahoo', '', '', '', $time, '66.196.90.1', 'Yahoo! Slurp', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Alexa', '', '', '', $time, '66.28.250.,209.237.238.', 'ia_archiver', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'NaverBot', '', '', '', $time, '218.145.25.,61.78.61.,61.78.61.', 'NaverBot-', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$user_prefix.&quot;users (user_type, user_status, user_group, username, user_password, user_password_encoding, user_email, user_reg_date, user_ip, user_agent, user_colour, user_allow_viewonline, user_allow_viewemail, user_allow_massemail, user_allow_pm, user_allow_email, user_data, user_new_privmsg, user_unread_privmsg, user_posts) VALUES (2, 2, 5, 'Jetbot', '', '', '', $time, '64.71.144.', 'Jetbot/', '9E8DA7', 1, 0, 0, 0, 0, '$bot_data', 0, 0, 0)&quot;);
+ 
+ // Forums
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_auth_options (auth_option, is_local) VALUES ('f_', 1)&quot;);
+@@ -378,7 +379,7 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_config (config_name, config_value, is_dynamic) VALUES ('board_email_sig', 'Thanks, The Management', 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_config (config_name, config_value, is_dynamic) VALUES ('board_email', '', 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_config (config_name, config_value, is_dynamic) VALUES ('board_contact', '', 0)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_config (config_name, config_value, is_dynamic) VALUES ('board_startdate', &quot;.gmtime().&quot;, 0)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_config (config_name, config_value, is_dynamic) VALUES ('board_startdate', $time, 0)&quot;);
+ 
+ // to be removed
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$table_prefix.&quot;forums_config (config_name, config_value, is_dynamic) VALUES ('email_function_name', 'mail', 0)&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000076.html">[Viperals-svncheckins] r156 - in cms/trunk: blocks includes/display install
+</A></li>
+	<LI>Next message: <A HREF="000078.html">[Viperals-svncheckins] r158 - cms/trunk/modules/Control_Panel/ucp
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#77">[ date ]</a>
+              <a href="thread.html#77">[ thread ]</a>
+              <a href="subject.html#77">[ subject ]</a>
+              <a href="author.html#77">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

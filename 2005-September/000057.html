@@ -1,0 +1,2521 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r136 - in cms/trunk: admin includes includes/display includes/forums modules modules/Control_Panel/ucp modules/Members_List modules/calender modules/calender/language modules/calender/language/en
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r136%20-%20in%20cms/trunk%3A%20admin%20includes%20includes/display%20includes/forums%20modules%20modules/Control_Panel/ucp%20modules/Members_List%20modules/calender%20modules/calender/language%20modules/calender/language/en&In-Reply-To=%3C200509202146.j8KLkpWi011680%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000056.html">
+   <LINK REL="Next"  HREF="000058.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r136 - in cms/trunk: admin includes includes/display includes/forums modules modules/Control_Panel/ucp modules/Members_List modules/calender modules/calender/language modules/calender/language/en</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r136%20-%20in%20cms/trunk%3A%20admin%20includes%20includes/display%20includes/forums%20modules%20modules/Control_Panel/ucp%20modules/Members_List%20modules/calender%20modules/calender/language%20modules/calender/language/en&In-Reply-To=%3C200509202146.j8KLkpWi011680%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r136 - in cms/trunk: admin includes includes/display includes/forums modules modules/Control_Panel/ucp modules/Members_List modules/calender modules/calender/language modules/calender/language/en">viperal at berlios.de
+       </A><BR>
+    <I>Tue Sep 20 23:46:51 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000056.html">[Viperals-svncheckins] r135 - in cms/trunk/includes: forums templates/modules/Forums
+</A></li>
+        <LI>Next message: <A HREF="000058.html">[Viperals-svncheckins] r137 - in cms/trunk: . includes includes/nusoap includes/templates includes/templates/modules includes/templates/modules/Forums includes/templates/modules/google_search install modules/Forums modules/Forums/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#57">[ date ]</a>
+              <a href="thread.html#57">[ thread ]</a>
+              <a href="subject.html#57">[ subject ]</a>
+              <a href="author.html#57">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-20 23:46:50 +0200 (Tue, 20 Sep 2005)
+New Revision: 136
+
+Added:
+   cms/trunk/includes/display/menu.php
+   cms/trunk/modules/calender/
+   cms/trunk/modules/calender/configurator.php
+   cms/trunk/modules/calender/index.php
+   cms/trunk/modules/calender/language/
+   cms/trunk/modules/calender/language/en/
+   cms/trunk/modules/calender/language/en/index.php
+Modified:
+   cms/trunk/admin/blocks.php
+   cms/trunk/admin/messages.php
+   cms/trunk/admin/modules.php
+   cms/trunk/includes/display/calender.php
+   cms/trunk/includes/display/display.php
+   cms/trunk/includes/forums/auth.php
+   cms/trunk/includes/functions.php
+   cms/trunk/includes/session.php
+   cms/trunk/modules/Control_Panel/ucp/ucp_calender.php
+   cms/trunk/modules/Members_List/index.php
+Log:
+
+
+Modified: cms/trunk/admin/blocks.php
+===================================================================
+--- cms/trunk/admin/blocks.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/admin/blocks.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -309,7 +309,7 @@
+ 	{
+ 		$start = strtotime($data['block_starts']);
+ 
+-		if (!$start || $start == -1)
++		if (!$start || $start === -1)
+ 		{
+ 			$error .= $_CLASS['core_user']-&gt;lang['ERROR_START_TIME'].'&lt;br /&gt;';
+ 		}
+@@ -319,7 +319,7 @@
+ 	{
+ 		$expires = strtotime($data['block_expires']);
+ 
+-		if (!$expires || $expires == -1)
++		if (!$expires || $expires === -1)
+ 		{
+ 			$error .= $_CLASS['core_user']-&gt;lang['ERROR_END_TIME'].'&lt;br /&gt;';
+ 		}
+
+Modified: cms/trunk/admin/messages.php
+===================================================================
+--- cms/trunk/admin/messages.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/admin/messages.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -234,7 +234,7 @@
+ 	{
+ 		$start = strtotime($data['block_starts']);
+ 
+-		if (!$start || $start == -1)
++		if (!$start || $start === -1)
+ 		{
+ 			$error .= $_CLASS['core_user']-&gt;lang['ERROR_START_TIME'].'&lt;br /&gt;';
+ 		}
+@@ -244,7 +244,7 @@
+ 	{
+ 		$expires = strtotime($data['block_expires']);
+ 
+-		if (!$expires || $expires == -1)
++		if (!$expires || $expires === -1)
+ 		{
+ 			$error .= $_CLASS['core_user']-&gt;lang['ERROR_END_TIME'].'&lt;br /&gt;';
+ 		}
+
+Modified: cms/trunk/admin/modules.php
+===================================================================
+--- cms/trunk/admin/modules.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/admin/modules.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -54,7 +54,7 @@
+ 		switch ($_REQUEST['mode'])
+ 		{
+ 			case 'change':
+-				$result = $_CLASS['core_db']-&gt;query('SELECT module_status, module_type FROM '.CORE_MODULES_TABLE.' WHERE module_id = '.$id);
++				$result = $_CLASS['core_db']-&gt;query('SELECT module_name, module_status, module_type FROM '.CORE_MODULES_TABLE.' WHERE module_id = '.$id);
+ 				$module = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 			
+@@ -77,7 +77,7 @@
+ 					{
+ 						$module_configurer = new $name;
+ 
+-						if (method_exists('status_change'))
++						if (method_exists($module_configurer, 'status_change'))
+ 						{
+ 							$report = $module_configurer-&gt;status_change($status, $module['module_status']);
+ 		
+@@ -118,7 +118,7 @@
+ 						{
+ 							$module_configurer = new $name;
+ 	
+-							if (method_exists('install'))
++							if (method_exists($module_configurer, 'install'))
+ 							{
+ 								$status = $module_configurer-&gt;install();
+ 			
+@@ -158,7 +158,7 @@
+ 						{
+ 							$module_configurer = new $name;
+ 	
+-							if (method_exists('uninstall'))
++							if (method_exists($module_configurer, 'uninstall'))
+ 							{
+ 								$status = $module_configurer-&gt;uninstall();
+ 			
+
+Modified: cms/trunk/includes/display/calender.php
+===================================================================
+--- cms/trunk/includes/display/calender.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/includes/display/calender.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -1,25 +1,33 @@
+ &lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal )								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
+ 
++$Id$
++*/
++
+ class calender
+ {
+ 	var $day;
+ 	var $month;
+ 	var $year;
+ 	var $month_data_array = array();
+-	var $table = 'cms_calender';
++	var $table = false;
+ 	
+ 	// Use me, use me plz....
+ 	var $time_offset = 0;
+@@ -29,7 +37,6 @@
+ 	*/
+ 	function set_date($day, $month = false, $year = false)
+ 	{
+-		//(int)
+ 		$this-&gt;month = (!$month || $month &gt; 12 || $month &lt; 1) ? date('n') : $month;
+ 		
+ 		if ($year)
+@@ -42,6 +49,7 @@
+ 			$this-&gt;year = date('Y');
+ 			$this-&gt;year_current = true;
+ 		}
++		//checkdate ( int month, int day, int year )
+ 
+ 		$this-&gt;last_day = date(&quot;t&quot;, mktime(0, 0, 0, $this-&gt;month, 1, $this-&gt;year));
+ 		$this-&gt;first_day = date(&quot;w&quot;, mktime(0, 0, 0, $this-&gt;month, 1, $this-&gt;year)) + 1;
+@@ -149,7 +157,7 @@
+ 			{
+ 				$_CLASS['core_template']-&gt;assign_vars_array($template_name, array(
+ 					'NUMBER'	=&gt; false
+-					));
++				));
+ 				continue;
+ 			}
+ 			
+@@ -160,7 +168,7 @@
+ 					'NUMBER'	=&gt; $num,
+ 					'LINK'		=&gt; ($num != $this-&gt;day || !$current_month) ? generate_link($link.'&amp;year='.$this-&gt;year.'&amp;month='.$this-&gt;month.'&amp;mode=day_view&amp;day='.$num) : false,
+ 					'DATA'		=&gt; empty($this-&gt;month_data_array[($num - 1)]) ? false : $this-&gt;month_data_array[($num - 1)],
+-					));
++				));
+ 			}
+ 
+ 			if ($num == $this-&gt;last_day)
+@@ -185,39 +193,47 @@
+ 		
+ 		$date = explode(':', date('n:d:y', $time));
+ 		
+-		$day['start'] = mktime(0, 0, 0, $date[0], $date[1], $date[2]);
++		$day['start'] = mktime(0, 0, 0, $date[0], $date[1], $date[2]) + 60;
+ 		$day['end'] = mktime(24, 0, 0, $date[0], $date[1], $date[2]) - 1;
+ 
+ 		$sql = 'SELECT * FROM '. $this-&gt;table .'
+-					WHERE start_date &lt;= '. $day['end'] .' 
+-					AND end_date &gt;= '. $day['start'];
++					WHERE calender_starts &lt;= '. $day['end'] .' 
++					AND calender_expires &gt;= '. $day['start'];
+ 					
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+ 		
+ 		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+-			if ($row['recur'] &amp;&amp; ($row['start_date'] &lt; $day['start']))
++			if ($row['calender_recur_rate'] &amp;&amp; ($row['calender_starts'] &lt; $day['start']))
+ 			{
+-				$row['start_date'] = $row['start_date'] + ($row['recur'] * ceil(($day['start'] - $row['start_date']) / $row['recur']));
++				$row['calender_starts'] = $row['calender_starts'] + ($row['calender_recur_rate'] * ceil(($day['start'] - $row['calender_starts']) / $row['calender_recur_rate']));
+ 								
+-				if ($row['start_date'] &gt; $day['end'])
++				if ($row['calender_starts'] &gt; $day['end'])
+ 				{
+ 					continue;
+ 				}
+ 			}
+ 
+-			$time = explode(':', $row['start_time']);
++			if ($row['calender_start_time'])
++			{
++				$temp_time = explode(':', $row['calender_start_time']);
+ 
+-			$start_time = mktime($time[0], $time[1], 0, $date[0], $date[1], $date[2]);
+-			$end_time = $start_time + $row['duration'];
++				$start_time = mktime($temp_time[0], $temp_time[1], 0, $date[0], $date[1], $date[2]);
++				$end_time = $start_time + $row['duration'];
++			}
++			else
++			{
++				$start_time = ($row['calender_starts'] &gt; $day['start']) ? $day['start'] : $row['calender_starts'];
++				$end_time = $row['calender_expires'];
++			}
+  
+ 			$_CLASS['core_template']-&gt;assign_vars_array($template_name, array(
+-					'TITLE'			=&gt; $row['title'],
+-					'ID'			=&gt; $row['id'],
+-					'DESCRIPTION'	=&gt; $row['description'],
+-					'LINK'			=&gt; generate_link(&quot;$link&amp;mode=details&amp;id=&quot;.$row['id']),
+-					'START_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($start_time, 'g:i A'),
+-					'END_TIME'		=&gt; $_CLASS['core_user']-&gt;format_date($end_time, 'g:i A'),
++					'TITLE'				=&gt; $row['calender_title'],
++					'ID'				=&gt; $row['calender_id'],
++					'DESCRIPTION'		=&gt; $row['calender_text'],
++					'LINK'				=&gt; generate_link(&quot;$link&amp;mode=details&amp;id=&quot;.$row['calender_id']),
++					'START_TIME'		=&gt; $_CLASS['core_user']-&gt;format_date($start_time, 'g:i A'),
++					'END_TIME'			=&gt; $_CLASS['core_user']-&gt;format_date($end_time, 'g:i A'),
+ 			));
+ 		}
+ 		$_CLASS['core_db']-&gt;free_result($result);
+@@ -238,8 +254,8 @@
+ 		$month['end'] = mktime(24, 0, 0, $date[0], $date[1], $date[2]) - 1;
+ 
+ 		$sql = 'SELECT * FROM '. $this-&gt;table .'
+-					WHERE start_date &lt;= '. $month['end'] .' 
+-					AND end_date &gt;= '. $month['start'];
++					WHERE calender_starts &lt;= '. $month['end'] .' 
++					AND calender_expires &gt;= '. $month['start'];
+ 		
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+@@ -248,9 +264,9 @@
+ 		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			// Does time between start and end span more than one day ?
+-			if (($row['end_date'] - $row['start_date']) &gt;= 86400)
++			if (($row['calender_expires'] - $row['calender_starts']) &gt;= 86400)
+ 			{
+-				$days = $this-&gt;generate_days($row['start_date'], $row['end_date'], $month['start'], $month['end'],  $row['recur']);
++				$days = $this-&gt;generate_days($row['calender_starts'], $row['calender_expires'], $month['start'], $month['end'],  $row['calender_recur_rate']);
+ 
+ 				foreach ($days as $day =&gt; $null)
+ 				{
+@@ -261,19 +277,20 @@
+ 						continue;
+ 					}
+ 		
+-					$row['link']  = generate_link($link.'&amp;mode=details&amp;id='.$row['id']);
++					$row['calender_link']  = generate_link($link.'&amp;mode=details&amp;id='.$row['calender_id']);
+ 					$this-&gt;month_data_array[$day][] = $row;
+ 				}
+ 			}
+ 			else
+ 			{
+-				$day = date('j', $row['start_date']) - 1;
++				$day = date('j', $row['calender_starts']) - 1;
++
+ 				if (count($this-&gt;month_data_array[$day]) &gt;= $limit)
+ 				{
+ 					continue;
+ 				}
+ 	
+-				$row['link']  = generate_link($link.'&amp;mode=details&amp;id='.$row['id']);
++				$row['calender_link']  = generate_link($link.'&amp;mode=details&amp;id='.$row['calender_id']);
+ 				$this-&gt;month_data_array[$day][] = $row;
+ 			}
+ 		}
+@@ -281,46 +298,56 @@
+ 		$_CLASS['core_db']-&gt;free_result($result);		
+ 	}
+ 
+-	function generate_days($start_time, $end_time, $start_date, $end_date, $recurring = 86400)
++	function generate_days($calender_start_time, $end_time, $calender_starts, $calender_expires, $calender_recur = 86400)
+ 	{
+ 		global $_CLASS;
+ 
+ 		// Never know how some versions may treat things, or what other people may do.
+-		settype($start_time, 'integer');
+-		settype($start_date, 'integer');
++		settype($calender_start_time, 'integer');
++		settype($calender_starts, 'integer');
+ 		settype($end_time, 'integer');
+-		settype($end_date, 'integer');
++		settype($calender_expires, 'integer');
+ 
+-		// we don't want useless loops if the recurrence less than 1 day
+-		if (is_numeric($recurring))
++		$calender_recurring = false;
++
++		if (is_string($calender_recur) &amp;&amp; in_array($calender_recur, 'everyday', 'every_other', 'weekly', 'monthly', 'years'))
+ 		{
+-			$recurring = ($recurring &gt; 86400) ? (int) $recurring : 86400;
++			Switch ($calender_recur)
++			{
++				Case 'weekly':
++					
++				Case 'monthly':
++			}
+ 		}
+-// Add recurrence for months, years (maybe)..
+-// Damit why couldn't there always be 31 days in a month :-(
++		
++		// we don't want useless loops if the calender_recurrence less than 1 day
++		if (!$calender_recurring)
++		{
++			$calender_recurring = ($calender_recurring &gt; 86400) ? (int) $calender_recurring : 86400;
++		}
+ 
+-		$end_time = ($end_time &lt; $end_date) ? (int) $end_time : (int) $end_date;
++		$end_time = ($end_time &lt; $calender_expires) ? (int) $end_time : (int) $calender_expires;
+ 
+-		// Get the closest time to our start_date, if start_time is before that start_date
+-		if ($start_time &lt; $start_date)
++		// Get the closest time to our calender_starts, if calender_start_time is before that calender_starts
++		if ($calender_start_time &lt; $calender_starts)
+ 		{
+-			$start_time = $start_time + ($recurring * ceil(($start_date - $start_time) / $recurring));
++			$calender_start_time = $calender_start_time + ($calender_recurring * ceil(($calender_starts - $calender_start_time) / $calender_recurring));
+ 		}
+ 
+-		// mainly a check for the above, since recurrence can be out of the start/end date range
+-		if ($start_time &gt; $end_date)
++		// mainly a check for the above, since calender_recurrence can be out of the start/end date range
++		if ($calender_start_time &gt; $calender_expires)
+ 		{
+ 			return array(); //return empty array.
+ 		}
+ 
+-		$loop_time = $start_time;
++		$loop_time = $calender_start_time;
+ 		$days = array();
+ 
+ 		While ($loop_time &lt; $end_time)
+ 		{
+ 			$days[date('j', $loop_time)] = true;
+ 
+-			$loop_time += $recurring;
++			$loop_time += $calender_recurring;
+ 		}
+ 		
+ 		return $days;
+@@ -331,20 +358,33 @@
+ 		global $_CLASS;
+ 		
+ 		$sql = 'SELECT * FROM '. $this-&gt;table .'
+-					WHERE id = '.$id;
++					WHERE calender_id = '.$id;
+ 					
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+ 		
+ 		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 		$_CLASS['core_db']-&gt;free_result($result);
+ 		
+-		$time = explode(':', $row['start_time']);
+-		//echo $row['start_time'];
+-// Needs fixing
+-		$row['start_time'] = mktime($time[0], $time[1], 0, 0, 0, 2005);
+-		//echo $row['start_time'];
+-		$row['end_time'] = $row['start_time'] + $row['duration'];
++		if ($row['calender_start_time'])
++		{
++			if (!$time)
++			{
++				$time = mktime(12, 0, 0, $this-&gt;month, $this-&gt;day, $this-&gt;year);
++			}
++	
++			$date = explode(',', date('n,t,Y', $time));
+ 
++			$temp_time = explode(':', $row['calender_start_time']);
++
++			$row['start_time'] = mktime($temp_time[0], $temp_time[1], 0, $date[0], $date[1], $date[2]);
++			$row['end_time'] = $start_time + $row['duration'];
++		}
++		else
++		{
++			$row['start_time'] = $row['calender_starts'];
++			$row['end_time'] = $row['calender_expires'];
++		}
++
+ 		return $row;
+ 	}
+ }
+
+Modified: cms/trunk/includes/display/display.php
+===================================================================
+--- cms/trunk/includes/display/display.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/includes/display/display.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -176,11 +176,12 @@
+ 
+ 		$this-&gt;header['js'][] = '&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/common.js&quot;&gt;&lt;/script&gt;';
+ 		$this-&gt;header['js'][] = &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;\nvar cms_session_id = '{$_CLASS['core_user']-&gt;data['session_id']}';\nvar cms_cookie_path = '{$_CORE_CONFIG['server']['cookie_path']}';\nvar cms_cookie_domain = '{$_CORE_CONFIG['server']['cookie_domain']}';\n&lt;/script&gt;&quot;;
++		$this-&gt;header['meta'][] = '&lt;base href=&quot;'.generate_base_url().'&quot; /&gt;';
+ 
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+ 			'SITE_LANG'			=&gt;	$_CLASS['core_user']-&gt;lang['LANG'],
+ 			'SITE_TITLE'		=&gt;	$_CORE_CONFIG['global']['site_name'].': '.(is_array($_CORE_MODULE['module_title']) ? implode(' &gt; ', $_CORE_MODULE['module_title']) : $_CORE_MODULE['module_title']),
+-			'SITE_BASE'			=&gt;	generate_base_url(),
++			'SITE_URL'			=&gt;	generate_base_url(),
+ 			'SID'				=&gt;	empty($_CLASS['core_user']-&gt;data['session_id']) ? '' : $_CLASS['core_user']-&gt;data['session_id'],
+ 			'SITE_NAME'			=&gt;	$_CORE_CONFIG['global']['site_name'],
+ 			'HEADER_MESSAGE'	=&gt;	$this-&gt;message,
+
+Added: cms/trunk/includes/display/menu.php
+===================================================================
+--- cms/trunk/includes/display/menu.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/includes/display/menu.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -0,0 +1,65 @@
++&lt;?php
++//**************************************************************//
++//  Vipeal CMS:													//
++//**************************************************************//
++//																//
++//  Copyright &#169; 2004 by Viperal									//
++//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
++//																//
++//  Viperal CMS is released under the terms and conditions		//
++//  of the GNU General Public License version 2					//
++//																//
++//**************************************************************//
++
++class menu
++{
++
++	var $menu = '&lt;script language=&quot;JavaScript&quot; type=&quot;text/javascript&quot;&gt;';
++	var $menuname = 'Menu';
++	var $options = '&lt;script language=&quot;JavaScript&quot; type=&quot;text/javascript&quot;&gt;var AdminM =[';
++
++	var $mainopen = false;
++	function main($image='null', $name, $link ,$t2='null',$t3=false)
++	{
++		if ($this-&gt;mainopen)
++		{
++			$this-&gt;options .= &quot;]\n&quot;;
++		}
++		$this-&gt;options .= &quot;[null,'$name','$link',null,'Home Page',\n&quot;;
++
++	}
++	
++	function sub($image='null', $name, $link ,$t2='null',$t3=false)
++	{
++
++		$this-&gt;options .= &quot;[null,'$name','$link',null,'Home Page'],\n&quot;;
++
++	}
++	
++	function menuarray($menu, $previous=false) {
++
++		foreach  ($menu as $name =&gt; $value)
++		{
++			if ($previous == $name)
++			{
++				$this-&gt;main($image='null', $name, $value ,$t2='null',$t3='null');
++			} else {
++			
++				if (is_array($value))
++				{
++					$this-&gt;menuarray($value, $name);
++				} else {
++					$this-&gt;sub($image='null', $name, $value ,$t2='null',$t3='null');
++				}
++			}
++		}
++		$this-&gt;options .= &quot;],\n&quot;;
++	}
++	
++	function menuclose() {
++			$this-&gt;options = substr($this-&gt;options, 0, -2). &quot;;\ncmDraw ('AdminMenu', AdminM, 'hbr', cmThemeOffice, 'ThemeOffice');
++&lt;/script&gt;\n&quot;; 
++	}
++}
++
++?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/auth.php
+===================================================================
+--- cms/trunk/includes/forums/auth.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/includes/forums/auth.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -1,4 +1,4 @@
+-&lt;?php
++&lt;?php
+ /*
+ ||**************************************************************||
+ ||  Viperal CMS &#194;&#169; :												||
+@@ -19,335 +19,359 @@
+ ||**************************************************************||
+ 
+ $Id$
+-*/
+-
+-// -------------------------------------------------------------
+-//
+-// COPYRIGHT : 2001, 2004 phpBB Group
+-// WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+-//
+-// -------------------------------------------------------------
+-
+-// Will be keeping my eye of 'other products' to ensure these things don't
+-// mysteriously appear elsewhere, think up your own solutions!
+-class auth
+-{
+-	var $founder = false;
+-	var $acl = array();
+-	var $option = array();
+-	var $acl_options = array();
+-
+-	function acl(&amp;$userdata)
+-	{
+-		global $_CLASS;
+-
+-		if (is_null($this-&gt;acl_options = $_CLASS['core_cache']-&gt;get('acl_options')))
+-		{
+-			$sql = 'SELECT auth_option, is_global, is_local
+-				FROM ' . FORUMS_ACL_OPTIONS_TABLE . '
+-				ORDER BY auth_option_id';
+-			$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-			$global = $local = 0;
+-			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-			{
+-				if (!empty($row['is_global']))
+-				{
+-					$this-&gt;acl_options['global'][$row['auth_option']] = $global++;
+-				}
+-				if (!empty($row['is_local']))
+-				{
+-					$this-&gt;acl_options['local'][$row['auth_option']] = $local++;
+-				}
+-			}
+-			$_CLASS['core_db']-&gt;free_result($result);
+-
+-			$_CLASS['core_cache']-&gt;put('acl_options', $this-&gt;acl_options);
+-
+-			$this-&gt;acl_clear_prefetch();
+-			$this-&gt;acl_cache($userdata);
+-		}
+-		elseif (!trim($userdata['user_permissions']))
+-		{
+-			$this-&gt;acl_cache($userdata);
+-		}
+-
+-		foreach (explode(&quot;\n&quot;, $userdata['user_permissions']) as $f =&gt; $seq)
+-		{
+-			if ($seq)
+-			{
+-				$i = 0;
+-				while ($subseq = substr($seq, $i, 6))
+-				{
+-					if (!isset($this-&gt;acl[$f]))
+-					{
+-						$this-&gt;acl[$f] = '';
+-					}
+-					$this-&gt;acl[$f] .= str_pad(base_convert($subseq, 36, 2), 31, 0, STR_PAD_LEFT);
+-					$i += 6;
+-				}
+-			}
+-		}
+-		return;
+-	}
+-
+-	// Look up an option
+-	function acl_get($opt, $f = 0)
+-	{
+-		static $cache;
+-
+-		if (!isset($cache[$f][$opt]))
+-		{
+-			$cache[$f][$opt] = false;
+-			if (isset($this-&gt;acl_options['global'][$opt]))
+-			{
+-				if (isset($this-&gt;acl[0]))
+-				{
+-					$cache[$f][$opt] = $this-&gt;acl[0]{$this-&gt;acl_options['global'][$opt]};
+-				}
+-			}
+-
+-			if (isset($this-&gt;acl_options['local'][$opt]))
+-			{
+-				if (isset($this-&gt;acl[$f]))
+-				{
+-					$cache[$f][$opt] |= $this-&gt;acl[$f]{$this-&gt;acl_options['local'][$opt]};
+-				}
+-			}
+-		}
+-
+-		return isset($cache[$f][$opt]) ? $cache[$f][$opt] : false;
+-	}
+-
+-	function acl_getf($opt)
+-	{
+-		static $cache;
+-
+-		if (isset($this-&gt;acl_options['local'][$opt]))
+-		{
+-			foreach ($this-&gt;acl as $f =&gt; $bitstring)
+-			{
+-				if (!isset($cache[$f][$opt]))
+-				{
+-					$cache[$f][$opt] = false;
+-
+-					$cache[$f][$opt] = $bitstring{$this-&gt;acl_options['local'][$opt]};
+-					if (isset($this-&gt;acl_options['global'][$opt]))
+-					{
+-						$cache[$f][$opt] |= $this-&gt;acl[0]{$this-&gt;acl_options['global'][$opt]};
+-					}
+-				}
+-			}
+-		}
+-
+-		return $cache;
+-	}
+-
+-	function acl_gets($opts, $f = 0)
+-	{
+-		$acl = 0;
+-
+-		if (is_array($opts))
+-		{
+-			foreach ($opts as $opt)
+-			{
+-				$acl |= $this-&gt;acl_get($opt, $f);
+-			}
+-		}
+-		else
+-		{
+-			$acl |= $this-&gt;acl_get($opts, $f);
+-		}
+-
+-		return $acl;
+-	}
+-
+-	function acl_get_list($user_id = false, $opts = false, $forum_id = false)
+-	{
+-		$hold_ary = $this-&gt;acl_raw_data($user_id, $opts, $forum_id);
+-
+-		$auth_ary = array();
+-		foreach ($hold_ary as $user_id =&gt; $forum_ary)
+-		{
+-			foreach ($forum_ary as $forum_id =&gt; $auth_option_ary)
+-			{
+-				foreach ($auth_option_ary as $auth_option =&gt; $auth_setting)
+-				{
+-					if ($auth_setting == ACL_YES)
+-					{
+-						$auth_ary[$forum_id][$auth_option][] = $user_id;
+-					}
+-				}
+-			}
+-		}
+-
+-		return $auth_ary;
+-	}
+-
+-	// Cache data
+-	function acl_cache(&amp;$userdata)
+-	{
+-		global $_CLASS;
+-
+-		$hold_ary = $this-&gt;acl_raw_data($userdata['user_id'], false, false);
+-		$hold_ary = empty($hold_ary[$userdata['user_id']]) ? '' : $hold_ary[$userdata['user_id']];
+-
+-		$hold_str = '';
+-		if (is_array($hold_ary))
+-		{
+-			ksort($hold_ary);
+-
+-			$last_f = 0;
+-			foreach ($hold_ary as $f =&gt; $auth_ary)
+-			{
+-				$ary_key = (!$f) ? 'global' : 'local';
+-
+-				$bitstring = array();
+-				foreach ($this-&gt;acl_options[$ary_key] as $opt =&gt; $id)
+-				{
+-					if (!empty($auth_ary[$opt]))
+-					{
+-						$bitstring[$id] = 1;
+-
+-						$option_key = substr($opt, 0, strpos($opt, '_') + 1);
+-						if (empty($holding[$this-&gt;acl_options[$ary_key][$option_key]]))
+-						{
+-							$bitstring[$this-&gt;acl_options[$ary_key][$option_key]] = 1;
+-						}
+-					}
+-					else
+-					{
+-						$bitstring[$id] = 0;
+-					}
+-				}
+-
+-				$bitstring = implode('', $bitstring);
+-
+-				$hold_str .= str_repeat(&quot;\n&quot;, $f - $last_f);
+-
+-				for ($i = 0; $i &lt; strlen($bitstring); $i += 31)
+-				{
+-					$hold_str .= str_pad(base_convert(str_pad(substr($bitstring, $i, 31), 31, 0, STR_PAD_RIGHT), 2, 36), 6, 0, STR_PAD_LEFT);
+-				}
+-
+-				$last_f = $f;
+-			}
+-			unset($bitstring);
+-
+-			$userdata['user_permissions'] = rtrim($hold_str);
+-
+-			$sql = 'UPDATE ' . USERS_TABLE . &quot;
+-				SET user_permissions = '&quot; . $_CLASS['core_db']-&gt;escape($userdata['user_permissions']) . &quot;'
+-				WHERE user_id = &quot; . $userdata['user_id'];
+-			$_CLASS['core_db']-&gt;query($sql);
+-		}
+-		unset($hold_ary);
+-	}
+-
+-	function acl_raw_data($user_id = false, $opts = false, $forum_id = false)
+-	{
+-		global $_CLASS;
+-
+-		if (!$user_id)
+-		{
+-// not sure if that is needed anywhere. maybe add the others later...
+-			return;
+-		}
+-
+-		$sql_user = ($user_id) ? (is_array($user_id) ? 'user_id IN (' . implode(', ', $user_id) . ')' : 'user_id = '.$user_id) : '';
+-		$sql_forum = ($forum_id) ? (is_array($forum_id) ? 'AND a.forum_id IN (' . implode(', ', $forum_id) . ')' : 'AND a.forum_id = '.$forum_id) : '';
+-		$sql_opts = ($opts) ? (is_array($opts) ? ' AND ao.auth_option IN (' . implode(', ', preg_replace('#^[\s]*?(.*?)[\s]*?$#e', &quot;\&quot;'\&quot; . \$_CLASS['core_db']-&gt;escape('\\1') . \&quot;'\&quot;&quot;, $opts)) . ')' : &quot;AND ao.auth_option = '&quot;.$_CLASS['core_db']-&gt;escape($opts).&quot;'&quot;) : '';
+-		$groups = $group_members = $hold_ary = array();
+-
+-		$sql = 'SELECT group_id, user_id FROM ' . USER_GROUP_TABLE .&quot; WHERE $sql_user AND member_status &lt;&gt; &quot;.STATUS_PENDING;
+-// This is the why phpBB3 seems to be, the why they wanted it to act may have been the above.
+-// atleast when you look at the coding....	
+-		//$sql = 'SELECT group_id, user_id FROM ' . USERS_TABLE .' WHERE '.$sql_user;
+-		$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-		{
+-			$groups[] = $row['group_id'];
+-			$group_members[$row['group_id']][] = $row['user_id'];
+-		}
+-
+-// make sure AND ( bla=blaa OR blaa2=baa2 ) works right with all databases
+-		$sql_user = empty($groups) ? ' AND a.' . $sql_user :  'AND (a.'.$sql_user.' OR a.group_id IN ('.implode(', ', $groups).'))';
+-
+-		// Sort by group_id since we want user setting to over right grp..  specific &gt; broad
+-		$sql = 'SELECT ao.auth_option, a.user_id, a.group_id, a.forum_id, a.auth_setting
+-					FROM ' . FORUMS_ACL_TABLE . ' a, ' . FORUMS_ACL_OPTIONS_TABLE . &quot; ao
+-					WHERE a.auth_option_id = ao.auth_option_id 
+-						$sql_user $sql_forum $sql_opts
+-						ORDER BY a.group_id&quot;;
+-
+-		$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-		{
+-			if ($row['auth_setting'] != ACL_YES)
+-			{
+-				continue;
+-			}
+-
+-			if ($row['group_id'])
+-			{
+-				foreach ($group_members[$row['group_id']] as $user_id)
+-				{
+-					$hold_ary[$user_id][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
+-				}
+-
+-				continue;
+-			}
+-
+-			$hold_ary[$row['user_id']][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
+-		}
+-//print_r($hold_ary);
+-		return $hold_ary;
+-	}
+-
+-	// Clear one or all users cached permission settings
+-	function acl_clear_prefetch($user_id = false)
+-	{
+-		global $_CLASS;
+-
+-		$where_sql = ($user_id) ? ' WHERE user_id ' . ((is_array($user_id)) ? ' IN (' . implode(', ', array_map('intval', $user_id)) . ')' : &quot; = $user_id&quot;) : '';
+-
+-		$sql = 'UPDATE ' . USERS_TABLE . &quot;
+-			SET user_permissions = ''
+-			$where_sql&quot;;
+-		$_CLASS['core_db']-&gt;query($sql);
+-
+-		return;
+-	}
+-
+-	function acl_group_raw_data($group_id = false, $opts = false, $forum_id = false)
+-	{
+-		global $_CLASS;
+-
+-		$sql_group = ($group_id) ? ((!is_array($group_id)) ? &quot;group_id = $group_id&quot; : 'group_id IN (' . implode(', ', $group_id) . ')') : '';
+-		$sql_forum = ($forum_id) ? ((!is_array($forum_id)) ? &quot;AND a.forum_id = $forum_id&quot; : 'AND a.forum_id IN (' . implode(', ', $forum_id) . ')') : '';
+-		$sql_opts = ($opts) ? ((!is_array($opts)) ? &quot;AND ao.auth_option = '$opts'&quot; : 'AND ao.auth_option IN (' . implode(', ', preg_replace('#^[\s]*?(.*?)[\s]*?$#e', &quot;\&quot;'\&quot; . \$_CLASS['core_db']-&gt;escape('\\1') . \&quot;'\&quot;&quot;, $opts)) . ')') : '';
+-
+-		$hold_ary = array();
+-
+-		// Grab group settings ... ACL_NO overrides ACL_YES so act appropriatley
+-		$sql = 'SELECT a.group_id, ao.auth_option, a.forum_id, a.auth_setting
+-			FROM ' . FORUMS_ACL_OPTIONS_TABLE . ' ao, ' . FORUMS_ACL_GROUPS_TABLE . ' a
+-			WHERE ao.auth_option_id = a.auth_option_id
+-				' . (($sql_group) ? 'AND a.' . $sql_group : '') . &quot;
+-				$sql_forum
+-				$sql_opts
+-			ORDER BY a.forum_id, ao.auth_option&quot;;
+-		$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-		{
+-			$hold_ary[$row['group_id']][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
+-		}
+-		$_CLASS['core_db']-&gt;free_result($result);
+-
+-		return $hold_ary;
+-	}
+-}
++*/
++
++// -------------------------------------------------------------
++//
++// COPYRIGHT : 2001, 2004 phpBB Group
++// WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
++//
++// -------------------------------------------------------------
++
++// Will be keeping my eye of 'other products' to ensure these things don't
++// mysteriously appear elsewhere, think up your own solutions!
++class auth
++{
++	var $founder = false;
++	var $acl = array();
++	var $option = array();
++	var $acl_options = array();
++
++	function acl(&amp;$userdata)
++	{
++		global $_CLASS;
++
++		if (is_null($this-&gt;acl_options = $_CLASS['core_cache']-&gt;get('acl_options')))
++		{
++			$sql = 'SELECT auth_option, is_global, is_local
++				FROM ' . FORUMS_ACL_OPTIONS_TABLE . '
++				ORDER BY auth_option_id';
++			$result = $_CLASS['core_db']-&gt;query($sql);
++
++			$global = $local = 0;
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++			{
++				if (!empty($row['is_global']))
++				{
++					$this-&gt;acl_options['global'][$row['auth_option']] = $global++;
++				}
++				if (!empty($row['is_local']))
++				{
++					$this-&gt;acl_options['local'][$row['auth_option']] = $local++;
++				}
++			}
++			$_CLASS['core_db']-&gt;free_result($result);
++
++			$_CLASS['core_cache']-&gt;put('acl_options', $this-&gt;acl_options);
++
++			$this-&gt;acl_clear_prefetch();
++			$this-&gt;acl_cache($userdata);
++		}
++		elseif (!trim($userdata['user_permissions']))
++		{
++			$this-&gt;acl_cache($userdata);
++		}
++
++		foreach (explode(&quot;\n&quot;, $userdata['user_permissions']) as $f =&gt; $seq)
++		{
++			if ($seq)
++			{
++				$i = 0;
++				while ($subseq = substr($seq, $i, 6))
++				{
++					if (!isset($this-&gt;acl[$f]))
++					{
++						$this-&gt;acl[$f] = '';
++					}
++					$this-&gt;acl[$f] .= str_pad(base_convert($subseq, 36, 2), 31, 0, STR_PAD_LEFT);
++					$i += 6;
++				}
++			}
++		}
++		return;
++	}
++
++	// Look up an option
++	function acl_get($opt, $f = 0)
++	{
++		static $cache;
++
++		if (!isset($cache[$f][$opt]))
++		{
++			$cache[$f][$opt] = false;
++			if (isset($this-&gt;acl_options['global'][$opt]))
++			{
++				if (isset($this-&gt;acl[0]))
++				{
++					$cache[$f][$opt] = $this-&gt;acl[0]{$this-&gt;acl_options['global'][$opt]};
++				}
++			}
++
++			if (isset($this-&gt;acl_options['local'][$opt]))
++			{
++				if (isset($this-&gt;acl[$f]))
++				{
++					$cache[$f][$opt] |= $this-&gt;acl[$f]{$this-&gt;acl_options['local'][$opt]};
++				}
++			}
++		}
++
++		return isset($cache[$f][$opt]) ? $cache[$f][$opt] : false;
++	}
++
++	function acl_getf($opt)
++	{
++		static $cache;
++
++		if (isset($this-&gt;acl_options['local'][$opt]))
++		{
++			foreach ($this-&gt;acl as $f =&gt; $bitstring)
++			{
++				if (!isset($cache[$f][$opt]))
++				{
++					$cache[$f][$opt] = false;
++
++					$cache[$f][$opt] = $bitstring{$this-&gt;acl_options['local'][$opt]};
++					if (isset($this-&gt;acl_options['global'][$opt]))
++					{
++						$cache[$f][$opt] |= $this-&gt;acl[0]{$this-&gt;acl_options['global'][$opt]};
++					}
++				}
++			}
++		}
++
++		return $cache;
++	}
++
++	function acl_gets($opts, $f = 0)
++	{
++		$acl = 0;
++
++		if (is_array($opts))
++		{
++			foreach ($opts as $opt)
++			{
++				$acl |= $this-&gt;acl_get($opt, $f);
++			}
++		}
++		else
++		{
++			$acl |= $this-&gt;acl_get($opts, $f);
++		}
++
++		return $acl;
++	}
++
++	function acl_get_list($user_id = false, $opts = false, $forum_id = false)
++	{
++		$hold_ary = $this-&gt;acl_raw_data($user_id, $opts, $forum_id);
++		
++		if (empty($hold_ary))
++		{
++			return array();
++		}
++
++		$auth_ary = array();
++
++		foreach ($hold_ary as $user_id =&gt; $forum_ary)
++		{
++			foreach ($forum_ary as $forum_id =&gt; $auth_option_ary)
++			{
++				foreach ($auth_option_ary as $auth_option =&gt; $auth_setting)
++				{
++					$auth_ary[$forum_id][$auth_option][] = $user_id;
++				}
++			}
++		}
++
++		return $auth_ary;
++	}
++
++	// Cache data
++	function acl_cache(&amp;$userdata)
++	{
++		global $_CLASS;
++
++		$hold_ary = $this-&gt;acl_raw_data($userdata['user_id'], false, false);
++		$hold_ary = empty($hold_ary[$userdata['user_id']]) ? '' : $hold_ary[$userdata['user_id']];
++
++		$hold_str = '';
++		if (is_array($hold_ary))
++		{
++			ksort($hold_ary);
++
++			$last_f = 0;
++			foreach ($hold_ary as $f =&gt; $auth_ary)
++			{
++				$ary_key = (!$f) ? 'global' : 'local';
++
++				$bitstring = array();
++				foreach ($this-&gt;acl_options[$ary_key] as $opt =&gt; $id)
++				{
++					if (!empty($auth_ary[$opt]))
++					{
++						$bitstring[$id] = 1;
++
++						$option_key = substr($opt, 0, strpos($opt, '_') + 1);
++						if (empty($holding[$this-&gt;acl_options[$ary_key][$option_key]]))
++						{
++							$bitstring[$this-&gt;acl_options[$ary_key][$option_key]] = 1;
++						}
++					}
++					else
++					{
++						$bitstring[$id] = 0;
++					}
++				}
++
++				$bitstring = implode('', $bitstring);
++
++				$hold_str .= str_repeat(&quot;\n&quot;, $f - $last_f);
++
++				for ($i = 0; $i &lt; strlen($bitstring); $i += 31)
++				{
++					$hold_str .= str_pad(base_convert(str_pad(substr($bitstring, $i, 31), 31, 0, STR_PAD_RIGHT), 2, 36), 6, 0, STR_PAD_LEFT);
++				}
++
++				$last_f = $f;
++			}
++			unset($bitstring);
++
++			$userdata['user_permissions'] = rtrim($hold_str);
++
++			$sql = 'UPDATE ' . USERS_TABLE . &quot;
++				SET user_permissions = '&quot; . $_CLASS['core_db']-&gt;escape($userdata['user_permissions']) . &quot;'
++				WHERE user_id = &quot; . $userdata['user_id'];
++			$_CLASS['core_db']-&gt;query($sql);
++		}
++		unset($hold_ary);
++	}
++
++	function acl_raw_data($user_id = false, $opts = false, $forum_id = false)
++	{
++		global $_CLASS;
++
++		$sql_user = ($user_id) ? (is_array($user_id) ? 'user_id IN (' . implode(', ', $user_id) . ')' : 'user_id = '.$user_id) : '';
++		$sql_forum = ($forum_id) ? (is_array($forum_id) ? 'AND a.forum_id IN (' . implode(', ', $forum_id) . ')' : 'AND a.forum_id = '.$forum_id) : '';
++		$sql_opts = ($opts) ? (is_array($opts) ? ' AND ao.auth_option IN (' . implode(', ', preg_replace('#^[\s]*?(.*?)[\s]*?$#e', &quot;\&quot;'\&quot; . \$_CLASS['core_db']-&gt;escape('\\1') . \&quot;'\&quot;&quot;, $opts)) . ')' : &quot;AND ao.auth_option = '&quot;.$_CLASS['core_db']-&gt;escape($opts).&quot;'&quot;) : '';
++		$groups = $group_id_array = $group_members = $hold_ary = array();
++
++		if ($sql_user)
++		{
++			$sql = 'SELECT group_id, user_id FROM ' . USER_GROUP_TABLE .&quot; WHERE $sql_user AND member_status &lt;&gt; &quot;.STATUS_PENDING;
++
++			$result = $_CLASS['core_db']-&gt;query($sql);
++	
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++			{
++				$groups[] = $row['group_id'];
++				$group_members[$row['group_id']][] = $row['user_id'];
++			}
++			$_CLASS['core_db']-&gt;free_result($result);
++
++			$sql_user = empty($groups) ? ' AND a.' . $sql_user :  'AND (a.'.$sql_user.' OR a.group_id IN ('.implode(', ', $groups).'))';
++		}
++
++		// Sort by group_id since we want user setting to over right grp..  specific &gt; broad
++		$sql = 'SELECT ao.auth_option, a.user_id, a.group_id, a.forum_id, a.auth_setting
++					FROM ' . FORUMS_ACL_TABLE . ' a, ' . FORUMS_ACL_OPTIONS_TABLE . &quot; ao
++					WHERE a.auth_option_id = ao.auth_option_id 
++						$sql_user $sql_forum $sql_opts
++						ORDER BY a.group_id&quot;;
++
++		$result = $_CLASS['core_db']-&gt;query($sql);
++
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++		{
++			if ($row['auth_setting'] != ACL_YES)
++			{
++				continue;
++			}
++
++			if ($row['group_id'])
++			{
++				$group_id_array[$row['group_id']] = $row;
++
++				continue;
++			}
++
++			$hold_ary[$row['user_id']][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
++		}
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		if (!empty($group_id_array))
++		{
++			if (empty($group_members))
++			{
++				$sql = 'SELECT user_group, user_id FROM ' . USERS_TABLE .' WHERE user_group IN ('.implode(', ', array_keys($group_id_array)).') AND user_status = '.STATUS_ACTIVE;
++				$result = $_CLASS['core_db']-&gt;query($sql);
++	
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++				{
++					$group_members[$row['user_group']][] = $row['user_id'];
++				}
++				$_CLASS['core_db']-&gt;free_result($result);
++			}
++
++			foreach ($group_id_array as $group_id =&gt; $row)
++			{
++				if (empty($group_members[$group_id]))
++				{
++					continue;
++				}
++
++				foreach ($group_members[$group_id] as $user_id)
++				{
++					$hold_ary[$user_id][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
++				}
++			}
++		}
++
++		return $hold_ary;
++	}
++
++	// Clear one or all users cached permission settings
++	function acl_clear_prefetch($user_id = false)
++	{
++		global $_CLASS;
++
++		$where_sql = ($user_id) ? ' WHERE user_id ' . ((is_array($user_id)) ? ' IN (' . implode(', ', array_map('intval', $user_id)) . ')' : &quot; = $user_id&quot;) : '';
++
++		$sql = 'UPDATE ' . USERS_TABLE . &quot;
++			SET user_permissions = ''
++			$where_sql&quot;;
++		$_CLASS['core_db']-&gt;query($sql);
++
++		return;
++	}
++
++	function acl_group_raw_data($group_id = false, $opts = false, $forum_id = false)
++	{
++		global $_CLASS;
++
++		$sql_group = ($group_id) ? ((!is_array($group_id)) ? &quot;group_id = $group_id&quot; : 'group_id IN (' . implode(', ', $group_id) . ')') : '';
++		$sql_forum = ($forum_id) ? ((!is_array($forum_id)) ? &quot;AND a.forum_id = $forum_id&quot; : 'AND a.forum_id IN (' . implode(', ', $forum_id) . ')') : '';
++		$sql_opts = ($opts) ? ((!is_array($opts)) ? &quot;AND ao.auth_option = '$opts'&quot; : 'AND ao.auth_option IN (' . implode(', ', preg_replace('#^[\s]*?(.*?)[\s]*?$#e', &quot;\&quot;'\&quot; . \$_CLASS['core_db']-&gt;escape('\\1') . \&quot;'\&quot;&quot;, $opts)) . ')') : '';
++
++		$hold_ary = array();
++
++		// Grab group settings ... ACL_NO overrides ACL_YES so act appropriatley
++		$sql = 'SELECT a.group_id, ao.auth_option, a.forum_id, a.auth_setting
++			FROM ' . FORUMS_ACL_OPTIONS_TABLE . ' ao, ' . FORUMS_ACL_GROUPS_TABLE . ' a
++			WHERE ao.auth_option_id = a.auth_option_id
++				' . (($sql_group) ? 'AND a.' . $sql_group : '') . &quot;
++				$sql_forum
++				$sql_opts
++			ORDER BY a.forum_id, ao.auth_option&quot;;
++		$result = $_CLASS['core_db']-&gt;query($sql);
++
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++		{
++			$hold_ary[$row['group_id']][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
++		}
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		return $hold_ary;
++	}
++}
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/functions.php
+===================================================================
+--- cms/trunk/includes/functions.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/includes/functions.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -374,18 +374,25 @@
+ function generate_link($link = false, $link_options = false)
+ {
+ 	global $_CLASS, $_CORE_MODULE;
++	//static $SEO = array('?', '&amp;', '&amp;');
+ 
+ 	$options = array(
+ 		'admin'		=&gt; false,
+ 		'full'		=&gt; false,
+ 		'sid'		=&gt; true,
+-		'force_sid' =&gt; false
++		'force_sid' =&gt; false,
++		'seo'		=&gt; true
+ 	);
+ 
+ 	if (is_array($link_options))
+ 	{
+ 		$options = array_merge($options, $link_options);
+ 	} 
++$options['seo'] = false;
++	if ($options['admin'])
++	{
++		$options['seo'] = false;
++	}
+ 
+ 	if ($link &amp;&amp; strpos($link, '#'))
+ 	{
+@@ -400,32 +407,47 @@
+ 
+ 	if (!$link)
+ 	{
+-		$link = $file;
+-
+ 		if ($options['force_sid'] || ($options['sid'] &amp;&amp; $_CLASS['core_user']-&gt;need_sid))
+ 		{
+-			$link .= '?'.$_CLASS['core_user']-&gt;sid_link;
++			$options['seo'] = false;
++
++			$link = $file.'?'.$_CLASS['core_user']-&gt;sid_link;
+ 		}
++		else
++		{
++			$link = ($options['seo']) ? 'index' : $file;
++		}
+ 	}
+ 	else
+ 	{
++		if ($options['force_sid'] || ($options['sid'] &amp;&amp; $_CLASS['core_user']-&gt;need_sid))
++		{
++			$link .= '&amp;'.$_CLASS['core_user']-&gt;sid_link;
++		}
++
+ 		if ($link{0} == '&amp;')
+ 		{
+ 			$link = $_CORE_MODULE['name'].$link;
+ 		}
+ 
+-		$link = $file.'?mod='.$link;
+-
+-		if ($options['force_sid'] || ($options['sid'] &amp;&amp; $_CLASS['core_user']-&gt;need_sid))
++		if (!$options['seo'])
+ 		{
+-			$link .= '&amp;'.$_CLASS['core_user']-&gt;sid_link;
++			$link = $file.'?mod='.$link;
+ 		}
++		else
++		{
++			$link = str_replace(array('?', '&amp;', '&amp;'), '/', $link);
++		}
+     }
+ 
+     if ($what_you_call_this)
+     {
+-		$link .= '#'.$what_you_call_this;
++		$link .= ($options['seo']) ? '.html#'.$what_you_call_this : '#'.$what_you_call_this;
+ 	}
++	elseif ($options['seo'])
++	{
++		$link .= '.html';
++	}
+ 
+     return ($options['full']) ? generate_base_url().$link : $link;
+ }
+
+Modified: cms/trunk/includes/session.php
+===================================================================
+--- cms/trunk/includes/session.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/includes/session.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -55,7 +55,6 @@
+ 				FROM ' . SESSIONS_TABLE . ' s, ' . USERS_TABLE . &quot; u
+ 				WHERE s.session_id = '&quot; . $_CLASS['core_db']-&gt;escape($session_id) . &quot;'
+ 					AND u.user_id = s.session_user_id&quot;;
+-
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 			$this-&gt;data = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+@@ -83,7 +82,7 @@
+ 				if ($valid)
+ 				{
+ 					// Set session update a minute or so after last update or if page changes
+-					if (($this-&gt;time - $this-&gt;data['session_time']) &gt; 60 || ($this-&gt;data['session_url'] != $this-&gt;url))
++					if (($this-&gt;time - $this-&gt;data['session_time']) &gt; 60 || ($this-&gt;data['session_url'] !== $this-&gt;url))
+ 					{
+ 						$this-&gt;save_session = true;
+ 					}
+@@ -168,6 +167,30 @@
+ 			$this-&gt;session_destroy(false, false);
+ 		}
+ 
++		if ($this-&gt;is_bot)
++		{
++			$sql = 'SELECT u.*, s.*
++				FROM ' . SESSIONS_TABLE . ' s, ' . USERS_TABLE . ' u
++				WHERE s.session_user_id = '. (int) $this-&gt;data['user_id'] .'
++					AND u.user_id = s.session_user_id';
++
++			$result = $_CLASS['core_db']-&gt;query($sql);
++			$temp = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++			$_CLASS['core_db']-&gt;free_result($result);
++			
++			if ($temp)
++			{
++				$this-&gt;data = $temp;
++
++				if (($this-&gt;time - $this-&gt;data['session_time']) &gt; 60 || ($this-&gt;data['session_url'] !== $this-&gt;url))
++				{
++					$this-&gt;save_session = true;
++				}
++
++				return true;
++			}
++		}
++
+ 		$this-&gt;data['session_last_visit'] = ($this-&gt;data['user_last_visit']) ? $this-&gt;data['user_last_visit'] : $this-&gt;time;
+ 
+ 		$session_id = function_exists('sha1') ? sha1(uniqid(mt_rand(), true)) : md5(uniqid(mt_rand(), true));
+
+Modified: cms/trunk/modules/Control_Panel/ucp/ucp_calender.php
+===================================================================
+--- cms/trunk/modules/Control_Panel/ucp/ucp_calender.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/modules/Control_Panel/ucp/ucp_calender.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -4,8 +4,13 @@
+ {
+ 	function ucp_calender($id, $mode)
+ 	{
+-		global $_CLASS, $site_file_root;
++		global $_CLASS, $table_prefix, $site_file_root;
+ 
++		if (!defined('CALENDER_TABLE'))
++		{
++			define('CALENDER_TABLE', $table_prefix.'calender');
++		}
++
+ 		$link = 'Control_Panel&amp;i='.$id;
+ 		
+ 		$day = get_variable('day', 'REQUEST', false, 'integer');
+@@ -13,6 +18,7 @@
+ 		$year = get_variable('year', 'REQUEST', false, 'integer');
+ 		
+ 		load_class($site_file_root.'includes/display/calender.php', 'calender');
++		$_CLASS['calender']-&gt;table = CALENDER_TABLE;
+ 		$_CLASS['calender']-&gt;set_date($day, $month, $year);
+ 		
+ 		if (isset($_GET['mode']) &amp;&amp; $_GET['mode'] == 'details')
+@@ -34,7 +40,7 @@
+ 				$previous_month = generate_link($link.'&amp;mode=day_view&amp;year='.$month_flanks['previous_month']['year'].'&amp;month='.$month_flanks['previous_month']['month']);
+ 				$next_month = generate_link($link.'&amp;mode=day_view&amp;year='.$month_flanks['next_month']['year'].'&amp;month='.$month_flanks['next_month']['month']);
+ 				
+-				$_CLASS['core_template']-&gt;assign(array(
++				$_CLASS['core_template']-&gt;assign_array(array(
+ 					'L_SUNDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Sun'],
+ 					'L_MONDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Mon'],
+ 					'L_TUESDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Tue'],
+@@ -54,11 +60,15 @@
+ 			case 'add_event':
+ 				if (isset($_POST['submit']))
+ 				{
+-					$this-&gt;add_event();
++					if ($this-&gt;add_event() === false)
++					{
++						echo implode('&lt;br/&gt;', $this-&gt;error);
++					}
++					
+ 					break;
+ 				}
+ 
+-				$_CLASS['core_template']-&gt;assign(array(
++				$_CLASS['core_template']-&gt;assign_array(array(
+ 					'S_UCP_ACTION'	=&gt; generate_link(&quot;Control_Panel&amp;i=$id&amp;mode=$mode&quot;),
+ 				));
+ 
+@@ -71,15 +81,14 @@
+ 				$data = false;
+ 				$data = $_CLASS['calender']-&gt;get_events_details($id);
+ 				
+-				$_CLASS['core_template']-&gt;assign(array(
+-					'CAL_TITLE'			=&gt; $data['title'],
+-					'CAL_DESCRIPTION'	=&gt; $data['description'],
++				$_CLASS['core_template']-&gt;assign_array(array(
++					'CAL_TITLE'			=&gt; $data['calender_title'],
++					'CAL_DESCRIPTION'	=&gt; $data['calender_text'],
+ 					'CAL_START_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($data['start_time']),
+ 					'CAL_END_TIME'		=&gt; $_CLASS['core_user']-&gt;format_date($data['end_time']),
+ 				));
+ 			
+-				$_CLASS['core_template']-&gt;display('modules/Control_Panel/ucp_calender_details.html');
+-				$_CLASS['core_display']-&gt;display_footer();
++				$_CLASS['core_display']-&gt;display(false, 'modules/Control_Panel/ucp_calender_details.html');
+ 			break;
+ 			
+ 			case 'month_view':
+@@ -90,7 +99,7 @@
+ 
+ 				$month_flanks = $_CLASS['calender']-&gt;flank_months();
+ 
+-				$_CLASS['core_template']-&gt;assign(array(
++				$_CLASS['core_template']-&gt;assign_array(array(
+ 					'L_SUNDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Sunday'],
+ 					'L_MONDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Monday'],
+ 					'L_TUESDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Tuesday'],
+@@ -120,41 +129,53 @@
+ 		global $_CLASS;
+ 
+ 		$data_array = array(
+-			'title'			=&gt; get_variable('title', 'POST', false),
+-			'description'	=&gt; get_variable('description', 'POST', false),
+-			'note'			=&gt; get_variable('note', 'POST', false),
+-			'start_time'	=&gt; get_variable('start', 'POST', false),
+-			'end_time'		=&gt; get_variable('end', 'POST', false),
+-			'recur'			=&gt; false,
++			'calender_title'	=&gt; get_variable('title', 'POST', false),
++			'calender_text'		=&gt; get_variable('description', 'POST', false),
++			'calender_notes'	=&gt; get_variable('note', 'POST', false),
++			'calender_starts'	=&gt; get_variable('start', 'POST', false),
++			'calender_expires'	=&gt; get_variable('end', 'POST', false),
++			//'recur'			=&gt; false,
+ 		);
+ 
+-		$error = '';
++		$error = array();
+ 
+-		if (($start_time = strtotime($data_array['start_time'])) === -1)
++		$start_time = strtotime($data_array['calender_starts']);
++
++		if (!$start_time || $start_time === -1)
+ 		{
+-			$error .= $_CLASS['core_user']-&gt;get_lang('ERROR_START_TIME').'&lt;br /&gt;';
++			$error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_START_TIME');
+ 		}
+ 
+-		if (($end_time = strtotime($data_array['end_time'])) === -1)
++		$end_time = strtotime($data_array['calender_expires']);
++
++		if (!$end_time || $end_time === -1)
+ 		{
+-			$error .= $_CLASS['core_user']-&gt;get_lang('ERROR_END_TIME').'&lt;br /&gt;';
++			$error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_END_TIME');
+ 		}
+ 		
+ 		if (!$error &amp;&amp; $start_time &gt; $end_time)
+ 		{
+-			$error .= $_CLASS['core_user']-&gt;get_lang('ERROR_').'&lt;br /&gt;';
++			$error[] = $_CLASS['core_user']-&gt;get_lang('ERROR_');
+ 		}
+ 
+-		if (!$error)
++		if (!empty($error))
+ 		{
+-			//$duration = $start_time - $end_time;
+-			//$start_time = $date = implode(''. explode(':', date('H:i', $start_time)));;
++			$this-&gt;error = $error;
+ 
+-			$data_array['start_time'] = $data_array['start_date'] = $start_time;
+-			$data_array['end_time'] = $data_array['end_date'] = $end_time;
+-			
+-			$_CLASS['core_db']-&gt;sql_query('INSERT INTO cms_calender ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $data_array));
++			return false;
+ 		}
++
++		//$duration = $start_time - $end_time;
++		//$start_time = $date = implode(''. explode(':', date('H:i', $start_time)));;
++
++		$data_array['calender_starts'] = $start_time;
++		$data_array['calender_expires'] = $end_time;
++		
++		$_CLASS['core_db']-&gt;query('INSERT INTO ' . CALENDER_TABLE .' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $data_array));
++
++		$data_array['calender_id'] = $_CLASS['core_db']-&gt;insert_id(CALENDER_TABLE, 'calender_id');
++
++		return $data_array;
+ 	}
+ }
+ 
+
+Modified: cms/trunk/modules/Members_List/index.php
+===================================================================
+--- cms/trunk/modules/Members_List/index.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/modules/Members_List/index.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -62,7 +62,8 @@
+ // What do you want to do today? ... oops, I think that line is taken ...
+ switch ($mode)
+ {
+-	case 'leaders':
++
++	case 'forum_leaders':
+ 		// Display a listing of board admins, moderators
+ 
+ 		$_CLASS['core_user']-&gt;add_lang('groups', 'Forums');
+@@ -90,7 +91,7 @@
+ 		}
+ 
+ 		$sql = 'SELECT forum_id, forum_name 
+-			FROM ' . FORUMS_TABLE . '
++			FROM ' . FORUMS_FORUMS_TABLE . '
+ 			WHERE forum_type = ' . FORUM_POST;
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+ 		
+@@ -105,7 +106,7 @@
+ 			FROM ' . USERS_TABLE . ' u, ' . GROUPS_TABLE . ' g
+ 			LEFT JOIN ' . USER_GROUP_TABLE . ' ug ON (ug.group_id = g.group_id AND ug.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ')
+ 			WHERE u.user_id IN (' . implode(', ', $admin_id_ary + $mod_id_ary) . ')
+-				AND u.group_id = g.group_id
++				AND u.user_group = g.group_id
+ 			ORDER BY g.group_name ASC, u.username ASC';
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+@@ -158,7 +159,7 @@
+ 		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		$_CLASS['core_template']-&gt;assign('PM_IMG', $_CLASS['core_user']-&gt;img('btn_pm', $_CLASS['core_user']-&gt;lang['MESSAGE']));
+-		break;
++	break;
+ 
+ 	case 'contact':
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+@@ -305,6 +306,7 @@
+ 		if (!$member || (!$_CLASS['core_auth']-&gt;admin_power('users') &amp;&amp; $member['user_status'] != STATUS_ACTIVE))
+ 		{
+ 			$_CLASS['core_db']-&gt;free_result($result);
++
+ 			trigger_error(($member) ? 'USER_INACTIVE' : 'NO_USER');
+ 		}
+ 		
+@@ -334,55 +336,45 @@
+ 		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 		$_CLASS['core_db']-&gt;free_result($result);
+ 
+-		$member['session_time'] = (isset($row['session_time'])) ? $row['session_time'] : 0;
++		$member['session_time'] = isset($row['session_time']) ? $row['session_time'] : 0;
+ 		unset($row);
+ 
++		$num_real_posts = $_CLASS['core_user']-&gt;data['user_posts'];
++
++		/*
+ 		// Obtain list of forums where this users post count is incremented
+ 		$auth2 = new auth();
+ 		$auth2-&gt;acl($member);
+-		$f_postcount_ary = $auth2-&gt;acl_getf('f_postcount');
+-
+-		$sql_forums = array();
+-		foreach ($f_postcount_ary as $forum_id =&gt; $allow)
++		
++		if ($permission_array = $auth2-&gt;acl_getf('f_postcount'))
+ 		{
+-			if ($allow['f_postcount'])
+-			{
+-				$sql_forums[] = $forum_id;
+-			}
+-		}
++			$sql_forums = array_keys($permission_array);
+ 
+-		$post_count_sql = (sizeof($sql_forums)) ? 'AND f.forum_id IN (' . implode(', ', $sql_forums) . ')' : '';
+-		unset($sql_forums, $f_postcount_ary, $auth2);
++			// Grab all the relevant data
++			$sql = 'SELECT COUNT(*) AS num_posts
++				FROM ' . FORUMS_POSTS_TABLE . &quot;
++					WHERE poster_id = $user_id
++					AND forum_id IN (&quot; . implode(', ', $sql_forums) . ')';
+ 
+-		// Grab all the relevant data
+-		$sql = 'SELECT COUNT(p.post_id) AS num_posts
+-			FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_FORUMS_TABLE . &quot; f
+-			WHERE p.poster_id = $user_id
+-				AND f.forum_id = p.forum_id
+-				$post_count_sql&quot;;
+-		$result = $_CLASS['core_db']-&gt;query($sql);
+-		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-		$_CLASS['core_db']-&gt;free_result($result);
++			$result = $_CLASS['core_db']-&gt;query($sql);
++			$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++			$_CLASS['core_db']-&gt;free_result($result);
++	
++			$num_real_posts = min($_CLASS['core_user']-&gt;data['user_posts'], $row['num_posts']);
+ 
+-		$num_real_posts = min($_CLASS['core_user']-&gt;data['user_posts'], $row['num_posts']);
++			unset($sql_forums, $permission_array, $auth2);
+ 
+-		// Change post_count_sql to an forum_id array the user is able to see
+-		$f_forum_ary = $_CLASS['auth']-&gt;acl_getf('f_read');
++		}		
++		$active_f_row = $active_t_row = array();
++		*/
+ 
+-		$sql_forums = array();
+-		foreach ($f_forum_ary as $forum_id =&gt; $allow)
++		// Change post_count_sql to an forum_id array the user is able to see
++		if ($permission_array = $_CLASS['auth']-&gt;acl_getf('f_read'))
+ 		{
+-			if (isset($allow['f_read']) &amp;&amp; $allow['f_read'])
+-			{
+-				$sql_forums[] = $forum_id;
+-			}
+-		}
+-
+-		$post_count_sql = (sizeof($sql_forums)) ? 'AND f.forum_id IN (' . implode(', ', $sql_forums) . ')' : '';
+-		unset($sql_forums, $f_forum_ary);
+-
+-		if ($post_count_sql)
+-		{
++			$sql_forums = array_keys($permission_array);
++	
++			$post_count_sql = 'AND f.forum_id IN (' . implode(', ', $sql_forums) . ')';
++	
+ 			$sql = 'SELECT f.forum_id, f.forum_name, COUNT(post_id) AS num_posts
+ 				FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_FORUMS_TABLE . &quot; f
+ 				WHERE p.poster_id = $user_id
+@@ -407,11 +399,9 @@
+ 
+ 			$active_t_row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 			$_CLASS['core_db']-&gt;free_result($result);
++	
++			unset($sql_forums, $permission_array, $post_count_sql);
+ 		}
+-		else
+-		{
+-			$active_f_row = $active_t_row = array();
+-		}
+ 
+ 		// Do the relevant calculations
+ 		$memberdays = max(1, round((time() - $member['user_reg_date']) / 86400));
+@@ -1136,12 +1126,11 @@
+ 
+ function show_profile($data)
+ {
+-	global $config, $_CORE_CONFIG, $_CLASS, $ranks, $SID;
++	global $config, $_CORE_CONFIG, $_CLASS;
+ 
+-	$username = $data['username'];
+ 	$user_id = $data['user_id'];
++	$rank_title = $rank_img = '';
+ 
+-	$rank_title = $rank_img = '';
+ 	get_user_rank($data['user_rank'], $data['user_posts'], $rank_title, $rank_img);
+ 	
+ 	if (!empty($data['user_allow_viewemail']) || $_CLASS['auth']-&gt;acl_get('a_email'))
+@@ -1152,37 +1141,35 @@
+ 	{
+ 		$email = '';
+ 	}
+-	
+-	$last_visit = (!empty($data['session_time'])) ? $data['session_time'] : $data['user_last_visit'];
+ 
+-	// Dump it out to the template
+-	// TODO
+-	// Add permission check for IM clients
++	$last_visit = ($data['session_time']) ? $data['session_time'] : $data['user_last_visit'];
++	$online = ($data['session_time'] &gt;= ($_CLASS['core_user']-&gt;time - ($config['load_online_time'] * 60)));
++
+ 	return array(
+-		'USERNAME'		=&gt; $username,
+-		'USER_COLOR'	=&gt; (!empty($data['user_colour'])) ? $data['user_colour'] : '',
++		'USERNAME'		=&gt; $data['username'],
++		'USER_COLOR'	=&gt; ($data['user_colour']) ? $data['user_colour'] : '',
+ 		'RANK_TITLE'	=&gt; $rank_title,
+ 
+-		'JOINED'		=&gt; $_CLASS['core_user']-&gt;format_date($data['user_reg_date'], $_CLASS['core_user']-&gt;lang['DATE_FORMAT']),
+-		'VISITED'		=&gt; (empty($last_visit)) ? ' - ' : $_CLASS['core_user']-&gt;format_date($last_visit, $_CLASS['core_user']-&gt;lang['DATE_FORMAT']),
++		'JOINED'		=&gt; $_CLASS['core_user']-&gt;format_date($data['user_reg_date']),
++		'VISITED'		=&gt; ($last_visit) ? ' - ' : $_CLASS['core_user']-&gt;format_date($last_visit),
+ 		'POSTS'			=&gt; ($data['user_posts']) ? $data['user_posts'] : 0,
+ 
+-		'ONLINE_IMG'	=&gt; (intval($data['session_time']) &gt;= time() - ($config['load_online_time'] * 60)) ? $_CLASS['core_user']-&gt;img('btn_online', $_CLASS['core_user']-&gt;lang['USER_ONLINE']) : $_CLASS['core_user']-&gt;img('btn_offline', $_CLASS['core_user']-&gt;lang['USER_ONLINE']),
++		'ONLINE_IMG'	=&gt; ($online) ? $_CLASS['core_user']-&gt;img('btn_online', $_CLASS['core_user']-&gt;lang['USER_ONLINE']) : $_CLASS['core_user']-&gt;img('btn_offline', $_CLASS['core_user']-&gt;lang['USER_ONLINE']),
+ 		'RANK_IMG'		=&gt; $rank_img,
+-		'ICQ_STATUS_IMG'=&gt; (!empty($data['user_icq'])) ? '&lt;img src=&quot;<A HREF="http://web.icq.com/whitepages/online?icq=">http://web.icq.com/whitepages/online?icq=</A>' . $data['user_icq'] . '&amp;img=5&quot; width=&quot;18&quot; height=&quot;18&quot; border=&quot;0&quot; /&gt;' : '',
+-		
++		'ICQ_STATUS_IMG'=&gt; ($data['user_icq']) ? '&lt;img src=&quot;<A HREF="http://web.icq.com/whitepages/online?icq=">http://web.icq.com/whitepages/online?icq=</A>' . $data['user_icq'] . '&amp;img=5&quot; width=&quot;18&quot; height=&quot;18&quot; border=&quot;0&quot; /&gt;' : '',
++
+ 		'U_PROFILE'		=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u='.$user_id),
+-		'U_SEARCH_USER'	=&gt; ($_CLASS['auth']-&gt;acl_get('u_search')) ? generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($username) . '&amp;show_results=posts') : '',
++		'U_SEARCH_USER'	=&gt; ($_CLASS['auth']-&gt;acl_get('u_search')) ? generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($data['username']) . '&amp;show_results=posts') : '',
+ 		'U_PM'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_sendpm')) ? generate_link('Control_Panel&amp;i=pm&amp;mode=compose&amp;u='.$user_id) : '',
+ 		'U_EMAIL'		=&gt; $email,
+-		'U_WWW'			=&gt; (!empty($data['user_website'])) ? $data['user_website'] : '',
++		'U_WWW'			=&gt; ($data['user_website']) ? $data['user_website'] : '',
+ 		'U_ICQ'			=&gt; ($data['user_icq']) ? generate_link('Members_List&amp;mode=contact&amp;action=icq&amp;u='.$user_id) : '',
+ 		'U_AIM'			=&gt; ($data['user_aim']) ? generate_link('Members_List&amp;mode=contact&amp;action=aim&amp;u='.$user_id) : '',
+ 		'U_YIM'			=&gt; ($data['user_yim']) ? '<A HREF="http://edit.yahoo.com/config/send_webmesg?.target=">http://edit.yahoo.com/config/send_webmesg?.target=</A>' . $data['user_yim'] . '&amp;.src=pg' : '',
+ 		'U_MSN'			=&gt; ($data['user_msnm']) ? generate_link('Members_List&amp;mode=contact&amp;action=msnm&amp;u='.$user_id) : '',
+ 		'U_JABBER'		=&gt; ($data['user_jabber']) ? generate_link('Members_List&amp;mode=contact&amp;action=jabber&amp;u='.$user_id) : '',
+ 
+-		'S_ONLINE'		=&gt; (intval($data['session_time']) &gt;= time() - 300) ? true : false
++		'S_ONLINE'		=&gt; $online
+ 	);
+ }
+ 
+
+Added: cms/trunk/modules/calender/configurator.php
+===================================================================
+--- cms/trunk/modules/calender/configurator.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/modules/calender/configurator.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -0,0 +1,90 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++global $table_prefix;
++
++if (!defined('CALENDER_TABLE'))
++{
++	define('CALENDER_TABLE', $table_prefix.'calender');
++}
++
++class calender_configurator
++{
++	var $error = array();
++	
++	function install()
++	{
++		global $_CLASS;
++
++		$_CLASS['core_db']-&gt;table_create('start', CALENDER_TABLE);
++		
++		$_CLASS['core_db']-&gt;add_table_field_int('calender_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_char('calender_title', 80);
++		$_CLASS['core_db']-&gt;add_table_field_int('calender_starts', array('max' =&gt; 200000000));
++		$_CLASS['core_db']-&gt;add_table_field_int('calender_expires', array('max' =&gt; 200000000));
++		$_CLASS['core_db']-&gt;add_table_field_text('calender_text', 60000, true);
++		$_CLASS['core_db']-&gt;add_table_field_text('calender_notes', 60000, true);
++		$_CLASS['core_db']-&gt;add_table_field_char('calender_recur_rate', 80);
++		$_CLASS['core_db']-&gt;add_table_field_char('calender_start_time', 5, true);
++		$_CLASS['core_db']-&gt;add_table_field_int('calender_duration', array('max' =&gt; 200000000, 'null' =&gt; true));
++
++		$_CLASS['core_db']-&gt;add_table_index('calender_id', 'primary');
++		$_CLASS['core_db']-&gt;add_table_index('calender_starts');
++		$_CLASS['core_db']-&gt;add_table_index('calender_expires');
++
++		$_CLASS['core_db']-&gt;table_create('commit');
++
++		/*$array = array(
++			'articles_title'	=&gt; 'Welcome Post',
++			'articles_posted'	=&gt; (int) $_CLASS['core_user']-&gt;time,
++			'articles_text'		=&gt; '&lt;p align=&quot;center&quot;&gt;I need something snappy here&lt;/p&gt;',
++			'articles_order'	=&gt; 1,
++			'articles_type'		=&gt; 1,
++			'articles_status'	=&gt; STATUS_ACTIVE,
++			'poster_id'			=&gt; 0,
++			'poster_ip'			=&gt; (string) ''
++		);*/
++
++		//$_CLASS['core_db']-&gt;query('INSERT INTO ' . ARTICLES_TABLE . ' '. $_CLASS['core_db']-&gt;sql_build_array('INSERT', $array));
++
++		return true;
++	}
++
++	function uninstall()
++	{
++		global $_CLASS;
++
++		$_CLASS['core_db']-&gt;report_error(false);
++
++		$_CLASS['core_db']-&gt;query('DROP TABLE ' . CALENDER_TABLE);
++
++		$_CLASS['core_db']-&gt;report_error(true);
++	}
++}
++
++?&gt;
+\ No newline at end of file
+
+Added: cms/trunk/modules/calender/index.php
+===================================================================
+--- cms/trunk/modules/calender/index.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/modules/calender/index.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -0,0 +1,130 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++if (!defined('CALENDER_TABLE'))
++{
++	define('CALENDER_TABLE', $table_prefix.'calender');
++}
++
++$_CLASS['core_user']-&gt;user_setup();
++$_CLASS['core_user']-&gt;add_lang();
++
++$mode = get_variable('mode', 'GET', false);
++
++$link = 'calender';
++
++$day = get_variable('day', 'REQUEST', false, 'integer');
++$month = get_variable('month', 'REQUEST', false, 'integer');
++$year = get_variable('year', 'REQUEST', false, 'integer');
++
++load_class(SITE_FILE_ROOT.'includes/display/calender.php', 'calender');
++
++$_CLASS['calender']-&gt;table = CALENDER_TABLE;
++$_CLASS['calender']-&gt;set_date($day, $month, $year);
++
++switch ($mode)
++{
++	case 'day_view':
++		$_CLASS['calender']-&gt;month_view($link);
++		$_CLASS['calender']-&gt;get_events_day($link);
++
++		$day_flanks = $_CLASS['calender']-&gt;flank_days();
++		$month_flanks = $_CLASS['calender']-&gt;flank_months();
++
++		$previous_day = generate_link($link.'&amp;mode=day_view&amp;year='.$day_flanks['previous_day']['year'].'&amp;month='.$day_flanks['previous_day']['month'].'&amp;day='.$day_flanks['previous_day']['day']);
++		$next_day = generate_link($link.'&amp;mode=day_view&amp;year='.$day_flanks['next_day']['year'].'&amp;month='.$day_flanks['next_day']['month'].'&amp;day='.$day_flanks['next_day']['day']);
++		$previous_month = generate_link($link.'&amp;mode=day_view&amp;year='.$month_flanks['previous_month']['year'].'&amp;month='.$month_flanks['previous_month']['month']);
++		$next_month = generate_link($link.'&amp;mode=day_view&amp;year='.$month_flanks['next_month']['year'].'&amp;month='.$month_flanks['next_month']['month']);
++		
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'L_SUNDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Sun'],
++			'L_MONDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Mon'],
++			'L_TUESDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Tue'],
++			'L_WEDNESDAY'			=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Wed'],
++			'L_THURSDAY'			=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Thu'],
++			'L_FRIDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Fri'],
++			'L_SATURDAY'			=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Sat'],
++			'L_TODAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['TODAY'],
++			'THIS_DAY'				=&gt; date('F j, Y', mktime(0, 0, 0, $_CLASS['calender']-&gt;month, $_CLASS['calender']-&gt;day, $_CLASS['calender']-&gt;year)),
++			'PREVIOUS_DAY_LINK'		=&gt; $previous_day,
++			'NEXT_DAY_LINK'			=&gt; $next_day,
++		));
++
++		$_CLASS['core_display']-&gt;display(false, 'modules/calender/calender_day.html');
++	break;
++		
++	case 'details':
++	
++		$id = get_variable('id', 'GET', false, 'integer');
++		$data = false;
++		$data = $_CLASS['calender']-&gt;get_events_details($id);
++		
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'CAL_TITLE'			=&gt; $data['calender_title'],
++			'CAL_DESCRIPTION'	=&gt; $data['calender_text'],
++			'CAL_START_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($data['start_time']),
++			'CAL_END_TIME'		=&gt; $_CLASS['core_user']-&gt;format_date($data['end_time']),
++		));
++	
++		$_CLASS['core_display']-&gt;display(false, 'modules/calender/calender_details.html');
++
++	break;
++	
++	case 'month_view':
++	default:
++		$_CLASS['calender']-&gt;get_events_month($link);
++		$_CLASS['calender']-&gt;month_view($link);
++
++		$month_flanks = $_CLASS['calender']-&gt;flank_months();
++
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'L_SUNDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Sunday'],
++			'L_MONDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Monday'],
++			'L_TUESDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Tuesday'],
++			'L_WEDNESDAY'			=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Wednesday'],
++			'L_THURSDAY'			=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Thursday'],
++			'L_FRIDAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Friday'],
++			'L_SATURDAY'			=&gt; $_CLASS['core_user']-&gt;lang['datetime']['Saturday'],
++			'L_TODAY'				=&gt; $_CLASS['core_user']-&gt;lang['datetime']['TODAY'],
++			
++			'THIS_MONTH_NAME'		=&gt; $_CLASS['core_user']-&gt;lang['datetime'][date('F', mktime(0, 0, 0, $_CLASS['calender']-&gt;month, 1, $_CLASS['calender']-&gt;year))],
++			'NEXT_MONTH_NAME'		=&gt; $_CLASS['core_user']-&gt;lang['datetime'][date('F', mktime(0, 0, 0, $month_flanks['next_month']['month'], 1, $_CLASS['calender']-&gt;year))],
++			'PREVIOUS_MONTH_NAME'	=&gt; $_CLASS['core_user']-&gt;lang['datetime'][date('F', mktime(0, 0, 0, $month_flanks['previous_month']['month'], 1, $_CLASS['calender']-&gt;year))],
++			'NEXT_MONTH_YEAR'		=&gt; $month_flanks['next_month']['year'],
++			'PREVIOUS_MONTH_YEAR'	=&gt; $month_flanks['previous_month']['year'],
++			'CURRENT_YEAR'			=&gt; $_CLASS['calender']-&gt;year,
++			'PREVIOUS_MONTH'		=&gt; generate_link($link.'&amp;mode=month_view&amp;year='.$month_flanks['previous_month']['year'].'&amp;month='.$month_flanks['previous_month']['month']),
++			'NEXT_MONTH'			=&gt; generate_link($link.'&amp;mode=month_view&amp;year='.$month_flanks['next_month']['year'].'&amp;month='.$month_flanks['next_month']['month']),
++		));
++
++		$_CLASS['core_display']-&gt;display(false, 'modules/calender/calender_main.html');
++
++	break;	
++}
++
++?&gt;
+\ No newline at end of file
+
+Added: cms/trunk/modules/calender/language/en/index.php
+===================================================================
+--- cms/trunk/modules/calender/language/en/index.php	2005-09-20 05:07:35 UTC (rev 135)
++++ cms/trunk/modules/calender/language/en/index.php	2005-09-20 21:46:50 UTC (rev 136)
+@@ -0,0 +1,488 @@
++&lt;?php
++// -------------------------------------------------------------
++//
++// $Id: ucp.php,v 1.12 2004/06/06 21:44:49 acydburn Exp $
++//
++// FILENAME  : ucp.php [ English ]
++// STARTED   : Sat Dec 16, 2000
++// COPYRIGHT : &#194;&#169; 2001, 2003 phpBB Group
++// WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
++// LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
++// 
++// -------------------------------------------------------------
++
++// DEVELOPERS PLEASE NOTE 
++//
++// Placeholders can now contain order information, e.g. instead of
++// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
++// translators to re-order the output of data while ensuring it remains correct
++//
++// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
++// equally where a string contains only two placeholders which are used to wrap text
++// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
++$this-&gt;lang += array(
++	'ACCOUNT_ACTIVE'			=&gt; 'Your account has now been activated. Thank you for registering',
++	'ACCOUNT_ACTIVE_ADMIN'		=&gt; 'The account has now been activated',
++	'ACCOUNT_ADDED'				=&gt; 'Thank you for registering, your account has been created. You may now login with your username and password',
++	'ACCOUNT_COPPA'				=&gt; 'Your account has been created but has to be approved, please check your email for details.',
++	'ACCOUNT_INACTIVE'			=&gt; 'Your account has been created. However, this forum requires account activation, an activation key has been sent to the email address you provided. Please check your email for further information',
++	'ACCOUNT_INACTIVE_ADMIN'	=&gt; 'Your account has been created. However, this forum requires account activation by the administrator. An email has been sent to them and you will be informed when your account has been activated',
++	'ACTIVATION_EMAIL_SENT'		=&gt; 'The activation email has been sent to your email address',
++	
++	'ADD'						=&gt; 'Add',
++	'ADD_BCC'					=&gt; 'Add [Bcc]',
++	'ADD_FOES'					=&gt; 'Add new foes',
++	'ADD_FOES_EXPLAIN'			=&gt; 'You may enter several usernames each on a different line',
++	'ADD_FOLDER'				=&gt; 'Add folder',
++	'ADD_FRIENDS'				=&gt; 'Add new friends',
++	'ADD_FRIENDS_EXPLAIN'		=&gt; 'You may enter several usernames each on a different line',
++	'ADD_NEW_RULE'				=&gt; 'Add new Rule',
++	'ADD_RULE'					=&gt; 'Add Rule',
++	'ADD_TO'					=&gt; 'Add [To]',
++	'ADMIN_EMAIL'				=&gt; 'Administrators can email me information',
++	'AGREE'						=&gt; 'I agree to these terms',
++	'ALLOW_PM'					=&gt; 'Allow users to send you private messages',
++	'ALLOW_PM_EXPLAIN'			=&gt; 'Note that admins and moderators will always be able to send you messages.',
++	'ALREADY_ACTIVATED'			=&gt; 'You have already activated your account',
++	'ATTACHMENTS_DELETED'		=&gt; 'Attachments successfully deleted',
++	'ATTACHMENT_DELETED'		=&gt; 'Attachment successfully deleted',
++	'AVATAR_CATEGORY'			=&gt; 'Category',
++	'AVATAR_EXPLAIN'			=&gt; 'Maximum dimensions; width %1$d pixels, height %2$d pixels, filesize %3$dkB.',
++	'AVATAR_GALLERY'			=&gt; 'Local gallery',
++	'AVATAR_PAGE'				=&gt; 'Page',
++
++	'BACK_TO_DRAFTS'			=&gt; 'Back to saved drafts',
++	'BIRTHDAY'					=&gt; 'Birthday',
++	'BIRTHDAY_EXPLAIN'			=&gt; 'Setting a year will list your age when it is your birthday.',
++	'BOARD_DATE_FORMAT'			=&gt; 'My date format',
++	'BOARD_DATE_FORMAT_EXPLAIN'	=&gt; 'The syntax used is identical to the PHP &lt;a href=&quot;<A HREF="http://www.php.net/date">http://www.php.net/date</A>&quot; target=&quot;_other&quot;&gt;date()&lt;/a&gt; function',
++	'BOARD_DST'					=&gt; 'Daylight Saving Time is in effect',
++	'BOARD_LANGUAGE'			=&gt; 'My language',
++	'BOARD_STYLE'				=&gt; 'My board style',
++	'BOARD_TIMEZONE'			=&gt; 'My timezone',
++	'BOOKMARKS'					=&gt; 'Bookmarks',
++	'BOOKMARKS_FORUMS'			=&gt; 'Bookmarks ( Forums )',
++	'BOOKMARKS_SITE'			=&gt; 'Bookmarks ( Site )',
++	'BOOKMARKS_DISABLED'		=&gt; 'Bookmarks are disabled on this board',
++	'BOOKMARKS_REMOVED'			=&gt; 'Bookmarks removed successfully',
++
++	'CANNOT_EDIT_MESSAGE_TIME'	=&gt; 'You can no longer edit or delete that message',
++	'CANNOT_MOVE_TO_SAME_FOLDER'=&gt; 'Messages can not be moved to the folder you want to remove.',
++	'CANNOT_RENAME_FOLDER'		=&gt; 'This folder can not be renamed.',
++	'CANNOT_REMOVE_FOLDER'		=&gt; 'This folder can not be removed.',
++	'CHANGE_PASSWORD'			=&gt; 'Change password',
++	'CHANGE_PASSWORD_EXPLAIN'	=&gt; 'Must be between %1$d and %2$d characters.',
++	'CLICK_RETURN_FOLDER'		=&gt; 'Click %1$sHere%2$s to return to your &quot;%3$s&quot; Folder',
++	'CONFIRMATION'				=&gt; 'Confirmation of registration',
++	'CONFIRM_CODE'				=&gt; 'Confirmation code',
++	'CONFIRM_CODE_EXPLAIN'		=&gt; 'Enter the code exactly as you see it in the image, it is case sensitive, zero has a diagonal line through it.',
++	'CONFIRM_CODE_WRONG'		=&gt; 'The confirmation code you entered was incorrect.',
++	'CONFIRM_EMAIL'				=&gt; 'Confirm email address',
++	'CONFIRM_EMAIL_EXPLAIN'		=&gt; 'You only need to specify this if you are changing your email address.',
++	'CONFIRM_EXPLAIN'			=&gt; 'To prevent automated registrations the board administrator requires you to enter a confirmation code. The code is displayed in the image you should see below. If you are visually impaired or cannot otherwise read this code please contact the %sBoard Administrator%s.',
++	'CONFIRM_PASSWORD'			=&gt; 'Confirm password',
++	'CONFIRM_PASSWORD_EXPLAIN'	=&gt; 'You only need to confirm your password if you changed it above',
++	'COPPA_BIRTHDAY'			=&gt; 'To continue with the registration procedure please tell us when you were born.',
++	'COPPA_COMPLIANCE'			=&gt; 'COPPA Compliance',
++	'COPPA_EXPLAIN'				=&gt; 'Please note that clicking submit will create your account. However it cannot be activated until a parent or guardian approves your registration. You will be emailed a copy of the necessary form with details of where to send it.',
++	'CREATE_FOLDER'				=&gt; 'Add Folder...',
++	'CURRENT_IMAGE'				=&gt; 'Current Image',
++	'CURRENT_PASSWORD'			=&gt; 'Current password',
++	'CURRENT_PASSWORD_EXPLAIN'	=&gt; 'You must confirm your current password if you wish to change it, alter your email address or username.',
++	'CUR_PASSWORD_ERROR'		=&gt; 'The current password you entered is incorrect.',
++
++	'DEFAULT_ACTION'			=&gt; 'Default Action',
++	'DEFAULT_ACTION_EXPLAIN'	=&gt; 'This Action will be triggered if none of the above is applicable',
++	'DEFAULT_ADD_SIG'			=&gt; 'Attach my signature by default',
++	'DEFAULT_BBCODE'			=&gt; 'Enable BBCode by default',
++	'DEFAULT_HTML'				=&gt; 'Enable HTML by default',
++	'DEFAULT_NOTIFY'			=&gt; 'Notify me upon replies by default',
++	'DEFAULT_SMILIES'			=&gt; 'Enable smilies by default',
++	'DEFINED_RULES'				=&gt; 'Defined Rules',
++	'DELETE_ALL'				=&gt; 'Delete all',
++	'DELETE_ATTACHMENT'			=&gt; 'Delete Attachment',
++	'DELETE_ATTACHMENTS'		=&gt; 'Delete Attachments',
++	'DELETE_ATTACHMENT_CONFIRM'	=&gt; 'Are you sure you want to delete this attachment?',
++	'DELETE_ATTACHMENTS_CONFIRM'=&gt; 'Are you sure you want to delete these attachments?',
++	'DELETE_AVATAR'				=&gt; 'Delete Image',
++	'DELETE_COOKIES_CONFIRM'	=&gt; 'Are you sure you want to delete all cookies set by this board?',
++	'DELETE_MARKED_PM'			=&gt; 'Delete Marked Messages',
++	'DELETE_MARKED_PM_CONFIRM'	=&gt; 'Are you sure you want to delete all marked messages?',
++	'DELETE_OLDEST_MESSAGES'	=&gt; 'Delete Oldest Messages',
++	'DELETE_MESSAGE'			=&gt; 'Delete Message',
++	'DELETE_MESSAGE_CONFIRM'	=&gt; 'Are you sure you want to delete this private message?',
++	'DELETE_MESSAGES_IN_FOLDER'	=&gt; 'Delete all messages within removed folder',
++	'DELETE_RULE'				=&gt; 'Delete Rule',
++	'DELETE_RULE_CONFIRM'		=&gt; 'Are you sure you want to delete this rule?',
++	'DISABLE_CENSORS'			=&gt; 'Enable Word censoring',
++	'DISPLAY_GALLERY'			=&gt; 'Display gallery',
++	'DOWNLOADS'					=&gt; 'Downloads',
++	'DRAFTS_DELETED'			=&gt; 'All selected drafts were successfully deleted.',
++	'DRAFTS_EXPLAIN'			=&gt; 'Here you can view, edit and delete your saved drafts.',
++	'DRAFT_UPDATED'				=&gt; 'Draft successfully updated.',
++
++	'EDIT_DRAFT_EXPLAIN'		=&gt; 'Here you are able to edit your draft. Drafts do not contain attachment and poll informations.',
++	'EMAIL_INVALID_EMAIL'		=&gt; 'The email address you entered is invalid.',
++	'EMAIL_REMIND'				=&gt; 'This must be the email address you supplied when registering.',
++	'EMAIL_PM'					=&gt; 'Email PM',
++	'EMAIL_TAKEN_EMAIL'			=&gt; 'The entered email address is already in use',
++	'EMPTY_DRAFT'				=&gt; 'You must enter a message to submit your changes',
++	'EMPTY_DRAFT_TITLE'			=&gt; 'You must enter a draft title',
++	'EXPORT_AS_XML'				=&gt; 'Export as XML',
++	'EXPORT_AS_CSV'				=&gt; 'Export as CSV',
++	'EXPORT_AS_TXT'				=&gt; 'Export as TXT',
++	'EXPORT_AS_MSG'				=&gt; 'Export as MSG',
++
++	'FIELD_REQUIRED'			=&gt; 'The field &quot;%s&quot; must be completed.',
++	'FIELD_TOO_SHORT'			=&gt; 'The field &quot;%1$s&quot; is too short, a minimum of %2$d characters is required.',
++	'FIELD_TOO_LONG'			=&gt; 'The field &quot;%1$s&quot; is too long, a maximum of %2$d characters is allowed.',
++	'FIELD_TOO_SMALL'			=&gt; 'The value of &quot;%1$s&quot; is too small, a minimum value of %2$d is required.',
++	'FIELD_TOO_LARGE'			=&gt; 'The value of &quot;%1$s&quot; is too large, a maximum value of %2$d is allowed.',
++	'FIELD_INVALID_CHARS_NUMBERS_ONLY'	=&gt; 'The field &quot;%s&quot; has invalid characters, only numbers are allowed.',
++	'FIELD_INVALID_CHARS_ALPHA_ONLY'	=&gt; 'The field &quot;%s&quot; has invalid characters, only alphanumeric characters are allowed.',
++	'FIELD_INVALID_CHARS_SPACERS_ONLY'	=&gt; 'The field &quot;%s&quot; has invalid characters, only alphanumeric, space or -+_[] characters are allowed.',
++	'FIELD_INVALID_DATE'		=&gt; 'The field &quot;%s&quot; has an invalid date.',
++
++	'FOE_MESSAGE'				=&gt; 'Message from foe',
++	'FOES_EXPLAIN'				=&gt; 'Foes are users which will be ignored by default. Posts by these users will not be fully visible and personal messages will not be permitted. Please note that you cannot ignore moderators or administrators.',
++	'FOES_UPDATED'				=&gt; 'Your foes list has been updated successfully',
++	'FOLDER_ADDED'				=&gt; 'Folder successfully added',
++	'FOLDER_MESSAGE_STATUS'		=&gt; '%1$d from %2$d messages stored',
++	'FOLDER_NAME_EXIST'			=&gt; 'Folder &lt;b&gt;%s&lt;/b&gt; already exist',
++	'FOLDER_OPTIONS'			=&gt; 'Folder Options',
++	'FOLDER_RENAMED'			=&gt; 'Folder successfully renamed',
++	'FOLDER_REMOVED'			=&gt; 'Folder successfully removed',
++	'FOLDER_STATUS_MSG'			=&gt; 'Folder is %1$d%% full (%2$d from %3$d messages stored)',
++	'FORWARD_PM'				=&gt; 'Forward PM',
++	'FRIEND_MESSAGE'			=&gt; 'Message from friend',
++	'FRIENDS'					=&gt; 'Friends',
++	'FRIENDS_EXPLAIN'			=&gt; 'Friends enable you quick access to members you communicate with frequently. If the template has relevant support any posts made by a friend may be highlighted.',
++	'FRIENDS_OFFLINE'			=&gt; 'Offline',
++	'FRIENDS_ONLINE'			=&gt; 'Online',
++	'FRIENDS_UPDATED'			=&gt; 'Your friends list has been updated successfully',
++	'FULL_FOLDER_OPTION_CHANGED'=&gt; 'Full Folder Option changed successfully',
++	'FWD_ORIGINAL_MESSAGE'		=&gt; '-------- Original Message --------',
++	'FWD_SUBJECT'				=&gt; 'Subject: %s',
++	'FWD_DATE'					=&gt; 'Date: %s',
++	'FWD_FROM'					=&gt; 'From: %s',
++	'FWD_TO'					=&gt; 'To: %s',
++
++	'HIDE_ONLINE'				=&gt; 'Hide my online status',
++	'HOLD_NEW_MESSAGES'			=&gt; 'Do not accept new messages (New messages will be held back until enough space is available)',
++
++	'IF_FOLDER_FULL'			=&gt; 'If Folder Full',
++	'IMPORTANT_NEWS'			=&gt; 'Important announcements',
++
++	'LANGUAGE'					=&gt; 'Language',
++	'LINK_REMOTE_AVATAR'		=&gt; 'Link off-site',
++	'LINK_REMOTE_AVATAR_EXPLAIN'=&gt; 'Enter the URL of the location containing the Avatar image you wish to link to.',
++	'LINK_REMOTE_SIZE'			=&gt; 'Avatar dimensions',
++	'LINK_REMOTE_SIZE_EXPLAIN'	=&gt; 'Specify the width and height of the avatar, leave blank to attempt automatic verification.',
++	'LOGIN_EXPLAIN_UCP'			=&gt; 'Please Login in order to access the User Control Panel',
++	'LOGIN_REDIRECT'			=&gt; 'You have been successfully logged in.',
++	'LOGOUT_REDIRECT'			=&gt; 'You have been successfully logged out.',
++
++	'MARK_IMPORTANT'			=&gt; 'Mark as Important',
++	'MARKED_MESSAGE'			=&gt; 'Marked Message',
++	'MAX_FOLDER_REACHED'		=&gt; 'Maximum number of allowed user defined folder reached',
++	'MESSAGE_COLOURS'			=&gt; 'Message Colours',
++	'MESSAGE_DELETED'			=&gt; 'Message successfully deleted',
++	'MESSAGE_HISTORY'			=&gt; 'Message History',
++	'MESSAGE_REMOVED_FROM_OUTBOX'	=&gt; 'This message has been removed by it\'s author before it was delivered',
++	'MESSAGE_REPORTED'			=&gt; 'Click to view reports',
++	'MESSAGE_REPORTED_MESSAGE'	=&gt; 'Reported Message',
++	'MESSAGE_STORED'			=&gt; 'The message has been send successfully',
++	'MESSAGES_DELETED'			=&gt; 'Messages successfully deleted',
++	'MOVE_DELETED_MESSAGES_TO'	=&gt; 'Move messages from removed folder to',
++	'MOVE_DOWN'					=&gt; 'Move down',
++	'MOVE_PM_ERROR'				=&gt; 'An error occurred while moving the messages to the new folder, only %1d from %2d messages were moved.',
++	'MOVE_TO_FOLDER'			=&gt; 'Move to Folder',
++	'MOVE_UP'					=&gt; 'Move up',
++
++	'NEW_EMAIL_ERROR'			=&gt; 'The email addresses you entered do not match.',
++	'NEW_FOLDER_NAME'			=&gt; 'New folder name',
++	'NEW_PASSWORD'				=&gt; 'Password',
++	'NEW_PASSWORD_ERROR'		=&gt; 'The passwords you entered do not match.',
++	'NEW_PASSWORD_EXPLAIN'		=&gt; 'Must be between %1$d and %2$d characters.',
++	'MINIMUM_KARMA'				=&gt; 'Minimum User Karma',
++	'MINIMUM_KARMA_EXPLAIN'		=&gt; 'Posts by users with Karma less than this will be ignored.',
++	'NOTIFY_METHOD'				=&gt; 'Notification method',
++	'NOTIFY_METHOD_BOTH'		=&gt; 'Both',
++	'NOTIFY_METHOD_EMAIL'		=&gt; 'Email only',
++	'NOTIFY_METHOD_EXPLAIN'		=&gt; 'Method for sending messages sent via this board.',
++	'NOTIFY_METHOD_IM'			=&gt; 'Jabber only',
++	'NOTIFY_ON_PM'				=&gt; 'Email me on new private messages',
++	'NOT_ADDED_FOES'			=&gt; 'Usernames not added to foes list because of administrator/moderator status.',
++	'NOT_AGREE'					=&gt; 'I do not agree to these terms',
++	'NOT_ENOUGH_SPACE_FOLDER'	=&gt; 'The Destination Folder &quot;%s&quot; seems to be full. The requested action has not been taken.',
++	'NOT_MOVED_MESSAGE'			=&gt; 'You have 1 private message currently on hold because of full folder.',
++	'NOT_MOVED_MESSAGES'		=&gt; 'You have %d private messages currently on hold because of full folder.',
++	'NO_ACTION_MODE'			=&gt; 'No message action specified',
++	'NO_AUTHOR'					=&gt; 'No author defined for this message',
++	
++	'NO_AUTH_DELETE_MESSAGE'	=&gt; 'You are not authorized to delete private messages.',
++	'NO_AUTH_EDIT_MESSAGE'		=&gt; 'You are not authorized to edit private messages.',
++	'NO_AUTH_FORWARD_MESSAGE'	=&gt; 'You are not authorized to forward private messages.',
++	'NO_AUTH_GROUP_MESSAGE'		=&gt; 'You are not authorized to send private messages to groups.',
++	'NO_AUTH_READ_MESSAGE'		=&gt; 'You are not authorized to read private messages.',
++	'NO_AUTH_READ_REMOVED_MESSAGE'	=&gt; 'You are not able to read this message because it was removed by the author.',
++	'NO_AUTH_SEND_MESSAGE'		=&gt; 'You are not authorized sending private messages.',
++	'NO_AUTH_SIGNATURE'			=&gt; 'You are not authorized to define a signature',
++
++	'NO_BOOKMARKS'				=&gt; 'You have no bookmarks',
++	'NO_BOOKMARKS_SELECTED'		=&gt; 'You have selected no bookmarks',
++	'NO_EMAIL_USER'				=&gt; 'The email/username information submitted could not be found',
++	'NO_FOES'					=&gt; 'No foes currently defined',
++	'NO_FRIENDS'				=&gt; 'No friends currently defined',
++	'NO_FRIENDS_OFFLINE'		=&gt; 'No friends offline',
++	'NO_FRIENDS_ONLINE'			=&gt; 'No friends online',
++	'NO_IMPORTANT_NEWS'			=&gt; 'No important announcements present',
++	'NO_MESSAGE'				=&gt; 'Private Message could not be found',
++	'NO_NEW_FOLDER_NAME'		=&gt; 'You have to specify a new folder name',
++	'NO_NEWER_PM'				=&gt; 'No newer messages',
++	'NO_OLDER_PM'				=&gt; 'No older messages',
++	'NO_RECIPIENT'				=&gt; 'No recipient defined',
++	'NO_RULES_DEFINED'			=&gt; 'No rules defined',
++	'NO_SAVED_DRAFTS'			=&gt; 'No drafts saved',
++	'NO_WATCHED_FORUMS'			=&gt; 'You are not watching any forums.',
++	'NO_WATCHED_TOPICS'			=&gt; 'You are not watching any topics.',
++
++	'PASSWORD_ACTIVATED'		=&gt; 'Your new password has been activated',
++	'PASSWORD_UPDATED'			=&gt; 'Your password has been sent successfully to your original email address.',
++	'PM_DISABLED'				=&gt; 'Private messaging has been disabled on this board',
++	'PM_FROM'					=&gt; 'From',
++	'PM_ICON'					=&gt; 'PM Icon',
++	'PM_INBOX'					=&gt; 'Inbox',
++	'PM_OUTBOX'					=&gt; 'Outbox',
++	'PM_SENTBOX'				=&gt; 'Sentbox',
++	'PM_SUBJECT'				=&gt; 'Message Subject',
++	'PM_TO'						=&gt; 'Send To',
++	'POPUP_ON_PM'				=&gt; 'Pop up window on new private message',
++	'POST_EDIT_PM'				=&gt; 'Edit message',
++	'POST_FORWARD_PM'			=&gt; 'Forward message',
++	'POST_NEW_PM'				=&gt; 'Post message',
++	'POST_PM_LOCKED'			=&gt; 'Private Messaging is locked',
++	'POST_QUOTE_PM'				=&gt; 'Quote message',
++	'POST_REPLY_PM'				=&gt; 'Reply to message',
++	'PRINT_PM'					=&gt; 'Print View',
++	'PREFERENCES_UPDATED'		=&gt; 'Your preferences have been updated.',
++	'PROFILE_INFO_NOTICE'		=&gt; 'Please note that this information will be viewable to other members. Be careful when including any personal details. Any fields marked with a * must be completed.',
++	'PROFILE_UPDATED'			=&gt; 'Your profile has been updated.',
++
++	'RECIPIENT'					=&gt; 'Recipient',
++	'RECIPIENTS'				=&gt; 'Recipients',
++	'REGISTRATION'				=&gt; 'Registration',
++	'RELEASE_MESSAGES'			=&gt; 'Click %sHere%s to release the on-hold messages, they will be re-sorted into the appropiate folder if enough space is made available.',
++	'REMOVE_ADDRESS'			=&gt; 'Remove address',
++	'REMOVE_SELECTED_BOOKMARKS'	=&gt; 'Remove selected bookmarks',
++	'REMOVE_SELECTED_BOOKMARKS_CONFIRM' =&gt; 'Are you sure you want to delete all selected bookmarks?',
++	'REMOVE_BOOKMARK_MARKED'	=&gt; 'Remove marked bookmarks',
++	'REMOVE_FOLDER'				=&gt; 'Remove folder',
++	'REMOVE_FOLDER_CONFIRM'		=&gt; 'Are you sure you want to remove this folder?',
++	'RENAME'					=&gt; 'Rename',
++	'RENAME_FOLDER'				=&gt; 'Rename folder',
++	'REPLIED_MESSAGE'			=&gt; 'Replied to Message',
++	'REPORT_PM'					=&gt; 'Report PM',
++	'REPORT_PM_NOTIFY'			=&gt; 'Send report notifications as PM',
++	'REPORT_PM_NOTIFY_EXPLAIN'	=&gt; 'If enabled, notifications and status updates to new reports get send as PM instead of emailing them.',
++	'RETURN_FOLDER'				=&gt; 'Click %1$sHere%2$s to return to folder',
++	'RETURN_UCP'				=&gt; 'Click %sHere%s to return to the User Control Panel',
++	'RULE_ADDED'				=&gt; 'Rule successfully added',
++	'RULE_ALREADY_DEFINED'		=&gt; 'This rule was defined previously',
++	'RULE_DELETED'				=&gt; 'Rule successfully removed',
++	'RULE_NOT_DEFINED'			=&gt; 'Rule not correctly specified',
++
++	'SEARCH_YOUR_POSTS'			=&gt; 'Show your posts',
++	'SEND_PASSWORD'				=&gt; 'Send password',
++	'SENT_AT'					=&gt; 'Sent At',
++	'SHOW_EMAIL'				=&gt; 'Users can contact me by email',
++	'SIGNATURE_EXPLAIN'			=&gt; 'This is a block of text that can be added to posts you make. There is a %d character limit',
++	'SIGNATURE_PREVIEW'			=&gt; 'Your signature will appear like this in posts',
++	'SIGNATURE_TOO_LONG'		=&gt; 'Your signature is too long.',
++	'SORT'						=&gt; 'Sort',
++	'SORT_COMMENT'				=&gt; 'File Comment',
++	'SORT_DOWNLOADS'			=&gt; 'Downloads',
++	'SORT_EXTENSION'			=&gt; 'Extension',
++	'SORT_FILENAME'				=&gt; 'Filename',
++	'SORT_POST_TIME'			=&gt; 'Post Time',
++	'SORT_SIZE'					=&gt; 'Filesize',
++
++	'TERMS_OF_USE_CONTENT'		=&gt; 'While the administrators and moderators of this forum will attempt to remove or edit any generally objectionable material as quickly as possible, it is impossible to review every message. Therefore you acknowledge that all posts made to these forums express the views and opinions of the author and not the administrators, moderators or webmaster (except for posts by these people) and hence will not be held liable.&lt;br /&gt;&lt;br /&gt;You agree not to post any abusive, obscene, vulgar, slanderous, hateful, threatening, sexually-orientated or any other material that may violate any applicable laws. Doing so may lead to you being immediately and permanently banned (and your service provider being informed). The IP address of all posts is recorded to aid in enforcing these conditions. You agree that the webmaster, administrator and moderators of this forum have the right to remove, edit, move or close any topic at any time should they see fit. As a user you a!
+ gree to any information you	have entered above being stored in a database. While this information will not be disclosed to any third party without your consent the webmaster, administrator and moderators cannot be held responsible for any hacking attempt that may lead to the data being compromised.&lt;br /&gt;&lt;br /&gt;This forum system uses cookies to store information on your local computer. These cookies do not contain any of the information you have entered above, they serve only to improve your viewing pleasure. The email address is used only for confirming your registration details and password (and for sending new passwords should you forget your current one).&lt;br /&gt;&lt;br /&gt;By clicking Register below you agree to be bound by these conditions.',
++	'TIMEZONE'					=&gt; 'Timezone',
++	'TO'						=&gt; 'To',
++	'TOO_MANY_RECIPIENTS'		=&gt; 'Too many recipients',
++	'TOO_MANY_REGISTERS'		=&gt; 'You have exceeded the maximum number of registration attempts for this session. Please try again later.',
++
++	'UCP'						=&gt; 'User Control Panel',
++	'UCP_ADMIN_ACTIVATE'		=&gt; 'Please note that you will need to enter a valid email address before your account is activated. The administrator will review your account and if approved you will an email at the address you specified.',
++	'UCP_AIM'					=&gt; 'AOL Instant Messenger',
++	'UCP_ATTACHMENTS'			=&gt; 'Attachments',
++	'UCP_CALENDER_DAY_VIEW'		=&gt; 'Day Details',
++	'UCP_CALENDER_MANAGE'		=&gt; 'Manage',
++	'UCP_CALENDER_MONTH_VIEW'	=&gt; 'Month View',
++	'UCP_COPPA_BEFORE'			=&gt; 'Before %s',
++	'UCP_COPPA_ON_AFTER'		=&gt; 'On or After %s',
++	'UCP_EMAIL_ACTIVATE'		=&gt; 'Please note that you will need to enter a valid email address before your account is activated. You will recieve an email at the address you provide that contains an account activation link.',
++	'UCP_ICQ'					=&gt; 'ICQ Number',
++	'UCP_JABBER'				=&gt; 'Jabber Address',
++	
++	'UCP_MAIN'					=&gt; 'Overview',
++	'UCP_MAIN_BOOKMARKS'		=&gt; 'Bookmarks',
++	'UCP_MAIN_DRAFTS'			=&gt; 'Saved drafts',
++	'UCP_MAIN_FRONT'			=&gt; 'Front page',
++	'UCP_MAIN_SUBSCRIBED'		=&gt; 'Subscribed',
++	
++	'UCP_MSNM'					=&gt; 'MSN Messenger',
++	'UCP_NO_ATTACHMENTS'		=&gt; 'You have posted no files',
++	
++	'UCP_PREFS'					=&gt; 'Preferences',
++	'UCP_PREFS_PERSONAL'		=&gt; 'Personal Settings',
++	'UCP_PREFS_POST'			=&gt; 'Posting Messages',
++	'UCP_PREFS_VIEW'			=&gt; 'Viewing Posts',
++	
++	'UCP_PM'					=&gt; 'Private Messages',
++	'UCP_PM_COMPOSE'			=&gt; 'Compose Message',
++	'UCP_PM_DRAFTS'				=&gt; 'PM Drafts',
++	'UCP_PM_OPTIONS'			=&gt; 'Options',
++	'UCP_PM_POPUP'				=&gt; 'Private Messages',
++	'UCP_PM_UNREAD'				=&gt; 'Unread Messages',
++	'UCP_PM_VIEW_MESSAGES'		=&gt; 'View Messages',
++	
++	'UCP_PROFILE'				=&gt; 'Profile',
++	'UCP_PROFILE_AVATAR'		=&gt; 'Your avatar',
++	'UCP_PROFILE_PROFILE_INFO'	=&gt; 'Your Profile',
++	'UCP_PROFILE_REG_DETAILS'	=&gt; 'Registration details',
++	'UCP_PROFILE_SIGNATURE'		=&gt; 'Your signature',
++	
++	'UCP_REGISTER_DISABLE'		=&gt; 'Creating a new account is currently not possible.',
++	'UCP_REMIND'				=&gt; 'Send password',
++	'UCP_RESEND'				=&gt; 'Send activation email',
++	'UCP_WATCHED'				=&gt; 'Watched items',
++	'UCP_WELCOME'				=&gt; 'Welcome to the User Control Panel. From here you can monitor, view and update your profile, preferences, subscribed forums and topics. You can also send messages to other users (if permitted). Please ensure you read any announcements before continuing.',
++	'UCP_YIM'					=&gt; 'Yahoo Messenger',
++	'UCP_ZEBRA'					=&gt; 'Friends and Foes',
++	'UCP_ZEBRA_FOES'			=&gt; 'Foes',
++	'UCP_ZEBRA_FRIENDS'			=&gt; 'Friends',
++	'UNKNOWN_FOLDER'			=&gt; 'Unknown Folder',
++	'UNREAD_MESSAGES'			=&gt; 'Unread Messages',
++	'UNWATCH_MARKED'			=&gt; 'Unwatch marked',
++	'UPLOAD_AVATAR_FILE'		=&gt; 'Upload from your machine',
++	'UPLOAD_AVATAR_URL'			=&gt; 'Upload from a URL',
++	'UPLOAD_AVATAR_URL_EXPLAIN'	=&gt; 'Enter the URL of the location containing the image, it will be copied to this site.',
++	'USERNAME_ALPHA_ONLY_EXPLAIN'	=&gt; 'Username must be between %1$d and %2$d chars long and use only alphanumeric characters',
++	'USERNAME_ALPHA_SPACERS_EXPLAIN'=&gt; 'Username must be between %1$d and %2$d chars long and use alphanumeric, space or -+_[] characters.',
++	'USERNAME_CHARS_ANY_EXPLAIN'=&gt; 'Length must be between %1$d and %2$d characters.',
++	'USERNAME_TAKEN_USERNAME'	=&gt; 'The username you entered is already in use, please select an alternative.',
++	'USER_NOT_FOUND'			=&gt; 'The usernames you specified could not be found.',
++
++	'VIEW_AVATARS'				=&gt; 'Display Avatars',
++	'VIEW_EDIT'					=&gt; 'View/Edit',
++	'VIEW_FLASH'				=&gt; 'Display Flash animations',
++	'VIEW_IMAGES'				=&gt; 'Display Images within posts',
++	'VIEW_NEXT_HISTORY'			=&gt; 'Next PM in history',
++	'VIEW_NEXT_PM'				=&gt; 'Next PM',
++	'VIEW_PM'					=&gt; 'View Message',
++	'VIEW_PM_INFO'				=&gt; 'Message Details',
++	'VIEW_PM_MESSAGE'			=&gt; '1 Message',
++	'VIEW_PM_MESSAGES'			=&gt; '%d Messages',
++	'VIEW_PREVIOUS_HISTORY'		=&gt; 'Previous PM in history',
++	'VIEW_PREVIOUS_PM'			=&gt; 'Previous PM',
++	'VIEW_SIGS'					=&gt; 'Display Signatures',
++	'VIEW_SMILIES'				=&gt; 'Display Smileys as images',
++	'VIEW_TOPICS_DAYS'			=&gt; 'Display topics from previous days',
++	'VIEW_TOPICS_DIR'			=&gt; 'Display topic order direction',
++	'VIEW_TOPICS_KEY'			=&gt; 'Display topics ordering by',
++	'VIEW_POSTS_DAYS'			=&gt; 'Display posts from previous days',
++	'VIEW_POSTS_DIR'			=&gt; 'Display post order direction',
++	'VIEW_POSTS_KEY'			=&gt; 'Display posts ordering by',
++	
++	'WATCHED_FORUMS'			=&gt; 'Watched Forums',
++	'WATCHED_TOPICS'			=&gt; 'Watched Topics',
++	'WRONG_ACTIVATION'			=&gt; 'The activation key you supplied does not match any in the database',
++
++	'YOUR_DETAILS'				=&gt; 'Your activity',
++	'YOUR_FOES'					=&gt; 'Your foes',
++	'YOUR_FOES_EXPLAIN'			=&gt; 'To remove usernames select them and click submit',
++	'YOUR_FRIENDS'				=&gt; 'Your friends',
++	'YOUR_FRIENDS_EXPLAIN'		=&gt; 'To remove usernames select them and click submit',
++	'YOUR_KARMA'				=&gt; 'Your Karma level',
++	'YOUR_WARNINGS'				=&gt; 'Your Warning level',
++
++	'PM_ACTION' =&gt; array(
++		'PLACE_INTO_FOLDER'	=&gt; 'Place into folder',
++		'MARK_AS_READ'		=&gt; 'Mark as read',
++		'MARK_AS_IMPORTANT'	=&gt; 'Mark Message',
++		'DELETE_MESSAGE'	=&gt; 'Delete Message'
++	),
++	'PM_CHECK' =&gt; array(
++		'SUBJECT'	=&gt; 'Subject',
++		'SENDER'	=&gt; 'Sender',
++		'MESSAGE'	=&gt; 'Message',
++		'STATUS'	=&gt; 'Message Status',
++		'TO'		=&gt; 'Sent To'
++	),
++	'PM_RULE' =&gt; array(
++		'IS_LIKE'		=&gt; 'Is Like',
++		'IS_NOT_LIKE'	=&gt; 'Is Not Like',
++		'IS'			=&gt; 'Is',
++		'IS_NOT'		=&gt; 'Is Not',
++		'BEGINS_WITH'	=&gt; 'Begins with',
++		'ENDS_WITH'		=&gt; 'Ends with',
++		'IS_FRIEND'		=&gt; 'Is Friend',
++		'IS_FOE'		=&gt; 'Is Foe',
++		'IS_USER'		=&gt; 'Is User',
++		'IS_GROUP'		=&gt; 'Is In Usergroup',
++		'ANSWERED'		=&gt; 'Answered',
++		'FORWARDED'		=&gt; 'Forwarded',
++		'REPORTED'		=&gt; 'Reported',
++		'TO_GROUP'		=&gt; 'Usergroup',
++		'TO_ME'			=&gt; 'Me'
++	),
++
++
++	'UCP_GROUPS_MEMBERSHIP'	=&gt; 'Memberships', 
++	'UCP_GROUPS_MANAGE'		=&gt; 'Manage groups', 
++	'GROUPS_EXPLAIN'		=&gt; 'Usergroups enable board admins to better administer users. By default you will be placed in a specific group, this is your default group. This group defines how you may appear to other users, for example your username colouration, avatar, rank, etc. Depending on whether the administrator allows it you may be allowed to change your default group. You may also be placed in or allowed to join other groups. Some groups may give you extra rights to view content or increase your capabilities in other areas.', 
++	'GROUP_LEADER'		=&gt; 'Leaderships', 
++	'GROUP_MEMBER'		=&gt; 'Memberships', 
++	'GROUP_PENDING'		=&gt; 'Pending memberships', 
++	'GROUP_NONMEMBER'	=&gt; 'Non-memberships', 
++	'GROUP_DETAILS'		=&gt; 'Group details', 
++
++	'NO_LEADER'		=&gt; 'No group leaderships',
++	'NO_MEMBER'		=&gt; 'No group memberships', 
++	'NO_PENDING'	=&gt; 'No pending memberships', 
++	'NO_NONMEMBER'	=&gt; 'No non-member groups', 
++
++	'QUIT_ALL'		=&gt; 'Quit all', 
++	'QUIT_MARKED'	=&gt; 'Quit marked', 
++	'JOIN_ALL'		=&gt; 'Join all', 
++	'JOIN_MARKED'	=&gt; 'Join marked', 
++	
++	'ACTIVE_TOPICS'			=&gt; 'Active Topics',
++	'ANNOUNCEMENTS'			=&gt; 'Announcements',
++	
++	'ICON_ANNOUNCEMENT'		=&gt; 'Announcement',
++	'ICON_STICKY'			=&gt; 'Sticky',
++
++	'LOGIN_NOTIFY_FORUM'	=&gt; 'You have been notified about this forum, please login to view it.',
++
++	'MARK_TOPICS_READ'		=&gt; 'Mark Topics Read',
++	'MOVED_TOPIC'			=&gt; 'Moved Topic',
++
++	'NEW_POSTS_HOT'			=&gt; 'New posts [ Popular ]',
++	'NEW_POSTS_LOCKED'		=&gt; 'New posts [ Locked ]',
++	'NO_NEW_POSTS_HOT'		=&gt; 'No new posts [ Popular ]',
++	'NO_NEW_POSTS_LOCKED'	=&gt; 'No new posts [ Locked ]',
++
++	'POST_FORUM_LOCKED'		=&gt; 'Forum is locked',
++	'POST_NEW_TOPIC'		=&gt; 'Post new topic',
++	
++	'TOPICS_MARKED'			=&gt; 'The topics for this forum have now been marked read',
++
++	'VIEW_FORUM'			=&gt; 'View Forum',
++	'VIEW_FORUM_TOPIC'		=&gt; '1 Topic',
++	'VIEW_FORUM_TOPICS'		=&gt; '%d Topics',
++);
++
++?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000056.html">[Viperals-svncheckins] r135 - in cms/trunk/includes: forums templates/modules/Forums
+</A></li>
+	<LI>Next message: <A HREF="000058.html">[Viperals-svncheckins] r137 - in cms/trunk: . includes includes/nusoap includes/templates includes/templates/modules includes/templates/modules/Forums includes/templates/modules/google_search install modules/Forums modules/Forums/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#57">[ date ]</a>
+              <a href="thread.html#57">[ thread ]</a>
+              <a href="subject.html#57">[ subject ]</a>
+              <a href="author.html#57">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,3928 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r180 - in cms/trunk: includes	includes/forums includes/forums/mcp modules/forums
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r180%20-%20in%20cms/trunk%3A%20includes%0A%09includes/forums%20includes/forums/mcp%20modules/forums&In-Reply-To=%3C200608062019.k76KJn6x032191%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000098.html">
+   <LINK REL="Next"  HREF="000100.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r180 - in cms/trunk: includes	includes/forums includes/forums/mcp modules/forums</H1>
+    <B>viperal at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r180%20-%20in%20cms/trunk%3A%20includes%0A%09includes/forums%20includes/forums/mcp%20modules/forums&In-Reply-To=%3C200608062019.k76KJn6x032191%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r180 - in cms/trunk: includes	includes/forums includes/forums/mcp modules/forums">viperal at mail.berlios.de
+       </A><BR>
+    <I>Sun Aug  6 22:19:49 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000098.html">[Viperals-svncheckins] r179 - in cms/trunk: admin includes	includes/db includes/forums includes/templates/admin/modules	install modules/control_panel/modules modules/forums	modules/forums/images modules/forums/images/en	modules/forums/images/karma themes/viperal/template/modules
+</A></li>
+        <LI>Next message: <A HREF="000100.html">[Viperals-svncheckins] r181 - cms/trunk/includes/db
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2006-08-06 22:19:46 +0200 (Sun, 06 Aug 2006)
+New Revision: 180
+
+Added:
+   cms/trunk/includes/forums/mcp/mcp_notes.php
+Modified:
+   cms/trunk/includes/forums/functions.php
+   cms/trunk/includes/forums/functions_admin.php
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/forums/functions_posting.php
+   cms/trunk/includes/forums/mcp/mcp_forum.php
+   cms/trunk/includes/forums/mcp/mcp_front.php
+   cms/trunk/includes/forums/mcp/mcp_main.php
+   cms/trunk/includes/forums/mcp/mcp_post.php
+   cms/trunk/includes/forums/mcp/mcp_queue.php
+   cms/trunk/includes/forums/mcp/mcp_topic.php
+   cms/trunk/includes/functions_user.php
+   cms/trunk/modules/forums/main.php
+   cms/trunk/modules/forums/mcp.php
+   cms/trunk/modules/forums/viewforum.php
+   cms/trunk/modules/forums/viewtopic.php
+Log:
+
+
+Modified: cms/trunk/includes/forums/functions.php
+===================================================================
+--- cms/trunk/includes/forums/functions.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/functions.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -1119,7 +1119,7 @@
+ 	$l_online_users = $online_userlist = $l_online_record = $l_online_time = '';
+ 
+ // this isn't required in most places
+-	if ($config['load_online'] &amp;&amp; $config['load_online_time'])
++	if ($config['load_online'])// &amp;&amp; $config['load_online_time']
+ 	{
+ 		$logged_visible_online = $logged_hidden_online = $guests_online = 0;
+ 		$reading_sql = '';
+@@ -1214,15 +1214,15 @@
+ 			switch (${$var_ary[0]})
+ 			{
+ 				case 0:
+-					${$var_ary[1]} = $_CLASS['core_user']-&gt;lang[$l_prefix . '_USERS_ZERO_TOTAL'];
++					${$var_ary[1]} = $_CLASS['core_user']-&gt;get_lang($l_prefix . '_USERS_ZERO_TOTAL');
+ 				break;
+ 
+ 				case 1:
+-					${$var_ary[1]} = $_CLASS['core_user']-&gt;lang[$l_prefix . '_USER_TOTAL'];
++					${$var_ary[1]} = $_CLASS['core_user']-&gt;get_lang($l_prefix . '_USER_TOTAL');
+ 				break;
+ 
+ 				default:
+-					${$var_ary[1]} = $_CLASS['core_user']-&gt;lang[$l_prefix . '_USERS_TOTAL'];
++					${$var_ary[1]} = $_CLASS['core_user']-&gt;get_lang($l_prefix . '_USERS_TOTAL');
+ 				break;
+ 			}
+ 		}
+@@ -1270,8 +1270,8 @@
+ 	// The following assigns all _common_ variables that may be used at any point
+ 	// in a template.
+ 	$_CLASS['core_template']-&gt;assign_array(array(
+-		'LAST_VISIT_DATE' 			=&gt; sprintf($_CLASS['core_user']-&gt;lang['YOU_LAST_VISIT'], $s_last_visit),
+-		'CURRENT_TIME'				=&gt; sprintf($_CLASS['core_user']-&gt;lang['CURRENT_TIME'], $_CLASS['core_user']-&gt;format_date(time(), false, true)),
++		'LAST_VISIT_DATE' 			=&gt; sprintf($_CLASS['core_user']-&gt;get_lang('YOU_LAST_VISIT'), $s_last_visit),
++		'CURRENT_TIME'				=&gt; sprintf($_CLASS['core_user']-&gt;get_lang('CURRENT_TIME'), $_CLASS['core_user']-&gt;format_date($_CLASS['core_user']-&gt;time, false, true)),
+ 		'TOTAL_USERS_ONLINE' 		=&gt; $l_online_users,
+ 		'LOGGED_IN_USER_LIST' 		=&gt; $online_userlist,
+ 		'RECORD_USERS' 				=&gt; $l_online_record,
+
+Modified: cms/trunk/includes/forums/functions_admin.php
+===================================================================
+--- cms/trunk/includes/forums/functions_admin.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/functions_admin.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -24,21 +24,22 @@
+ // -------------------------------------------------------------
+ // Fix links &quot;defined('IN_ADMIN')&quot;
+ // Simple version of jumpbox, just lists authed forums
+-function make_forum_select($select_id = false, $ignore_id = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true)
++function make_forum_select($select_id = false, $ignore_id = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $return_array = false)
+ {
+ 	global $_CLASS;
+ 
+ 	$acl = ($ignore_acl) ? '' : array('f_list', 'a_forum', 'a_forumadd', 'a_forumdel');
+ 
+ 	// This query is identical to the jumpbox one
+-	$sql = 'SELECT forum_id, parent_id, forum_name, forum_type, left_id, right_id
++	$sql = 'SELECT forum_id, parent_id, forum_name, forum_type, forum_status, left_id, right_id
+ 		FROM ' . FORUMS_FORUMS_TABLE . '
+ 		ORDER BY left_id ASC';
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-	$right = $iteration = 0;
++	$right = 0;
+ 	$padding_store = array('0' =&gt; '');
+-	$forum_list = $padding = '';
++	$padding = '';
++	$forum_list = ($return_array) ? array() : '';
+ 
+ 	// Sometimes it could happen that forums will be displayed here not be displayed within the index page
+ 	// This is the result of forums not displayed at index, having list permissions and a parent of a forum with no permissions.
+@@ -78,12 +79,17 @@
+ 		{
+ 			continue;
+ 		}
+-
+-		$selected = (is_array($select_id)) ? ((in_array($row['forum_id'], $select_id)) ? ' selected=&quot;selected&quot;' : '') : (($row['forum_id'] == $select_id) ? ' selected=&quot;selected&quot;' : '');
+-
+-		$forum_list .= '&lt;option value=&quot;' . $row['forum_id'] . '&quot;' . $selected . '&gt;' . $padding . $row['forum_name'] . '&lt;/option&gt;';
+-
+-		$iteration++;
++		if ($return_array)
++		{
++			// Include some more informations...
++			$selected = (is_array($select_id)) ? ((in_array($row['forum_id'], $select_id)) ? true : false) : (($row['forum_id'] == $select_id) ? true : false);
++			$forum_list[$row['forum_id']] = array_merge(array('padding' =&gt; $padding, 'selected' =&gt; $selected), $row);
++		}
++		else
++		{
++			$selected = (is_array($select_id)) ? ((in_array($row['forum_id'], $select_id)) ? ' selected=&quot;selected&quot;' : '') : (($row['forum_id'] == $select_id) ? ' selected=&quot;selected&quot;' : '');
++			$forum_list .= '&lt;option value=&quot;' . $row['forum_id'] . '&quot;' . $selected . '&gt;' . $padding . $row['forum_name'] . '&lt;/option&gt;';
++		}
+ 	}
+ 	unset($padding_store);
+ 
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/functions_display.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -315,9 +315,7 @@
+ 			'S_IS_LINK'			=&gt; ($row['forum_type'] == FORUM_LINK), 
+ 			'S_UNREAD_FORUM'	=&gt; !empty($forum_unread[$forum_id]),
+ 			'S_LOCKED_FORUM'	=&gt; ($row['forum_status'] == ITEM_LOCKED) ? true : false,
+-
+-			'LAST_POST_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'), 
+-
++			
+ 			'FORUM_ID'			=&gt; $row['forum_id'], 
+ 			'FORUM_FOLDER_IMG'	=&gt; ($row['forum_image']) ? '&lt;img src=&quot;' . $row['forum_image'] . '&quot; alt=&quot;' . $folder_alt . '&quot; /&gt;' : $_CLASS['core_user']-&gt;img($folder_image, $folder_alt),
+ 			//'FORUM_FOLDER_IMG_SRC'	=&gt; ($row['forum_image']) ? $row['forum_image'] : $_CLASS['core_user']-&gt;img($folder_image, $folder_alt, false, '', 'src'),
+@@ -347,6 +345,8 @@
+ 		'MODIFY_FORUM'		=&gt; $_CLASS['auth']-&gt;acl_get('a_forum'),
+ 		'U_MARK_FORUMS'		=&gt; generate_link('forums&amp;file=viewforum&amp;f=' . $root_data['forum_id'] . '&amp;mark=Forums'), 
+ 		'S_HAS_SUBFORUM'	=&gt; ($visible_forums) ? true : false,
++		'LAST_POST_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'), 
++
+ 		'L_SUBFORUM'		=&gt; ($visible_forums == 1) ? $_CLASS['core_user']-&gt;lang['SUBFORUM'] : $_CLASS['core_user']-&gt;lang['SUBFORUMS']
+ 	));
+ 
+@@ -398,7 +398,7 @@
+ 				break;
+ 	
+ 				default:
+-					if ($replies &gt;= $config['hot_threshold'])
++					if ($config['hot_threshold'] &amp;&amp; $replies &gt;= $config['hot_threshold'])
+ 					{
+ 						$folder_img = ($unread) ? 'folder_hot_new': 'folder_hot';
+ 						//$status = ($unread) ? 4 : 3;
+
+Modified: cms/trunk/includes/forums/functions_posting.php
+===================================================================
+--- cms/trunk/includes/forums/functions_posting.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/functions_posting.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -1398,81 +1398,11 @@
+ 		if ($post_mode == 'reply')
+ 		{
+ 			$sql_data[FORUMS_POSTS_TABLE]['sql'] = array_merge($sql_data[FORUMS_POSTS_TABLE]['sql'], array(
+-				'topic_id' =&gt; $data['topic_id'])
+-			);
++				'topic_id' =&gt; $data['topic_id']
++			));
+ 		}
+ 
+-		$query = '';
+-
+-		switch ($_CLASS['core_db']-&gt;db_layer)
+-		{
+-			case 'mssql':
+-			case 'mssql_odbc':
+-				$fields = array();
+-				foreach ($sql_data[FORUMS_POSTS_TABLE]['sql'] as $key =&gt; $var)
+-				{
+-					$fields[] = $key;
+-
+-					if (is_null($var))
+-					{
+-						$values[] = 'NULL';
+-					}
+-					else if (is_string($var))
+-					{
+-						if ($key !== 'bbcode_bitfield')
+-						{
+-							$values[] = &quot;'&quot; . $_CLASS['core_db']-&gt;escape($var) . &quot;'&quot;;
+-						}
+-						else
+-						{
+-							$values[] = &quot;CAST('&quot; . $var . &quot;' AS varbinary)&quot;;
+-						}
+-					}
+-					else
+-					{
+-						$values[] = (is_bool($var)) ? intval($var) : $var;
+-					}
+-				}
+-				$query = ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+-			break;
+-
+-			case 'sqlite':
+-				$fields = array();
+-				foreach ($sql_data[FORUMS_POSTS_TABLE]['sql'] as $key =&gt; $var)
+-				{
+-					$fields[] = $key;
+-
+-					if (is_null($var))
+-					{
+-						$values[] = 'NULL';
+-					}
+-					else if (is_string($var))
+-					{
+-						if ($key !== 'bbcode_bitfield')
+-						{
+-							$values[] = &quot;'&quot; . $_CLASS['core_db']-&gt;escape($var) . &quot;'&quot;;
+-						}
+-						else
+-						{
+-							$values[] = &quot;'&quot; . sqlite_udf_encode_binary($var) . &quot;'&quot;;
+-						}
+-					}
+-					else
+-					{
+-						$values[] = (is_bool($var)) ? intval($var) : $var;
+-					}
+-				}
+-				$query = ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+-			break;
+-
+-			default:
+-				$query = $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_data[FORUMS_POSTS_TABLE]['sql']);
+-			break;
+-		}
+-
+-
+-		$sql = 'INSERT INTO ' . FORUMS_POSTS_TABLE . ' ' .	$query;
+-		$_CLASS['core_db']-&gt;query($sql);
++		$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_POSTS_TABLE . ' ' .	$_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_data[FORUMS_POSTS_TABLE]['sql']));
+ 		$data['post_id'] = $_CLASS['core_db']-&gt;insert_id(FORUMS_POSTS_TABLE, 'post_id');
+ 
+ 		if ($post_mode == 'post')
+@@ -1482,8 +1412,8 @@
+ 				'topic_last_post_id'	=&gt; $data['post_id'],
+ 				'topic_last_post_time'	=&gt; $current_time,
+ 				'topic_last_poster_id'	=&gt; (int) $_CLASS['core_user']-&gt;data['user_id'],
+-				'topic_last_poster_name'=&gt; (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $username) ? $username : (($_CLASS['core_user']-&gt;data['user_id'] != ANONYMOUS) ? $_CLASS['core_user']-&gt;data['username'] : '')
+-			);
++				'topic_last_poster_name'=&gt; (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $username) ? $username : (($_CLASS['core_user']-&gt;data['user_id'] != ANONYMOUS) ? $_CLASS['core_user']-&gt;data['username'] : ''
++			));
+ 		}
+ 
+ 		unset($sql_data[FORUMS_POSTS_TABLE]['sql']);
+@@ -1547,70 +1477,8 @@
+ 	// Update the posts table
+ 	if (isset($sql_data[FORUMS_POSTS_TABLE]['sql']))
+ 	{
+-		switch ($_CLASS['core_db']-&gt;db_layer)
+-		{
+-			case 'mssql':
+-			case 'mssql_odbc':
+-				$values = array();
+-				foreach ($sql_data[FORUMS_POSTS_TABLE]['sql'] as $key =&gt; $var)
+-				{
+-					if (is_null($var))
+-					{
+-						$values[] = &quot;$key = NULL&quot;;
+-					}
+-					else if (is_string($var))
+-					{
+-						if ($key !== 'bbcode_bitfield')
+-						{
+-							$values[] = &quot;$key = '&quot; . $_CLASS['core_db']-&gt;escape($var) . &quot;'&quot;;
+-						}
+-						else
+-						{
+-							$values[] = &quot;$key = CAST('&quot; . $var . &quot;' AS varbinary)&quot;;
+-						}
+-					}
+-					else
+-					{
+-						$values[] = (is_bool($var)) ? &quot;$key = &quot; . intval($var) : &quot;$key = $var&quot;;
+-					}
+-				}
+-				$query = implode(', ', $values);
+-			break;
+-
+-			case 'sqlite':
+-				$values = array();
+-				foreach ($sql_data[FORUMS_POSTS_TABLE]['sql'] as $key =&gt; $var)
+-				{
+-					if (is_null($var))
+-					{
+-						$values[] = &quot;$key = NULL&quot;;
+-					}
+-					else if (is_string($var))
+-					{
+-						if ($key !== 'bbcode_bitfield')
+-						{
+-							$values[] = &quot;$key = '&quot; . $_CLASS['core_db']-&gt;escape($var) . &quot;'&quot;;
+-						}
+-						else
+-						{
+-							$values[] = &quot;$key ='&quot; . sqlite_udf_encode_binary($var) . &quot;'&quot;;
+-						}
+-					}
+-					else
+-					{
+-						$values[] = (is_bool($var)) ? &quot;$key = &quot; . intval($var) : &quot;$key = $var&quot;;
+-					}
+-				}
+-				$query = implode(', ', $values);
+-			break;
+-
+-			default:
+-				$query = $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $sql_data[FORUMS_POSTS_TABLE]['sql']);
+-			break;
+-		}
+-
+ 		$sql = 'UPDATE ' . FORUMS_POSTS_TABLE . '
+-			SET ' . $query . '
++			SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $sql_data[FORUMS_POSTS_TABLE]['sql']) . '
+ 			WHERE post_id = ' . $data['post_id'];
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+@@ -1688,9 +1556,10 @@
+ 	}
+ 
+ 	// Submit Attachments
+-	if (sizeof($data['attachment_data']) &amp;&amp; $data['post_id'] &amp;&amp; in_array($mode, array('post', 'reply', 'quote', 'edit')))
++	if (count($data['attachment_data']) &amp;&amp; $data['post_id'] &amp;&amp; in_array($mode, array('post', 'reply', 'quote', 'edit')))
+ 	{
+-		$space_taken = $files_added = 0;
++		$space_taken = $files_added = $files_updated = 0;
++		$attach_sql_array = array();
+ 
+ 		foreach ($data['attachment_data'] as $pos =&gt; $attach_row)
+ 		{
+@@ -1700,7 +1569,9 @@
+ 				$sql = 'UPDATE ' . FORUMS_ATTACHMENTS_TABLE . &quot;
+ 					SET attach_comment = '&quot; . $_CLASS['core_db']-&gt;escape($attach_row['attach_comment']) . &quot;'
+ 					WHERE attach_id = &quot; . (int) $attach_row['attach_id'];
+-				$_CLASS['core_db']-&gt;query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
++				
++				$files_updated++;
+ 			}
+ 			else
+ 			{
+@@ -1710,7 +1581,7 @@
+ 					continue;
+ 				}
+ 
+-				$attach_sql = array(
++				$attach_sql_array[] = array(
+ 					'post_msg_id'		=&gt; $data['post_id'],
+ 					'topic_id'			=&gt; $data['topic_id'],
+ 					'in_message'		=&gt; 0,
+@@ -1726,17 +1597,18 @@
+ 					'thumbnail'			=&gt; $attach_row['thumbnail']
+ 				);
+ 
+-				$sql = 'INSERT INTO ' . FORUMS_ATTACHMENTS_TABLE . ' ' .
+-					$_CLASS['core_db']-&gt;sql_build_array('INSERT', $attach_sql);
+-				$_CLASS['core_db']-&gt;query($sql);
+-
+ 				$space_taken += $attach_row['filesize'];
+ 				$files_added++;
+ 			}
+ 		}
+-
+-		if (sizeof($data['attachment_data']))
+-		{
++
++		if (count($attach_sql_array))
++		{
++			$_CLASS['core_db']-&gt;sql_query_build('MULTI_INSERT', $attach_sql_array, FORUMS_TOPICS_TABLE);
++		}
++	
++		if ($files_updated || $files_added)
++		{
+ 			$sql = 'UPDATE ' . FORUMS_POSTS_TABLE . '
+ 				SET post_attachment = 1
+ 				WHERE post_id = ' . $data['post_id'];
+@@ -1747,6 +1619,7 @@
+ 				WHERE topic_id = ' . $data['topic_id'];
+ 			$_CLASS['core_db']-&gt;query($sql);
+ 		}
++		unset($attach_sql_array);
+ 
+ 		set_config('upload_dir_size', $config['upload_dir_size'] + $space_taken, true);
+ 		set_config('num_files', $config['num_files'] + $files_added, true);
+
+Modified: cms/trunk/includes/forums/mcp/mcp_forum.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_forum.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/mcp/mcp_forum.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -34,8 +34,9 @@
+ // -------------------------------------------------------------
+ 
+ $forum_id = get_variable('f', 'REQUEST', false, 'int');
++$action = get_variable('action', 'REQUEST');
+ 
+-if (!$forum_id || !$_CLASS['auth']-&gt;acl_get('m_', $forum_id))
++if (!$forum_id || !$_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id))
+ {
+ 	trigger_error('MODULE_NOT_EXIST');
+ }
+@@ -50,7 +51,7 @@
+ 
+ $forum_info = $forum_info[$forum_id];
+ 
+-$url = 'Forums&amp;file=mcp&amp;f='.$forum_id;
++$url = 'forums&amp;file=mcp&amp;f='.$forum_id;
+ $action = get_variable('action', 'REQUEST');
+ 		
+ if ($action === 'merge_select')
+@@ -60,8 +61,8 @@
+ }
+ 
+ $start = get_variable('start', 'REQUEST', false, 'int');
+-$topic_id_list = array_unique(request_var('topic_id_list', array(0)));
+-$post_id_list = array_unique(request_var('post_id_list', array(0)));
++$topic_id_list = array_unique(get_variable('topic_id_list', 'REQUEST',  array(), 'array:int'));
++$post_id_list = array_unique(get_variable('post_id_list', 'REQUEST',  array(), 'array:int'));
+ $topic_id = get_variable('t', 'REQUEST', false, 'int');;
+ 
+ // Resync Topics
+@@ -94,7 +95,7 @@
+ mcp_sorting('viewforum', $sort_days, $sort_key, $sort_dir, $sort_by_sql, $sort_order_sql, $total, $forum_id);
+ 
+ $forum_topics = ($total == -1) ? $forum_info['forum_topics'] : $total;
+-$limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time &gt;= ' . (time() - ($sort_days * 86400)) : '';
++$limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time &gt;= ' . ($_CLASS['core_user']-&gt;time - ($sort_days * 86400)) : '';
+ 
+ $pagination = generate_pagination($url . &quot;&amp;action=$action&amp;mode=$mode&quot; . (($action == 'merge_select') ? $selected_ids : ''), $forum_topics, $topics_per_page, $start);
+ 
+@@ -105,21 +106,23 @@
+ 	'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', 'TOPIC_REPORTED'),
+ 	'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', 'TOPIC_UNAPPROVED'),
+ 
+-	'S_CAN_DELETE'			=&gt; $_CLASS['auth']-&gt;acl_get('m_delete', $forum_id),
+-	'S_CAN_MOVE'			=&gt; $_CLASS['auth']-&gt;acl_get('m_move', $forum_id),
+-	'S_CAN_FORK'			=&gt; $_CLASS['auth']-&gt;acl_get('m_', $forum_id),
+-	'S_CAN_LOCK'			=&gt; $_CLASS['auth']-&gt;acl_get('m_lock', $forum_id),
+-	'S_CAN_SYNC'			=&gt; $_CLASS['auth']-&gt;acl_get('m_', $forum_id),
+-	'S_CAN_APPROVE'			=&gt; $_CLASS['auth']-&gt;acl_get('m_approve', $forum_id),
++	'S_CAN_DELETE'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_delete', $forum_id),
++	'S_CAN_MOVE'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_move', $forum_id),
++	'S_CAN_FORK'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id),
++	'S_CAN_LOCK'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_lock', $forum_id),
++	'S_CAN_SYNC'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id),
++	'S_CAN_APPROVE'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id),
+ 
+-	'U_VIEW_FORUM'			=&gt; generate_link('Forums&amp;file=viewforum&amp;f=' . $forum_id),
++	'U_VIEW_FORUM'			=&gt; generate_link('forums&amp;file=viewforum&amp;f=' . $forum_id),
++	'U_VIEW_FORUM_LOGS'		=&gt; ($_CLASS['forums_auth']-&gt;acl_gets('a_', 'm_', $forum_id)) ? generate_link('forums&amp;file=mcp&amp;i=logs&amp;mode=forum_logs&amp;f=' . $forum_id) : '',
++
+ 	'S_MCP_ACTION'			=&gt; generate_link($url . &quot;&amp;mode=$mode&amp;start=$start&quot; . (($action == 'merge_select') ? $selected_ids : '')),
+ 
+-	'PAGINATION'		=&gt; $pagination['formated'],
+-	'PAGINATION_ARRAY'	=&gt; $pagination['array'],
++	'PAGINATION'			=&gt; $pagination['formated'],
++	'PAGINATION_ARRAY'		=&gt; $pagination['array'],
+ 	'PAGE_NUMBER'			=&gt; on_page($forum_topics, $topics_per_page, $start),
+-	'TOTAL'					=&gt; $forum_topics)
+-);
++	'TOTAL'					=&gt; $forum_topics
++));
+ 
+ $icons = obtain_icons();
+ 
+@@ -128,7 +131,7 @@
+ $sql = 'SELECT t.*
+ 	FROM ' . FORUMS_TOPICS_TABLE . &quot; t
+ 	WHERE (t.forum_id = $forum_id OR t.forum_id = 0)
+-		&quot; . (($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND t.topic_approved = 1') . &quot;
++		&quot; . (($_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND t.topic_approved = 1') . &quot;
+ 		AND t.topic_type IN (&quot; . POST_ANNOUNCE . &quot;, &quot; . POST_GLOBAL . &quot;)
+ 		$limit_time_sql
+ 	ORDER BY $sort_order_sql&quot;;
+@@ -143,7 +146,7 @@
+ $sql = 'SELECT t.*
+ 	FROM ' . FORUMS_TOPICS_TABLE . &quot; t
+ 	WHERE t.forum_id = $forum_id
+-		&quot; . (($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND t.topic_approved = 1') . '
++		&quot; . (($_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND t.topic_approved = 1') . '
+ 		AND t.topic_type IN (' . POST_NORMAL . ', ' . POST_STICKY . &quot;)
+ 		$limit_time_sql
+ 	ORDER BY t.topic_type DESC, $sort_order_sql&quot;;
+@@ -159,7 +162,7 @@
+ {
+ 	$topic_title = '';
+ 
+-	if ($_CLASS['auth']-&gt;acl_get('m_approve', $row['forum_id']))
++	if ($_CLASS['forums_auth']-&gt;acl_get('m_approve', $row['forum_id']))
+ 	{
+ 		$row['topic_replies'] = $row['topic_replies_real'];
+ 	}
+@@ -216,39 +219,45 @@
+ 	}
+ 
+ 	$topic_title = censor_text($row['topic_title']);
+-		
++
++	$topic_unapproved = (!$row['topic_approved'] &amp;&amp; $_CLASS['forums_auth']-&gt;acl_gets('m_approve', $row['forum_id']));
++	$posts_unapproved = ($row['topic_approved'] &amp;&amp; $row['topic_replies'] &lt; $row['topic_replies_real'] &amp;&amp; $_CLASS['forums_auth']-&gt;acl_gets('m_approve', $row['forum_id']));
++	$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? generate_link($url . '&amp;i=queue&amp;mode='.(($topic_unapproved) ? 'approve_details' : 'unapproved_posts') .'&amp;t=' . $row['topic_id'], false, false) : false;
++
+ 	$_CLASS['core_template']-&gt;assign_vars_array('topicrow', array(
+ 		'U_VIEW_TOPIC'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;t={$row['topic_id']}&amp;mode=topic_view&quot;),
+ 
+ 		'S_SELECT_TOPIC'	=&gt; ($action == 'merge_select' &amp;&amp; $row['topic_id'] != $topic_id) ? true : false,
+ 		'U_SELECT_TOPIC'	=&gt; generate_link($url . '&amp;mode=topic_view&amp;action=merge&amp;to_topic_id=' . $row['topic_id'] . $selected_ids),
+-		'U_MCP_QUEUE'		=&gt; generate_link($url . '&amp;i=queue&amp;mode=approve_details&amp;t=' . $row['topic_id'], false, false),
+-		'U_MCP_REPORT'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;i=main&amp;mode=topic_view&amp;t={$row['topic_id']}&amp;action=reports&quot;),
++		'U_MCP_QUEUE'		=&gt; $u_mcp_queue,
++		'U_MCP_REPORT'		=&gt; generate_link(&quot;forums&amp;file=mcp&amp;i=main&amp;mode=topic_view&amp;t={$row['topic_id']}&amp;action=reports&quot;),
+ 
+-		'ATTACH_ICON_IMG'	=&gt; ($_CLASS['auth']-&gt;acl_gets('f_download', 'u_download', $row['forum_id']) &amp;&amp; $row['topic_attachment']) ? $_CLASS['core_user']-&gt;img('icon_attach', $_CLASS['core_user']-&gt;lang['TOTAL_ATTACHMENTS']) : '',
++		'ATTACH_ICON_IMG'	=&gt; ($_CLASS['forums_auth']-&gt;acl_gets('f_download', 'u_download', $row['forum_id']) &amp;&amp; $row['topic_attachment']) ? $_CLASS['core_user']-&gt;img('icon_attach', $_CLASS['core_user']-&gt;lang['TOTAL_ATTACHMENTS']) : '',
+ 		'TOPIC_FOLDER_IMG' 	=&gt; $_CLASS['core_user']-&gt;img($folder_img, $folder_alt),
+ 		//'TOPIC_FOLDER_IMG_SRC'	=&gt; $user-&gt;img($folder_img, $folder_alt, false, '', 'src'),
+ 
+ 		'TOPIC_ICON_IMG'		=&gt; empty($icons[$row['icon_id']]) ? '' : $icons[$row['icon_id']]['img'],
+ 		'TOPIC_ICON_IMG_WIDTH'	=&gt; empty($icons[$row['icon_id']]) ? '' : $icons[$row['icon_id']]['width'],
+ 		'TOPIC_ICON_IMG_HEIGHT' =&gt; empty($icons[$row['icon_id']]) ? '' : $icons[$row['icon_id']]['height'],
+-		
++		'UNAPPROVED_IMG'		=&gt; ($topic_unapproved || $posts_unapproved) ? $_CLASS['core_user']-&gt;img('icon_unapproved', ($topic_unapproved) ? 'TOPIC_UNAPPROVED' : 'POSTS_UNAPPROVED') : '',
++
+ 		'TOPIC_TYPE'		=&gt; $topic_type,
+ 		'TOPIC_TITLE'		=&gt; $topic_title,
+-		'REPLIES'			=&gt; $row['topic_replies'],
++		'REPLIES'			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('m_approve', $row['forum_id'])) ? $row['topic_replies_real'] : $row['topic_replies'],
+ 		'LAST_POST_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']),
+ 		'TOPIC_ID'			=&gt; $row['topic_id'],
+ 		'S_TOPIC_CHECKED'	=&gt; ($topic_id_list &amp;&amp; in_array($row['topic_id'], $topic_id_list)) ? 'checked=&quot;checked&quot; ' : '',
+ 
+-		'S_TOPIC_REPORTED'	=&gt; ($row['topic_reported']),
+-		'S_TOPIC_UNAPPROVED'=&gt; !($row['topic_approved']),
++		'S_TOPIC_REPORTED'	=&gt; (!empty($row['topic_reported']) &amp;&amp; $_CLASS['forums_auth']-&gt;acl_gets('m_report', $row['forum_id'])),
++		'S_TOPIC_UNAPPROVED'=&gt; $topic_unapproved,
++		'S_POSTS_UNAPPROVED'=&gt; $posts_unapproved,
+ 		'NEWEST_POST_IMG' =&gt; false
+ 	));
+ }
+ unset($topic_rows);
+ 
+ page_header();
+-$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/Forums/mcp_forum.html');
++$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/forums/mcp_forum.html');
+ 
+ function mcp_resync_topics($topic_ids)
+ {
+@@ -281,6 +290,7 @@
+ 	{
+ 		add_log('mod', $row['forum_id'], $row['topic_id'], 'LOG_TOPIC_RESYNC', $row['topic_title']);
+ 	}
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$msg = (count($topic_ids) == 1) ? $_CLASS['core_user']-&gt;lang['TOPIC_RESYNC_SUCCESS'] : $_CLASS['core_user']-&gt;lang['TOPICS_RESYNC_SUCCESS'];
+ 
+
+Modified: cms/trunk/includes/forums/mcp/mcp_front.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_front.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/mcp/mcp_front.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -42,15 +42,13 @@
+ 
+ $forum_id = get_variable('f', 'REQUEST', false, 'int');
+ 
+-$url = 'Forums&amp;file=mcp';
++$url = 'forums&amp;file=mcp';
+ 
+ $forum_list_approve = get_forum_list('m_approve');
+-$_CLASS['core_template']-&gt;assign('S_SHOW_UNAPPROVED', false);
++$_CLASS['core_template']-&gt;assign('S_SHOW_UNAPPROVED', !empty($forum_list_approve));
+ 
+ if (!empty($forum_list_approve))
+ {
+-	$_CLASS['core_template']-&gt;assign('S_SHOW_UNAPPROVED', true);
+-
+ 	$sql = 'SELECT post_id, forum_id
+ 		FROM ' . FORUMS_POSTS_TABLE . '
+ 		WHERE forum_id IN (0, ' . implode(', ', $forum_list_approve) . ')
+@@ -99,8 +97,8 @@
+ 				'U_POST_DETAILS'=&gt; generate_link($url . '&amp;p=' . $row['post_id'] . '&amp;mode=post_details'),
+ 				'U_MCP_FORUM'	=&gt; ($row['forum_id']) ? generate_link($url . '&amp;f=' . $row['forum_id'] . '&amp;mode=forum_view') : '',
+ 				'U_MCP_TOPIC'	=&gt; generate_link($url . '&amp;t=' . $row['topic_id'] . '&amp;mode=topic_view'),
+-				'U_FORUM'		=&gt; ($row['forum_id']) ? generate_link('Forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : '',
+-				'U_TOPIC'		=&gt; generate_link('Forums&amp;file=viewtopic&amp;f=' . (($row['forum_id']) ? $row['forum_id'] : $forum_id) . '&amp;t=' . $row['topic_id']),
++				'U_FORUM'		=&gt; ($row['forum_id']) ? generate_link('forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : '',
++				'U_TOPIC'		=&gt; generate_link('forums&amp;file=viewtopic&amp;f=' . (($row['forum_id']) ? $row['forum_id'] : $forum_id) . '&amp;t=' . $row['topic_id']),
+ 				'U_AUTHOR'		=&gt; ($row['poster_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['poster_id']),
+ 
+ 				'FORUM_NAME'	=&gt; ($row['forum_id']) ? $forum_names[$row['forum_id']] : $_CLASS['core_user']-&gt;lang['GLOBAL_ANNOUNCEMENT'],
+@@ -125,7 +123,7 @@
+ 	}
+ }
+ 
+-/*
++
+ // Latest 5 reported
+ $forum_list = get_forum_list('m_reports');
+ $_CLASS['core_template']-&gt;assign('S_SHOW_REPORTS', !empty($forum_list));
+@@ -135,6 +133,7 @@
+ 	$sql = 'SELECT COUNT(r.report_id) AS total
+ 		FROM ' . FORUMS_REPORTS_TABLE . ' r, ' . POSTS_TABLE . ' p
+ 		WHERE r.post_id = p.post_id
++			AND r.report_closed = 0
+ 			AND p.forum_id IN (0, ' . implode(', ', $forum_list) . ')';
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+@@ -146,11 +145,12 @@
+ 			FROM ' . FORUMS_REPORTS_TABLE . ' r, ' . FORUMS_REASONS_TABLE . ' rr,' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_TOPICS_TABLE . ' t, ' . USERS_TABLE . ' u
+ 			LEFT JOIN ' . FORUMS_FORUMS_TABLE . ' f ON f.forum_id = p.forum_id
+ 			WHERE r.post_id = p.post_id
++				AND r.report_closed = 0
+ 				AND r.reason_id = rr.reason_id
+ 				AND p.topic_id = t.topic_id
+ 				AND r.user_id = u.user_id
+ 				AND p.forum_id IN (0, ' . implode(', ', $forum_list) . ')
+-			ORDER BY p.post_id DESC';
++			ORDER BY p.post_time DESC';
+ 		$result = $_CLASS['core_db']-&gt;query_limit($sql, 5);
+ 
+ 		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+@@ -159,8 +159,8 @@
+ 				'U_POST_DETAILS'=&gt; generate_link($url . '&amp;p=' . $row['post_id'] . '&amp;mode=post_details'),
+ 				'U_MCP_FORUM'	=&gt; ($row['forum_id']) ? generate_link($url . '&amp;f=' . $row['forum_id'] . '&amp;mode=forum_view') : '',
+ 				'U_MCP_TOPIC'	=&gt; generate_link($url . '&amp;t=' . $row['topic_id'] . '&amp;mode=topic_view'),
+-				'U_FORUM'		=&gt; ($row['forum_id']) ? generate_link('Forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : '',
+-				'U_TOPIC'		=&gt; generate_link('Forums&amp;file=viewtopic&amp;f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']),
++				'U_FORUM'		=&gt; ($row['forum_id']) ? generate_link('forums&amp;file=viewforum&amp;f=' . $row['forum_id']) : '',
++				'U_TOPIC'		=&gt; generate_link('forums&amp;file=viewtopic&amp;f=' . $row['forum_id'] . '&amp;t=' . $row['topic_id']),
+ 				'U_REPORTER'	=&gt; ($row['user_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']),
+ 
+ 				'FORUM_NAME'	=&gt; ($row['forum_id']) ? $row['forum_name'] : $_CLASS['core_user']-&gt;lang['POST_GLOBAL'],
+@@ -187,16 +187,16 @@
+ 		);
+ 	}
+ }
+-*/
+ 
+-$forum_list_log = get_forum_list(array('m_', 'a_general'));
++
++$forum_list = get_forum_list(array('m_', 'a_general'));
+ // Add forum_id 0 for global announcements
+-$forum_list_log[] = 0;
++$forum_list[] = 0;
+ 
+ $log_count = 0;
+ $log = array();
+ 
+-view_log('mod', $log, $log_count, 5, 0, $forum_list_log);
++view_log('mod', $log, $log_count, 5, 0, $forum_list);
+ 
+ foreach ($log as $row)
+ {
+@@ -205,8 +205,8 @@
+ 		'IP'			=&gt; $row['ip'],
+ 		'TIME'			=&gt; $_CLASS['core_user']-&gt;format_date($row['time']),
+ 		'ACTION'		=&gt; $row['action'],
+-		'U_VIEWTOPIC'	=&gt; $row['viewtopic'],
+-		'U_VIEWLOGS'	=&gt; $row['viewlogs']
++		'U_VIEWTOPIC'	=&gt; (!empty($row['viewtopic'])) ? $row['viewtopic'] : '',
++		'U_VIEWLOGS'	=&gt; (!empty($row['viewlogs'])) ? $row['viewlogs'] : ''
+ 	));
+ }
+ 
+@@ -215,10 +215,12 @@
+ 	'S_HAS_LOGS'	=&gt; !empty($log)
+ ));
+ 
++unset($forum_list, $log);
++
+ $_CLASS['core_template']-&gt;assign('S_MCP_ACTION', generate_link($url));
+ make_jumpbox(generate_link($url . '&amp;mode=forum_view'), 0, false, 'm_');
+ 
+ page_header();
+-$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/Forums/mcp_front.html');
++$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/forums/mcp_front.html');
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/mcp/mcp_main.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_main.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/mcp/mcp_main.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -53,7 +53,7 @@
+ 		$l_prefix = 'POST';
+ 	}
+ 	
+-	if (!check_ids($ids, $table, $sql_id, 'm_lock'))
++	if (!check_ids($ids, $table, $sql_id, array('f_user_lock', 'm_lock')))
+ 	{// redirect maybe
+ 		return;
+ 	}
+@@ -64,15 +64,15 @@
+ 	$hidden_fields = build_hidden_fields(array(
+ 		$sql_id . '_list'	=&gt; $ids,
+ 		'mode'				=&gt; $mode,
+-		'redirect'			=&gt; $redirect)
+-	);
++		'redirect'			=&gt; $redirect
++	));
+ 
+ 	$success_msg = false;
+ 
+ 	if (display_confirmation($message, $hidden_fields))
+ 	{
+ 		$sql = &quot;UPDATE $table
+-			SET $set_id = &quot; . (($mode == 'lock' || $mode == 'lock_post') ? ITEM_LOCKED : ITEM_UNLOCKED) . &quot;
++			SET $set_id = &quot; . (($mode === 'lock' || $mode === 'lock_post') ? ITEM_LOCKED : ITEM_UNLOCKED) . &quot;
+ 			WHERE $sql_id IN (&quot; . implode(', ', $ids) . &quot;)&quot;;
+ 		$_CLASS['core_db']-&gt;query($sql);
+ 
+@@ -100,11 +100,11 @@
+ }
+ 
+ // Change Topic Type
+-function change_topic_type($mode, $topic_ids)
++function change_topic_type($mode, $topic_ids, $forum_id)
+ {
+ 	global $_CLASS;
+ 
+-	if (!check_ids($topic_ids, FORUMS_TOPICS_TABLE, 'topic_id', 'm_'))
++	if (!check_ids($topic_ids, FORUMS_TOPICS_TABLE, 'topic_id', array('f_announce', 'f_sticky', 'm_')))
+ 	{
+ 		return;
+ 	}
+@@ -155,8 +155,6 @@
+ 					AND forum_id &lt;&gt; 0';
+ 			$_CLASS['core_db']-&gt;query($sql);
+ 
+-// do select first
+-			/*
+ 			if ($forum_id)
+ 			{
+ 				$sql = 'UPDATE ' . TOPICS_TABLE . &quot;
+@@ -165,7 +163,6 @@
+ 						AND forum_id = 0';
+ 				$_CLASS['core_db']-&gt;query($sql);
+ 			}
+-			*/
+ 		}
+ 		else
+ 		{
+@@ -204,6 +201,7 @@
+ 	}
+ }
+ 
++
+ // Move Topic
+ function mcp_move_topic($topic_ids)
+ {
+@@ -263,8 +261,8 @@
+ 	$_CLASS['core_template']-&gt;assign_array(array(
+ 		'S_FORUM_SELECT'		=&gt; make_forum_select($to_forum_id, $old_forums, false, true, true),
+ 		'S_CAN_LEAVE_SHADOW'	=&gt; true,
+-		'ADDITIONAL_MSG'		=&gt; $additional_msg)
+-	);
++		'ADDITIONAL_MSG'		=&gt; $additional_msg
++	));
+ 
+ 	$message = $_CLASS['core_user']-&gt;get_lang('MOVE_TOPIC' . ((count($topic_ids) === 1) ? '' : 'S'));
+ 
+@@ -281,6 +279,8 @@
+ 		$_CLASS['core_db']-&gt;transaction();
+ 
+ 		$forum_ids = array($to_forum_id);
++		$shadow = array();
++
+ 		foreach ($topic_data as $topic_id =&gt; $row)
+ 		{
+ 			// Get the list of forums to resync, add a log entry
+@@ -290,11 +290,11 @@
+ 			// Leave a redirection if required and only if the topic is visible to users
+ 			if ($leave_shadow &amp;&amp; $row['topic_approved'])
+ 			{
+-				$shadow = array(
++				$shadow[] = array(
+ 					'forum_id'				=&gt;	(int) $row['forum_id'],
+ 					'icon_id'				=&gt;	(int) $row['icon_id'],
+ 					'topic_attachment'		=&gt;	(int) $row['topic_attachment'],
+-					'topic_approved'		=&gt;	(int) $row['topic_approved'],
++					'topic_approved'		=&gt;	1,
+ 					'topic_reported'		=&gt;	(int) $row['topic_reported'],
+ 					'topic_title'			=&gt;	(string) $row['topic_title'],
+ 					'topic_poster'			=&gt;	(int) $row['topic_poster'],
+@@ -321,14 +321,14 @@
+ 					'poll_max_options'		=&gt;	(int) $row['poll_max_options'],
+ 					'poll_last_vote'		=&gt;	(int) $row['poll_last_vote']
+ 				);
+-
+-				$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_TOPICS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $shadow));
+ 			}
+ 		}
+-		unset($topic_data, $shadow);
+ 
++		$_CLASS['core_db']-&gt;sql_query_build('MULTI_INSERT', $shadow, FORUMS_TOPICS_TABLE);
+ 		$_CLASS['core_db']-&gt;transaction('commit');
+ 
++		unset($topic_data, $shadow);
++
+ 		// Now sync forums
+ 		sync('forum', 'forum_id', $forum_ids);
+ 
+@@ -432,46 +432,49 @@
+ 		$sql = 'SELECT DISTINCT topic_id
+ 			FROM ' . FORUMS_POSTS_TABLE . '
+ 			WHERE post_id IN (' . implode(', ', $post_ids) . ')';
+-		$result = $db-&gt;query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 		$topic_id_list = array();
+ 
+-		while ($row = $db-&gt;sql_fetchrow($result))
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$topic_id_list[] = $row['topic_id'];
+ 		}
+-		$affected_topics = sizeof($topic_id_list);
+-		$db-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
++		$affected_topics = count($topic_id_list);
+ 		$post_data = get_post_data($post_ids);
+ 
+ 		foreach ($post_data as $id =&gt; $row)
+ 		{
+ 			add_log('mod', $row['forum_id'], $row['topic_id'], 'LOG_DELETE_POST', $row['post_subject']);
+ 		}
++		unset($post_data);
+ 
+ 		// Now delete the posts, topics and forums are automatically resync'ed
+ 		delete_posts('post_id', $post_ids);
+ 					
+ 		$sql = 'SELECT COUNT(topic_id) AS topics_left
+-			FROM ' . TOPICS_TABLE . '
++			FROM ' . FORUMS_TOPICS_TABLE . '
+ 			WHERE topic_id IN (' . implode(', ', $topic_id_list) . ')';
+-		$result = $db-&gt;query_limit($sql, 1);
+ 
+-		$deleted_topics = ($row = $db-&gt;sql_fetchrow($result)) ? ($affected_topics - $row['topics_left']) : $affected_topics;
+-		$db-&gt;sql_freeresult($result);
++		$result = $_CLASS['core_db']-&gt;query($sql);
++		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
++		$deleted_topics = ($row['topics_left']) ? ($affected_topics - $row['topics_left']) : $affected_topics;
+ 		$topic_id = request_var('t', 0);
+ 
+ 		// Return links
+ 		$return_link = array();
+-		if ($affected_topics == 1 &amp;&amp; !$deleted_topics &amp;&amp; $topic_id)
++		if ($affected_topics === 1 &amp;&amp; !$deleted_topics &amp;&amp; $topic_id)
+ 		{
+-			$return_link[] = sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewtopic&amp;f=$forum_id&amp;t=$topic_id&quot;).'&quot;&gt;', '&lt;/a&gt;');
++			$return_link[] = sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;forums&amp;file=viewtopic&amp;f=$forum_id&amp;t=$topic_id&quot;).'&quot;&gt;', '&lt;/a&gt;');
+ 		}
+-		$return_link[] = sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id).'&quot;&gt;', '&lt;/a&gt;');
+ 
+-		if (sizeof($post_ids) == 1)
++		$return_link[] = sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link('forums&amp;file=viewforum&amp;f='.$forum_id).'&quot;&gt;', '&lt;/a&gt;');
++
++		if (count($post_ids) === 1)
+ 		{
+ 			if ($deleted_topics)
+ 			{
+@@ -498,11 +501,11 @@
+ 		}
+ 	}
+ 
+-	$redirect = generate_link('Forums');
++	$redirect = generate_link('forums');
+ 
+ 	if (!$success_msg)
+ 	{
+-		url_redirect($redirect);
++		redirect($redirect);
+ 	}
+ 	else
+ 	{
+@@ -563,8 +566,8 @@
+ 	$_CLASS['core_template']-&gt;assign_array(array(
+ 		'S_FORUM_SELECT'		=&gt; make_forum_select($to_forum_id, false, false, true, true),
+ 		'S_CAN_LEAVE_SHADOW'	=&gt; false,
+-		'ADDITIONAL_MSG'		=&gt; $additional_msg)
+-	);
++		'ADDITIONAL_MSG'		=&gt; $additional_msg
++	));
+ 
+ 	$message = $_CLASS['core_user']-&gt;get_lang('FORK_TOPIC' . ((count($topic_ids) === 1) ? '' : 'S'));
+ 
+@@ -575,7 +578,7 @@
+ 		$topic_data = get_topic_data($topic_ids);
+ 
+ 		$total_posts = 0;
+-		$new_topic_id_list = array();
++		$new_topic_id_list = $new_topic_forum_name_list = $insert_array = array();
+ 
+ 		$_CLASS['core_db']-&gt;transaction();
+ 
+@@ -604,16 +607,19 @@
+ 				'topic_last_view_time'		=&gt; (int) $topic_row['topic_last_view_time'],
+ 				'topic_bumped'				=&gt; (int) $topic_row['topic_bumped'],
+ 				'topic_bumper'				=&gt; (int) $topic_row['topic_bumper'],
+-				'topic_views'				=&gt; (int) $topic_row['topic_views'],
++				'topic_views'				=&gt; 0,
+ 				'poll_title'				=&gt; (string) $topic_row['poll_title'],
+ 				'poll_start'				=&gt; (int) $topic_row['poll_start'],
+ 				'poll_length'				=&gt; (int) $topic_row['poll_length']
+ 			);
+ 
+-			$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_TOPICS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_ary));
++			$_CLASS['core_db']-&gt;sql_query_build('INSERT', $sql_ary, FORUMS_TOPICS_TABLE);
++			unset($sql_ary);
++
+ 			$new_topic_id = $_CLASS['core_db']-&gt;insert_id(FORUMS_TOPICS_TABLE, 'topic_id');
+ 
+ 			$new_topic_id_list[$topic_id] = $new_topic_id;
++			$new_topic_forum_name_list[$topic_id] = $topic_row['forum_name'];
+ 
+ 			if ($topic_row['poll_start'])
+ 			{
+@@ -626,12 +632,16 @@
+ 
+ 				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+-					$sql = 'INSERT INTO ' . FORUMS_POLL_OPTIONS_TABLE . ' (poll_option_id, topic_id, poll_option_text, poll_option_total)
+-						VALUES (' . $row['poll_option_id'] . ', ' . $new_topic_id . &quot;, '&quot; . $_CLASS['core_db']-&gt;escape($row['poll_option_text']) . &quot;', 0)&quot;;
+-					$_CLASS['core_db']-&gt;query($sql);
++					$insert_array[FORUMS_POLL_OPTIONS_TABLE][] = array(
++						'poll_option_id'	=&gt; (int) $row['poll_option_id'],
++						'topic_id'			=&gt; (int) $new_topic_id,
++						'poll_option_text'	=&gt; (string) $row['poll_option_text'],
++						'poll_option_total'	=&gt; 0
++					);
+ 				}
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 			}
++			unset($topic_data[$topic_id]);
+ 
+ 			$sql = 'SELECT *
+ 				FROM ' . FORUMS_POSTS_TABLE . &quot;
+@@ -642,9 +652,8 @@
+ 			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				$total_posts++;
+-// just change $row values for topic_id, forum_id, post_reported;
+ 
+-				$sql_ary = array(
++				$insert_array[FORUMS_POSTS_TABLE][] = array(
+ 					'topic_id'			=&gt; (int) $new_topic_id,
+ 					'forum_id'			=&gt; (int) $to_forum_id,
+ 					'poster_id'			=&gt; (int) $row['poster_id'],
+@@ -672,11 +681,10 @@
+ 					'post_edit_locked'	=&gt; (int) $row['post_edit_locked']
+ 				);
+ 
+-				$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_POSTS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_ary));
+-
+ 				// Copy Attachments
+ 				if ($row['post_attachment'])
+ 				{
++					$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_POSTS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array_pop($insert_array[FORUMS_POSTS_TABLE])));
+ 					$new_post_id = $_CLASS['core_db']-&gt;insert_id(FORUMS_POSTS_TABLE, 'post_id');
+ 
+ 					$sql = 'SELECT * FROM ' . FORUMS_ATTACHMENTS_TABLE . &quot;
+@@ -687,7 +695,7 @@
+ 					
+ 					while ($attach_row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 					{
+-						$sql_ary = array(
++						$insert_array[FORUMS_ATTACHMENTS_TABLE][] = array(
+ 							'post_msg_id'		=&gt; (int) $new_post_id,
+ 							'topic_id'			=&gt; (int) $new_topic_id,
+ 							'in_message'		=&gt; 0,
+@@ -695,26 +703,39 @@
+ 							'physical_filename'	=&gt; (string) basename($attach_row['physical_filename']),
+ 							'real_filename'		=&gt; (string) basename($attach_row['real_filename']),
+ 							'download_count'	=&gt; (int) $attach_row['download_count'],
+-							'comment'			=&gt; (string) $attach_row['comment'],
++							'attach_comment'	=&gt; (string) $attach_row['attach_comment'],
+ 							'extension'			=&gt; (string) $attach_row['extension'],
+ 							'mimetype'			=&gt; (string) $attach_row['mimetype'],
+ 							'filesize'			=&gt; (int) $attach_row['filesize'],
+ 							'filetime'			=&gt; (int) $attach_row['filetime'],
+ 							'thumbnail'			=&gt; (int) $attach_row['thumbnail']
+ 						);
+-						
+-						$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_ATTACHMENTS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_ary));
+ 					}
+ 					$_CLASS['core_db']-&gt;free_result($result);
+ 				}
+ 			}
+ 			$_CLASS['core_db']-&gt;free_result($result);
+ 		}
++		unset($topic_data);
+ 
+ 		$_CLASS['core_db']-&gt;transaction('commit');
+ 
+ 		if (!empty($new_topic_id_list))
+ 		{
++			if (!empty($insert_array[FORUMS_POLL_OPTIONS_TABLE]))
++			{
++				$_CLASS['core_db']-&gt;sql_query_build('MULTI_INSERT', $insert_array[FORUMS_POLL_OPTIONS_TABLE], FORUMS_POLL_OPTIONS_TABLE);
++			}
++			if (!empty($insert_array[FORUMS_POSTS_TABLE]))
++			{
++				$_CLASS['core_db']-&gt;sql_query_build('MULTI_INSERT', $insert_array[FORUMS_POSTS_TABLE], FORUMS_POSTS_TABLE);
++			}
++			if (!empty($insert_array[FORUMS_ATTACHMENTS_TABLE]))
++			{
++				$_CLASS['core_db']-&gt;sql_query_build('MULTI_INSERT', $insert_array[FORUMS_ATTACHMENTS_TABLE], FORUMS_ATTACHMENTS_TABLE);
++			}
++			unset($insert_array);
++			
+ 			// Sync new topics, parent forums and board stats
+ 			sync('topic', 'topic_id', $new_topic_id_list, true);
+ 			sync('forum', 'forum_id', $to_forum_id, true);
+@@ -723,15 +744,11 @@
+ 	
+ 			foreach ($new_topic_id_list as $topic_id =&gt; $new_topic_id)
+ 			{
+-				add_log('mod', $to_forum_id, $new_topic_id, 'LOG_FORK', $topic_row['forum_name']);
++				add_log('mod', $to_forum_id, $new_topic_id, 'LOG_FORK', $new_topic_forum_name_list[$topic_id]['forum_name']);
+ 			}
+ 			
+ 			$success_msg = (count($topic_ids) === 1) ? 'TOPIC_FORKED_SUCCESS' : 'TOPICS_FORKED_SUCCESS';
+ 		}
+-		else
+-		{
+-			trigger_error('Something Failed');
+-		}
+ 	}
+ 
+ 	$redirect = generate_link($redirect);
+@@ -742,7 +759,7 @@
+ 	}
+ 	else
+ 	{
+-		$_CLASS['core_display']-&gt;meta_refresh(3, generate_link('Forums&amp;file=viewforum&amp;f='.$to_forum_id));
++		$_CLASS['core_display']-&gt;meta_refresh(3, generate_link('forums&amp;file=viewforum&amp;f='.$to_forum_id));
+ 		$return_link = sprintf($_CLASS['core_user']-&gt;lang['RETURN_NEW_FORUM'], '&lt;a href=&quot;'. $redirect . '&quot;&gt;', '&lt;/a&gt;');
+ 
+ 		trigger_error($_CLASS['core_user']-&gt;lang[$success_msg] . '&lt;br /&gt;&lt;br /&gt;' . $return_link);
+
+Added: cms/trunk/includes/forums/mcp/mcp_notes.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_notes.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/mcp/mcp_notes.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -0,0 +1,205 @@
++&lt;?php
++/** 
++*
++* @package mcp
++* @version $Id: mcp_notes.php,v 1.26 2006/07/29 11:35:32 grahamje Exp $
++* @copyright (c) 2005 phpBB Group 
++* @license <A HREF="http://opensource.org/licenses/gpl-license.php">http://opensource.org/licenses/gpl-license.php</A> GNU Public License 
++*
++*/
++
++
++
++global $_CLASS;
++
++$action = get_variable('action', 'REQUEST');
++$mode = get_variable('mode', 'REQUEST');
++
++//$this-&gt;page_title = 'MCP_NOTES';
++
++switch ($mode)
++{
++	case 'user_notes':
++		//$_CLASS['core_user']-&gt;add_lang('acp/common.php');
++
++		mcp_notes_user_view($action);
++		$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP_NOTES'), 'modules/forums/mcp_notes_user.html');
++	break;
++	
++	//case 'front':
++	default:
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'U_FIND_MEMBER'		=&gt; generate_link('members_list&amp;mode=search_user&amp;form=mcp&amp;field=username'),
++			'U_POST_ACTION'		=&gt; generate_link('forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes'),
++
++			'L_TITLE'			=&gt; $_CLASS['core_user']-&gt;get_lang('MCP_NOTES')
++		));
++
++		$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP_NOTES'), 'modules/forums/mcp_notes_front.html');
++	break;
++}
++
++/**
++* Display user notes
++*/
++function mcp_notes_user_view($action)
++{
++	global $_CLASS, $_CORE_CONFIG, $config;
++
++	$user_id = request_var('u', 0);
++	$username = request_var('username', '');
++	$start = request_var('start', 0);
++	$st	= request_var('st', 0);
++	$sk	= request_var('sk', 'b');
++	$sd	= request_var('sd', 'd');
++
++	$url = 'forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes';
++
++	$sql_where = ($user_id) ? &quot;user_id = $user_id&quot; : &quot;username = '&quot; . $db-&gt;sql_escape($username) . &quot;'&quot;;
++
++	$sql = 'SELECT *
++		FROM ' . CORE_USERS_TABLE . &quot;
++		WHERE $sql_where&quot;;
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	$userrow = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++	$_CLASS['core_db']-&gt;free_result($result);
++
++	if (!$userrow)
++	{
++		trigger_error('NO_USER');
++	}
++
++	$user_id = $userrow['user_id'];
++
++	$deletemark = ($action === 'del_marked');
++	$deleteall	= ($action === 'del_all');
++	$marked		= get_variable('marknote', 'REQUEST', false, 'array:int');
++	$usernote	= request_var('usernote', '', true);
++
++	// Handle any actions
++	if (($deletemark || $deleteall) &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('a_clearlogs'))
++	{
++		$where_sql = '';
++		if ($deletemark &amp;&amp; $marked)
++		{
++			/*$sql_in = array();
++			foreach ($marked as $mark)
++			{
++				$sql_in[] = $mark;
++			}*/
++			$where_sql = ' AND log_id IN (' . implode(', ', $marked) . ')';
++			/*unset($sql_in);*/
++		}
++
++		if ($where_sql || $deleteall)
++		{
++			$sql = 'DELETE FROM ' . FORUMS_LOG_TABLE . '
++				WHERE log_type = ' . FORUMS_LOG_USERS . &quot; 
++					AND reportee_id = $user_id
++					$where_sql&quot;;
++			$_CLASS['core_db']-&gt;query($sql);
++
++			add_log('admin', 'LOG_CLEAR_USER', $userrow['username']);
++
++			$msg = ($deletemark) ? 'MARKED_NOTES_DELETED' : 'ALL_NOTES_DELETED';
++			$redirect = generate_link($url . '&amp;u=' . $user_id);
++
++			$_CLASS['core_display']-&gt;meta_refresh(3, $redirect);
++			trigger_error($_CLASS['core_user']-&gt;lang[$msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
++		}
++	}
++
++	if ($usernote &amp;&amp; $action === 'add_feedback')
++	{
++		add_log('admin', 'LOG_USER_FEEDBACK', $userrow['username']);
++		add_log('user', $user_id, 'LOG_USER_GENERAL', $usernote);
++
++		$redirect = generate_link($url . '&amp;u=' . $user_id);
++		$_CLASS['core_display']-&gt;meta_refresh(3, $redirect);
++		trigger_error($_CLASS['core_user']-&gt;lang['USER_FEEDBACK_ADDED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
++	}
++
++	// Generate the appropriate user information for the user we are looking at
++	$rank_title = $rank_img = '';
++	//get_user_rank($userrow['user_rank'], $userrow['user_posts'], $rank_title, $rank_img);
++
++	$avatar_img = '';
++	if (!empty($userrow['user_avatar']))
++	{
++		switch ($userrow['user_avatar_type'])
++		{
++			case AVATAR_UPLOAD:
++				$avatar_img = $_CORE_CONFIG['global']['path_avatar_upload'] . '/';
++			break;
++
++			case AVATAR_GALLERY:
++				$avatar_img = $_CORE_CONFIG['global']['path_avatar_gallery'] . '/';
++			break;
++		}
++		$avatar_img .= $userrow['user_avatar'];
++
++		$avatar_img = '&lt;img src=&quot;' . $avatar_img . '&quot; width=&quot;' . $userrow['user_avatar_width'] . '&quot; height=&quot;' . $userrow['user_avatar_height'] . '&quot; alt=&quot;&quot; /&gt;';
++	}
++
++	$limit_days = array(0 =&gt; $_CLASS['core_user']-&gt;lang['ALL_ENTRIES'], 1 =&gt; $_CLASS['core_user']-&gt;lang['1_DAY'], 7 =&gt; $_CLASS['core_user']-&gt;lang['7_DAYS'], 14 =&gt; $_CLASS['core_user']-&gt;lang['2_WEEKS'], 30 =&gt; $_CLASS['core_user']-&gt;lang['1_MONTH'], 90 =&gt; $_CLASS['core_user']-&gt;lang['3_MONTHS'], 180 =&gt; $_CLASS['core_user']-&gt;lang['6_MONTHS'], 365 =&gt; $_CLASS['core_user']-&gt;lang['1_YEAR']);
++	$sort_by_text = array('a' =&gt; $_CLASS['core_user']-&gt;lang['SORT_USERNAME'], 'b' =&gt; $_CLASS['core_user']-&gt;lang['SORT_DATE'], 'c' =&gt; $_CLASS['core_user']-&gt;lang['SORT_IP'], 'd' =&gt; $_CLASS['core_user']-&gt;lang['SORT_ACTION']);
++	$sort_by_sql = array('a' =&gt; 'l.username', 'b' =&gt; 'l.log_time', 'c' =&gt; 'l.log_ip', 'd' =&gt; 'l.log_operation');
++
++	$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
++	gen_sort_selects($limit_days, $sort_by_text, $st, $sk, $sd, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
++
++	// Define where and sort sql for use in displaying logs
++	$sql_where = ($st) ? ($_CLASS['core_user']-&gt;time - ($st * 86400)) : 0;
++	$sql_sort = $sort_by_sql[$sk] . ' ' . (($sd == 'd') ? 'DESC' : 'ASC');
++
++	$log_data = array();
++	$log_count = 0;
++	view_log('user', $log_data, $log_count, $config['posts_per_page'], $start, 0, 0, $user_id, $sql_where, $sql_sort);
++
++	$_CLASS['core_template']-&gt;assign('S_USER_NOTES', false);
++
++	if ($log_count)
++	{
++		$_CLASS['core_template']-&gt;assign('S_USER_NOTES', true);
++
++		foreach ($log_data as $row)
++		{
++			$_CLASS['core_template']-&gt;assign_vars_array('usernotes', array(
++				'REPORT_BY'		=&gt; $row['username'],
++				'REPORT_AT'		=&gt; $_CLASS['core_user']-&gt;format_date($row['time']),
++				'ACTION'		=&gt; $row['action'],
++				'IP'			=&gt; $row['ip'],
++				'ID'			=&gt; $row['id'])
++			);
++		}
++	}
++
++	$pagination = generate_pagination($url . &quot;&amp;u=$user_id&amp;st=$st&amp;sk=$sk&amp;sd=$sd&quot;, $log_count, $config['posts_per_page'], $start);
++
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'U_POST_ACTION'			=&gt; generate_link($url . '&amp;u=' . $user_id),
++		'S_CLEAR_ALLOWED'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('a_clearlogs'),
++		'S_SELECT_SORT_DIR'		=&gt; $s_sort_dir,
++		'S_SELECT_SORT_KEY'		=&gt; $s_sort_key,
++		'S_SELECT_SORT_DAYS'	=&gt; $s_limit_days,
++
++		'L_TITLE'			=&gt; $_CLASS['core_user']-&gt;get_lang('MCP_NOTES_USER'),
++
++		'PAGE_NUMBER'		=&gt; on_page($log_count, $config['posts_per_page'], $start),
++		'PAGINATION'		=&gt; $pagination['formated'],
++		'PAGINATION_ARRAY'	=&gt; $pagination['array'],
++		'TOTAL_REPORTS'		=&gt; ($log_count == 1) ? $_CLASS['core_user']-&gt;get_lang('LIST_REPORT') : sprintf($_CLASS['core_user']-&gt;get_lang('LIST_REPORTS'), $log_count),
++
++		'USERNAME'			=&gt; $userrow['username'],
++		'USER_COLOR'		=&gt; (!empty($userrow['user_colour'])) ? $userrow['user_colour'] : '',
++		'RANK_TITLE'		=&gt; $rank_title,
++		'JOINED'			=&gt; $_CLASS['core_user']-&gt;format_date($userrow['user_reg_date']),
++		'POSTS'				=&gt; ($userrow['user_posts']) ? $userrow['user_posts'] : 0,
++		'WARNINGS'			=&gt; (@$userrow['user_warnings']) ? $userrow['user_warnings'] : 0,
++
++		'AVATAR_IMG'		=&gt; $avatar_img,
++		'RANK_IMG'			=&gt; $rank_img,
++	));
++}
++
++?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/mcp/mcp_post.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_post.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/mcp/mcp_post.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -1,355 +1,391 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright &#169; 2004 by Viperal									//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-
+-// -------------------------------------------------------------
+-//
+-// $Id: mcp_post.php,v 1.4 2004/07/19 20:13:16 acydburn Exp $
+-//
+-// FILENAME  : mcp_post.php
+-// STARTED   : Thu Jul 08, 2004
+-// COPYRIGHT : &#169; 2004 phpBB Group
+-// WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
+-// LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
+-// 
+-// -------------------------------------------------------------
+-
+-
+-$_CLASS['core_user']-&gt;add_lang('posting');
+-$id = 0;
+-$url = 'Forums&amp;file=mcp';
+-$post_id = request_var('p', 0);
+-$start	= request_var('start', 0);
+-
+-// Get post data
+-$post_info = get_post_data(array($post_id));
+-
+-if (empty($post_info))
+-{
+-	trigger_error('POST_NOT_EXIST');
+-}
+-
+-$post_info = $post_info[$post_id];
+-
+-switch ($action)
+-{
+-	case 'chgposter_search':
+-		$username = request_var('username', '');
+-
+-		if ($username)
+-		{
+-			$users_ary = array();
+-
+-			if (strpos($username, '*') === false)
+-			{
+-				$username = &quot;*$username*&quot;;
+-			}
+-			$username = str_replace('*', '%', str_replace('%', '\%', $username));
+-
+-			$sql = 'SELECT user_id, username
+-				FROM ' . USERS_TABLE . &quot;
+-				WHERE username LIKE '&quot; . $_CLASS['core_db']-&gt;sql_escape($username) . &quot;'
+-					AND user_type NOT IN (&quot; . USER_INACTIVE . ', ' . USER_IGNORE . ')
+-					AND user_id &lt;&gt; ' . $post_info['user_id'];
+-			$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-			{
+-				$users_ary[strtolower($row['username'])] = $row;
+-			}
+-
+-			$user_select = '';
+-			ksort($users_ary);
+-			foreach ($users_ary as $row)
+-			{
+-				$user_select .= '&lt;option value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . &quot;&lt;/option&gt;\n&quot;;
+-			}
+-		}
+-
+-		if (!$user_select)
+-		{
+-			$_CLASS['core_template']-&gt;assign('MESSAGE', $_CLASS['core_user']-&gt;lang['NO_MATCHES_FOUND']);
+-		}
+-
+-		$_CLASS['core_template']-&gt;assign_array(array(
+-			'S_USER_SELECT'		=&gt;	$user_select,
+-			'SEARCH_USERNAME'	=&gt;	request_var('username', ''))
+-		);
+-		break;
+-
+-	case 'chgposter':
+-
+-		$new_user = request_var('u', 0);
+-
+-		if ($new_user &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']) &amp;&amp; $new_user != $post_info['user_id'])
+-		{
+-			$sql = 'UPDATE ' . POSTS_TABLE . &quot;
+-				SET poster_id = $new_user
+-				WHERE post_id = $post_id&quot;;
+-			$_CLASS['core_db']-&gt;query($sql);
+-
+-			if ($post_info['topic_last_post_id'] == $post_info['post_id'] || $post_info['forum_last_post_id'] == $post_info['post_id'])
+-			{
+-				sync('topic', 'topic_id', $post_info['topic_id'], false, false);
+-				sync('forum', 'forum_id', $post_info['forum_id'], false, false);
+-			}
+-			
+-			// Renew post info
+-			$post_info = get_post_data(array($post_id));
+-
+-			if (empty($post_info))
+-			{
+-				trigger_error('POST_NOT_EXIST');
+-			}
+-
+-			$post_info = $post_info[$post_id];
+-		}
+-	break;
+-		
+-	case 'del_marked':
+-	case 'del_all':
+-	case 'add_feedback':
+-		$deletemark = ($action == 'del_marked') ? true : false;
+-		$deleteall	= ($action == 'del_all') ? true : false;
+-		$marked		= request_var('marknote', 0);
+-		$usernote	= request_var('usernote', '');
+-
+-		if (($deletemark || $deleteall) &amp;&amp; $_CLASS['auth']-&gt;acl_get('a_clearlogs'))
+-		{
+-			$where_sql = '';
+-			if ($deletemark &amp;&amp; $marked)
+-			{
+-				$sql_in = array();
+-				foreach ($marked as $mark)
+-				{
+-					$sql_in[] = $mark;
+-				}
+-				$where_sql = ' AND log_id IN (' . implode(', ', $sql_in) . ')';
+-				unset($sql_in);
+-			}
+-
+-			$sql = 'DELETE FROM ' . LOG_TABLE . '
+-				WHERE log_type = ' . LOG_USERS . &quot; 
+-					$where_sql&quot;;
+-			$_CLASS['core_db']-&gt;query($sql);
+-
+-			add_log('admin', 'LOG_USERS_CLEAR');
+-
+-			$msg = ($deletemark) ? 'MARKED_DELETED' : 'ALL_DELETED';
+-			$redirect = generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;);
+-			$_CLASS['core_display']-&gt;meta_refresh(2, $redirect);
+-			trigger_error($_CLASS['core_user']-&gt;lang[$msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
+-		}
+-
+-		if ($usernote &amp;&amp; $action == 'add_feedback')
+-		{
+-			add_log('admin', 'LOG_USER_FEEDBACK', $post_info['username']);
+-			add_log('user', $post_info['user_id'], 'LOG_USER_GENERAL', $usernote);
+-
+-			$redirect = generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;);
+-			$_CLASS['core_display']-&gt;meta_refresh(2, $redirect);
+-			trigger_error($_CLASS['core_user']-&gt;lang['USER_FEEDBACK_ADDED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;'));
+-		}
+-	break;
+-}
+-
+-// Set some vars
+-$users_ary = array();
+-$poster = ($post_info['user_colour']) ? '&lt;span style=&quot;color:#' . $post_info['user_colour'] . '&quot;&gt;' . $post_info['username'] . '&lt;/span&gt;' : $post_info['username'];
+-
+-// Process message, leave it uncensored
+-$message = $post_info['post_text'];
+-
+-if ($post_info['bbcode_bitfield'])
+-{
+-	global $site_file_root;
+-
+-	require_once($site_file_root.'includes/forums/bbcode.php');
+-	$bbcode = new bbcode($post_info['bbcode_bitfield']);
+-	$bbcode-&gt;bbcode_second_pass($message, $post_info['bbcode_uid'], $post_info['bbcode_bitfield']);
+-}
+-
+-$_CLASS['core_template']-&gt;assign_array(array(
+-	'U_MCP_ACTION'			=&gt; generate_link($url.'&amp;i=main&amp;quickmod=1'), // Use this for mode paramaters
+-	'U_POST_ACTION'			=&gt; generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&quot;), // Use this for action parameters
+-	'U_APPROVE_ACTION'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=queue&amp;p='.$post_id),
+-
+-	'S_CAN_VIEWIP'			=&gt; $_CLASS['auth']-&gt;acl_get('m_ip', $post_info['forum_id']),
+-	'S_CAN_CHGPOSTER'		=&gt; $_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']),
+-	'S_CAN_LOCK_POST'		=&gt; $_CLASS['auth']-&gt;acl_get('m_lock', $post_info['forum_id']),
+-	'S_CAN_DELETE_POST'		=&gt; $_CLASS['auth']-&gt;acl_get('m_delete', $post_info['forum_id']),
+-
+-	'S_POST_REPORTED'		=&gt; $post_info['post_reported'],
+-	'S_POST_UNAPPROVED'		=&gt; !$post_info['post_approved'],
+-	'S_POST_LOCKED'			=&gt; $post_info['post_edit_locked'],
+-	//'S_USER_WARNINGS'		=&gt; ($post_info['user_warnings']) ? true : false,
+-	'S_SHOW_USER_NOTES'		=&gt; true,
+-	'S_CLEAR_ALLOWED'		=&gt; ($_CLASS['auth']-&gt;acl_get('a_clearlogs')) ? true : false,
+-
+-	'U_VIEW_PROFILE'		=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $post_info['user_id']),
+-//		'U_MCP_USERNOTES'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes&amp;u=' . $post_info['user_id']),
+-//		'U_MCP_WARNINGS'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=warnings&amp;mode=view_user&amp;u=' . $post_info['user_id']),
+-	'U_EDIT'				=&gt; ($_CLASS['auth']-&gt;acl_get('m_edit', $post_info['forum_id'])) ? generate_link(&quot;Forums&amp;file=posting&amp;mode=edit&amp;f={$post_info['forum_id']}&amp;p={$post_info['post_id']}&quot;) : '',
+-
+-	'RETURN_TOPIC'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewtopic&amp;p=$post_id#$post_id&quot;).'&quot;&gt;', '&lt;/a&gt;'),
+-	'RETURN_FORUM'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewforum&amp;f={$post_info['forum_id']}&amp;start={$start}&quot;).'&quot;&gt;', '&lt;/a&gt;'),
+-	'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', $_CLASS['core_user']-&gt;lang['POST_REPORTED']),
+-	'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', $_CLASS['core_user']-&gt;lang['POST_UNAPPROVED']),
+-	'EDIT_IMG'				=&gt; $_CLASS['core_user']-&gt;img('btn_edit', $_CLASS['core_user']-&gt;lang['EDIT_POST']),
+-	'SEARCH_IMG'			=&gt; $_CLASS['core_user']-&gt;img('btn_search', 'SEARCH_USER_POSTS'),
+-	
+-	'POSTER_NAME'			=&gt; $poster,
+-	'POST_PREVIEW'			=&gt; smiley_text($message),
+-	'POST_SUBJECT'			=&gt; $post_info['post_subject'],
+-	'POST_DATE'				=&gt; $_CLASS['core_user']-&gt;format_date($post_info['post_time']),
+-	'POST_IP'				=&gt; $post_info['poster_ip'],
+-	'POST_IPADDR'			=&gt; @gethostbyaddr($post_info['poster_ip']),
+-	'POST_ID'				=&gt; $post_info['post_id'])
+-);
+-
+-// Get User Notes
+-$log_data = array();
+-$log_count = 0;
+-
+-view_log('user', $log_data, $log_count, $config['posts_per_page'], 0, 0, 0, $post_info['user_id']);
+-
+-if ($log_count)
+-{
+-	$_CLASS['core_template']-&gt;assign('S_USER_NOTES', true);
+-
+-	foreach ($log_data as $row)
+-	{
+-		$_CLASS['core_template']-&gt;assign_vars_array('usernotes', array(
+-			'REPORT_BY'		=&gt; $row['username'],
+-			'REPORT_AT'		=&gt; $_CLASS['core_user']-&gt;format_date($row['time']),
+-			'ACTION'		=&gt; $row['action'],
+-			'ID'			=&gt; $row['id'])
+-		);
+-	}
+-}
+-
+-// Get Reports
+-
+-/*if ($_CLASS['auth']-&gt;acl_get('m_', $post_info['forum_id']))
+-{
+-	$sql = 'SELECT r.*, re.*, u.user_id, u.username 
+-		FROM ' . REPORTS_TABLE . ' r, ' . USERS_TABLE . ' u, ' . REASONS_TABLE . &quot; re
+-		WHERE r.post_id = $post_id
+-			AND r.reason_id = re.reason_id
+-			AND u.user_id = r.user_id
+-		ORDER BY r.report_time DESC&quot;;
+-	$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-	if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-	{
+-		$_CLASS['core_template']-&gt;assign('S_SHOW_REPORTS', true);
+-
+-		do
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('reports', array(
+-				'REPORT_ID'		=&gt; $row['report_id'],
+-				'REASON_TITLE'	=&gt; $_CLASS['core_user']-&gt;lang['report_reasons']['TITLE'][strtoupper($row['reason_name'])],
+-				'REASON_DESC'	=&gt; $_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_name'])],
+-				'REPORTER'		=&gt; ($row['user_id'] != ANONYMOUS) ? $row['username'] : $_CLASS['core_user']-&gt;lang['GUEST'],
+-				'U_REPORTER'	=&gt; ($row['user_id'] != ANONYMOUS) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['user_id']) : '',
+-				'USER_NOTIFY'	=&gt; ($row['user_notify']) ? true : false,
+-				'REPORT_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['report_time']),
+-				'REPORT_TEXT'	=&gt; str_replace(&quot;\n&quot;, '&lt;br /&gt;', trim($row['report_text'])))
+-			);
+-		}
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
+-	}
+-	$_CLASS['core_db']-&gt;free_result($result);
+-}*/
+-
+-// Get IP
+-if ($_CLASS['auth']-&gt;acl_get('m_ip', $post_info['forum_id']))
+-{
+-	$rdns_ip_num = request_var('rdns', '');
+-
+-	if ($rdns_ip_num != 'all')
+-	{
+-		$_CLASS['core_template']-&gt;assign('U_LOOKUP_ALL', generate_link($url.'&amp;i=main&amp;mode=post_details&amp;rdns=all'));
+-	}
+-
+-	// Get other users who've posted under this IP
+-	$sql = 'SELECT u.user_id, u.username, user_posts
+-		FROM ' . USERS_TABLE . ' u, ' . FORUMS_POSTS_TABLE . &quot; p
+-		WHERE p.poster_id = u.user_id
+-			AND p.poster_ip = '{$post_info['poster_ip']}'
+-			AND p.poster_id &lt;&gt; {$post_info['user_id']}
+-		ORDER BY user_posts DESC&quot;;
+-	$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-	{
+-		// Fill the user select list with users who have posted
+-		// under this IP
+-		if ($row['user_id'] != $post_info['poster_id'])
+-		{
+-			$users_ary[strtolower($row['username'])] = $row;
+-		}
+-
+-		$_CLASS['core_template']-&gt;assign_vars_array('userrow', array(
+-			'USERNAME'		=&gt; ($row['user_id'] == ANONYMOUS) ? $_CLASS['core_user']-&gt;lang['GUEST'] : $row['username'],
+-			'NUM_POSTS'		=&gt; $row['user_posts'],	
+-			'L_POST_S'		=&gt; ($row['user_posts'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
+-
+-			'U_PROFILE'		=&gt; ($row['user_id'] == ANONYMOUS) ? '' : generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']),
+-			'U_SEARCHPOSTS' =&gt; generate_link('Forums&amp;file=search&amp;search_author=' . urlencode($row['username']) . '&amp;showresults=topics'))
+-		);
+-	}
+-	$_CLASS['core_db']-&gt;free_result($result);
+-
+-	// Get other IP's this user has posted under
+-	$sql = 'SELECT poster_ip, COUNT(*) AS postings
+-		FROM ' . FORUMS_POSTS_TABLE . '
+-		WHERE poster_id = ' . $post_info['poster_id'] . '
+-		GROUP BY poster_ip
+-		ORDER BY postings DESC';
+-	$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-	{
+-		$hostname = (($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') &amp;&amp; $row['poster_ip']) ? @gethostbyaddr($row['poster_ip']) : '';
+-
+-		$_CLASS['core_template']-&gt;assign_vars_array('iprow', array(
+-			'IP'			=&gt; $row['poster_ip'],
+-			'HOSTNAME'		=&gt; $hostname,
+-			'NUM_POSTS'		=&gt; $row['postings'],	
+-			'L_POST_S'		=&gt; ($row['postings'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
+-
+-			'U_LOOKUP_IP'	=&gt; ($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') ? '' : generate_link(&quot;$url&amp;i=$id&amp;mode=post_details&amp;rdns={$row['poster_ip']}#ip&quot;),
+-			'U_WHOIS'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;i=$id&amp;mode=whois&amp;ip={$row['poster_ip']}&quot;))
+-		);
+-	}
+-	$_CLASS['core_db']-&gt;free_result($result);
+-
+-	// If we were not searching for a specific username fill
+-	// the user_select box with users who have posted under
+-	// the same IP
+-	if ($action != 'chgposter_search')
+-	{
+-		$user_select = '';
+-		ksort($users_ary);
+-		foreach ($users_ary as $row)
+-		{
+-			$user_select .= '&lt;option value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . &quot;&lt;/option&gt;\n&quot;;
+-		}
+-		$_CLASS['core_template']-&gt;assign('S_USER_SELECT', $user_select);
+-	}
+-}
+-
++&lt;?php
++//**************************************************************//
++//  Vipeal CMS:													//
++//**************************************************************//
++//																//
++//  Copyright &#169; 2004 by Viperal									//
++//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
++//																//
++//  Viperal CMS is released under the terms and conditions		//
++//  of the GNU General Public License version 2					//
++//																//
++//**************************************************************//
++
++// -------------------------------------------------------------
++//
++// $Id: mcp_post.php,v 1.4 2004/07/19 20:13:16 acydburn Exp $
++//
++// FILENAME  : mcp_post.php
++// STARTED   : Thu Jul 08, 2004
++// COPYRIGHT : &#169; 2004 phpBB Group
++// WWW       : <A HREF="http://www.phpbb.com/">http://www.phpbb.com/</A>
++// LICENCE   : GPL vs2.0 [ see /docs/COPYING ] 
++// 
++// -------------------------------------------------------------
++
++
++$_CLASS['core_user']-&gt;add_lang('posting');
++
++$post_id = get_variable('p', 'REQUEST', false, 'int');
++$action = get_variable('action', 'REQUEST');
++
++if (!$post_id &amp;&amp; $action !== 'whois')
++{
++	trigger_error('POST_NOT_EXIST');
++}
++
++if ($action !== 'whois')
++{
++	// Get post data
++	$post_info = get_post_data(array($post_id));
++	
++	if (empty($post_info[$post_id]))
++	{
++		trigger_error('POST_NOT_EXIST');
++	}
++	$post_info = $post_info[$post_id];
++	
++	$url = 'forums&amp;file=mcp';
++	$start	= get_variable('start', 'REQUEST', 0, 'int');
++}
++
++switch ($action)
++{
++	case 'whois':
++		$ip = get_variable('ip', 'REQUEST');
++		require_once SITE_FILE_ROOT.'includes/functions_user.php';
++
++		$whois = user_ipwhois($ip);
++
++		$whois = preg_replace('#(\s)([\w\-\._\+]+@[\w\-\.]+)(\s)#', '\1&lt;a href=&quot;mailto:\2&quot;&gt;\2&lt;/a&gt;\3', $whois);
++		$whois = preg_replace('#(\s)(http:/{2}[^\s]*)(\s)#', '\1&lt;a href=&quot;\2&quot; target=&quot;_blank&quot;&gt;\2&lt;/a&gt;\3', $whois);
++		
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'RETURN_POST'	=&gt; sprintf($_CLASS['core_user']-&gt;get_lang('RETURN_POST'), '&lt;a href=&quot;' . generate_link(&quot;forums&amp;file=mcp&amp;mode=$mode&amp;p=$post_id&quot;) . '&quot;&gt;', '&lt;/a&gt;'),
++			'WHOIS'			=&gt; trim($whois)
++		));
++
++		$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/forums/mcp_whois.html');
++	break;
++
++	case 'chgposter':
++	case 'chgposter_ip':
++		if ($action == 'chgposter')
++		{
++			$username = get_variable('username', 'REQUEST', '');
++			$sql_where = ($username) ?  &quot;username = '&quot; . $_CLASS['core_db']-&gt;escape($username) . &quot;'&quot; : '';
++		}
++		else
++		{
++			$new_user_id = get_variable('u', 'REQUEST', 0, 'int');
++			$sql_where = ($new_user_id) ? 'user_id = ' . $new_user_id : '';
++		}
++
++		if ($sql_where)
++		{
++			$sql = 'SELECT *
++				FROM ' . CORE_USERS_TABLE . '
++				WHERE ' . $sql_where;
++			$result = $_CLASS['core_db']-&gt;query($sql);
++			$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++			$_CLASS['core_db']-&gt;free_result($result);
++		}
++
++		if (!$sql_where || !$row)
++		{
++			trigger_error('NO_USER');
++		}
++
++		if ($_CLASS['forums_auth']-&gt;acl_get('m_chgposter', $post_info['forum_id']))
++		{
++			change_poster($post_info, $row);
++		}
++	break;
++}
++
++// Set some vars
++$users_ary = array();
++$poster = ($post_info['user_colour']) ? '&lt;span style=&quot;color:#' . $post_info['user_colour'] . '&quot;&gt;' . $post_info['username'] . '&lt;/span&gt;' : $post_info['username'];
++
++// Process message, leave it uncensored
++$message = $post_info['post_text'];
++
++if ($post_info['bbcode_bitfield'])
++{
++	require_once SITE_FILE_ROOT.'includes/forums/bbcode.php';
++
++	$bbcode = new bbcode($post_info['bbcode_bitfield']);
++	$bbcode-&gt;bbcode_second_pass($message, $post_info['bbcode_uid'], $post_info['bbcode_bitfield']);
++}
++
++$message = smiley_text($message);
++$message = str_replace(&quot;\n&quot;, '&lt;br /&gt;', $message);
++
++$_CLASS['core_template']-&gt;assign_array(array(
++	'U_MCP_ACTION'			=&gt; generate_link($url.'&amp;i=main&amp;quickmod=1'), // Use this for mode paramaters
++	'U_POST_ACTION'			=&gt; generate_link(&quot;$url&amp;mode=post_details&quot;), // Use this for action parameters
++	'U_APPROVE_ACTION'		=&gt; generate_link('forums&amp;file=mcp&amp;i=queue&amp;p='.$post_info['post_id']),
++
++	'S_CAN_VIEWIP'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_ip', $post_info['forum_id']),
++	'S_CAN_CHGPOSTER'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_', $post_info['forum_id']),
++	'S_CAN_LOCK_POST'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_lock', $post_info['forum_id']),
++	'S_CAN_DELETE_POST'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_delete', $post_info['forum_id']),
++
++	'S_POST_REPORTED'		=&gt; ($post_info['post_reported']),
++	'S_POST_UNAPPROVED'		=&gt; (!$post_info['post_approved']),
++	'S_POST_LOCKED'			=&gt; ($post_info['post_edit_locked']),
++	'S_USER_NOTES'			=&gt; true,
++	'S_CLEAR_ALLOWED'		=&gt; ($_CLASS['forums_auth']-&gt;acl_get('a_clearlogs')),
++
++	'U_EDIT'				=&gt; ($_CLASS['forums_auth']-&gt;acl_get('m_edit', $post_info['forum_id'])) ? generate_link(&quot;forums&amp;file=posting&amp;mode=edit&amp;p={$post_info['post_id']}&quot;) : '',
++	'U_FIND_MEMBER'			=&gt; generate_link('members_list&amp;mode=search_user&amp;form=mcp_chgposter&amp;field=username'),
++	'U_MCP_APPROVE'			=&gt; generate_link('forums&amp;file=mcp&amp;i=queue&amp;mode=approve_details&amp;p=' . $post_info['post_id']),
++	'U_MCP_REPORT'			=&gt; generate_link('forums&amp;file=mcp&amp;i=reports&amp;mode=report_details&amp;p=' . $post_info['post_id']),
++	'U_MCP_USER_NOTES'		=&gt; generate_link('forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes&amp;u=' . $post_info['user_id']),
++	'U_MCP_WARN_USER'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_warn') ? append_sid(&quot;{$phpbb_root_path}mcp.$phpEx&quot;, 'i=warn&amp;mode=warn_user&amp;u=' . $post_info['user_id']) : '',
++	'U_VIEW_POST'			=&gt; generate_link('forums&amp;file=viewtopic&amp;p=' . $post_info['post_id'] . '#p' . $post_info['post_id']),
++	'U_VIEW_PROFILE'		=&gt; generate_link('members_list&amp;mode=viewprofile&amp;u=' . $post_info['user_id']),
++	'U_VIEW_TOPIC'			=&gt; generate_link('forums&amp;file=viewtopic&amp;t=' . $post_info['topic_id']),
++
++	'RETURN_TOPIC'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;forums&amp;file=viewtopic&amp;p={$post_info['post_id']}#{$post_info['post_id']}&quot;).'&quot;&gt;', '&lt;/a&gt;'),
++	'RETURN_FORUM'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link(&quot;forums&amp;file=viewforum&amp;f={$post_info['forum_id']}&amp;start={$start}&quot;).'&quot;&gt;', '&lt;/a&gt;'),
++
++	'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', $_CLASS['core_user']-&gt;lang['POST_REPORTED']),
++	'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', $_CLASS['core_user']-&gt;lang['POST_UNAPPROVED']),
++	'EDIT_IMG'				=&gt; $_CLASS['core_user']-&gt;img('btn_edit', $_CLASS['core_user']-&gt;lang['EDIT_POST']),
++	'SEARCH_IMG'			=&gt; $_CLASS['core_user']-&gt;img('btn_search', 'SEARCH_USER_POSTS'),
++	
++	'POSTER_NAME'			=&gt; $poster,
++	'POST_PREVIEW'			=&gt; $message,
++	'POST_SUBJECT'			=&gt; $post_info['post_subject'],
++	'POST_DATE'				=&gt; $_CLASS['core_user']-&gt;format_date($post_info['post_time']),
++	'POST_IP'				=&gt; $post_info['poster_ip'],
++	'POST_IPADDR'			=&gt; @gethostbyaddr($post_info['poster_ip']),
++	'POST_ID'				=&gt; $post_info['post_id']
++));
++
++// Get User Notes
++$log_data = array();
++$log_count = 0;
++
++view_log('user', $log_data, $log_count, $config['posts_per_page'], 0, 0, 0, $post_info['user_id']);
++
++if ($log_count)
++{
++	$_CLASS['core_template']-&gt;assign('S_USER_NOTES', true);
++
++	foreach ($log_data as $row)
++	{
++		$_CLASS['core_template']-&gt;assign_vars_array('usernotes', array(
++			'REPORT_BY'		=&gt; $row['username'],
++			'REPORT_AT'		=&gt; $_CLASS['core_user']-&gt;format_date($row['time']),
++			'ACTION'		=&gt; $row['action'],
++			'ID'			=&gt; $row['id']
++		));
++	}
++}
++
++// Get Reports
++/*
++if ($_CLASS['forums_auth']-&gt;acl_get('m_', $post_info['forum_id']))
++{
++	$sql = 'SELECT r.*, re.*, u.user_id, u.username 
++		FROM ' . FORUMS_REPORTS_TABLE . ' r, ' . CORE_USERS_TABLE . ' u, ' . DORUMS_REPORTS_REASONS_TABLE . &quot; re
++		WHERE r.post_id = $post_id
++			AND r.reason_id = re.reason_id
++			AND u.user_id = r.user_id
++		ORDER BY r.report_time DESC&quot;;
++	$result = $_CLASS['core_db']-&gt;query($sql);
++
++	if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		$_CLASS['core_template']-&gt;assign('S_SHOW_REPORTS', true);
++
++		do
++		{
++			if (isset($_CLASS['core_user']-&gt;lang['report_reasons']['TITLE'][strtoupper($row['reason_title'])]) &amp;&amp; isset($_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_title'])]))
++			{
++				$row['reson_description'] = $user-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_title'])];
++				$row['reason_title'] = $user-&gt;lang['report_reasons']['TITLE'][strtoupper($row['reason_title'])];
++			}
++
++			$_CLASS['core_template']-&gt;assign_vars_array('reports', array(
++				'REPORT_ID'		=&gt; $row['report_id'],
++				'REASON_TITLE'	=&gt; $row['reason_title'],
++				'REASON_DESC'	=&gt; $row['reason_description'],
++				'REPORTER'		=&gt; ($row['user_id'] != ANONYMOUS) ? $row['username'] : $_CLASS['core_user']-&gt;lang['GUEST'],
++				'U_REPORTER'	=&gt; ($row['user_id'] != ANONYMOUS) ? generate_link('members_list&amp;mode=viewprofile&amp;u='.$row['user_id']) : '',
++				'USER_NOTIFY'	=&gt; ($row['user_notify']),
++				'REPORT_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['report_time']),
++				'REPORT_TEXT'	=&gt; str_replace(&quot;\n&quot;, '&lt;br /&gt;', trim($row['report_text'])))
++			);
++		}
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
++}*/
++
++// Get IP
++if ($_CLASS['forums_auth']-&gt;acl_get('m_info', $post_info['forum_id']))
++{
++	$rdns_ip_num = get_variable('rdns', 'REQUEST');
++	$users_ary = array();
++
++	$_CLASS['core_template']-&gt;assign('U_LOOKUP_ALL', ($rdns_ip_num === 'all') ? false : generate_link($url.'&amp;i=main&amp;mode=post_details&amp;rdns=all&amp;p='.$post_info['post_id']));
++
++	// Get other users who've posted under this IP
++	$sql = 'SELECT u.user_id, u.username, COUNT(*) as postings
++		FROM ' . CORE_USERS_TABLE . ' u, ' . FORUMS_POSTS_TABLE . &quot; p
++		WHERE p.poster_id = u.user_id
++			AND p.poster_ip = '&quot; . $_CLASS['core_db']-&gt;escape($post_info['poster_ip']) . &quot;'
++			AND p.poster_id &lt;&gt; {$post_info['user_id']}
++		GROUP BY u.user_id, u.username
++		ORDER BY postings DESC&quot;;
++
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		// Fill the user select list with users who have posted
++		// under this IP
++		if ($row['user_id'] != $post_info['poster_id'])
++		{
++			$users_ary[strtolower($row['username'])] = $row;
++		}
++
++		$_CLASS['core_template']-&gt;assign_vars_array('userrow', array(
++			'USERNAME'		=&gt; ($row['user_id'] == ANONYMOUS) ? $_CLASS['core_user']-&gt;lang['GUEST'] : $row['username'],
++			'NUM_POSTS'		=&gt; $row['postings'],	
++			'L_POST_S'		=&gt; ($row['postings'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
++
++			'U_PROFILE'		=&gt; ($row['user_id'] == ANONYMOUS) ? '' : generate_link('members_list&amp;mode=viewprofile&amp;u=' . $row['user_id']),
++			'U_SEARCHPOSTS' =&gt; generate_link('forums&amp;file=search&amp;author=' . urlencode($row['username']) . '&amp;sr=topics')
++		));
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
++	
++	$user_select = '';
++	ksort($users_ary);
++
++	foreach ($users_ary as $row)
++	{
++		$user_select .= '&lt;option value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . &quot;&lt;/option&gt;\n&quot;;
++
++	}
++	$_CLASS['core_template']-&gt;assign('S_USER_SELECT', $user_select);
++
++	unset($users_ary, $user_select);
++
++	// Get other IP's this user has posted under
++	$sql = 'SELECT poster_ip, COUNT(*) AS postings
++		FROM ' . FORUMS_POSTS_TABLE . '
++		WHERE poster_id = ' . $post_info['poster_id'] . '
++		GROUP BY poster_ip
++		ORDER BY postings DESC';
++	$result = $_CLASS['core_db']-&gt;query($sql);
++
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		$hostname = (($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') &amp;&amp; $row['poster_ip']) ? @gethostbyaddr($row['poster_ip']) : '';
++
++		$_CLASS['core_template']-&gt;assign_vars_array('iprow', array(
++			'IP'			=&gt; $row['poster_ip'],
++			'HOSTNAME'		=&gt; $hostname,
++			'NUM_POSTS'		=&gt; $row['postings'],	
++			'L_POST_S'		=&gt; ($row['postings'] == 1) ? $_CLASS['core_user']-&gt;lang['POST'] : $_CLASS['core_user']-&gt;lang['POSTS'],
++
++			'U_LOOKUP_IP'	=&gt; ($rdns_ip_num == $row['poster_ip'] || $rdns_ip_num == 'all') ? '' : generate_link(&quot;$url&amp;mode=post_details&amp;p={$post_info['post_id']}&amp;rdns={$row['poster_ip']}#ip&quot;),
++			'U_WHOIS'		=&gt; generate_link(&quot;forums&amp;file=mcp&amp;mode=post_details&amp;action=whois&amp;ip={$row['poster_ip']}&quot;)
++		));
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
++}
++
+ page_header();
+-$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/Forums/mcp_post.html');
+-
++$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/forums/mcp_post.html');
++
++
++/**
++* Change a post's poster
++*/
++function change_poster(&amp;$post_info, $userdata)
++{
++	global $_CLASS;
++
++	if (empty($userdata) || $userdata['user_id'] == $post_info['user_id'])
++	{
++		return;
++	}
++
++	$post_id = $post_info['post_id'];
++
++	$sql = 'UPDATE ' . FORUMS_POSTS_TABLE . &quot;
++		SET poster_id = {$userdata['user_id']}
++		WHERE post_id = $post_id&quot;;
++	$_CLASS['core_db']-&gt;query($sql);
++
++	// Resync topic/forum if needed
++	if ($post_info['topic_last_post_id'] == $post_id || $post_info['forum_last_post_id'] == $post_id || $post_info['topic_first_post_id'] == $post_id)
++	{
++		sync('topic', 'topic_id', $post_info['topic_id'], false, false);
++		sync('forum', 'forum_id', $post_info['forum_id'], false, false);
++	}
++
++	// Adjust post counts
++	if ($post_info['post_postcount'])
++	{
++		$sql = 'UPDATE ' . CORE_USERS_TABLE . '
++			SET user_posts = user_posts - 1
++			WHERE user_id = ' . $post_info['user_id'];
++		$_CLASS['core_db']-&gt;query($sql);
++
++		$sql = 'UPDATE ' . CORE_USERS_TABLE . '
++			SET user_posts = user_posts + 1
++			WHERE user_id = ' . $userdata['user_id'];
++		$_CLASS['core_db']-&gt;query($sql);
++	}
++
++	// Add posted to information for this topic for the new user
++	//markread('post', $post_info['forum_id'], $post_info['topic_id'], $_CLASS['core_user']-&gt;time, $userdata['user_id']);
++
++	// Remove the dotted topic option if the old user has no more posts within this topic
++	/*if ($config['load_db_track'] &amp;&amp; $post_info['user_id'] != ANONYMOUS)
++	{
++		$sql = 'SELECT topic_id
++			FROM ' . FORUMS_POSTS_TABLE . '
++			WHERE topic_id = ' . $post_info['topic_id'] . '
++				AND poster_id = ' . $post_info['user_id'];
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
++		$topic_id = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		$topic_id = (int) $topic_id['topic_id'];
++
++		if (!$topic_id)
++		{
++			$sql = 'DELETE FROM ' . FORUMS_TOPICS_POSTED_TABLE . '
++				WHERE user_id = ' . $post_info['user_id'] . '
++					AND topic_id = ' . $post_info['topic_id'];
++			$_CLASS['core_db']-&gt;query($sql);
++		}
++	}*/
++
++	// Do not change the poster_id within the attachments table, since they were still posted by the original user
++
++	$from_username = $post_info['username'];
++	$to_username = $userdata['username'];
++
++	// Renew post info
++	$post_info = get_post_data(array($post_id));
++
++	if (empty($post_info[$post_id]))
++	{
++		trigger_error($user-&gt;lang['POST_NOT_EXIST']);
++	}
++
++	$post_info = $post_info[$post_id];
++
++	// Now add log entry
++	add_log('mod', $post_info['forum_id'], $post_info['topic_id'], 'LOG_MCP_CHANGE_POSTER', $post_info['topic_title'], $from_username, $to_username);
++}
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/mcp/mcp_queue.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_queue.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/mcp/mcp_queue.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -23,316 +23,339 @@
+ // 
+ // -------------------------------------------------------------
+ 
+-class mcp_queue extends module
+-{
+ 
+-	function mcp_queue($id, $mode, $url)
+-	{
+-		global $_CLASS, $site_file_root, $config;
++global $_CLASS, $site_file_root, $config;
+ 
+-		$forum_id = request_var('f', 0);
+-		$start = request_var('start', 0);
++$forum_id = request_var('f', 0);
++$start = request_var('start', 0);
++$action = get_variable('action', 'REQUEST');
++$mode = get_variable('mode', 'REQUEST');
+ 
+-		switch ($mode)
++
++switch ($action)
++{
++	case 'approve':
++	case 'disapprove':
++		require_once SITE_FILE_ROOT.'includes/forums/functions_posting.php';
++
++		$post_id_list = array_unique(get_variable('post_id_list', 'REQUEST', array(), 'array:int'));
++
++		if (empty($post_id_list))
+ 		{
+-			case 'approve':
+-			case 'disapprove':
+-				require_once($site_file_root.'includes/forums/functions_messenger.php');
+-				require_once($site_file_root.'includes/forums/functions_posting.php');
++			trigger_error('NO_POST_SELECTED');
++		}
+ 
+-				$post_id_list = request_var('post_id_list', array(0));
++		($mode === 'approve') ? approve_post($post_id_list, $mode) : disapprove_post($post_id_list, $mode);
++	break;
++}
+ 
+-				if (!sizeof($post_id_list))
+-				{
+-					trigger_error('NO_POST_SELECTED');
+-				}
++switch ($mode)
++{
++	case 'approve_details':
++		$_CLASS['core_user']-&gt;add_lang('posting');
++		require_once SITE_FILE_ROOT.'includes/forums/functions_posting.php';
+ 
+-				if ($mode == 'approve')
+-				{
+-					approve_post($post_id_list);
+-				}
+-				else
+-				{
+-					disapprove_post($post_id_list);
+-				}
++		$post_id = get_variable('p', 'REQUEST', false, 'int');
++		$topic_id = get_variable('t', 'REQUEST', false, 'int');
+ 
+-				break;
+-			
+-			case 'approve_details':
+-				
+-				$_CLASS['core_user']-&gt;add_lang('posting');
+-				require_once($site_file_root.'includes/forums/functions_posting.php');
++		if ($topic_id)
++		{
++			$topic_info = get_topic_data(array($topic_id), 'm_approve');
++			$post_id = isset($topic_info[$topic_id]['topic_first_post_id']) ? (int) $topic_info[$topic_id]['topic_first_post_id'] : false;
++		}
+ 
+-				$post_id = request_var('p', 0);
+-				$topic_id = request_var('t', 0);
++		$post_info = ($post_id/) ? get_post_data(array($post_id), 'm_approve') : false;
+ 
+-				if ($topic_id)
+-				{
+-					$topic_info = get_topic_data(array($topic_id), 'm_approve');
+-					$post_id = (int) $topic_info[$topic_id]['topic_first_post_id'];
+-				}
++		if (!$post_id || empty($post_info[$post_id]))
++		{
++			trigger_error('NO_POST_SELECTED');
++		}
+ 
+-				$post_info = get_post_data(array($post_id), 'm_approve');
++		$post_info = $post_info[$post_id];
+ 
+-				if (!sizeof($post_info))
+-				{
+-					trigger_error('NO_POST_SELECTED');
+-				}
++		if ($post_info['topic_first_post_id'] != $post_id &amp;&amp; topic_review($post_info['topic_id'], $post_info['forum_id'], 'topic_review', 0, false))
++		{
++			$_CLASS['core_template']-&gt;assign_array(array(
++				'S_TOPIC_REVIEW'	=&gt; true,
++				'TOPIC_TITLE'		=&gt; $post_info['topic_title'])
++			);
++		}
+ 
+-				$post_info = $post_info[$post_id];
++		// Set some vars
++		if ($post_info['user_id'] == ANONYMOUS)
++		{
++			$post_info['username'] = ($post_info['post_username']) ? $post_info['post_username'] : $_CLASS['core_user']-&gt;lang['GUEST'];
++		}
+ 
+-				if ($post_info['topic_first_post_id'] != $post_id &amp;&amp; topic_review($post_info['topic_id'], $post_info['forum_id'], 'topic_review', 0, false))
+-				{
+-					$_CLASS['core_template']-&gt;assign_array(array(
+-						'S_TOPIC_REVIEW'	=&gt; true,
+-						'TOPIC_TITLE'		=&gt; $post_info['topic_title'])
+-					);
+-				}
++		$poster = ($post_info['user_colour']) ? '&lt;span style=&quot;color:#' . $post_info['user_colour'] . '&quot;&gt;' . $post_info['username'] . '&lt;/span&gt;' : $post_info['username'];
+ 
+-				// Set some vars
+-				$poster = ($post_info['user_colour']) ? '&lt;span style=&quot;color:#' . $post_info['user_colour'] . '&quot;&gt;' . $post_info['username'] . '&lt;/span&gt;' : $post_info['username'];
++		// Process message, leave it uncensored
++		$message = $post_info['post_text'];
++		if ($post_info['bbcode_bitfield'])
++		{
++			require_once SITE_FILE_ROOT.'includes/forums/bbcode.php';
+ 
+-				// Process message, leave it uncensored
+-				$message = $post_info['post_text'];
+-				if ($post_info['bbcode_bitfield'])
+-				{
+-					require_once($site_file_root.'includes/forums/bbcode.php');
+-					$bbcode = new bbcode($post_info['bbcode_bitfield']);
+-					$bbcode-&gt;bbcode_second_pass($message, $post_info['bbcode_uid'], $post_info['bbcode_bitfield']);
+-				}
+-				$message = smiley_text($message);
++			$bbcode = new bbcode($post_info['bbcode_bitfield']);
++			$bbcode-&gt;bbcode_second_pass($message, $post_info['bbcode_uid'], $post_info['bbcode_bitfield']);
++		}
++		$message = smiley_text($message);
+ 
+-				$_CLASS['core_template']-&gt;assign_array(array(
+-					'S_MCP_QUEUE'			=&gt; true,
+-					'S_APPROVE_ACTION'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;i=queue&amp;p=$post_id&amp;f=$forum_id&quot;),
+-					
+-					'S_CAN_VIEWIP'			=&gt; $_CLASS['auth']-&gt;acl_get('m_ip', $post_info['forum_id']),
+-					'S_POST_REPORTED'		=&gt; $post_info['post_reported'],
+-					'S_POST_UNAPPROVED'		=&gt; !$post_info['post_approved'],
+-					'S_POST_LOCKED'			=&gt; $post_info['post_edit_locked'],
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'S_MCP_QUEUE'			=&gt; true,
++			'S_APPROVE_ACTION'		=&gt; generate_link(&quot;forums&amp;file=mcp&amp;i=queue&amp;p=$post_id&amp;f=$forum_id&quot;),
++			'S_CAN_VIEWIP'			=&gt; $_CLASS['auth']-&gt;acl_get('m_info', $post_info['forum_id']),
++			'S_POST_REPORTED'		=&gt; $post_info['post_reported'],
++			'S_POST_UNAPPROVED'		=&gt; !$post_info['post_approved'],
++			'S_POST_LOCKED'			=&gt; $post_info['post_edit_locked'],
+ //					'S_USER_NOTES'			=&gt; ($post_info['user_notes']) ? true : false,
+-					'S_USER_WARNINGS'		=&gt; ($post_info['user_warnings']) ? true : false,
+ 
+-					'U_VIEW_PROFILE'		=&gt; generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $post_info['user_id']),
+-					'U_MCP_USERNOTES'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes&amp;u=' . $post_info['user_id']),
+-					'U_MCP_WARNINGS'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=warnings&amp;mode=view_user&amp;u=' . $post_info['user_id']),
+-					'U_EDIT'				=&gt; ($_CLASS['auth']-&gt;acl_get('m_edit', $post_info['forum_id'])) ? generate_link(&quot;Forums&amp;file=posting&amp;mode=edit&amp;f={$post_info['forum_id']}&amp;p={$post_info['post_id']}&quot;) : '',
++			'U_EDIT'				=&gt; $_CLASS['auth']-&gt;acl_get('m_edit', $post_info['forum_id']) ? generate_link(&quot;forums&amp;file=posting&amp;mode=edit&amp;f={$post_info['forum_id']}&amp;p={$post_info['post_id']}&quot;) : '',
++			'U_MCP_APPROVE'			=&gt;  generate_link('forums&amp;file=mcp&amp;i=queue&amp;mode=approve_details&amp;f=' . $post_info['forum_id'] . '&amp;p=' . $post_id),
++			'U_MCP_REPORT'			=&gt;  generate_link('forums&amp;file=mcp&amp;i=reports&amp;mode=report_details&amp;f=' . $post_info['forum_id'] . '&amp;p=' . $post_id),
++			'U_MCP_USER_NOTES'		=&gt;  generate_link('forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes&amp;u=' . $post_info['user_id']),
++			'U_MCP_WARN_USER'		=&gt; $_CLASS['auth']-&gt;acl_get('m_warn') ? generate_link('forums&amp;file=mcp&amp;i=warn&amp;mode=warn_user&amp;u=' . $post_info['user_id']) : '',
++			'U_VIEW_POST'			=&gt; generate_link('forums&amp;file=viewtopic&amp;p=' . $post_info['post_id'] . '#p' . $post_info['post_id']),
++			'U_VIEW_PROFILE'		=&gt; generate_link('members_list&amp;mode=viewprofile&amp;u=' . $post_info['user_id']),
++			'U_VIEW_TOPIC'			=&gt; generate_link('forums&amp;file=viewtopic&amp;t=' . $post_info['topic_id']),
+ 
+-					'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', $_CLASS['core_user']-&gt;lang['POST_REPORTED']),
+-					'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', $_CLASS['core_user']-&gt;lang['POST_UNAPPROVED']),
+-					'EDIT_IMG'				=&gt; $_CLASS['core_user']-&gt;img('btn_edit', $_CLASS['core_user']-&gt;lang['EDIT_POST']),
++			'RETURN_QUEUE'			=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_QUEUE'], '&lt;a href=&quot;' . generate_link('forums&amp;file=mcp&amp;i=queue' . (($topic_id) ? '&amp;mode=unapproved_topics' : '&amp;mode=unapproved_posts')) . &quot;&amp;start=$start\&quot;&gt;&quot;, '&lt;/a&gt;'),
++			'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', $_CLASS['core_user']-&gt;lang['POST_REPORTED']),
++			'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', $_CLASS['core_user']-&gt;lang['POST_UNAPPROVED']),
++			'EDIT_IMG'				=&gt; $_CLASS['core_user']-&gt;img('btn_edit', $_CLASS['core_user']-&gt;lang['EDIT_POST']),
+ 
+-					'POSTER_NAME'			=&gt; $poster,
+-					'POST_PREVIEW'			=&gt; $message,
+-					'POST_SUBJECT'			=&gt; $post_info['post_subject'],
+-					'POST_DATE'				=&gt; $_CLASS['core_user']-&gt;format_date($post_info['post_time']),
+-					'POST_IP'				=&gt; $post_info['poster_ip'],
+-					'POST_IPADDR'			=&gt; @gethostbyaddr($post_info['poster_ip']),
+-					'POST_ID'				=&gt; $post_info['post_id'])
+-				);
++			'POSTER_NAME'			=&gt; $poster,
++			'POST_PREVIEW'			=&gt; $message,
++			'POST_SUBJECT'			=&gt; $post_info['post_subject'],
++			'POST_DATE'				=&gt; $_CLASS['core_user']-&gt;format_date($post_info['post_time']),
++			'POST_IP'				=&gt; $post_info['poster_ip'],
++			'POST_IPADDR'			=&gt; @gethostbyaddr($post_info['poster_ip']),
++			'POST_ID'				=&gt; $post_info['post_id']
++		));
+ 
+-				$this-&gt;display($_CLASS['core_user']-&gt;lang['MCP_QUEUE'], 'mcp_post.html');
++		$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP_QUEUE'), 'modules/forums/mcp_post.html');
++	break;
+ 
+-				break;
++	case 'unapproved_topics':
++	case 'unapproved_posts':
++		$forum_info = array();
++		$topic_id = get_variable('t', 'REQUEST', false, 'int');
+ 
+-			case 'unapproved_topics':
+-			case 'unapproved_posts':
+-				$forum_info = array();
++		if ($topic_id)
++		{
++			$topic_info = get_topic_data(array($topic_id));
++
++			if (empty($topic_info[$topic_id]))
++			{
++				trigger_error('TOPIC_NOT_EXIST');
++			}
++
++			$topic_info = $topic_info[$topic_id];
++			$forum_id = $topic_info['forum_id'];
++		}
+ 
+-				$forum_list_approve = get_forum_list('m_approve', false, true);
++		$forum_list_approve = get_forum_list('m_approve', false, true);
+ 
+-				if (!$forum_id)
+-				{
+-					$forum_list = array();
+-					foreach ($forum_list_approve as $row)
+-					{
+-						$forum_list[] = $row['forum_id'];
+-					}
+-					
+-					if (!$forum_list = implode(', ', $forum_list))
+-					{
+-						trigger_error('NOT_MODERATOR');
+-					}
++		if (!$forum_id)
++		{
++			$forum_list = array();
++			foreach ($forum_list_approve as $row)
++			{
++				$forum_list[] = $row['forum_id'];
++			}
++			
++			if (!$forum_list = implode(', ', $forum_list))
++			{
++				trigger_error('NOT_MODERATOR');
++			}
+ 
+-					$sql = 'SELECT SUM(forum_topics) as sum_forum_topics 
+-						FROM ' . FORUMS_FORUMS_TABLE . &quot;
+-						WHERE forum_id IN ($forum_list)&quot;;
+-					$result = $_CLASS['core_db']-&gt;query($sql);
+-					$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-					$_CLASS['core_db']-&gt;free_result($result);
++			$sql = 'SELECT SUM(forum_topics) as sum_forum_topics 
++				FROM ' . FORUMS_FORUMS_TABLE . &quot;
++				WHERE forum_id IN ($forum_list)&quot;;
++			$result = $_CLASS['core_db']-&gt;query($sql);
++			$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 
+-					$forum_info['forum_topics'] = (int) $row['sum_forum_topics'];
+-				}
+-				else
+-				{
+-					$forum_info = get_forum_data(array($forum_id), 'm_approve');
++			$forum_info['forum_topics'] = (int) $row['sum_forum_topics'];
++		}
++		else
++		{
++			$forum_info = get_forum_data(array($forum_id), 'm_approve');
+ 
+-					if (!sizeof($forum_info))
+-					{
+-						trigger_error('NOT_MODERATOR');
+-					}
++			if (empty($forum_info[$forum_id]))
++			{
++				trigger_error('NOT_MODERATOR');
++			}
+ 
+-					$forum_info = $forum_info[$forum_id];
+-					$forum_list = $forum_id;
+-				}
++			$forum_info = $forum_info[$forum_id];
++			$forum_list = $forum_id;
++		}
+ 
+-				$forum_options = '&lt;option value=&quot;0&quot;' . (($forum_id == 0) ? ' selected=&quot;selected&quot;' : '') . '&gt;' . $_CLASS['core_user']-&gt;lang['ALL_FORUMS'] . '&lt;/option&gt;';
+-				foreach ($forum_list_approve as $row)
+-				{
+-					$forum_options .= '&lt;option value=&quot;' . $row['forum_id'] . '&quot;' . (($forum_id == $row['forum_id']) ? ' selected=&quot;selected&quot;' : '') . '&gt;' . $row['forum_name'] . '&lt;/option&gt;';
+-				}
++		$forum_options = '&lt;option value=&quot;0&quot;' . (($forum_id == 0) ? ' selected=&quot;selected&quot;' : '') . '&gt;' . $_CLASS['core_user']-&gt;lang['ALL_FORUMS'] . '&lt;/option&gt;';
++		foreach ($forum_list_approve as $row)
++		{
++			$forum_options .= '&lt;option value=&quot;' . $row['forum_id'] . '&quot;' . (($forum_id == $row['forum_id']) ? ' selected=&quot;selected&quot;' : '') . '&gt;' . $row['forum_name'] . '&lt;/option&gt;';
++		}
+ 
+-				mcp_sorting($mode, $sort_days, $sort_key, $sort_dir, $sort_by_sql, $sort_order_sql, $total, $forum_id);
+-				$forum_topics = ($total == -1) ? $forum_info['forum_topics'] : $total;
+-				$limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time &gt;= ' . (time() - ($sort_days * 86400)) : '';
++		mcp_sorting($mode, $sort_days, $sort_key, $sort_dir, $sort_by_sql, $sort_order_sql, $total, $forum_id);
+ 
+-				if ($mode == 'unapproved_posts')
+-				{
+-					$sql = 'SELECT p.post_id
+-						FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_TOPICS_TABLE . ' t' . (($sort_order_sql{0} == 'u') ? ', ' . USERS_TABLE . ' u' : '') . &quot;
+-						WHERE p.forum_id IN ($forum_list)
+-							AND p.post_approved = 0
+-							&quot; . (($sort_order_sql{0} == 'u') ? 'AND u.user_id = p.poster_id' : '') . &quot;
+-							AND t.topic_id = p.topic_id
+-							AND t.topic_first_post_id &lt;&gt; p.post_id
+-						ORDER BY $sort_order_sql&quot;;
+-					$result = $_CLASS['core_db']-&gt;query_limit($sql, $config['topics_per_page'], $start);
++		$forum_topics = ($total == -1) ? $forum_info['forum_topics'] : $total;
++		$limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time &gt;= ' . ($_CLASS['core_user']-&gt;time - ($sort_days * 86400)) : '';
+ 
+-					$i = 0;
+-					$post_ids = array();
+-					while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-					{
+-						$post_ids[] = $row['post_id'];
+-						$row_num[$row['post_id']] = $i++;
+-					}
++		if ($mode == 'unapproved_posts')
++		{
++			$sql = 'SELECT DISTINCT p.post_id
++				FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_TOPICS_TABLE . ' t' . (($sort_order_sql{0} == 'u') ? ', ' . CORE_USERS_TABLE . ' u' : '') . &quot;
++				WHERE p.forum_id IN (0, $forum_list)
++					AND p.post_approved = 0
++					&quot; . (($sort_order_sql{0} == 'u') ? 'AND u.user_id = p.poster_id' : '') . '
++					' . (($topic_id) ? 'AND p.topic_id = ' . $topic_id : '') . &quot;
++					AND t.topic_id = p.topic_id
++					AND t.topic_first_post_id &lt;&gt; p.post_id
++				ORDER BY $sort_order_sql&quot;;
++			$result = $_CLASS['core_db']-&gt;query_limit($sql, $config['topics_per_page'], $start);
+ 
+-					if (sizeof($post_ids))
+-					{
+-						$sql = 'SELECT f.forum_id, f.forum_name, t.topic_id, t.topic_title, p.post_id, p.post_username, p.poster_id, p.post_time, u.username
+-							FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_FORUMS_TABLE . ' f, ' . FORUMS_TOPICS_TABLE . ' t, ' . USERS_TABLE . &quot; u
+-							WHERE p.post_id IN (&quot; . implode(', ', $post_ids) . &quot;)
+-								AND t.topic_id = p.topic_id
+-								AND f.forum_id = p.forum_id
+-								AND u.user_id = p.poster_id&quot;;
++			$i = 0;
++			$post_ids = array();
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++			{
++				$post_ids[] = $row['post_id'];
++				$row_num[$row['post_id']] = $i++;
++			}
+ 
+-						$result = $_CLASS['core_db']-&gt;query($sql);
+-						$post_data = $rowset = array();
+-						while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-						{
+-							$post_data[$row['post_id']] = $row;
+-						}
+-						$_CLASS['core_db']-&gt;free_result($result);
++			if (!Empty($post_ids))
++			{
++				$sql = 'SELECT f.forum_id, f.forum_name, t.topic_id, t.topic_title, p.post_id, p.post_username, p.poster_id, p.post_time, u.username
++					FROM ' . FORUMS_POSTS_TABLE . ' p, ' . FORUMS_FORUMS_TABLE . ' f, ' . FORUMS_TOPICS_TABLE . ' t, ' . CORE_USERS_TABLE . &quot; u
++					WHERE p.post_id IN (&quot; . implode(', ', $post_ids) . &quot;)
++						AND t.topic_id = p.topic_id
++						AND f.forum_id = p.forum_id
++						AND u.user_id = p.poster_id&quot;;
+ 
+-						foreach ($post_ids as $post_id)
+-						{
+-							$rowset[] = $post_data[$post_id];
+-						}
+-						unset($post_data, $post_ids);
+-					}
+-					else
+-					{
+-						$rowset = array();
+-					}
++				$rowset = array_flip($post_ids);
++				unset($post_ids);
++
++				$result = $_CLASS['core_db']-&gt;query($sql);
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++				{
++					$rowset[$row['post_id']] = $row;
+ 				}
+-				else
++				$_CLASS['core_db']-&gt;free_result($result);
++
++
++				/*$post_data = $rowset = array();
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+-					$sql = 'SELECT f.forum_id, f.forum_name, t.topic_id, t.topic_title, t.topic_time AS post_time, t.topic_poster AS poster_id, t.topic_first_post_id AS post_id, t.topic_first_poster_name AS username
+-						FROM ' . FORUMS_TOPICS_TABLE . ' t, ' . FORUMS_FORUMS_TABLE . &quot; f
+-						WHERE t.topic_approved = 0
+-							AND t.forum_id IN ($forum_list)
+-							AND f.forum_id = t.forum_id
+-						ORDER BY $sort_order_sql&quot;;
+-					$result = $_CLASS['core_db']-&gt;query_limit($sql, $config['topics_per_page'], $start);
+-
+-					$rowset = array();
+-					while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-					{
+-						$rowset[] = $row;
+-					}
+-					$_CLASS['core_db']-&gt;free_result($result);
++					$post_data[$row['post_id']] = $row;
+ 				}
++				$_CLASS['core_db']-&gt;free_result($result);
+ 
+-				foreach ($rowset as $row)
++				foreach ($post_ids as $post_id)
+ 				{
+-					if ($row['poster_id'] == ANONYMOUS)
+-					{
+-						$poster = (!empty($row['post_username'])) ? $row['post_username'] : $_CLASS['core_user']-&gt;lang['GUEST'];
+-					}
+-					else
+-					{
+-						$poster = $row['username'];
+-					}
++					$rowset[] = $post_data[$post_id];
++				}
++				unset($post_data, $post_ids);*/
++			}
++			else
++			{
++				$rowset = array();
++			}
++		}
++		else
++		{
++			$sql = 'SELECT f.forum_id, f.forum_name, t.topic_id, t.topic_title, t.topic_time AS post_time, t.topic_poster AS poster_id, t.topic_first_post_id AS post_id, t.topic_first_poster_name AS username
++				FROM ' . FORUMS_TOPICS_TABLE . ' t, ' . FORUMS_FORUMS_TABLE . &quot; f
++				WHERE t.topic_approved = 0
++					AND t.forum_id IN ($forum_list)
++					AND f.forum_id = t.forum_id
++				ORDER BY $sort_order_sql&quot;;
++			$result = $_CLASS['core_db']-&gt;query_limit($sql, $config['topics_per_page'], $start);
+ 
+-					$s_checkbox = '&lt;input type=&quot;checkbox&quot; name=&quot;post_id_list[]&quot; value=&quot;' . $row['post_id'] . '&quot; /&gt;';
++			$rowset = array();
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++			{
++				$rowset[] = $row;
++			}
++			$_CLASS['core_db']-&gt;free_result($result);
++		}
+ 
+-					$_CLASS['core_template']-&gt;assign_vars_array('postrow', array(
+-						'U_VIEWFORUM'	=&gt; generate_link('Forums&amp;file=viewforum&amp;f=' . $row['forum_id']),
+-						// Q: Why accessing the topic by a post_id instead of its topic_id?
+-						// A: To prevent the post from being hidden because of wrong encoding or different charset
+-						'U_VIEWTOPIC'	=&gt; generate_link('Forums&amp;file=viewtopic&amp;f=' . $row['forum_id'] . '&amp;p=' . $row['post_id'] . (($mode == 'unapproved_posts') ? '#' . $row['post_id'] : '')),
+-						'U_VIEW_DETAILS'=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;i=queue&amp;start=$start&amp;mode=approve_details&amp;f={$forum_id}&amp;p={$row['post_id']}&quot;),
+-						'U_VIEWPROFILE'	=&gt; ($row['poster_id'] != ANONYMOUS) ? generate_link(&quot;Members_List&amp;mode=viewprofile&amp;u={$row['poster_id']}&quot;) : '',
++		foreach ($rowset as $row)
++		{
++			if ($row['poster_id'] == ANONYMOUS)
++			{
++				$poster = (!empty($row['post_username'])) ? $row['post_username'] : $_CLASS['core_user']-&gt;lang['GUEST'];
++			}
++			else
++			{
++				$poster = $row['username'];
++			}
+ 
+-						'FORUM_NAME'	=&gt; $row['forum_name'],
+-						'TOPIC_TITLE'	=&gt; $row['topic_title'],
+-						'POSTER'		=&gt; $poster,
+-						'POST_TIME'		=&gt; $_CLASS['core_user']-&gt;format_date($row['post_time']),
+-						'S_CHECKBOX'	=&gt; $s_checkbox)
+-					);
+-				}
+-				unset($rowset);
++			$s_checkbox = '&lt;input type=&quot;checkbox&quot; name=&quot;post_id_list[]&quot; value=&quot;' . $row['post_id'] . '&quot; /&gt;';
+ 
+-				// Now display the page
+-				$_CLASS['core_template']-&gt;assign_array(array(
+-					'L_DISPLAY_ITEMS'		=&gt; ($mode == 'unapproved_posts') ? $_CLASS['core_user']-&gt;lang['DISPLAY_POSTS'] : $_CLASS['core_user']-&gt;lang['DISPLAY_TOPICS'],
+-					'S_FORUM_OPTIONS'		=&gt; $forum_options)
+-				);
++			$_CLASS['core_template']-&gt;assign_vars_array('postrow', array(
++				'U_VIEWFORUM'	=&gt; generate_link('forums&amp;file=viewforum&amp;f=' . $row['forum_id']),
++				// Q: Why accessing the topic by a post_id instead of its topic_id?
++				// A: To prevent the post from being hidden because of wrong encoding or different charset
++				'U_VIEWTOPIC'	=&gt; generate_link('forums&amp;file=viewtopic&amp;p=' . $row['post_id'] . (($mode === 'unapproved_posts') ? '#' . $row['post_id'] : '')),
++				'U_VIEW_DETAILS'=&gt; generate_link(&quot;forums&amp;file=mcp&amp;i=queue&amp;start=$start&amp;mode=approve_details&amp;p={$row['post_id']}&quot; . (($mode === 'unapproved_topics') ? &quot;&amp;t={$row['topic_id']}&quot; : '')),
++				'U_VIEWPROFILE'	=&gt; ($row['poster_id'] != ANONYMOUS) ? generate_link(&quot;members_list&amp;mode=viewprofile&amp;u={$row['poster_id']}&quot;) : '',
+ 
+-				$this-&gt;display($_CLASS['core_user']-&gt;lang['MCP_QUEUE'], 'mcp_queue.html');
+-				break;
++				'POST_ID'		=&gt; $row['post_id'],
++				'FORUM_NAME'	=&gt; ($row['forum_id']) ? $row['forum_name'] : $_CLASS['core_user']-&gt;lang['GLOBAL_ANNOUNCEMENT'],
++				'POST_SUBJECT'	=&gt; $row['topic_title'],
++				'POSTER'		=&gt; $poster,
++				'POST_TIME'		=&gt; $_CLASS['core_user']-&gt;format_date($row['post_time']),
++			));
+ 		}
+-	}
++		unset($rowset);
+ 
+-	function install()
+-	{
+-	}
++		$pagination = generate_pagination('forums&amp;file=mcp&amp;f='.$forum_id, $total, $config['topics_per_page'], $start)
+ 
+-	function uninstall()
+-	{
+-	}
++		// Now display the page
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'L_DISPLAY_ITEMS'		=&gt; ($mode === 'unapproved_posts') ? $_CLASS['core_user']-&gt;lang['DISPLAY_POSTS'] : $_CLASS['core_user']-&gt;lang['DISPLAY_TOPICS'],
++			'L_EXPLAIN'				=&gt; ($mode === 'unapproved_posts') ? $_CLASS['core_user']-&gt;lang['MCP_QUEUE_UNAPPROVED_POSTS_EXPLAIN'] : $_CLASS['core_user']-&gt;lang['MCP_QUEUE_UNAPPROVED_TOPICS_EXPLAIN'],
++			'L_TITLE'				=&gt; ($mode === 'unapproved_posts') ? $_CLASS['core_user']-&gt;lang['MCP_QUEUE_UNAPPROVED_POSTS'] : $_CLASS['core_user']-&gt;lang['MCP_QUEUE_UNAPPROVED_TOPICS'],
++			'L_ONLY_TOPIC'			=&gt; ($topic_id) ? sprintf($_CLASS['core_user']-&gt;lang['ONLY_TOPIC'], $topic_info['topic_title']) : '',
++
++			'S_FORUM_OPTIONS'		=&gt; $forum_options,
++			'S_MCP_ACTION'			=&gt; build_url(array('t', 'f', 'sd', 'st', 'sk')),
++			'S_TOPICS'				=&gt; ($mode === 'unapproved_posts') ? false : true,
++
++			'PAGINATION'			=&gt; $pagination['formated'],
++			'PAGINATION_ARRAY'		=&gt; $pagination['array'],
++			'PAGE_NUMBER'			=&gt; on_page($total, $config['topics_per_page'], $start),
++			'TOPIC_ID'				=&gt; $topic_id,
++			'TOTAL'					=&gt; $total
++		));
+ 
+-	function module()
+-	{
+-		$details = array(
+-			'name'			=&gt; 'MCP - Queue',
+-			'description'	=&gt; 'Module for management of items waiting for approval', 
+-			'filename'		=&gt; 'queue',
+-			'version'		=&gt; '0.1.0', 
+-			'phpbbversion'	=&gt; '2.2.0'
+-		);
+-		return $details;
+-	}
++		$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP_QUEUE'), 'modules/forums/mcp_queue.html');
++	break;
+ }
+ 
+-// Approve Post/Topic
+-function approve_post($post_id_list)
++
++/**
++* Approve Post/Topic
++*/
++function approve_post($post_id_list, $mode)
+ {
+ 	global $_CLASS, $_CORE_CONFIG, $config;
+ 
+-	if (!($forum_id = check_ids($post_id_list, POSTS_TABLE, 'post_id', 'm_approve')))
++	if (!check_ids($post_id_list, POSTS_TABLE, 'post_id', 'm_approve'))
+ 	{
+ 		trigger_error('NOT_AUTHORIZED');
+ 	}
+ 
+-	$redirect = request_var('redirect', $_CLASS['core_user']-&gt;data['session_page']);
++	$redirect = get_variable('redirect', 'POST', $_CLASS['core_user']-&gt;data['session_url']);
+ 	$success_msg = '';
+ 
+ 	$s_hidden_fields = build_hidden_fields(array(
++		'i'				=&gt; 'queue',
++		'mode'			=&gt; $mode,
+ 		'post_id_list'	=&gt; $post_id_list,
+ 		'f'				=&gt; $forum_id,
+-		'mode'			=&gt; 'approve',
+-		'redirect'		=&gt; $redirect)
+-	);
++		'action'		=&gt; 'approve',
++		'redirect'		=&gt; $redirect
++	));
+ 
+ 	if (confirm_box(true))
+ 	{
+@@ -351,7 +374,7 @@
+ 			$topic_id_list[$post_data['topic_id']] = 1;
+ 			
+ 			// Topic or Post. ;)
+-			if ($post_data['topic_first_post_id'] == $post_id &amp;&amp; $post_data['topic_last_post_id'] == $post_id)
++			if ($post_data['topic_first_post_id'] == $post_id)
+ 			{
+ 				if ($post_data['forum_id'])
+ 				{
+@@ -436,7 +459,7 @@
+ 		update_post_information('forum', $forum_id);
+ 		unset($topic_id_list);
+ 		
+-		$messenger = new messenger();
++/*		$messenger = new messenger();
+ 
+ 		// Notify Poster?
+ 		if ($notify_poster)
+@@ -465,8 +488,8 @@
+ 					'POST_SUBJECT'	=&gt; censor_text($post_data['post_subject']),
+ 					'TOPIC_TITLE'	=&gt; censor_text($post_data['topic_title']),
+ 
+-					'U_VIEW_TOPIC'	=&gt; generate_link(&quot;Forums&amp;file=viewtopic&amp;f=$forum_id&amp;t={$post_data['topic_id']}&amp;e=0&quot;),
+-					'U_VIEW_POST'	=&gt; generate_link(&quot;Forums&amp;file=viewtopic7amp;f=$forum_id&amp;t={$post_data['topic_id']}&amp;p=$post_id&amp;e=$post_id&quot;))
++					'U_VIEW_TOPIC'	=&gt; generate_link(&quot;forums&amp;file=viewtopic&amp;f=$forum_id&amp;t={$post_data['topic_id']}&amp;e=0&quot;),
++					'U_VIEW_POST'	=&gt; generate_link(&quot;forums&amp;file=viewtopic7amp;f=$forum_id&amp;t={$post_data['topic_id']}&amp;p=$post_id&amp;e=$post_id&quot;))
+ 				);
+ 
+ 				$messenger-&gt;send($post_data['user_notify_type']);
+@@ -474,7 +497,7 @@
+ 			}
+ 			$messenger-&gt;save_queue();
+ 		}
+-
++*/
+ 		// Send out normal user notifications
+ 		$email_sig = str_replace('&lt;br /&gt;', &quot;\n&quot;, &quot;-- \n&quot; . $config['board_email_sig']);
+ 		
+@@ -509,10 +532,10 @@
+ 			'S_APPROVE'			=&gt; true)
+ 		);
+ 
+-		confirm_box(false, 'APPROVE_POST' . ((sizeof($post_id_list) == 1) ? '' : 'S'), $s_hidden_fields, 'mcp_approve.html');
++		confirm_box(false, 'APPROVE_POST' . ((sizeof($post_id_list) == 1) ? '' : 'S'), $s_hidden_fields, 'modules/forums/mcp_approve.html');
+ 	}
+ 
+-	$redirect = request_var('redirect', generate_link('Forums'));
++	$redirect = request_var('redirect', generate_link('forums'));
+ 
+ 	if (!$success_msg)
+ 	{
+@@ -521,53 +544,59 @@
+ 	else
+ 	{
+ 		$_CLASS['core_display']-&gt;meta_refresh(3, $redirect);
+-		trigger_error($_CLASS['core_user']-&gt;lang[$success_msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;') . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link('Forums&amp;file=viewforum&amp;f=' . $forum_id) . '&quot;&gt;', '&lt;/a&gt;'));
++		trigger_error($_CLASS['core_user']-&gt;lang[$success_msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_PAGE'], '&lt;a href=&quot;' . $redirect . '&quot;&gt;', '&lt;/a&gt;') . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link('forums&amp;file=viewforum&amp;f=' . $forum_id) . '&quot;&gt;', '&lt;/a&gt;'));
+ 	}
+ }
+ 
+-// Disapprove Post/Topic
++/**
++* Disapprove Post/Topic
++*/
+ function disapprove_post($post_id_list)
+ {
+ 	global $_CLASS, $_CORE_CONFIG, $config;
+ 
+-	if (!($forum_id = check_ids($post_id_list, POSTS_TABLE, 'post_id', 'm_approve')))
++	if (!check_ids($post_id_list, POSTS_TABLE, 'post_id', 'm_approve'))
+ 	{
+ 		trigger_error('NOT_AUTHORIZED');
+ 	}
+ 
+ 	$redirect = request_var('redirect', $_CLASS['core_user']-&gt;data['session_page']);
+-	$reason = request_var('reason', '');
++	$reason = request_var('reason', '', true);
+ 	$reason_id = request_var('reason_id', 0);
+ 	$success_msg = $additional_msg = '';
+ 
+ 	$s_hidden_fields = build_hidden_fields(array(
++		'i'				=&gt; 'queue',
++		'mode'			=&gt; $mode,
+ 		'post_id_list'	=&gt; $post_id_list,
+ 		'f'				=&gt; $forum_id,
+ 		'mode'			=&gt; 'disapprove',
+-		'redirect'		=&gt; $redirect)
+-	);
++		'redirect'		=&gt; $redirect
++	));
+ 
+-	$notify_poster = (isset($_REQUEST['notify_poster'])) ? true : false;
++	$notify_poster = isset($_REQUEST['notify_poster']);
++	$disapprove_reason = '';
+ 
+ 	if ($reason_id)
+ 	{
+-		$sql = 'SELECT reason_name 
+-			FROM ' . REASONS_TABLE . &quot; 
++		$sql = 'SELECT reason_title, reason_description
++			FROM ' . FORUMS_REPORTS_REASONS_TABLE . &quot; 
+ 			WHERE reason_id = $reason_id&quot;;
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
++		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+-		if (!($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) || (!$reason &amp;&amp; $row['reason_name'] == 'other'))
++		if (!$row || (!$reason &amp;&amp; $row['reason_name'] === 'other'))
+ 		{
+-			$additional_msg = 'Please give an appropiate reason for disapproval';
++			$additional_msg = $_CLASS['core_user']-&gt;lang['NO_REASON_DISAPPROVAL'];
+ 			unset($_POST['confirm']);
+ 		}
+ 		else
+ 		{
+-			$disapprove_reason = ($row['reason_name'] != 'other') ? $_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_name'])] : '';
+-			$disapprove_reason .= ($reason) ? &quot;\n\n&quot; . $_REQUEST['reason'] : '';
++			$disapprove_reason = ($row['reason_title'] != 'other') ? ((isset($_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_title'])])) ? $_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_title'])] : $row['reason_description']) : '';
++			$disapprove_reason .= ($reason) ? &quot;\n\n&quot; . $reason : '';
+ 			unset($reason);
+ 		}
+-		$_CLASS['core_db']-&gt;free_result($result);
+ 	}
+ 
+ 	if (confirm_box(true))
+@@ -609,17 +638,17 @@
+ 		
+ 		if ($forum_topics_real)
+ 		{
+-			$sql = 'UPDATE ' . FORUMS_TABLE . &quot;
++			$sql = 'UPDATE ' . FORUMS_FORUMS_TABLE . &quot;
+ 				SET forum_topics_real = forum_topics_real - $forum_topics_real
+ 				WHERE forum_id = $forum_id&quot;;
+ 			$_CLASS['core_db']-&gt;query($sql);
+ 		}
+ 
+-		if (sizeof($topic_replies_real_sql))
++		if (!empty($topic_replies_real_sql))
+ 		{
+ 			foreach ($topic_replies_real_sql as $topic_id =&gt; $num_replies)
+ 			{
+-				$sql = 'UPDATE ' . TOPICS_TABLE . &quot;
++				$sql = 'UPDATE ' . FORUMS_TOPICS_TABLE . &quot;
+ 					SET topic_replies_real = topic_replies_real - $num_replies
+ 					WHERE topic_id = $topic_id&quot;;
+ 				$_CLASS['core_db']-&gt;query($sql);
+@@ -628,6 +657,11 @@
+ 
+ 		if (sizeof($post_disapprove_sql))
+ 		{
++			if (!function_exists('delete_posts'))
++			{
++				require_once SITE_FILE_ROOT.'includes/forums/functions_admin.php';
++			}
++
+ 			// We do not check for permissions here, because the moderator allowed approval/disapproval should be allowed to delete the disapproved posts
+ 			delete_posts('post_id', $post_disapprove_sql);
+ 		}
+@@ -637,7 +671,7 @@
+ 		update_post_information('forum', $forum_id);
+ 		unset($topic_id_list);
+ 		
+-		$messenger = new messenger();
++		/*$messenger = new messenger();
+ 
+ 		// Notify Poster?
+ 		if ($notify_poster)
+@@ -672,7 +706,7 @@
+ 				$messenger-&gt;reset();
+ 			}
+ 			$messenger-&gt;save_queue();
+-		}
++		}*/
+ 		unset($post_info, $disapprove_reason);
+ 
+ 		if ($forum_topics_real)
+@@ -686,48 +720,30 @@
+ 	}
+ 	else
+ 	{
+-		$sql = 'SELECT * 
+-			FROM ' . REASONS_TABLE . ' 
+-			ORDER BY reason_priority ASC';
+-		$result = $_CLASS['core_db']-&gt;query($sql);
++		require_once SITE_FILE_ROOT.'includes/forums/functions_display.php';
++
++		display_reasons($reason_id);
++
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'S_NOTIFY_POSTER'	=&gt; true,
++			'S_APPROVE'			=&gt; false,
++			'REASON'			=&gt; $reason,
++			'ADDITIONAL_MSG'	=&gt; $additional_msg
++		));
+ 
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-		{
+-			$row['reason_name'] = strtoupper($row['reason_name']);
+-
+-			$reason_title = (!empty($_CLASS['core_user']-&gt;lang['report_reasons']['TITLE'][$row['reason_name']])) ? $_CLASS['core_user']-&gt;lang['report_reasons']['TITLE'][$row['reason_name']] : ucwords(str_replace('_', ' ', $row['reason_name']));
+-
+-			$reason_desc = (!empty($_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][$row['reason_name']])) ? $_CLASS['core_user']-&gt;lang['report_reasons']['DESCRIPTION'][$row['reason_name']] : $row['reason_desc'];
+-
+-			$_CLASS['core_template']-&gt;assign_vars_array('reason', array(
+-				'ID'			=&gt;	$row['reason_id'],
+-				'NAME'			=&gt;	htmlspecialchars($reason_title),
+-				'DESCRIPTION'	=&gt;	htmlspecialchars($reason_desc),
+-				'S_SELECTED'	=&gt;	($row['reason_id'] == $reason_id) ? true : false)
+-			);
+-		}
+-		$_CLASS['core_db']-&gt;free_result($result);
+-
+-		$_CLASS['core_template']-&gt;assign_array(array(
+-			'S_NOTIFY_POSTER'	=&gt; true,
+-			'S_APPROVE'			=&gt; false,
+-			'REASON'			=&gt; $reason,
+-			'ADDITIONAL_MSG'	=&gt; $additional_msg)
+-		);
+-
+ 		confirm_box(false, 'DISAPPROVE_POST' . ((sizeof($post_id_list) == 1) ? '' : 'S'), $s_hidden_fields, 'mcp_approve.html');
+ 	}
+ 
+-	$redirect = request_var('redirect', generate_link('Forums'));
++	$redirect = request_var('redirect', generate_link('forums'));
+ 
+ 	if (!$success_msg)
+ 	{
+-		url_redirect($redirect);
++		redirect($redirect);
+ 	}
+ 	else
+ 	{
+-		$_CLASS['core_display']-&gt;meta_refresh(3, generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&quot;));
+-		trigger_error($_CLASS['core_user']-&gt;lang[$success_msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link('Forums&amp;file=viewforum&amp;f=' . $forum_id) . '&quot;&gt;', '&lt;/a&gt;'));
++		$_CLASS['core_display']-&gt;meta_refresh(3, generate_link(&quot;forums&amp;file=viewforum&amp;f=$forum_id&quot;));
++		trigger_error($_CLASS['core_user']-&gt;lang[$success_msg] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link('forums&amp;file=viewforum&amp;f=' . $forum_id) . '&quot;&gt;', '&lt;/a&gt;'));
+ 	}
+ }
+ 
+
+Modified: cms/trunk/includes/forums/mcp/mcp_topic.php
+===================================================================
+--- cms/trunk/includes/forums/mcp/mcp_topic.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/forums/mcp/mcp_topic.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -53,29 +53,21 @@
+ 
+ $topic_info = $topic_info[$topic_id];
+ 
+-$url = 'Forums&amp;file=mcp&amp;t='.$topic_id;
++$url = 'forums&amp;file=mcp&amp;t='.$topic_id;
+ 
+ $action = get_variable('action', 'REQUEST');
+ $icon_id = get_variable('icon', 'REQUEST', false, 'int');
+ $subject = get_variable('subject', 'POST');
+-
+ $start = get_variable('start', 'REQUEST', false, 'int');
+-
+ $to_topic_id = get_variable('to_topic_id', 'REQUEST', false, 'int');
+ $to_forum_id = get_variable('to_forum_id', 'REQUEST', false, 'int');
++$post_id_list = array_unique(get_variable('post_id_list', 'REQUEST', array(), 'array:int'));
+ 
+-$post_id_list = array_unique(request_var('post_id_list', array(0)));
+-//echo $action;
+ // Split Topic?
+ if ($action === 'split_all' || $action === 'split_beyond')
+ {
+-	if (empty($post_id_list))
++	if ($message = split_topic($mode, $post_id_list, $topic_id, $to_forum_id, $subject))
+ 	{
+-		trigger_error('NO_POST_SELECTED');
+-	}
+-
+-	if ($message = split_topic($action, $post_id_list, $topic_id, $to_forum_id, $subject))
+-	{
+ 		$_CLASS['core_template']-&gt;assign('MESSAGE', $_CLASS['core_user']-&gt;get_lang($message));
+ 	}
+ 
+@@ -86,21 +78,22 @@
+ if ($action == 'merge_posts')
+ {
+ 	merge_posts($topic_id, $to_topic_id);
+-
+ 	$action = 'merge';
+ }
+ 
+-$topics_per_page = ($topic_info['forum_topics_per_page']) ? $topic_info['forum_topics_per_page'] : $config['topics_per_page'];
+-
+ if ($action === 'split' &amp;&amp; !$subject)
+ {
+ 	$subject = $topic_info['topic_title'];
+ }
+ 
++$topics_per_page = ($topic_info['forum_topics_per_page']) ? $topic_info['forum_topics_per_page'] : $config['topics_per_page'];
++
+ $where_sql = ($action === 'reports') ? 'WHERE post_reported = 1 AND ' : 'WHERE';
++
++$sort_days = $total = 0;
++$sort_by_sql = $sort_key = $sort_dir = '';
+ mcp_sorting('viewtopic', $sort_days, $sort_key, $sort_dir, $sort_by_sql, $sort_order_sql, $total, $topic_info['forum_id'], $topic_id, $where_sql);
+ 
+-$forum_topics = ($total == -1) ? $topic_info['forum_topics'] : $total;
+ $limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time &gt;= ' . ($_CLASS['core_user']-&gt;time - ($sort_days * 86400)) : '';
+ 
+ if ($total == -1)
+@@ -108,10 +101,10 @@
+ 	$total = $topic_info['topic_replies'] + 1;
+ }
+ 
+-$posts_per_page = max(0, get_variable('posts_per_page', 'POST', intval($config['posts_per_page'])));
++$posts_per_page = max(0, get_variable('posts_per_page', 'POST', intval($config['posts_per_page']), 'int'));
+ 
+ $sql = 'SELECT u.username, u.user_colour, p.*
+-	FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . ' u
++	FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . ' u
+ 	WHERE ' . (($action == 'reports') ? 'p.post_reported = 1 AND ' : '') . &quot;
+ 		p.topic_id = {$topic_id}
+ 		AND p.poster_id = u.user_id
+@@ -119,17 +112,18 @@
+ $result = $_CLASS['core_db']-&gt;query_limit($sql, $posts_per_page, $start);
+ 
+ $rowset = array();
+-$bbcode_bitfield = 0;
++$bbcode_bitfield = '';
+ 
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ {
+ 	$rowset[] = $row;
+-	$bbcode_bitfield |= $row['bbcode_bitfield'];
++	$bbcode_bitfield = $bbcode_bitfield | $row['bbcode_bitfield'];
+ }
++$_CLASS['core_db']-&gt;free_result($result);
+ 
+ if ($bbcode_bitfield)
+ {
+-	require_once(SITE_FILE_ROOT.'includes/forums/bbcode.php');
++	require_once SITE_FILE_ROOT.'includes/forums/bbcode.php';
+ 	$bbcode = new bbcode($bbcode_bitfield);
+ }
+ 
+@@ -140,7 +134,7 @@
+ 	$poster = ($row['user_colour']) ? '&lt;span style=&quot;color:#' . $row['user_colour'] . '&quot;&gt;' . $poster . '&lt;/span&gt;' : $poster;
+ 
+ 	$message = $row['post_text'];
+-	$post_subject = ($row['post_subject'] != '') ? $row['post_subject'] : $topic_info['topic_title'];
++	$post_subject = ($row['post_subject']) ? $row['post_subject'] : $topic_info['topic_title'];
+ 
+ 	// If the board has HTML off but the post has HTML
+ 	// on then we process it, else leave it alone
+@@ -157,9 +151,6 @@
+ 	$message = smiley_text($message);
+ 	$message = str_replace(&quot;\n&quot;, '&lt;br /&gt;', $message);
+ 
+-	$checked = ($post_id_list &amp;&amp; in_array(intval($row['post_id']), $post_id_list)) ? 'checked=&quot;checked&quot; ' : '';
+-	$s_checkbox = ($row['post_id'] == $topic_info['topic_first_post_id'] &amp;&amp; $action == 'split') ? '&nbsp;' : '&lt;input type=&quot;checkbox&quot; name=&quot;post_id_list[]&quot; value=&quot;' . $row['post_id'] . '&quot; ' . $checked . '/&gt;';
+-
+ 	if (!$row['post_approved'])
+ 	{
+ 		$has_unapproved_posts = true;
+@@ -171,26 +162,29 @@
+ 		'POST_SUBJECT'	=&gt; $post_subject,
+ 		'MESSAGE'		=&gt; $message,
+ 		'POST_ID'		=&gt; $row['post_id'],
++		'RETURN_TOPIC'	=&gt; sprintf($_CLASS['core_user']-&gt;get_lang('RETURN_TOPIC'), '&lt;a href=&quot;' . generate_link('forums&amp;file=viewtopic&amp;t=' . $topic_id) . '&quot;&gt;', '&lt;/a&gt;'),
+ 
+ 		'MINI_POST_IMG' =&gt; ($row['post_time'] &gt; $_CLASS['core_user']-&gt;data['user_last_visit'] &amp;&amp; $_CLASS['core_user']-&gt;is_user) ? $_CLASS['core_user']-&gt;img('icon_post_new', $_CLASS['core_user']-&gt;lang['NEW_POST']) : $_CLASS['core_user']-&gt;img('icon_post', $_CLASS['core_user']-&gt;lang['POST']),
+ 		
+-		'S_CHECKBOX'		=&gt; $s_checkbox,
+-		'S_POST_REPORTED'	=&gt; ($row['post_reported']) ? true : false,
+-		'S_POST_UNAPPROVED'	=&gt; ($row['post_approved']) ? false : true,
++		'S_CHECKED'			=&gt; ($post_id_list &amp;&amp; in_array(intval($row['post_id']), $post_id_list)),
++		'S_POST_REPORTED'	=&gt; ($row['post_reported']),
++		'S_POST_UNAPPROVED'	=&gt; (!$row['post_approved']),
+ 					
+ 		'U_POST_DETAILS'	=&gt; generate_link(&quot;$url&amp;p={$row['post_id']}&amp;mode=post_details&quot;),
+-		'U_MCP_APPROVE'		=&gt; generate_link('Forums&amp;file=mcp&amp;i=queue&amp;mode=approve&amp;post_id_list[]=' . $row['post_id']))
+-	);
++		'U_MCP_APPROVE'		=&gt; generate_link('forums&amp;file=mcp&amp;i=queue&amp;mode=approve_details&amp;p=' . $row['post_id']),
++		'U_MCP_REPORT'		=&gt; generate_link('forums&amp;file=mcp&amp;i=reports&amp;mode=report_details&amp;p=' . $row['post_id'])
++	));
+ 
+ 	unset($rowset[$i]);
+ }
++unset($rowset);
+ 
+ // Display topic icons for split topic
+ $s_topic_icons = false;
+ 
+-if ($_CLASS['auth']-&gt;acl_get('m_split', $topic_info['forum_id']))
++if ($_CLASS['forums_auth']-&gt;acl_get('m_split', $topic_info['forum_id']))
+ {
+-	require_once(SITE_FILE_ROOT.'includes/forums/functions_posting.php');
++	require_once SITE_FILE_ROOT.'includes/forums/functions_posting.php';
+ 	$s_topic_icons = posting_gen_topic_icons('', $icon_id);
+ 
+ 	// Has the user selected a topic for merge?
+@@ -198,7 +192,7 @@
+ 	{
+ 		$to_topic_info = get_topic_data(array($to_topic_id), 'm_merge');
+ 		
+-		if (!sizeof($to_topic_info))
++		if (empty($to_topic_info[$to_topic_id]))
+ 		{
+ 			$to_topic_id = 0;
+ 		}
+@@ -217,10 +211,10 @@
+ 
+ $_CLASS['core_template']-&gt;assign_array(array(
+ 	'TOPIC_TITLE'		=&gt; $topic_info['topic_title'],
+-	'U_VIEWTOPIC'		=&gt; generate_link('Forums&amp;file=viewtopic&amp;f=' . $topic_info['forum_id'] . '&amp;t=' . $topic_info['topic_id']),
++	'U_VIEWTOPIC'		=&gt; generate_link('forums&amp;file=viewtopic&amp;t=' . $topic_info['topic_id']),
+ 
+ 	'TO_TOPIC_ID'		=&gt; $to_topic_id,
+-	'TO_TOPIC_INFO'		=&gt; ($to_topic_id) ? sprintf($_CLASS['core_user']-&gt;lang['YOU_SELECTED_TOPIC'], $to_topic_id, '&lt;a href=&quot;'.generate_link('Forums&amp;file=viewtopic&amp;f=' . $to_topic_info['forum_id'] . '&amp;t=' . $to_topic_id) . '&quot; target=&quot;_new&quot;&gt;' . $to_topic_info['topic_title'] . '&lt;/a&gt;') : '',
++	'TO_TOPIC_INFO'		=&gt; ($to_topic_id) ? sprintf($_CLASS['core_user']-&gt;lang['YOU_SELECTED_TOPIC'], $to_topic_id, '&lt;a href=&quot;'.generate_link('forums&amp;file=viewtopic&amp;t=' . $to_topic_id) . '&quot; target=&quot;_new&quot;&gt;' . $to_topic_info['topic_title'] . '&lt;/a&gt;') : '',
+ 
+ 	'SPLIT_SUBJECT'		=&gt; $subject,
+ 	'POSTS_PER_PAGE'	=&gt; $posts_per_page,
+@@ -229,30 +223,32 @@
+ 	'REPORTED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_reported', 'POST_REPORTED', false, true),
+ 	'UNAPPROVED_IMG'	=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', 'POST_UNAPPROVED', false, true),
+ 
+-	'S_MCP_ACTION'		=&gt; generate_link(&quot;$url&amp;mode=$mode&quot;.(($start) ? '&amp;start='.$start : '')),
++	'S_MCP_ACTION'		=&gt; generate_link(&quot;$url&amp;mode=$mode&amp;action=$action&quot;.(($start) ? '&amp;start='.$start : '')),
+ 	'S_FORUM_SELECT'	=&gt; '&lt;select name=&quot;to_forum_id&quot;&gt;' . (($to_forum_id) ? make_forum_select($to_forum_id) : make_forum_select($topic_info['forum_id'])) . '&lt;/select&gt;',
+-	'S_CAN_SPLIT'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_split', $topic_info['forum_id']) &amp;&amp; $action != 'merge') ? true : false,
+-	'S_CAN_MERGE'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_merge', $topic_info['forum_id']) &amp;&amp; $action != 'split') ? true : false,
+-	'S_CAN_DELETE'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_delete', $topic_info['forum_id'])) ? true : false,
+-	'S_CAN_APPROVE'		=&gt; ($has_unapproved_posts &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_approve', $topic_info['forum_id'])) ? true : false,
+-	'S_CAN_LOCK'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_lock', $topic_info['forum_id'])) ? true : false,
+-	'S_REPORT_VIEW'		=&gt; ($action == 'reports') ? true : false,
++	'S_CAN_SPLIT'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_split', $topic_info['forum_id']),
++	'S_CAN_MERGE'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_merge', $topic_info['forum_id']),
++	'S_CAN_DELETE'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_delete', $topic_info['forum_id']),
++	'S_CAN_APPROVE'		=&gt; ($has_unapproved_posts &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('m_approve', $topic_info['forum_id'])),
++	'S_CAN_LOCK'		=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_lock', $topic_info['forum_id']),
++	'S_REPORT_VIEW'		=&gt; ($action == 'reports'),
+ 
+ 	'S_SHOW_TOPIC_ICONS'=&gt; $s_topic_icons,
+ 	'S_TOPIC_ICON'		=&gt; $icon_id,
+ 
++	'U_SELECT_TOPIC'	=&gt; generate_link(&quot;$url&amp;mode=forum_view&amp;action=merge_select&quot;),
++
+ 	'RETURN_TOPIC'		=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_TOPIC'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewtopic&amp;f={$topic_info['forum_id']}&amp;t={$topic_info['topic_id']}&amp;start=$start.&quot;).'&quot;&gt;', '&lt;/a&gt;'),
+ 	'RETURN_FORUM'		=&gt; sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;'.generate_link(&quot;Forums&amp;file=viewforum&amp;f={$topic_info['forum_id']}&amp;start=$start&quot;).'&quot;&gt;', '&lt;/a&gt;'),
+ 
+ 	'PAGE_NUMBER'		=&gt; on_page($total, $posts_per_page, $start),
+-	'PAGINATION'		=&gt; (!$posts_per_page) ? '' : generate_pagination('Forums&amp;file=mcp&amp;t=' . $topic_info['topic_id'] . &quot;&amp;mode=$mode&amp;action=$action&amp;to_topic_id=$to_topic_id&amp;posts_per_page=$posts_per_page&amp;st=$sort_days&amp;sk=$sort_key&amp;sd=$sort_dir&quot;, $total, $posts_per_page, $start),
+-	'TOTAL'				=&gt; $total)
+-);
++	'PAGINATION'		=&gt; (!$posts_per_page) ? '' : generate_pagination(&quot;forums&amp;file=mcp&amp;t={$topic_info['topic_id']}&amp;mode=$mode&amp;action=$action&amp;to_topic_id=$to_topic_id&amp;posts_per_page=$posts_per_page&amp;st=$sort_days&amp;sk=$sort_key&amp;sd=$sort_dir&quot;, $total, $posts_per_page, $start),
++	'TOTAL'				=&gt; $total
++));
+ 
+ page_header();
+ make_jumpbox($url . '&amp;mode=forum_view', $topic_info['forum_id'], false, 'm_');
+ 
+-$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/Forums/mcp_topic.html');
++$_CLASS['core_display']-&gt;display($_CLASS['core_user']-&gt;get_lang('MCP'), 'modules/forums/mcp_topic.html');
+ 
+ function split_topic($mode, $post_id_list, $topic_id, $to_forum_id, $subject)
+ {
+@@ -262,10 +258,11 @@
+ 		
+ 	if (empty($post_id_list) || !check_ids($post_id_list, FORUMS_POSTS_TABLE, 'post_id', 'm_split'))
+ 	{
+-		return false;
++		return 'NO_POST_SELECTED';
+ 	}
+ 
+-	$post_info = get_post_data($post_id_list);
++	$post_id = $post_id_list[0];
++	$post_info = get_post_data(array($post_id));
+ 
+ 	if (empty($post_info))
+ 	{
+@@ -286,7 +283,7 @@
+ 
+ 	$forum_info = get_forum_data(array($to_forum_id), 'm_split');
+ 
+-	if (empty($forum_info))
++	if (empty($forum_info[$to_forum_id]))
+ 	{
+ 		return 'NOT_MODERATOR_DESTINATION';
+ 	}
+@@ -309,16 +306,13 @@
+ 		'redirect'		=&gt; $redirect,
+ 		'subject'		=&gt; $subject,
+ 		'to_forum_id'	=&gt; $to_forum_id,
+-		'icon'			=&gt; request_var('icon', 0)
++		'icon'			=&gt; get_variable('icon', 'REQUEST', false, 'int')
+ 	));
+ 
+-	$message = ($mode == 'split_all') ? 'SPLIT_TOPIC_ALL' : 'SPLIT_TOPIC_BEYOND';
++	$message = ($mode === 'split_all') ? 'SPLIT_TOPIC_ALL' : 'SPLIT_TOPIC_BEYOND';
+ 
+ 	if (display_confirmation($_CLASS['core_user']-&gt;get_lang($message), $hidden_fields))
+ 	{
+-		$post_id = $post_id_list[0];
+-		//$post_info = $post_info[$post_id];
+-
+ 		if ($mode === 'split_beyond')
+ 		{
+ 			mcp_sorting('viewtopic', $sort_days, $sort_key, $sort_dir, $sort_by_sql, $sort_order_sql, $total, $forum_id, $topic_id);
+@@ -327,7 +321,7 @@
+ 			if ($sort_order_sql{0} == 'u')
+ 			{
+ 				$sql = 'SELECT p.post_id, p.poster_id, p.post_username, p.post_time
+-					FROM ' . FORUMS_POSTS_TABLE . ' p, ' . USERS_TABLE . &quot; u
++					FROM ' . FORUMS_POSTS_TABLE . ' p, ' . CORE_USERS_TABLE . &quot; u
+ 					WHERE p.topic_id = $topic_id
+ 						AND p.poster_id = u.user_id
+ 						$limit_time_sql
+@@ -363,6 +357,7 @@
+ 					$post_id_list[] = $row['post_id'];
+ 				}
+ 			}
++			$_CLASS['core_db']-&gt;free_result($result);
+ 		}
+ 
+ 		if (empty($post_id_list))
+@@ -375,20 +370,20 @@
+ 		$_CLASS['core_db']-&gt;transaction();
+ 
+ 		$sql_ary = array(
+-			'forum_id'				=&gt; $to_forum_id,
+-			'topic_title'			=&gt; $subject,
+-			'icon_id'				=&gt; $icon_id,
+-			'topic_approved'		=&gt; 1,
+-			'topic_poster' 			=&gt; $topic_poster,
++			'forum_id'					=&gt; $to_forum_id,
++			'topic_title'				=&gt; $subject,
++			'icon_id'					=&gt; $icon_id,
++			'topic_approved'			=&gt; 1,
++			'topic_poster' 				=&gt; $topic_poster,
+ 			'topic_first_poster_name'	=&gt; $topic_poster_name,
+-			'topic_time'			=&gt; $_CLASS['core_user']-&gt;time,
+-			'topic_status'			=&gt; ITEM_UNLOCKED,
+-			'topic_type'			=&gt; POST_NORMAL,
+-			'topic_attachment'		=&gt; 0,
+-			'topic_replies_real'	=&gt; 0,
+-			'topic_replies'			=&gt; 0,
+-			'topic_views'			=&gt; 0,
+-			'topic_moved_id'		=&gt; 0
++			'topic_time'				=&gt; $_CLASS['core_user']-&gt;time,
++			'topic_status'				=&gt; ITEM_UNLOCKED,
++			'topic_type'				=&gt; POST_NORMAL,
++			'topic_attachment'			=&gt; 0,
++			'topic_replies_real'		=&gt; 0,
++			'topic_replies'				=&gt; 0,
++			'topic_views'				=&gt; 0,
++			'topic_moved_id'			=&gt; 0
+ 		);
+ 
+ 		$_CLASS['core_db']-&gt;query('INSERT INTO ' . FORUMS_TOPICS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_ary));
+@@ -468,8 +463,9 @@
+ 		'start'			=&gt; $start,
+ 		'redirect'		=&gt; $redirect,
+ 		'f'				=&gt; $forum_id,
+-		't'				=&gt; $topic_id)
+-	);
++		't'				=&gt; $topic_id
++	));
++
+ 	$success_msg = $return_link = '';
+ 
+ 	if (confirm_box(true))
+@@ -500,11 +496,6 @@
+ 
+ 	$redirect = request_var('redirect', generate_link('Forums'));
+ 
+-	/*if (strpos($redirect, '?') === false)
+-	{
+-		$redirect = substr_replace($redirect, &quot;.$phpEx$SID&amp;&quot;, strpos($redirect, '&amp;'), 1);
+-	}*/
+-
+ 	if (!$success_msg)
+ 	{
+ 		return;
+
+Modified: cms/trunk/includes/functions_user.php
+===================================================================
+--- cms/trunk/includes/functions_user.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/includes/functions_user.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -747,4 +747,51 @@
+ 	
+ 	return array(AVATAR_UPLOAD, $file-&gt;get('realname'), $file-&gt;get('width'), $file-&gt;get('height'));
+ }
++
++/**
++* Whois facility
++* From phpBB 3
++*/
++function user_ipwhois($ip)
++{
++	$ipwhois = '';
++
++	$match = array(
++		'#RIPE\.NET#is'				=&gt; 'whois.ripe.net',
++		'#whois\.apnic\.net#is'		=&gt; 'whois.apnic.net',
++		'#nic\.ad\.jp#is'			=&gt; 'whois.nic.ad.jp',
++		'#whois\.registro\.br#is'	=&gt; 'whois.registro.br'
++	);
++
++	if (($fsk = @fsockopen('whois.arin.net', 43)))
++	{
++		fputs($fsk, &quot;$ip\n&quot;);
++		while (!feof($fsk))
++		{
++			$ipwhois .= fgets($fsk, 1024);
++		}
++		@fclose($fsk);
++	}
++
++	foreach (array_keys($match) as $server)
++	{
++		if (preg_match($server, $ipwhois))
++		{
++			$ipwhois = '';
++			if (($fsk = @fsockopen($match[$server], 43)))
++			{
++				fputs($fsk, &quot;$ip\n&quot;);
++				while (!feof($fsk))
++				{
++					$ipwhois .= fgets($fsk, 1024);
++				}
++				@fclose($fsk);
++			}
++			break;
++		}
++	}
++
++	return $ipwhois;
++}
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/forums/main.php
+===================================================================
+--- cms/trunk/modules/forums/main.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/modules/forums/main.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -95,8 +95,8 @@
+ 	'TOTAL_POSTS'	=&gt; sprintf($_CLASS['core_user']-&gt;get_lang($l_total_post_s), $config['num_posts']),
+ 	'TOTAL_TOPICS'	=&gt; sprintf($_CLASS['core_user']-&gt;get_lang($l_total_topic_s), $config['num_topics']),
+ 	'TOTAL_USERS'	=&gt; sprintf($_CLASS['core_user']-&gt;get_lang($l_total_user_s), $_CORE_CONFIG['user']['total_users']),
+-	'NEWEST_USER'	=&gt; sprintf($_CLASS['core_user']-&gt;get_lang('NEWEST_USER'), '&lt;a href=&quot;'. generate_link('Members_List&amp;mode=viewprofile&amp;u='.$_CORE_CONFIG['user']['newest_user_id']) . '&quot;&gt;', $_CORE_CONFIG['user']['newest_username'], '&lt;/a&gt;'), 
+-	'LEGEND'		=&gt; $legend, 
++	'NEWEST_USER'	=&gt; sprintf($_CLASS['core_user']-&gt;get_lang('NEWEST_USER'), '&lt;a href=&quot;'. generate_link('members_list&amp;mode=viewprofile&amp;u='.$_CORE_CONFIG['user']['newest_user_id']) . '&quot;&gt;', $_CORE_CONFIG['user']['newest_username'], '&lt;/a&gt;'), 
++	'LEGEND'		=&gt; $legend,
+ 	'BIRTHDAY_LIST'	=&gt; $birthday_list, 
+ 
+ 	'FORUM_IMG'			=&gt;	$_CLASS['core_user']-&gt;img('forum', 'NO_NEW_POSTS'),
+@@ -106,7 +106,8 @@
+ 	'S_LOGIN_ACTION'			=&gt; generate_link('control_panel&amp;mode=login'), 
+ 	'S_DISPLAY_BIRTHDAY_LIST'	=&gt; ($config['load_birthdays']), 
+ 
+-	'U_MARK_FORUMS'	=&gt; generate_link('forums&amp;mark=forums')
++	'U_MARK_FORUMS'	=&gt; generate_link('forums&amp;mark=forums'),
++	'U_MCP'			=&gt; $_CLASS['forums_auth']-&gt;acl_get('m_') ? generate_link('forums&amp;file=mcp&amp;i=main&amp;mode=front') : ''
+ ));
+ unset($birthday_list, $legend);
+ 
+
+Modified: cms/trunk/modules/forums/mcp.php
+===================================================================
+--- cms/trunk/modules/forums/mcp.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/modules/forums/mcp.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -27,101 +27,8 @@
+     die;
+ }
+ 
+-require_once($site_file_root.'includes/forums/functions_admin.php');
++require_once SITE_FILE_ROOT.'includes/forums/functions_admin.php';
+ 
+-/*
+-$sections = array(0 =&gt; array (
+-    'module_id' =&gt; '9',
+-    'module_title' =&gt; 'MAIN',
+-    'module_filename' =&gt; 'main',
+-    'module_subs' =&gt; 'front
+-forum_view
+-topic_view
+-post_details',
+-    'module_acl' =&gt; 'acl_m_',
+-  ),
+-  1 =&gt; array (
+-    'module_id' =&gt; '10',
+-    'module_title' =&gt; 'QUEUE',
+-    'module_filename' =&gt; 'queue',
+-    'module_subs' =&gt; 'unapproved_topics
+-unapproved_posts
+-reports',
+-    'module_acl' =&gt; 'acl_m_approve',
+-));
+-
+-foreach  ($sections as $row)
+-{
+-	$selected = ($row['module_filename'] == 'kk') ?  true : false;
+-
+-	// Get the localised lang string if available, or make up our own otherwise
+-	$module_lang = 'MCP_' . $row['module_title'];
+-
+-	$_CLASS['core_template']-&gt;assign_vars_array('mcp_section', array(
+-		'L_TITLE'		=&gt; (isset($_CLASS['core_user']-&gt;lang[$module_lang])) ? $_CLASS['core_user']-&gt;lang[$module_lang] : ucfirst(str_replace('_', ' ', strtolower($row['module_title']))),
+-		'S_SELECTED'	=&gt; $selected, 
+-		'U_TITLE'		=&gt; generate_link()
+-	));
+-
+-	if ($selected)
+-	{
+-		$module_id = $row['module_id'];
+-		$module_name = $row['module_filename'];
+-
+-		if ($row['module_subs'])
+-		{
+-			$submodules_ary = explode(&quot;\n&quot;, $row['module_subs']);
+-
+-			foreach ($submodules_ary as $submodule_title)
+-			{
+-				$submodule_title = trim($submodule_title);
+-
+-				if (!$submodule_title)
+-				{
+-					continue;
+-				}
+-				
+-			
+-				// Only show those rows we are able to access
+-				if (($submodule_title == 'post_details' &amp;&amp; !$post_id) || ($submodule_title == 'topic_view' &amp;&amp; !$topic_id) || ($submodule_title == 'forum_view' &amp;&amp; !$forum_id))
+-				{
+-					continue;
+-				}
+-				
+-
+-				$suffix = ($post_id) ? &quot;&amp;p=$post_id&quot; : '';
+-				$suffix .= ($topic_id) ? &quot;&amp;t=$topic_id&quot; : '';
+-				$suffix .= ($forum_id) ? &quot;&amp;f=$forum_id&quot; : '';
+-
+-				$selected = ($submodule_title == 'kll') ? true : false;
+-
+-				// Get the localised lang string if available, or make up our own otherwise
+-				$module_lang = strtoupper($module_type . '_' . $module_name . '_' . $submodule_title);
+-
+-				$_CLASS['core_template']-&gt;assign_vars_array(&quot;{$module_type}_subsection&quot;, array(
+-					'L_TITLE'		=&gt; (isset($_CLASS['core_user']-&gt;lang[$module_lang])) ? $_CLASS['core_user']-&gt;lang[$module_lang] : ucfirst(str_replace('_', ' ', strtolower($module_lang))),
+-					'S_SELECTED'	=&gt; $selected,
+-					'ADD_ITEM'		=&gt; $this-&gt;add_menu_item($row['module_filename'], $submodule_title),
+-					'U_TITLE'		=&gt; generate_link($module_url . '&amp;i=' . $module_id . '&amp;mode=' . $submodule_title . $suffix))
+-				);
+-
+-			}
+-		}
+-	}
+-}
+-
+-//$_CLASS['core_blocks']-&gt;load_blocks();
+-$_CLASS['core_blocks']-&gt;blocks_loaded = true;
+-
+-$data = array(
+-	'block_title'		=&gt; 'Forum Administration',
+-	'block_position'	=&gt; BLOCK_LEFT,
+-	'block_file'		=&gt; 'block-forums_mcp.php',
+-);
+-
+-$_CLASS['core_blocks']-&gt;add_block($data);
+-*/
+-
+ // Add Item to Submodule Title
+ function add_menu_item($module_name, $mode)
+ {
+@@ -188,15 +95,23 @@
+ 	login_box(array('admin_login' =&gt; true, 'full_login' =&gt; false, 'explain' =&gt; $_CLASS['core_user']-&gt;lang['LOGIN_EXPLAIN_MCP']));
+ }
+ 
+-if (!$_CLASS['auth']-&gt;acl_get('m_'))
+-{
+-	trigger_error('YOUR_NO_MODERATOR');
+-}
+-
+-$mode	= get_variable('mode', 'REQUEST', 'front');
++$i	= get_variable('i', 'REQUEST');
++$mode	= $i ? $i : get_variable('mode', 'REQUEST', 'front');
+ $action = get_variable('action', 'REQUEST');
+ $quick_mod = isset($_REQUEST['quickmod']);
+ 
++$post_id = get_variable('p', 'REQUEST', 0);
++$topic_id = get_variable('t', 'REQUEST', 0);
++$forum_id = get_variable('f', 'REQUEST', 0);
++$user_id = get_variable('u', 'REQUEST', 0);
++$username = get_variable('username', 'REQUEST', '');
++
++if ($mode == 'topic_logs')
++{
++	$id = 'logs';
++	$quickmod = false;
++}
++
+ if ($mode === 'approve' || $mode === 'disapprove')
+ {
+ 	$module = 'queue';
+@@ -207,7 +122,13 @@
+ 	$mode = 'forum_view';
+ }
+ 
+-// Topic view modes
++/*
++if (!$_CLASS['forums_auth']-&gt;acl_get('m_'))
++{
++	trigger_error('YOUR_NO_MODERATOR');
++}
++*/
++
+ if (in_array($mode, array('split', 'split_all', 'split_beyond', 'merge', 'merge_posts')))
+ {
+ 	$_REQUEST['action'] = $action = $mode;
+@@ -223,36 +144,118 @@
+ 	$quick_mod = false;
+ }
+ 
++if ($post_id)
++{
++	// We determine the topic and forum id here, to make sure the moderator really has moderative rights on this post
++	$sql = 'SELECT topic_id, forum_id
++		FROM ' . FORUMS_POSTS_TABLE . &quot;
++		WHERE post_id = $post_id&quot;;
++
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	$_CLASS['core_db']-&gt;fetch_row_assoc($result);
++	$_CLASS['core_db']-&gt;free_result($result);
++
++	$topic_id = (int) $row['topic_id'];
++	$forum_id = (int) ($row['forum_id']) ? $row['forum_id'] : $forum_id;
++}
++
++if ($topic_id &amp;&amp; !$forum_id)
++{
++	$sql = 'SELECT forum_id
++		FROM ' . FORUMS_TOPICS_TABLE . &quot;
++		WHERE topic_id = $topic_id&quot;;
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++	$_CLASS['core_db']-&gt;free_result($result);
++
++	$forum_id = (int) $row['forum_id'];
++}
++
++// If the user doesn't have any moderator powers (globally or locally) he can't access the mcp
++if (!$_CLASS['forums_auth']-&gt;acl_get('m_'))//acl_getf_global
++{
++	// Except he is using one of the quickmod tools for users
++	$user_quickmod_actions = array(
++		'lock'			=&gt; 'f_user_lock',
++		'unlock'		=&gt; 'f_user_lock',
++		'make_sticky'	=&gt; 'f_sticky',
++		'make_announce'	=&gt; 'f_announce',
++		'make_global'	=&gt; 'f_announce',
++		'make_normal'	=&gt; array('f_announce', 'f_sticky')
++	);
++
++	$allow_user = false;
++	if ($quickmod &amp;&amp; isset($user_quickmod_actions[$action]) &amp;&amp; !$_CLASS['forums_auth']-&gt;acl_gets($user_quickmod_actions[$action], $forum_id))
++	{
++		$topic_info = get_topic_data(array($topic_id));
++		if ($topic_info[$topic_id]['topic_poster'] == $user-&gt;data['user_id'])
++		{
++			$allow_user = true;
++		}
++	}
++
++	if (!$allow_user)
++	{
++		trigger_error('NOT_AUTHORIZED');
++	}
++}
++
++$_CLASS['core_template']-&gt;assign_array(array(
++	'S_USER_LOGGED_IN'		=&gt; true,
++	'S_DISPLAY_PM'			=&gt; false,
++	'S_DISPLAY_SEARCH'		=&gt; false,
++	'S_DISPLAY_MEMBERLIST'	=&gt; false,
++	'S_DISPLAY_JUMPBOX'		=&gt; false,
++	'S_TIMEZONE'			=&gt; '',
++
++	'LAST_VISIT_DATE'		=&gt; '',
++	'PAGINATION'			=&gt; '',
++	'PAGINATION_ARRAY'		=&gt; '',
++	'CURRENT_TIME'			=&gt; ''
++));
++		
++// if the user cannot read the forum he tries to access then we won't allow mcp access either
++if ($forum_id &amp;&amp; !$_CLASS['forums_auth']-&gt;acl_get('f_read', $forum_id))
++{
++	trigger_error('NOT_AUTHORIZED');
++}
++
+ if (!$quick_mod)
+ {
+ 	switch ($mode)
+ 	{
++		case 'main':
+ 		case 'front':
+-			require(SITE_FILE_ROOT.'includes/forums/mcp/mcp_front.php');
++			require_once SITE_FILE_ROOT.'includes/forums/mcp/mcp_front.php';
+ 			script_close(false);
+ 		break;
+ 
+ 		case 'forum_view':
+-			require(SITE_FILE_ROOT.'includes/forums/mcp/mcp_forum.php');
++			require_once SITE_FILE_ROOT.'includes/forums/mcp/mcp_forum.php';
+ 			script_close(false);
+ 		break;
+ 		
+ 		case 'topic_view':
+-			require(SITE_FILE_ROOT.'includes/forums/mcp/mcp_topic.php');
++			require_once SITE_FILE_ROOT.'includes/forums/mcp/mcp_topic.php';
+ 			script_close(false);
+ 		break;
+ 			
+ 		case 'post_details':
+-			require(SITE_FILE_ROOT.'includes/forums/mcp/mcp_post.php');
++			require_once SITE_FILE_ROOT.'includes/forums/mcp/mcp_post.php';
+ 			script_close(false);
+ 		break;
++		
++		case 'notes':
++			require_once SITE_FILE_ROOT.'includes/forums/mcp/mcp_notes.php';
++			script_close(false);
++		break;
+ 	}
+ 
+ 	//script_close(false);
+ }
+ 
+-require_once(SITE_FILE_ROOT.'includes/forums/mcp/mcp_main.php');
+-	
++require_once SITE_FILE_ROOT.'includes/forums/mcp/mcp_main.php';
++
+ switch ($mode)
+ {
+ 	case 'lock':
+@@ -284,13 +287,14 @@
+ 	case 'make_global':
+ 	case 'make_normal':
+ 		$topic_ids = get_topic_ids($quick_mod);
++		$forum_id = get_variable('f', 'REQUEST');
+ 
+ 		if (empty($topic_ids))
+ 		{
+ 			trigger_error('NO_TOPIC_SELECTED');
+ 		}
+ 
+-		change_topic_type($mode, $topic_ids);
++		change_topic_type($mode, $topic_ids, $forum_id);
+ 	break;
+ 
+ 	case 'move':
+@@ -409,6 +413,7 @@
+ 
+ 		$rowset[$row['topic_id']] = $row;
+ 	}
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	return $rowset;
+ }
+@@ -422,7 +427,7 @@
+ 
+ 	$sql = 'SELECT p.*, u.*, t.*, f.*
+ 		FROM ' . FORUMS_POSTS_TABLE . ' p LEFT JOIN ' . FORUMS_FORUMS_TABLE . ' f ON (f.forum_id = p.forum_id),
+-		' . USERS_TABLE . ' u, ' . FORUMS_TOPICS_TABLE . ' t
++		' . CORE_USERS_TABLE . ' u, ' . FORUMS_TOPICS_TABLE . ' t
+ 		WHERE p.post_id IN (' . implode(', ', $post_ids) . ')
+ 			AND u.user_id = p.poster_id
+ 			AND t.topic_id = p.topic_id';
+@@ -443,6 +448,7 @@
+ 
+ 		$rowset[$row['post_id']] = $row;
+ 	}
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	return $rowset;
+ }
+@@ -470,6 +476,7 @@
+ 
+ 		$rowset[$row['forum_id']] = $row;
+ 	}
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	return $rowset;
+ }
+@@ -649,7 +656,7 @@
+ // Should make this better
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		if (!$acl_list || $_CLASS['auth']-&gt;acl_get($acl_list, $row['forum_id']))
++		if (!$acl_list || $_CLASS['auth']-&gt;acl_gets($acl_list, $row['forum_id']))
+ 		{
+ 			$forum_ids[] = $row['forum_id'];
+ 			$ids[] = $row[$sql_id];
+@@ -666,4 +673,5 @@
+ {
+ 	return generate_hidden_fields($array);
+ }
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/forums/viewforum.php
+===================================================================
+--- cms/trunk/modules/forums/viewforum.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/modules/forums/viewforum.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -39,7 +39,7 @@
+     die;
+ }
+ 
+-require(SITE_FILE_ROOT.'includes/forums/functions_display.php');
++require_once SITE_FILE_ROOT.'includes/forums/functions_display.php';
+ 
+ // Start initial var setup
+ $forum_id	= request_var('f', 0);
+
+Modified: cms/trunk/modules/forums/viewtopic.php
+===================================================================
+--- cms/trunk/modules/forums/viewtopic.php	2006-08-04 13:47:39 UTC (rev 179)
++++ cms/trunk/modules/forums/viewtopic.php	2006-08-06 20:19:46 UTC (rev 180)
+@@ -110,7 +110,7 @@
+ 	$sql = 'SELECT topic_id, forum_id
+ 		FROM ' . FORUMS_TOPICS_TABLE . &quot;
+ 		 WHERE forum_id = $forum_id AND topic_last_post_time $sql_condition $topic_last_post_time&quot;
+-		 . ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id) ? '' : ' AND topic_approved = 1') . &quot;
++		 . ($_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id) ? '' : ' AND topic_approved = 1') . &quot;
+ 		ORDER BY topic_last_post_time $sql_ordering&quot;;
+ 
+ 	$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+@@ -136,7 +136,7 @@
+ }
+ else
+ {
+-	if ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id))
++	if ($_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id))
+ 	{
+ 		$join_sql = (!$post_id) ? &quot;t.topic_id = $topic_id&quot; : &quot;p.post_id = $post_id AND t.topic_id = p.topic_id AND p2.topic_id = p.topic_id AND p2.post_id &lt;= $post_id&quot;;
+ 	}
+@@ -171,13 +171,13 @@
+ $topic_data = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ $_CLASS['core_db']-&gt;free_result($result);
+ 
+-if (!$topic_data || $topic_data['forum_status'] == ITEM_DELETING || (!$topic_data['topic_approved'] &amp;&amp; !$_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)))
++if (!$topic_data || $topic_data['forum_status'] == ITEM_DELETING || (!$topic_data['topic_approved'] &amp;&amp; !$_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id)))
+ {
+ 	trigger_error('NO_TOPIC');
+ }
+ 
+ //Check for read permission
+-if (!$_CLASS['auth']-&gt;acl_get('f_read', $forum_id))// &amp;&amp; !$_CLASS['auth']-&gt;acl_get('m_', $forum_id)
++if (!$_CLASS['forums_auth']-&gt;acl_get('f_read', $forum_id))// &amp;&amp; !$_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id)
+ {
+ 	if ($_CLASS['core_user']-&gt;data['user_id'] != ANONYMOUS)
+ 	{
+@@ -244,7 +244,7 @@
+ }
+ 
+ // We make this check here because the correct forum_id is determined
+-$topic_replies = ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? (int) $topic_data['topic_replies_real'] : (int) $topic_data['topic_replies'];
++$topic_replies = ($_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id)) ? (int) $topic_data['topic_replies_real'] : (int) $topic_data['topic_replies'];
+ 
+ $topic_last_read = topic_last_read($topic_id, $forum_id);
+ 
+@@ -284,13 +284,13 @@
+ // requested anything different
+ if ($sort_days)
+ {
+-	$min_post_time = time() - ($sort_days * 86400);
++	$min_post_time = $_CLASS['core_user']-&gt;time - ($sort_days * 86400);
+ 
+ 	$sql = 'SELECT COUNT(post_id) AS num_posts
+ 		FROM ' . FORUMS_POSTS_TABLE . &quot;
+ 		WHERE topic_id = $topic_id
+ 			AND post_time &gt;= $min_post_time
+-		&quot; . (($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND post_approved = 1');
++		&quot; . (($_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND post_approved = 1');
+ 
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 	$total_posts = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['num_posts'] : 0;
+@@ -395,9 +395,9 @@
+ 		}
+ 	}
+ 
+-	$s_can_vote = (((empty($cur_voted_id) &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_vote', $forum_id)) || 
+-		($_CLASS['auth']-&gt;acl_get('f_votechg', $forum_id) &amp;&amp; $topic_data['poll_vote_change'])) &amp;&amp;
+-		(($topic_data['poll_length'] != 0 &amp;&amp; $topic_data['poll_start'] + $topic_data['poll_length'] &gt; time()) || $topic_data['poll_length'] == 0) &amp;&amp;
++	$s_can_vote = (((empty($cur_voted_id) &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_vote', $forum_id)) || 
++		($_CLASS['forums_auth']-&gt;acl_get('f_votechg', $forum_id) &amp;&amp; $topic_data['poll_vote_change'])) &amp;&amp;
++		(($topic_data['poll_length'] != 0 &amp;&amp; $topic_data['poll_start'] + $topic_data['poll_length'] &gt; $_CLASS['core_user']-&gt;time) || $topic_data['poll_length'] == 0) &amp;&amp;
+ 		$topic_data['topic_status'] != ITEM_LOCKED &amp;&amp; 
+ 		$topic_data['forum_status'] != ITEM_LOCKED) ? true : false;
+ 		
+@@ -590,7 +590,7 @@
+ $sql = 'SELECT p.post_id
+ 	FROM ' . FORUMS_POSTS_TABLE . ' p' . (($sort_by_sql[$sort_key]{0} == 'u') ? ', ' . USERS_TABLE . ' u': '') . &quot;
+ 	WHERE p.topic_id = $topic_id
+-		&quot; . ((!$_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? 'AND p.post_approved = 1' : '') . &quot;
++		&quot; . ((!$_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id)) ? 'AND p.post_approved = 1' : '') . &quot;
+ 		&quot; . (($sort_by_sql[$sort_key]{0} == 'u') ? 'AND u.user_id = p.poster_id': '') . &quot;
+ 		$limit_posts_time
+ 	ORDER BY $sql_sort_order&quot;;
+@@ -766,7 +766,7 @@
+ 				'msn'			=&gt; ($row['user_msnm']) ? generate_link('members_list&amp;mode=contact&amp;action=msnm&amp;u='.$poster_id) : '',
+ 				'yim'			=&gt; ($row['user_yim']) ? '<A HREF="http://edit.yahoo.com/config/send_webmesg?.target=">http://edit.yahoo.com/config/send_webmesg?.target=</A>' . $row['user_yim'] . '&amp;.src=pg' : '',
+ 				'jabber'		=&gt; ($row['user_jabber']) ? generate_link('members_list&amp;mode=contact&amp;action=jabber&amp;u='.$poster_id) : '',
+-				'search'		=&gt; ($_CLASS['auth']-&gt;acl_get('u_search')) ? generate_link('forums&amp;file=search&amp;search_author=' . urlencode($row['username']) .'&amp;showresults=posts') : '',
++				'search'		=&gt; ($_CLASS['forums_auth']-&gt;acl_get('u_search')) ? generate_link('forums&amp;file=search&amp;search_author=' . urlencode($row['username']) .'&amp;showresults=posts') : '',
+ 				'username'		=&gt; ($row['user_colour']) ? '&lt;span style=&quot;color:#' . $row['user_colour'] . '&quot;&gt;' . $poster . '&lt;/span&gt;' : $poster
+ 			);
+ 
+@@ -817,9 +817,9 @@
+ 				*/
+ 			}
+ 
+-			if (!empty($row['user_allow_viewemail']) || $_CLASS['auth']-&gt;acl_get('a_email'))
++			if (!empty($row['user_allow_viewemail']) || $_CLASS['forums_auth']-&gt;acl_get('a_email'))
+ 			{
+-				$user_cache[$poster_id]['email'] = ($config['board_email_form'] &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Members_List&amp;mode=email&amp;u='.$poster_id) : (($config['board_hide_emails'] &amp;&amp; !$_CLASS['auth']-&gt;acl_get('a_email')) ? '' : 'mailto:' . $row['user_email']);
++				$user_cache[$poster_id]['email'] = ($config['board_email_form'] &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('Members_List&amp;mode=email&amp;u='.$poster_id) : (($config['board_hide_emails'] &amp;&amp; !$_CLASS['forums_auth']-&gt;acl_get('a_email')) ? '' : 'mailto:' . $row['user_email']);
+ 			}
+ 			else
+ 			{
+@@ -876,7 +876,7 @@
+ // Pull attachment data
+ if (!empty($attach_list))
+ {
+-	if ($_CLASS['auth']-&gt;acl_gets(array('f_download', 'u_download'), $forum_id))
++	if ($_CLASS['forums_auth']-&gt;acl_gets(array('f_download', 'u_download'), $forum_id))
+ 	{
+ 		$sql = 'SELECT * 
+ 			FROM ' . FORUMS_ATTACHMENTS_TABLE . '
+@@ -990,7 +990,7 @@
+ 	}
+ 
+ 	// If the board has HTML off but the post has HTML on then we process it, else leave it alone
+-	if ($row['enable_html'] &amp;&amp; (!$config['allow_html'] || !$_CLASS['auth']-&gt;acl_get('f_html', $forum_id)))
++	if ($row['enable_html'] &amp;&amp; (!$config['allow_html'] || !$_CLASS['forums_auth']-&gt;acl_get('f_html', $forum_id)))
+ 	{
+ 		$row['post_text'] = preg_replace('#(&lt;!\-\- h \-\-&gt;&lt;)([\/]?.*?)(&gt;&lt;!\-\- h \-\-&gt;)#is', &quot;&lt;\\2&gt;&quot;, $row['post_text']);
+ 	}
+@@ -1021,7 +1021,7 @@
+ 		$message = preg_replace('#(?!&lt;.*)(?&lt;!\w)(' . $highlight_match . ')(?!\w|[^&lt;&gt;]*&gt;)#i', '&lt;span class=&quot;posthilit&quot;&gt;\1&lt;/span&gt;', $message);
+ 	}
+ 
+-	if ($row['enable_html'] &amp;&amp; ($config['allow_html'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_html', $forum_id)))
++	if ($row['enable_html'] &amp;&amp; ($config['allow_html'] &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_html', $forum_id)))
+ 	{
+ 		// Remove Comments from post content
+ 		$row['post_text'] = preg_replace('#&lt;!\-\-(.*?)\-\-&gt;#is', '', $row['post_text']);
+@@ -1133,10 +1133,10 @@
+ 		'ONLINE_IMG'		=&gt; ($poster_id == ANONYMOUS || !$config['load_onlinetrack']) ? '' : (($user_cache[$poster_id]['online']) ? $_CLASS['core_user']-&gt;img('btn_online', 'ONLINE') : $_CLASS['core_user']-&gt;img('btn_offline', 'OFFLINE')), 
+ 		'S_ONLINE'			=&gt; ($poster_id == ANONYMOUS || !$config['load_onlinetrack']) ? false : (($user_cache[$poster_id]['online']) ? true : false),
+ 
+-		'U_EDIT' 			=&gt; (($_CLASS['core_user']-&gt;data['user_id'] == $poster_id &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_edit', $forum_id) &amp;&amp; ($row['post_time'] &gt; time() - $config['edit_time'] || !$config['edit_time'])) || $_CLASS['auth']-&gt;acl_get('m_edit', $forum_id)) ? generate_link(&quot;forums&amp;file=posting&amp;mode=edit&amp;p=&quot; . $row['post_id']) : '',
+-		'U_QUOTE' 			=&gt; ($_CLASS['auth']-&gt;acl_get('f_quote', $forum_id)) ? generate_link(&quot;forums&amp;file=posting&amp;mode=quote&amp;p=&quot; . $row['post_id']) : '', 
+-		'U_INFO'            =&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link('forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id'], false, false) : '',
+-		'U_DELETE' 			=&gt; (($_CLASS['core_user']-&gt;data['user_id'] == $poster_id &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_delete', $forum_id) &amp;&amp; $topic_data['topic_last_post_id'] == $row['post_id'] &amp;&amp; ($row['post_time'] &gt; time() - $config['edit_time'] || !$config['edit_time'])) || $_CLASS['auth']-&gt;acl_get('m_delete', $forum_id)) ? generate_link(&quot;forums&amp;file=posting&amp;mode=delete&amp;p=&quot; . $row['post_id']) : '',
++		'U_EDIT' 			=&gt; (($_CLASS['core_user']-&gt;data['user_id'] == $poster_id &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_edit', $forum_id) &amp;&amp; ($row['post_time'] &gt; $_CLASS['core_user']-&gt;time - $config['edit_time'] || !$config['edit_time'])) || $_CLASS['forums_auth']-&gt;acl_get('m_edit', $forum_id)) ? generate_link(&quot;forums&amp;file=posting&amp;mode=edit&amp;p=&quot; . $row['post_id']) : '',
++		'U_QUOTE' 			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('f_quote', $forum_id)) ? generate_link(&quot;forums&amp;file=posting&amp;mode=quote&amp;p=&quot; . $row['post_id']) : '', 
++		'U_INFO'            =&gt; ($_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id)) ? generate_link('forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id'], false, false) : '',
++		'U_DELETE' 			=&gt; (($_CLASS['core_user']-&gt;data['user_id'] == $poster_id &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_delete', $forum_id) &amp;&amp; $topic_data['topic_last_post_id'] == $row['post_id'] &amp;&amp; ($row['post_time'] &gt; $_CLASS['core_user']-&gt;time - $config['edit_time'] || !$config['edit_time'])) || $_CLASS['forums_auth']-&gt;acl_get('m_delete', $forum_id)) ? generate_link(&quot;forums&amp;file=posting&amp;mode=delete&amp;p=&quot; . $row['post_id']) : '',
+ 
+ 		'U_PROFILE' 		=&gt; $user_cache[$poster_id]['profile'],
+ 		'U_SEARCH' 			=&gt; $user_cache[$poster_id]['search'],
+@@ -1150,20 +1150,20 @@
+ 		'U_JABBER'			=&gt; $user_cache[$poster_id]['jabber'], 
+ 
+ 		'U_REPORT'			=&gt; generate_link('forums&amp;file=report&amp;p=' . $row['post_id']),
+-		'U_MCP_REPORT'		=&gt; ($_CLASS['auth']-&gt;acl_gets(array('m_', 'a_', 'f_report'), $forum_id)) ? generate_link('forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id']) : '',
+-		'U_MCP_APPROVE'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? generate_link('forums&amp;file=mcp&amp;i=queue&amp;mode=approve&amp;post_id_list[]=' . $row['post_id'], false, false) : '',
+-		'U_MCP_DETAILS'		=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link('forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id']) : '',
++		'U_MCP_REPORT'		=&gt; ($_CLASS['forums_auth']-&gt;acl_gets(array('m_', 'a_', 'f_report'), $forum_id)) ? generate_link('forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id']) : '',
++		'U_MCP_APPROVE'		=&gt; ($_CLASS['forums_auth']-&gt;acl_get('m_approve', $forum_id)) ? generate_link('forums&amp;file=mcp&amp;i=queue&amp;mode=approve&amp;post_id_list[]=' . $row['post_id'], false, false) : '',
++		'U_MCP_DETAILS'		=&gt; ($_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id)) ? generate_link('forums&amp;file=mcp&amp;mode=post_details&amp;p=' . $row['post_id']) : '',
+ 		'U_MINI_POST'		=&gt; generate_link('forums&amp;file=viewtopic&amp;p=' . $row['post_id']) . '#' . $row['post_id'],
+ 		'U_NEXT_POST_ID'	=&gt; ($i &lt; $i_total &amp;&amp; isset($rowset[$i + 1])) ? $rowset[$i + 1]['post_id'] : '', 
+ 		'U_PREV_POST_ID'	=&gt; $prev_post_id, 
+ 
+ 		'POST_ID'           =&gt; $row['post_id'],
+ 
+-		//'U_NOTES'			=&gt; ($_CLASS['auth']-&gt;acl_getf_global('m_')) ? generate_link('forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes&amp;u=' . $poster_id) : '',
+-		//'U_WARN'			=&gt; ($_CLASS['auth']-&gt;acl_getf_global('m_warn') &amp;&amp; $poster_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link('forums&amp;file=mcp&amp;i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id']) : '',
++		//'U_NOTES'			=&gt; ($_CLASS['forums_auth']-&gt;acl_getf_global('m_')) ? generate_link('forums&amp;file=mcp&amp;i=notes&amp;mode=user_notes&amp;u=' . $poster_id) : '',
++		//'U_WARN'			=&gt; ($_CLASS['forums_auth']-&gt;acl_getf_global('m_warn') &amp;&amp; $poster_id != $_CLASS['core_user']-&gt;data['user_id']) ? generate_link('forums&amp;file=mcp&amp;i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id']) : '',
+ 
+ 		'S_POST_UNAPPROVED'	=&gt; !$row['post_approved'],
+-		'S_POST_REPORTED'	=&gt; ($row['post_reported'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('m_', $forum_id)),
++		'S_POST_REPORTED'	=&gt; ($row['post_reported'] &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id)),
+ 		'S_DISPLAY_NOTICE'	=&gt; ($display_notice &amp;&amp; $row['post_attachment']), 
+ 		'S_FRIEND'			=&gt; $row['friend'],
+ 		'S_UNREAD_POST'		=&gt; $unread,
+@@ -1209,21 +1209,21 @@
+ 	}
+ }
+ 
+-$allow_change_type = ($_CLASS['auth']-&gt;acl_get('m_', $forum_id) || ($_CLASS['core_user']-is_user &amp;&amp; $_CLASS['core_user']-&gt;data['user_id'] == $topic_data['topic_poster'])) ? true : false;
++$allow_change_type = ($_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id) || ($_CLASS['core_user']-&gt;is_user &amp;&amp; $_CLASS['core_user']-&gt;data['user_id'] == $topic_data['topic_poster'])) ? true : false;
+ 
+ // Quick mod tools
+ $topic_mod = '';
+-$topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_lock', $forum_id) || ($_CLASS['auth']-&gt;acl_get('f_user_lock', $forum_id) &amp;&amp; $_CLASS['core_user']-&gt;data['user_id'] != ANONYMOUS &amp;&amp; $_CLASS['core_user']-&gt;data['user_id'] == $topic_data['topic_poster'])) ? (($topic_data['topic_status'] == ITEM_UNLOCKED) ? '&lt;option value=&quot;lock&quot;&gt;' . $_CLASS['core_user']-&gt;lang['LOCK_TOPIC'] . '&lt;/option&gt;' : '&lt;option value=&quot;unlock&quot;&gt;' . $_CLASS['core_user']-&gt;lang['UNLOCK_TOPIC'] . '&lt;/option&gt;') : '';
+-$topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_delete', $forum_id)) ? '&lt;option value=&quot;delete_topic&quot;&gt;' . $_CLASS['core_user']-&gt;lang['DELETE_TOPIC'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_move', $forum_id)) ? '&lt;option value=&quot;move&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MOVE_TOPIC'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_split', $forum_id)) ? '&lt;option value=&quot;split&quot;&gt;' . $_CLASS['core_user']-&gt;lang['SPLIT_TOPIC'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_merge', $forum_id)) ? '&lt;option value=&quot;merge&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MERGE_TOPIC'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? '&lt;option value=&quot;fork&quot;&gt;' . $_CLASS['core_user']-&gt;lang['FORK_TOPIC'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['auth']-&gt;acl_gets(array('f_sticky', 'f_announce'), $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_NORMAL) ? '&lt;option value=&quot;make_normal&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_NORMAL'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_sticky', $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_STICKY) ? '&lt;option value=&quot;make_sticky&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_STICKY'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_announce', $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_ANNOUNCE) ? '&lt;option value=&quot;make_announce&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_ANNOUNCE'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['auth']-&gt;acl_get('f_announce', $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_GLOBAL) ? '&lt;option value=&quot;make_global&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_GLOBAL'] . '&lt;/option&gt;' : '';
+-$topic_mod .= ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? '&lt;option value=&quot;viewlogs&quot;&gt;' . $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_LOGS'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($_CLASS['forums_auth']-&gt;acl_get('m_lock', $forum_id) || ($_CLASS['forums_auth']-&gt;acl_get('f_user_lock', $forum_id) &amp;&amp; $_CLASS['core_user']-&gt;data['user_id'] != ANONYMOUS &amp;&amp; $_CLASS['core_user']-&gt;data['user_id'] == $topic_data['topic_poster'])) ? (($topic_data['topic_status'] == ITEM_UNLOCKED) ? '&lt;option value=&quot;lock&quot;&gt;' . $_CLASS['core_user']-&gt;lang['LOCK_TOPIC'] . '&lt;/option&gt;' : '&lt;option value=&quot;unlock&quot;&gt;' . $_CLASS['core_user']-&gt;lang['UNLOCK_TOPIC'] . '&lt;/option&gt;') : '';
++$topic_mod .= ($_CLASS['forums_auth']-&gt;acl_get('m_delete', $forum_id)) ? '&lt;option value=&quot;delete_topic&quot;&gt;' . $_CLASS['core_user']-&gt;lang['DELETE_TOPIC'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($_CLASS['forums_auth']-&gt;acl_get('m_move', $forum_id)) ? '&lt;option value=&quot;move&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MOVE_TOPIC'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($_CLASS['forums_auth']-&gt;acl_get('m_split', $forum_id)) ? '&lt;option value=&quot;split&quot;&gt;' . $_CLASS['core_user']-&gt;lang['SPLIT_TOPIC'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($_CLASS['forums_auth']-&gt;acl_get('m_merge', $forum_id)) ? '&lt;option value=&quot;merge&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MERGE_TOPIC'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id)) ? '&lt;option value=&quot;fork&quot;&gt;' . $_CLASS['core_user']-&gt;lang['FORK_TOPIC'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['forums_auth']-&gt;acl_gets(array('f_sticky', 'f_announce'), $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_NORMAL) ? '&lt;option value=&quot;make_normal&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_NORMAL'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_sticky', $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_STICKY) ? '&lt;option value=&quot;make_sticky&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_STICKY'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_announce', $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_ANNOUNCE) ? '&lt;option value=&quot;make_announce&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_ANNOUNCE'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($allow_change_type &amp;&amp; $_CLASS['forums_auth']-&gt;acl_get('f_announce', $forum_id) &amp;&amp; $topic_data['topic_type'] != POST_GLOBAL) ? '&lt;option value=&quot;make_global&quot;&gt;' . $_CLASS['core_user']-&gt;lang['MAKE_GLOBAL'] . '&lt;/option&gt;' : '';
++$topic_mod .= ($_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id)) ? '&lt;option value=&quot;viewlogs&quot;&gt;' . $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_LOGS'] . '&lt;/option&gt;' : '';
+ 
+ $pagination = generate_pagination(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;$u_sort_param&quot; . (($highlight_match) ? &quot;&amp;hilit=$highlight&quot; : ''), $total_posts, $config['posts_per_page'], $start);
+ 
+@@ -1240,7 +1240,7 @@
+ 	'PAGINATION_ARRAY'	=&gt; $pagination['array'],
+ 	'PAGE_NUMBER' 		=&gt; on_page($total_posts, $config['posts_per_page'], $start),
+ 	'TOTAL_POSTS'		=&gt; ($total_posts == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POST'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_TOPIC_POSTS'], $total_posts), 
+-	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_get('m_', $forum_id)) ? generate_link(&quot;forums&amp;file=mcp&amp;mode=topic_view&amp;t=$topic_id&amp;start=$start&amp;$u_sort_param&quot;, false, false) : '',
++	'U_MCP' 			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('m_', $forum_id)) ? generate_link(&quot;forums&amp;file=mcp&amp;mode=topic_view&amp;t=$topic_id&amp;start=$start&amp;$u_sort_param&quot;, false, false) : '',
+ 
+ 	'MODERATORS'	=&gt; (isset($forum_moderators[$forum_id]) &amp;&amp; !empty($forum_moderators[$forum_id])) ? implode(', ', $forum_moderators[$forum_id]) : '',
+ 
+@@ -1275,7 +1275,7 @@
+ 	'S_TOPIC_MOD' 			=&gt; ($topic_mod) ? '&lt;select name=&quot;mode&quot;&gt;' . $topic_mod . '&lt;/select&gt;' : '',
+ 	'S_MOD_ACTION' 			=&gt; generate_link(&quot;forums&amp;file=mcp&amp;t=$topic_id&amp;quickmod=1&quot;, false, false), 
+ 
+-	'S_DISPLAY_SEARCHBOX'	=&gt; ($_CLASS['auth']-&gt;acl_get('f_search', $forum_id)) ? true : false, 
++	'S_DISPLAY_SEARCHBOX'	=&gt; ($_CLASS['forums_auth']-&gt;acl_get('f_search', $forum_id)) ? true : false, 
+ 	'S_SEARCHBOX_ACTION'	=&gt; generate_link('forums&amp;file=search&amp;search_forum[]='.$forum_id), 
+ 
+ 	'U_TOPIC'				=&gt; ($view == 'print') ? generate_link('forums&amp;file=viewtopic&amp;t='.$topic_id, array('full' =&gt; true)) : generate_link('forums&amp;file=viewtopic&amp;t='.$topic_id),
+@@ -1284,8 +1284,8 @@
+ 	'U_VIEW_FORUM' 			=&gt; generate_link('forums&amp;file=viewforum&amp;f='.$forum_id),
+ 	'U_VIEW_OLDER_TOPIC'	=&gt; generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=previous&quot;),
+ 	'U_VIEW_NEWER_TOPIC'	=&gt; generate_link(&quot;forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=next&quot;),
+-	'U_PRINT_TOPIC'			=&gt; ($_CLASS['auth']-&gt;acl_get('f_print', $forum_id)) ? generate_link($viewtopic_url . '&amp;view=print') : '',
+-	'U_EMAIL_TOPIC'			=&gt; ($_CLASS['auth']-&gt;acl_get('f_email', $forum_id) &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('members_list&amp;mode=email&amp;t='.$topic_id) : '', 
++	'U_PRINT_TOPIC'			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('f_print', $forum_id)) ? generate_link($viewtopic_url . '&amp;view=print') : '',
++	'U_EMAIL_TOPIC'			=&gt; ($_CLASS['forums_auth']-&gt;acl_get('f_email', $forum_id) &amp;&amp; $_CORE_CONFIG['email']['email_enable']) ? generate_link('members_list&amp;mode=email&amp;t='.$topic_id) : '', 
+ 
+ 	'S_WATCH_FORUMS'		=&gt; $topic_data['watch_topic'] ? false : true,
+ 	'U_WATCH_TOPIC' 		=&gt; $s_watching_topic['link'], 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000098.html">[Viperals-svncheckins] r179 - in cms/trunk: admin includes	includes/db includes/forums includes/templates/admin/modules	install modules/control_panel/modules modules/forums	modules/forums/images modules/forums/images/en	modules/forums/images/karma themes/viperal/template/modules
+</A></li>
+	<LI>Next message: <A HREF="000100.html">[Viperals-svncheckins] r181 - cms/trunk/includes/db
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

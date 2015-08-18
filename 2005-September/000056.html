@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r135 - in cms/trunk/includes: forums templates/modules/Forums
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r135%20-%20in%20cms/trunk/includes%3A%20forums%20templates/modules/Forums&In-Reply-To=%3C200509200508.j8K588BR003618%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000055.html">
+   <LINK REL="Next"  HREF="000057.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r135 - in cms/trunk/includes: forums templates/modules/Forums</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r135%20-%20in%20cms/trunk/includes%3A%20forums%20templates/modules/Forums&In-Reply-To=%3C200509200508.j8K588BR003618%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r135 - in cms/trunk/includes: forums templates/modules/Forums">viperal at berlios.de
+       </A><BR>
+    <I>Tue Sep 20 07:08:08 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000055.html">[Viperals-svncheckins] r134 - in cms/trunk/language/en: . admin
+</A></li>
+        <LI>Next message: <A HREF="000057.html">[Viperals-svncheckins] r136 - in cms/trunk: admin includes includes/display includes/forums modules modules/Control_Panel/ucp modules/Members_List modules/calender modules/calender/language modules/calender/language/en
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#56">[ date ]</a>
+              <a href="thread.html#56">[ thread ]</a>
+              <a href="subject.html#56">[ subject ]</a>
+              <a href="author.html#56">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-20 07:07:35 +0200 (Tue, 20 Sep 2005)
+New Revision: 135
+
+Modified:
+   cms/trunk/includes/forums/functions_admin.php
+   cms/trunk/includes/forums/functions_posting.php
+   cms/trunk/includes/forums/message_parser.php
+   cms/trunk/includes/templates/modules/Forums/posting_body.html
+Log:
+Small fixes to forums.
+
+Modified: cms/trunk/includes/forums/functions_admin.php
+===================================================================
+--- cms/trunk/includes/forums/functions_admin.php	2005-09-19 19:56:09 UTC (rev 134)
++++ cms/trunk/includes/forums/functions_admin.php	2005-09-20 05:07:35 UTC (rev 135)
+@@ -434,7 +434,8 @@
+ 
+ 	$_CLASS['core_db']-&gt;transaction();
+ 
+-	$table_ary = array(FORUMS_POSTS_TABLE, FORUMS_REPORTS_TABLE, FORUMS_SEARCH_MATCH_TABLE);
++	//$table_ary = array(FORUMS_POSTS_TABLE, FORUMS_REPORTS_TABLE, FORUMS_SEARCH_MATCH_TABLE);
++	$table_ary = array(FORUMS_POSTS_TABLE, FORUMS_SEARCH_MATCH_TABLE);
+ 	
+ 	foreach ($table_ary as $table)
+ 	{
+
+Modified: cms/trunk/includes/forums/functions_posting.php
+===================================================================
+--- cms/trunk/includes/forums/functions_posting.php	2005-09-19 19:56:09 UTC (rev 134)
++++ cms/trunk/includes/forums/functions_posting.php	2005-09-20 05:07:35 UTC (rev 135)
+@@ -858,7 +858,7 @@
+ 		
+ 		if ($notify_type == 'topic' &amp;&amp; $user['forum_id'])
+ 		{
+-			$holding[$user['user_id']]['template'] = 'notify_forum';
++			$holding[$user['user_id']]['template'] = 'forum_notify';
+ 			$holding[$user['user_id']]['update'] = 'forum';
+ 		}
+ 		else
+
+Modified: cms/trunk/includes/forums/message_parser.php
+===================================================================
+--- cms/trunk/includes/forums/message_parser.php	2005-09-19 19:56:09 UTC (rev 134)
++++ cms/trunk/includes/forums/message_parser.php	2005-09-20 05:07:35 UTC (rev 135)
+@@ -350,7 +350,7 @@
+ 					{
+ 						// if theres any problems with this, find the first &quot;php&quot; without span remove it
+ 						// then find the first &lt;/span&gt; and remove it
+-						$pos = ($pos = mb_strpos($code, 'php&nbsp;&lt;/span&gt;')) ? $pos + 16 : mb_strpos($code, 'php &lt;/span&gt;') + 16;
++						$pos = ($pos = mb_strpos($code, 'php&nbsp;&lt;/span&gt;')) ? $pos + 16 : mb_strpos($code, 'php &lt;/span&gt;') + 11;
+ 						$code = mb_substr($code, $pos);
+ 					}
+ 									
+
+Modified: cms/trunk/includes/templates/modules/Forums/posting_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/posting_body.html	2005-09-19 19:56:09 UTC (rev 134)
++++ cms/trunk/includes/templates/modules/Forums/posting_body.html	2005-09-20 05:07:35 UTC (rev 135)
+@@ -10,7 +10,7 @@
+ 
+ // Define the bbCode tags
+ bbcode = new Array();
+-bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[php]','[/php]');
++bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[code=php]','[/code]');
+ imageTag = false;
+ 
+ // Helpline messages
+@@ -203,7 +203,9 @@
+ 				&lt;td&gt;&lt;input type=&quot;button&quot; class=&quot;btnbbcode&quot; accesskey=&quot;z&quot; name=&quot;addbbcode18&quot; value=&quot;php&quot; style=&quot;width: 40px&quot; onclick=&quot;bbstyle(18)&quot; onmouseover=&quot;helpline('z')&quot; /&gt;&lt;/td&gt;
+ 				&lt;td&gt;&lt;input type=&quot;button&quot; class=&quot;btnbbcode&quot; accesskey=&quot;l&quot; name=&quot;addbbcode10&quot; value=&quot;List&quot; style=&quot;width: 40px&quot; onclick=&quot;bbstyle(10)&quot; onmouseover=&quot;helpline('l')&quot; /&gt;&lt;/td&gt;
+ 				&lt;td&gt;&lt;input type=&quot;button&quot; class=&quot;btnbbcode&quot; accesskey=&quot;o&quot; name=&quot;addbbcode12&quot; value=&quot;List=&quot; style=&quot;width: 40px&quot; onclick=&quot;bbstyle(12)&quot; onmouseover=&quot;helpline('o')&quot; /&gt;&lt;/td&gt;
+-				&lt;td&gt;&lt;input type=&quot;button&quot; class=&quot;btnbbcode&quot; accesskey=&quot;p&quot; name=&quot;addbbcode14&quot; value=&quot;Img&quot; style=&quot;width: 40px&quot;  onclick=&quot;bbstyle(14)&quot; onmouseover=&quot;helpline('p')&quot; /&gt;&lt;/td&gt;
++				&lt;td&gt;&lt;input type=&quot;button&quot; class=&quot;btnbbcode&quot; accesskey=&quot;p&quot; name=&quot;addbbcode14&quot; value=&quot;Img&quot; style=&quot;width: 40px&quot;  onclick=&quot;bbstyle(14)&quot; onmouseover=&quot;helpline('p')&quot; /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr align=&quot;center&quot; valign=&quot;middle&quot;&gt;
+ 				&lt;td&gt;&lt;input type=&quot;button&quot; class=&quot;btnbbcode&quot; accesskey=&quot;w&quot; name=&quot;addbbcode16&quot; value=&quot;URL&quot; style=&quot;text-decoration: underline; width: 40px&quot; onclick=&quot;bbstyle(16)&quot; onmouseover=&quot;helpline('w')&quot; /&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+ 			&lt;tr&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000055.html">[Viperals-svncheckins] r134 - in cms/trunk/language/en: . admin
+</A></li>
+	<LI>Next message: <A HREF="000057.html">[Viperals-svncheckins] r136 - in cms/trunk: admin includes includes/display includes/forums modules modules/Control_Panel/ucp modules/Members_List modules/calender modules/calender/language modules/calender/language/en
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#56">[ date ]</a>
+              <a href="thread.html#56">[ thread ]</a>
+              <a href="subject.html#56">[ subject ]</a>
+              <a href="author.html#56">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

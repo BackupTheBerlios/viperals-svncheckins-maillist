@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r113 - in cms/trunk: . images includes/templates
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r113%20-%20in%20cms/trunk%3A%20.%20images%20includes/templates&In-Reply-To=%3C200509111931.j8BJVfYu015016%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000033.html">
+   <LINK REL="Next"  HREF="000035.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r113 - in cms/trunk: . images includes/templates</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r113%20-%20in%20cms/trunk%3A%20.%20images%20includes/templates&In-Reply-To=%3C200509111931.j8BJVfYu015016%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r113 - in cms/trunk: . images includes/templates">viperal at berlios.de
+       </A><BR>
+    <I>Sun Sep 11 21:31:41 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000033.html">[Viperals-svncheckins] r112 - cms/trunk/modules/Forums/admin
+</A></li>
+        <LI>Next message: <A HREF="000035.html">[Viperals-svncheckins] r114 - in cms/trunk: . includes/display themes/viperal themes/viperal/images themes/viperal/template themes_admin/viperal_admin themes_admin/viperal_admin/images themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-11 21:31:33 +0200 (Sun, 11 Sep 2005)
+New Revision: 113
+
+Added:
+   cms/trunk/images/paladin.png
+Modified:
+   cms/trunk/.htaccess
+   cms/trunk/includes/templates/error.html
+Log:
+
+
+Modified: cms/trunk/.htaccess
+===================================================================
+--- cms/trunk/.htaccess	2005-09-11 19:22:27 UTC (rev 112)
++++ cms/trunk/.htaccess	2005-09-11 19:31:33 UTC (rev 113)
+@@ -1,13 +1,13 @@
+-php_flag register_globals 0
+-php_flag register_argc_argv 0
+-php_flag magic_quotes_gpc 0
++#php_flag register_globals 0
++#php_flag register_argc_argv 0
++#php_flag magic_quotes_gpc 0
+ 
+ &lt;LimitExcept GET PUT POST&gt;
+ order allow,deny
+ allow from all
+ &lt;/LimitExcept&gt;
+ 
+-ErrorDocument 403 /error.php?error=403
+-ErrorDocument 404 /error.php?error=404
++ErrorDocument 403 error.php?error=403
++ErrorDocument 404 error.php?error=404
+ 
+ Options -Indexes
+\ No newline at end of file
+
+Added: cms/trunk/images/paladin.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: cms/trunk/images/paladin.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Modified: cms/trunk/includes/templates/error.html
+===================================================================
+--- cms/trunk/includes/templates/error.html	2005-09-11 19:22:27 UTC (rev 112)
++++ cms/trunk/includes/templates/error.html	2005-09-11 19:31:33 UTC (rev 113)
+@@ -4,12 +4,12 @@
+ &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+ &lt;title&gt;Error&lt;/title&gt;
+ &lt;/head&gt;
+-&lt;body style=&quot;background: url(/bg.gif);&quot;&gt;
++&lt;body style=&quot;background: url(images/bg.gif);&quot;&gt;
+ 
+ &lt;table style=&quot;position: absolute; left: 25%; top: 25%;&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td&gt;
+-			&lt;img src=&quot;/paladin.png&quot; /&gt;
++			&lt;img src=&quot;images/paladin.png&quot; /&gt;
+ 		&lt;/td&gt;
+ 		&lt;td valign=&quot;top&quot;&gt;
+ 			{ $MESSAGE_TEXT }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000033.html">[Viperals-svncheckins] r112 - cms/trunk/modules/Forums/admin
+</A></li>
+	<LI>Next message: <A HREF="000035.html">[Viperals-svncheckins] r114 - in cms/trunk: . includes/display themes/viperal themes/viperal/images themes/viperal/template themes_admin/viperal_admin themes_admin/viperal_admin/images themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

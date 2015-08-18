@@ -1,0 +1,752 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r101 - / cms cms/trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r101%20-%20/%20cms%20cms/trunk&In-Reply-To=%3C200509080420.j884KVZG010423%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000023.html">
+   <LINK REL="Next"  HREF="000025.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r101 - / cms cms/trunk</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r101%20-%20/%20cms%20cms/trunk&In-Reply-To=%3C200509080420.j884KVZG010423%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r101 - / cms cms/trunk">viperal at berlios.de
+       </A><BR>
+    <I>Thu Sep  8 06:20:31 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000023.html">[Viperals-svncheckins] r100 - /
+</A></li>
+        <LI>Next message: <A HREF="000025.html">[Viperals-svncheckins] r104 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/admin/functions branches/1.0alpha1/includes branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates/admin/blocks branches/1.0alpha1/includes/templates/admin/messages branches/1.0alpha1/install branches/1.0alpha1/modules/articles trunk trunk/admin trunk/admin/functions trunk/includes trunk/includes/display trunk/includes/templates/admin trunk/includes/templates/admin/articles trunk/includes/templates/admin/blocks trunk/includes/templates/admin/messages trunk/includes/templates/admin/modules trunk/install trunk/modules/articles trunk/modules/articles/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#24">[ date ]</a>
+              <a href="thread.html#24">[ thread ]</a>
+              <a href="subject.html#24">[ subject ]</a>
+              <a href="author.html#24">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-08 06:20:17 +0200 (Thu, 08 Sep 2005)
+New Revision: 101
+
+Added:
+   cms/trunk/
+   cms/trunk/admin.php
+   cms/trunk/admin/
+   cms/trunk/blocks/
+   cms/trunk/config.php
+   cms/trunk/core.php
+   cms/trunk/debug.php
+   cms/trunk/feed.php
+   cms/trunk/images/
+   cms/trunk/includes/
+   cms/trunk/index.php
+   cms/trunk/install/
+   cms/trunk/javascript/
+   cms/trunk/language/
+   cms/trunk/modules/
+   cms/trunk/themes/
+   cms/trunk/themes_admin/
+Removed:
+   cms/trunk/admin.php
+   cms/trunk/admin/
+   cms/trunk/blocks/
+   cms/trunk/config.php
+   cms/trunk/core.php
+   cms/trunk/debug.php
+   cms/trunk/feed.php
+   cms/trunk/images/
+   cms/trunk/includes/
+   cms/trunk/index.php
+   cms/trunk/install/
+   cms/trunk/javascript/
+   cms/trunk/language/
+   cms/trunk/modules/
+   cms/trunk/themes/
+   cms/trunk/themes_admin/
+   trunk/
+Log:
+Move file to cms/trunk
+
+Copied: cms/trunk (from rev 95, trunk)
+
+Copied: cms/trunk/admin (from rev 100, trunk/admin)
+
+Deleted: cms/trunk/admin.php
+===================================================================
+--- trunk/admin.php	2005-08-31 14:26:25 UTC (rev 95)
++++ cms/trunk/admin.php	2005-09-08 04:20:17 UTC (rev 101)
+@@ -1,112 +0,0 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-define('VIPERAL', 'Admin');
+-//define('NEED_SID', true);
+-
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '';
+-
+-require($site_file_root.'core.php');
+-
+-$_CLASS['core_user']-&gt;user_setup(null);
+-$_CLASS['core_display']-&gt;load_theme('viperal_admin', $site_file_root.'themes_admin/viperal_admin');
+-
+-$_CLASS['core_user']-&gt;add_lang('admin/common.php');
+-
+-$_CORE_MODULE['title'] = $_CLASS['core_user']-&gt;lang['ADMIN'];
+-$_CORE_MODULE['sides'] = BLOCK_ALL;
+-$_CLASS['core_blocks']-&gt;blocks_loaded = true;
+-
+-if (!$_CLASS['core_user']-&gt;is_user)
+-{
+-	if ($_CLASS['core_user']-&gt;is_bot)
+-	{
+-		url_redirect();
+-	}
+-
+-	login_box(array('admin_login' =&gt; true, 'full_screen' =&gt; true,  'full_login' =&gt; false, 'explain' =&gt; 'LOGIN_ADMIN', 'success' =&gt; 'LOGIN_ADMIN_SUCCESS'), 'login_admin.html');
+-}
+-
+-if ($_CLASS['core_user']-&gt;data['session_admin'] == ADMIN_NOT_LOGGED)
+-{
+-	login_box(array('admin_login' =&gt; true, 'full_screen' =&gt; true, 'full_login' =&gt; false, 'explain' =&gt; 'LOGIN_ADMIN_CONFIRM', 'success' =&gt; 'LOGIN_ADMIN_SUCCESS'), 'login_admin.html');
+-}
+-
+-if (!$_CLASS['core_user']-&gt;is_admin)
+-{
+-	trigger_error('NOT_ADMIN');
+-}
+-
+-$mod = get_variable('mod', 'REQUEST', false);
+-$file_path = false;
+-
+-if ($mod)
+-{
+-	$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.CORE_MODULES_TABLE.&quot; WHERE name='&quot;.$_CLASS['core_db']-&gt;escape($mod).&quot;'&quot;);
+-	$_CORE_MODULE = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-	$_CLASS['core_db']-&gt;free_result($result);
+-}
+-
+-if (!$mod || !$_CORE_MODULE)
+-{
+-	$_CORE_MODULE = array('title' =&gt; '', 'name' =&gt; '');
+-	$file_path = $site_file_root.'admin/index.php';
+-}
+-else
+-{
+-	if (file_exists($site_file_root.'admin/'.$_CORE_MODULE['name'].'.php'))
+-	{
+-		$file_path = $site_file_root.'admin/'.$_CORE_MODULE['name'].'.php';
+-	}
+-	else
+-	{
+-		$file_path = (file_exists($site_file_root.'modules/'.$_CORE_MODULE['name'].'/admin/index.php')) ? $site_file_root.'modules/'.$_CORE_MODULE['name'].'/admin/index.php' : false;
+-	}
+-}
+-
+-if (!$file_path)
+-{
+-	trigger_error('NO_ADMIN_MODULE', E_USER_ERROR);
+-}
+-
+-if ($_CORE_MODULE['name'])
+-{
+-	if (!$_CLASS['core_auth']-&gt;admin_power($_CORE_MODULE['name']))
+-	{
+-		trigger_error('NOT_AUTH', E_USER_ERROR);
+-	}
+-}
+-
+-$_CORE_MODULE['title'] = $_CLASS['core_user']-&gt;lang['ADMIN'].' &gt; '.$_CORE_MODULE['title'];
+-$_CORE_MODULE['sides'] = BLOCK_ALL;
+-	
+-require($site_file_root.'admin/menu.php');
+-
+-$main_menu = build_menu($menu);
+-
+-$_CLASS['core_template']-&gt;assign_array(array(
+-		'LINK_HOME'		=&gt; generate_link(),
+-		'LINK_ADMIN'	=&gt; generate_link(false, array('admin' =&gt; true)),
+-
+-		'MENU_MAIN'			=&gt; $main_menu['content'],
+-		'MENU_MAIN_ITEMS'	=&gt; $main_menu['menu'],
+-));
+-
+-
+-//load_class($site_file_root.'includes/core_editor.php', 'core_editor');
+-//$_CLASS['core_editor']-&gt;setup();
+-require($file_path);
+-    
+-?&gt;
+\ No newline at end of file
+
+Copied: cms/trunk/admin.php (from rev 100, trunk/admin.php)
+
+Copied: cms/trunk/blocks (from rev 100, trunk/blocks)
+
+Deleted: cms/trunk/config.php
+===================================================================
+
+Copied: cms/trunk/config.php (from rev 100, trunk/config.php)
+
+Deleted: cms/trunk/core.php
+===================================================================
+--- trunk/core.php	2005-08-31 14:26:25 UTC (rev 95)
++++ cms/trunk/core.php	2005-09-08 04:20:17 UTC (rev 101)
+@@ -1,149 +0,0 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal )								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-
+-if (!defined('VIPERAL'))
+-{
+-    die;
+-}
+-
+-set_magic_quotes_runtime(0);
+-error_reporting(E_ALL);
+-mb_internal_encoding('UTF-8');
+-//mb_http_output('UTF-8');
+-
+-// Remove registered globals
+-if ((bool) ini_get('register_globals'))
+-{
+-	foreach ($_REQUEST as $var_name =&gt; $value)
+-	{
+-		unset($$var_name);
+-	}
+-}
+-
+-define('STRIP_SLASHES', get_magic_quotes_gpc());
+-
+-$starttime = explode(' ', microtime());
+-$starttime = $starttime[1] + $starttime[0];
+-
+-// Move to index files
+-$base_memory_usage = function_exists('memory_get_usage') ? memory_get_usage() : 0;
+-
+-require($site_file_root.'includes/functions.php');
+-require($site_file_root.'config.php');
+-require($site_file_root.'includes/tables.php');
+-require($site_file_root.'includes/handler.php');
+-require($site_file_root.'includes/mailer.php');
+-require($site_file_root.'includes/db/'.$site_db['type'].'.php');
+-require($site_file_root.'includes/display/template.php');
+-require($site_file_root.'includes/cache/cache.php');
+-require($site_file_root.'includes/cache/cache_' . $acm_type . '.php');
+-
+-// Load basic classes
+-load_class(false, 'core_error_handler');
+-load_class(false, 'core_cache', 'cache_'.$acm_type);
+-load_class(false, 'core_template');
+-load_class(false, 'core_db', 'db_'.$site_db['type']);
+-
+-// Set error handler
+-$_CLASS['core_error_handler']-&gt;start();
+-//$_CLASS['core_error_handler']-&gt;stop();
+-//error_reporting(E_ERROR | E_WARNING | E_PARSE);
+-
+-if (function_exists('register_shutdown_function'))
+-{
+-	register_shutdown_function('script_close');
+-}
+-
+-$_CLASS['core_db']-&gt;connect($site_db);
+-unset($sitedb);
+-
+-$_CLASS['core_db']-&gt;return_on_error = true;
+-
+-// Error messages just incase we can't get our configs
+-$config_error = '&lt;center&gt;There is currently a problem with the site&lt;br/&gt;';
+-$config_error .= 'Please try again later&lt;br /&gt;&lt;br /&gt;Error Code: DB3&lt;/center&gt;';
+-
+-if (is_null($_CORE_CONFIG = $_CLASS['core_cache']-&gt;get('core_config')))
+-{
+-	$_CORE_CONFIG = array();
+-
+-	$sql = 'SELECT * FROM '.CORE_CONFIG_TABLE;
+-		
+-	if (!$result = $_CLASS['core_db']-&gt;query($sql))
+-	{
+-		trigger_error($config_error, E_USER_ERROR);
+-	}
+-	
+-	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-	{
+-		$_CORE_CONFIG[$row['section']][$row['name']] = $row['value'];
+-	}
+-	$_CLASS['core_db']-&gt;free_result($result);
+-
+-	$_CLASS['core_cache']-&gt;put('core_config', $_CORE_CONFIG);
+-}
+-
+-unset($config_error);
+-
+-$_CLASS['core_db']-&gt;return_on_error = false;
+-$_CLASS['core_cache']-&gt;remove('core_config');
+-$_CLASS['core_cache']-&gt;remove('config');
+-
+-if (VIPERAL == 'FEED')
+-{
+-	if (check_maintance_status(true) === true || check_load_status(true) === true)
+-	{
+-		header(&quot;HTTP/1.0 503 Service Unavailable&quot;);
+-		die;
+-	}
+-	return;
+-}
+-
+-// Load user based classes, and display options
+-require($site_file_root.'includes/session.php');
+-require($site_file_root.'includes/user.php');
+-require($site_file_root.'includes/auth/auth.php');
+-require($site_file_root.'includes/auth/auth_db.php');
+-require($site_file_root.'includes/display/blocks.php');
+-require($site_file_root.'includes/display/display.php');
+-
+-load_class(false, 'core_display');
+-load_class(false, 'core_blocks');
+-load_class(false, 'core_user');
+-
+-$_CLASS['core_user']-&gt;start();
+-
+-if (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $_CORE_CONFIG['global']['only_registered'])
+-{
+-	// conformation image 
+-	login_box(array('full_screen'	=&gt; true));
+-}
+-		
+-if ($_CLASS['core_user']-&gt;is_admin)
+-{
+-	$_CLASS['core_error_handler']-&gt;report = $_CORE_CONFIG['server']['error_options'];	
+-}
+-else
+-{
+-	$_CORE_CONFIG['global']['error'] = ERROR_NONE;
+-	$_CLASS['core_error_handler']-&gt;report = ERROR_NONE;
+-}
+-
+-if ($_SERVER['REQUEST_METHOD'] == 'POST' &amp;&amp; $_CLASS['core_user']-&gt;new_session)
+-{
+-	// error here
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: cms/trunk/core.php (from rev 100, trunk/core.php)
+
+Deleted: cms/trunk/debug.php
+===================================================================
+--- trunk/debug.php	2005-08-31 14:26:25 UTC (rev 95)
++++ cms/trunk/debug.php	2005-09-08 04:20:17 UTC (rev 101)
+@@ -1,142 +0,0 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-
+-define('VIPERAL', 'Admin');
+-
+-//echo str_replace('\\','/', getenv('DOCUMENT_ROOT')); die;
+-$site_file_root = '';
+-
+-require($site_file_root.'core.php');
+-
+-if (!$_CLASS['core_user']-&gt;is_admin)
+-{
+-	//die('this is admin only :-) need better language :-(');
+-}
+-
+-$_CLASS['core_error_handler']-&gt;stop();
+-$_CLASS['core_user']-&gt;user_setup();
+-error_reporting(E_ALL);
+-
+-$mode = get_variable('mode', 'GET', false);
+-
+-$_CLASS['core_template']-&gt;assign(array(
+-	'MODE'				=&gt;	$mode,
+-	'L_NOTICES'			=&gt;	'NOTICE ERRORS',
+-	'L_WARNINGS'		=&gt;	'WARNING ERRORS',
+-	'L_QUERIES'			=&gt;	'DB QUERY DETAILS',
+-	'bottomblock'		=&gt;	false,
+-	'MAIN_CONTENT'		=&gt;	false,
+-));
+-
+-switch ($mode)
+-{
+-	case 'warning':
+-		global $_CLASS;
+-		
+-		$debug_data = $_CLASS['core_user']-&gt;session_data_get('debug');
+-		
+-		if (empty($debug_data['E_WARNING']))
+-		{
+-			 break;
+-		}
+-
+-		$size = count($debug_data['E_WARNING']);
+-	
+-		for ($i=0; $i&lt;$size; $i++)
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('error_warnings', array(
+-				'errfile'	=&gt; $debug_data['E_WARNING'][$i]['file'],
+-				'errline'	=&gt; $debug_data['E_WARNING'][$i]['line'], 
+-				'msg_text' =&gt; $debug_data['E_WARNING'][$i]['error']
+-			));
+-		}
+-		
+-	break;
+-
+-	case 'queries':
+-		$query_details = $_CLASS['core_user']-&gt;session_data_get('query_details', array());
+-		$query_list = $_CLASS['core_user']-&gt;session_data_get('query_list', array());
+-
+-		foreach ($query_list as $key =&gt; $value)
+-		{
+-			$tempid = $first = false;
+-			$header = array();
+-		
+-			foreach ($query_details[$key] as $value2)
+-			{
+-				$queries = array();
+-		
+-				if (!is_array($value2))
+-				{
+-					continue;
+-				}
+-				
+-				if ($tempid !== $key)
+-				{
+-					foreach (array_keys($value2) as $key2)
+-					{
+-						$header[] = array('value' =&gt; (($key2) ? ucwords(str_replace('_', ' ', $key2)) : '&nbsp;'));
+-					}
+-					$tempid = $key;
+-				}
+-				
+-				foreach ($value2 as $key3 =&gt; $value3)
+-				{
+-					if (!$first || $first != $key3)
+-					{
+-						if (!$first)
+-						{
+-							$first = $key3;
+-						}
+-						
+-						$queries[] = array('row' =&gt; $key, 'value' =&gt; $value3, 'new' =&gt; false);
+-					}
+-					else
+-					{
+-						$queries[] = array('row' =&gt; $key, 'value' =&gt; $value3, 'new' =&gt; true);
+-					}
+-				}
+-			}
+-		
+-			$value['query'] = preg_replace('/\t(AND|OR)(\W)/', &quot;\$1\$2&quot;, htmlspecialchars(preg_replace('/[\s]*[\n\r\t]+[\n\r\s\t]*/', &quot;\n&quot;, $value['query'])));
+-
+-			$_CLASS['core_template']-&gt;assign_vars_array('query', array('row' =&gt; $key, 'query' =&gt; $value['query'], 'header' =&gt; $header, 'queries' =&gt; $queries, 'file' =&gt; $value['file'], 'line' =&gt; $value['line'], 'affected' =&gt; $value['affected'], 'time' =&gt; round($value['time'], 4)));
+-		}
+-	break;
+-	
+-	default:
+-	case 'notice':
+-		$debug_data = $_CLASS['core_user']-&gt;session_data_get('debug');
+-		
+-		if (empty($debug_data['E_NOTICE']))
+-		{
+-			break;
+-		}
+-		$size = count($debug_data['E_NOTICE']);
+-		
+-		for ($i = 0; $i &lt; $size; $i++)
+-		{
+-			$_CLASS['core_template']-&gt;assign_vars_array('error_notice', array(
+-				'errfile'	=&gt; $debug_data['E_NOTICE'][$i]['file'],
+-				'errline'	=&gt; $debug_data['E_NOTICE'][$i]['line'], 
+-				'msg_text' =&gt; $debug_data['E_NOTICE'][$i]['error']
+-			));
+-		}
+-	break;
+-}
+-
+-$_CLASS['core_template']-&gt;display('debug.html');
+-script_close(false);
+-?&gt;
+\ No newline at end of file
+
+Copied: cms/trunk/debug.php (from rev 100, trunk/debug.php)
+
+Deleted: cms/trunk/feed.php
+===================================================================
+--- trunk/feed.php	2005-08-31 14:26:25 UTC (rev 95)
++++ cms/trunk/feed.php	2005-09-08 04:20:17 UTC (rev 101)
+@@ -1,82 +0,0 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-define('VIPERAL', 'FEED');
+-
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = 'C:/apachefriends/xampp/cms/';
+-
+-require($site_file_root.'core.php');
+-
+-error_reporting(0);
+-header('Content-Type: text/xml');
+-
+-$result = $_CLASS['core_db']-&gt;sql_query('SELECT id, title, time, intro, poster_name FROM '.$prefix.'_news ORDER BY id DESC LIMIT 10');
+-
+-$last_post_time = 0;
+-	
+-while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
+-{
+-	if ($row['time'] &gt; $last_post_time)
+-	{
+-		$last_post_time = $row['time'];
+-	}
+-	
+-	$_CLASS['core_template']-&gt;assign_vars_array('items', array(
+-		'TITLE' 		=&gt; htmlspecialchars($row['title'], ENT_QUOTES),
+-		'LINK' 			=&gt; generate_link('News&amp;mode=view&amp;id='.$row['id'], array('full' =&gt; true)),
+-		'DESCRIPTION' 	=&gt; htmlspecialchars(strip_tags($row['intro']), ENT_QUOTES),
+-		'TIME'			=&gt; gmdate('M d Y H:i:s', $row['time']) .' GMT',
+-		'AUTHOR'		=&gt; $row['poster_name']
+-	));
+-}
+-
+-$_CLASS['core_db']-&gt;sql_freeresult($result);
+-
+-$_CLASS['core_template']-&gt;assign(array(
+-		'SITE_NAME' 	=&gt; $_CORE_CONFIG['global']['site_name'],
+-		'SITE_URL' 		=&gt; $_CORE_CONFIG['global']['site_url'],
+-		'SLOGAN' 		=&gt; $_CORE_CONFIG['global']['slogan'],
+-		'LANG'			=&gt; 'en-us',
+-		'LAST_MODIFIED'	=&gt; gmdate('M d Y H:i:s', $last_post_time) .' GMT',
+-		'TIME'			=&gt; gmdate('M d Y H:i:s', time()) .' GMT'
+-	));
+-
+-
+-$feed = get_variable('feed', 'GET', false);
+-
+-Switch ($feed)
+-{
+-	case 'rdf':
+-	case 'rss1':
+-
+-	$_CLASS['core_template']-&gt;display('rss/rdf.html');
+-	break;
+-	
+-	case 'rss2':
+-	$_CLASS['core_template']-&gt;display('rss/rss2.html');
+-	break;
+-	
+-	case 'rss':
+-	$_CLASS['core_template']-&gt;display('rss/rss91.html');
+-	break;
+-		
+-	default:
+-	$_CLASS['core_template']-&gt;display('rss/rss91.html');
+-}
+-
+-script_close();
+-die;
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: cms/trunk/feed.php (from rev 100, trunk/feed.php)
+
+Copied: cms/trunk/images (from rev 100, trunk/images)
+
+Copied: cms/trunk/includes (from rev 100, trunk/includes)
+
+Deleted: cms/trunk/index.php
+===================================================================
+--- trunk/index.php	2005-08-31 14:26:25 UTC (rev 95)
++++ cms/trunk/index.php	2005-09-08 04:20:17 UTC (rev 101)
+@@ -1,91 +0,0 @@
+-&lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
+-define('VIPERAL', 'CMS');
+-
+-//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+-$site_file_root = '';
+-require($site_file_root.'core.php');
+-
+-$mod = get_variable('mod', 'REQUEST', false);
+-
+-if (!$mod)
+-{
+-	// Set as homepage 
+-	$_CLASS['core_display']-&gt;homepage = true;
+-
+-	// Get homepage modules
+-	$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.CORE_MODULES_TABLE.' WHERE homepage &gt; 0 ORDER BY homepage ASC');
+-
+-	While ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-	{
+-		$_CLASS['core_display']-&gt;add_module($row);
+-	}
+-
+-	$_CLASS['core_db']-&gt;free_result($result);
+-
+-	if (!($_CORE_MODULE = $_CLASS['core_display']-&gt;get_module()))
+-	{
+-		$_CORE_MODULE['sides'] = BLOCK_ALL;
+-		$_CORE_MODULE += array('name' =&gt; '', 'title' =&gt; ''); // temp
+-
+-		$_CLASS['core_display']-&gt;display_head();
+-		// Hey admin we don't have a modules set
+-		if ($_CLASS['core_auth']-&gt;admin_auth('modules'))
+-		{
+-			$_CLASS['core_display']-&gt;message = '_NO_HOMEPAGE_ADMIN';
+-		}
+-	
+-		$_CLASS['core_display']-&gt;display_footer();
+-	}
+-}
+-else
+-{
+-	if ($mod == 'system')
+-	{
+-		include_once($site_file_root.'includes/system.php');
+-
+-		$mode = get_variable('mode', 'REQUEST', false);
+-		if (!$mode || !function_exists($mode))
+-		{
+-			script_close(false);
+-		}
+-
+-		$mode();
+-		script_close(false);
+-	}
+-
+-	//Grab module data if it exsits
+-	$result = $_CLASS['core_db']-&gt;query('SELECT * FROM '.CORE_MODULES_TABLE.' WHERE type='.MODULE_NORMAL.&quot; AND name='&quot;.$_CLASS['core_db']-&gt;escape($mod).&quot;'&quot;);
+-	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-	$_CLASS['core_db']-&gt;free_result($result);
+-
+-	$status = $_CLASS['core_display']-&gt;add_module($row);
+-	
+-	if ($status !== true)
+-	{
+-		trigger_error($status, E_USER_ERROR);
+-	}
+-
+-	$_CORE_MODULE = $_CLASS['core_display']-&gt;get_module();
+-}
+-
+-$path = $site_file_root.'modules/'.$_CORE_MODULE['name'].'/index.php';
+-$_CLASS['core_user']-&gt;page = $_CORE_MODULE['name'];
+-
+-require_once($path);
+-
+-script_close();
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: cms/trunk/index.php (from rev 100, trunk/index.php)
+
+Copied: cms/trunk/install (from rev 100, trunk/install)
+
+Copied: cms/trunk/javascript (from rev 100, trunk/javascript)
+
+Copied: cms/trunk/language (from rev 100, trunk/language)
+
+Copied: cms/trunk/modules (from rev 100, trunk/modules)
+
+Copied: cms/trunk/themes (from rev 100, trunk/themes)
+
+Copied: cms/trunk/themes_admin (from rev 100, trunk/themes_admin)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000023.html">[Viperals-svncheckins] r100 - /
+</A></li>
+	<LI>Next message: <A HREF="000025.html">[Viperals-svncheckins] r104 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/admin/functions branches/1.0alpha1/includes branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates/admin/blocks branches/1.0alpha1/includes/templates/admin/messages branches/1.0alpha1/install branches/1.0alpha1/modules/articles trunk trunk/admin trunk/admin/functions trunk/includes trunk/includes/display trunk/includes/templates/admin trunk/includes/templates/admin/articles trunk/includes/templates/admin/blocks trunk/includes/templates/admin/messages trunk/includes/templates/admin/modules trunk/install trunk/modules/articles trunk/modules/articles/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#24">[ date ]</a>
+              <a href="thread.html#24">[ thread ]</a>
+              <a href="subject.html#24">[ subject ]</a>
+              <a href="author.html#24">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

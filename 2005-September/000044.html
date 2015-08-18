@@ -1,0 +1,2052 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r123 - in cms/trunk: . admin includes/db includes/forums includes/forums/admin includes/templates/modules includes/templates/modules/Forums install javascript modules/Forums modules/Forums/admin modules/Quick_Message modules/articles
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r123%20-%20in%20cms/trunk%3A%20.%20admin%20includes/db%20includes/forums%20includes/forums/admin%20includes/templates/modules%20includes/templates/modules/Forums%20install%20javascript%20modules/Forums%20modules/Forums/admin%20modules/Quick_Message%20modules/articles&In-Reply-To=%3C200509150314.j8F3E9cG027069%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000043.html">
+   <LINK REL="Next"  HREF="000045.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r123 - in cms/trunk: . admin includes/db includes/forums includes/forums/admin includes/templates/modules includes/templates/modules/Forums install javascript modules/Forums modules/Forums/admin modules/Quick_Message modules/articles</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r123%20-%20in%20cms/trunk%3A%20.%20admin%20includes/db%20includes/forums%20includes/forums/admin%20includes/templates/modules%20includes/templates/modules/Forums%20install%20javascript%20modules/Forums%20modules/Forums/admin%20modules/Quick_Message%20modules/articles&In-Reply-To=%3C200509150314.j8F3E9cG027069%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r123 - in cms/trunk: . admin includes/db includes/forums includes/forums/admin includes/templates/modules includes/templates/modules/Forums install javascript modules/Forums modules/Forums/admin modules/Quick_Message modules/articles">viperal at berlios.de
+       </A><BR>
+    <I>Thu Sep 15 05:14:09 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000043.html">[Viperals-svncheckins] r122 - cms/trunk/images
+</A></li>
+        <LI>Next message: <A HREF="000045.html">[Viperals-svncheckins] r124 - in cms/trunk/modules: Quick_Message articles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-15 05:13:58 +0200 (Thu, 15 Sep 2005)
+New Revision: 123
+
+Added:
+   cms/trunk/modules/Quick_Message/configurator.php
+   cms/trunk/modules/articles/configurator.php
+Removed:
+   cms/trunk/includes/templates/modules/Server_Status/
+   cms/trunk/modules/Quick_Message/install.php
+   cms/trunk/modules/articles/install.php
+Modified:
+   cms/trunk/admin/modules.php
+   cms/trunk/core.php
+   cms/trunk/includes/db/mysql.php
+   cms/trunk/includes/db/mysql3.php
+   cms/trunk/includes/db/postgres.php
+   cms/trunk/includes/forums/admin/admin_permissions.php
+   cms/trunk/includes/forums/functions.php
+   cms/trunk/includes/forums/functions_admin.php
+   cms/trunk/includes/forums/functions_display.php
+   cms/trunk/includes/templates/modules/Forums/index_body.html
+   cms/trunk/includes/templates/modules/Forums/viewforum_body.html
+   cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html
+   cms/trunk/install/build_tables.php
+   cms/trunk/javascript/collapse.js
+   cms/trunk/javascript/common.js
+   cms/trunk/javascript/menu.js
+   cms/trunk/modules/Forums/admin/index.php
+   cms/trunk/modules/Forums/ajax.php
+   cms/trunk/modules/Forums/index.php
+   cms/trunk/modules/Forums/viewforum.php
+   cms/trunk/modules/Forums/viewtopic.php
+Log:
+Just a few, maybe a bit of changes and fixes
+
+Modified: cms/trunk/admin/modules.php
+===================================================================
+--- cms/trunk/admin/modules.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/admin/modules.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -66,6 +66,29 @@
+ 				check_type($module['module_type']);
+ 			
+ 				$status = ($module['module_status'] == STATUS_ACTIVE) ? STATUS_DISABLED : STATUS_ACTIVE;
++				
++				if (file_exists($site_file_root.'modules/'.$module['module_name'].'/configurator.php'))
++				{
++					require_once($site_file_root.'modules/'.$module['module_name'].'/configurator.php');
++					
++					$name = $module['module_name'].'_configurator';
++
++					if (class_exists($name))
++					{
++						$module_configurer = new $name;
++
++						if (method_exists('status_change'))
++						{
++							$report = $module_configurer-&gt;status_change($status, $module['module_status']);
++		
++							if ($report !== true)
++							{
++								trigger_error(is_string($report) ? $report : 'STATUS_CHANGE_FAILED');
++							}
++						}
++					}
++				}
++
+ 				$result = $_CLASS['core_db']-&gt;query('UPDATE '. CORE_MODULES_TABLE . &quot; SET module_status = $status WHERE module_id = $id&quot;);
+ 			break;
+ 
+@@ -83,20 +106,27 @@
+ 
+ 				if (display_confirmation())
+ 				{
+-					$error = true;
++					$status = true;
+ 
+-					if (file_exists($site_file_root.'modules/'.$module['module_name'].'/install.php'))
++					if (file_exists($site_file_root.'modules/'.$module['module_name'].'/configurator.php'))
+ 					{
+-						require_once($site_file_root.'modules/'.$module['module_name'].'/install.php');
++						require_once($site_file_root.'modules/'.$module['module_name'].'/configurator.php');
++						
++						$name = $module['module_name'].'_configurator';
++
++						if (class_exists($name))
++						{
++							$module_configurer = new $name;
+ 	
+-						$name = $module['module_name'].'_install';
+-						$install = new $name;
+-						$error = $install-&gt;install();
+-	
+-						if ($error !== true)
+-						{
+-							// do something better than this
+-							trigger_error($error);
++							if (method_exists('install'))
++							{
++								$status = $module_configurer-&gt;install();
++			
++								if ($status !== true)
++								{
++									trigger_error(is_string($status) ? $status : 'INSTALLATION_FAILED');
++								}
++							}
+ 						}
+ 					}
+ 
+@@ -118,14 +148,26 @@
+ 				
+ 				if (display_confirmation())
+ 				{
+-					if (file_exists($site_file_root.'modules/'.$module['module_name'].'/install.php'))
++					if (file_exists($site_file_root.'modules/'.$module['module_name'].'/configurator.php'))
+ 					{
+-						require_once($site_file_root.'modules/'.$module['module_name'].'/install.php');
++						require_once($site_file_root.'modules/'.$module['module_name'].'/configurator.php');
+ 						
+-						$name = $module['module_name'].'_install';
+-						$install = new $name;
+-						
+-						$install-&gt;uninstall();
++						$name = $module['module_name'].'_configurator';
++
++						if (class_exists($name))
++						{
++							$module_configurer = new $name;
++	
++							if (method_exists('uninstall'))
++							{
++								$status = $module_configurer-&gt;uninstall();
++			
++								if ($status !== true)
++								{
++									trigger_error(is_string($status) ? $status : 'UNISTALLATION_FAILED');
++								}
++							}
++						}
+ 					}
+ 
+ 					$_CLASS['core_db']-&gt;query('UPDATE ' . CORE_MODULES_TABLE . ' set module_status = ' . STATUS_PENDING . ' WHERE module_id = '.$id);
+
+Modified: cms/trunk/core.php
+===================================================================
+--- cms/trunk/core.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/core.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -147,7 +147,7 @@
+ 	}
+ }
+ 
+-$_CLASS['core_db']-&gt;report_error(false);
++$_CLASS['core_db']-&gt;report_error(true);
+ unset($config_error);
+ 
+ $_CLASS['core_cache']-&gt;remove('core_config');
+
+Modified: cms/trunk/includes/db/mysql.php
+===================================================================
+--- cms/trunk/includes/db/mysql.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/db/mysql.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -382,7 +382,7 @@
+ 		return preg_replace('#(.*?)#e', &quot;\$this-&gt;escape('\\1')&quot;, $value);
+ 	}
+ 		
+-	function optimize_tables($table = '')
++	function optimize_tables($table = false)
+ 	{
+ 		global $_CORE_CONFIG;
+ 	
+@@ -403,6 +403,10 @@
+ 				{
+ 					$table .= ', ' . $row[0];
+ 				}
++				else
++				{
++					$table = $row[0];
++				}
+ 			}
+ 
+ 			$this-&gt;free_result($result);
+
+Modified: cms/trunk/includes/db/mysql3.php
+===================================================================
+--- cms/trunk/includes/db/mysql3.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/db/mysql3.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -311,7 +311,7 @@
+ 		return preg_replace('#(.*?)#e', &quot;\$this-&gt;escape('\\1')&quot;, $value);
+ 	}
+ 	
+-	function optimize_tables($table = '')
++	function optimize_tables($table = false)
+ 	{
+ 		global $_CORE_CONFIG;
+ 	
+@@ -332,9 +332,13 @@
+ 				{
+ 					$table .= ', ' . $row[0];
+ 				}
++				else
++				{
++					$table = $row[0];
++				}
+ 			}
+ 
+-			$this-&gt;sql_freeresult($result);
++			$this-&gt;free_result($result);
+ 		}
+ 
+ 		if ($table)
+
+Modified: cms/trunk/includes/db/postgres.php
+===================================================================
+--- cms/trunk/includes/db/postgres.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/db/postgres.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -66,7 +66,10 @@
+ 			$connection_string[] = 'password='.$db['password'];
+ 		}
+ 
+-		$connection_string[] = 'dbname='.$db['database'];
++		if ($db['database'])
++		{
++			$connection_string[] = 'dbname='.$db['database'];
++		}
+ 
+ 		if ($this-&gt;link_identifier)
+ 		{
+
+Modified: cms/trunk/includes/forums/admin/admin_permissions.php
+===================================================================
+--- cms/trunk/includes/forums/admin/admin_permissions.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/forums/admin/admin_permissions.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -199,7 +199,7 @@
+ 					}
+ 				}
+ 
+-				if (sizeof($auth_setting))
++				if (!empty($auth_setting))
+ 				{
+ 					// Loop through all user/group ids
+ 					foreach ($ug_data as $id)
+@@ -211,14 +211,14 @@
+ 
+ 			// Do we need to recache the moderator lists? We do if the mode
+ 			// was mod or auth_settings['mod'] is a non-zero size array
+-			if ($mode == 'mod' || (isset($auth_settings['mod']) &amp;&amp; sizeof($auth_settings['mod'])))
++			if ($mode == 'mod' || !empty($auth_settings['mod']))
+ 			{
+ 				cache_moderators();
+ 			}
+ 
+ 			// Remove users who are now moderators or admins from everyones foes
+ 			// list
+-			if ($mode == 'mod' || (isset($auth_settings['mod']) &amp;&amp; sizeof($auth_settings['mod'])) || $mode == 'admin' || (isset($auth_settings['admin']) &amp;&amp; sizeof($auth_settings['admin'])))
++			if ($mode == 'mod' || !empty($auth_settings['mod']) || $mode == 'admin' || !empty($auth_settings['admin']))
+ 			{
+ 				update_foes();
+ 			}
+
+Modified: cms/trunk/includes/forums/functions.php
+===================================================================
+--- cms/trunk/includes/forums/functions.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/forums/functions.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -280,9 +280,9 @@
+ 
+ 	$forum_parents = array();
+ 	
+-	if ($forum_data['parent_id'] &gt; 0)
++	if ($forum_data['parent_id'])
+ 	{
+-		if ($forum_data['forum_parents'] == '')
++		if (!$forum_data['forum_parents'])
+ 		{
+ 			$sql = 'SELECT forum_id, forum_name, forum_type
+ 				FROM ' . FORUMS_FORUMS_TABLE . '
+@@ -318,9 +318,7 @@
+ {
+ 	global $config, $_CLASS;
+ 
+-	// Have we disabled the display of moderators? If so, then return
+-	// from whence we came ... 
+-	if (empty($config['load_moderators']))
++	if (!$config['load_moderators'])
+ 	{
+ 		return array();
+ 	}
+@@ -342,7 +340,7 @@
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$forum_moderators[$row['forum_id']][] = (!empty($row['user_id'])) ? '&lt;a href=&quot;' . generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']) . '&quot;&gt;' . $row['username'] . '&lt;/a&gt;' : '&lt;a href=&quot;' . generate_link('Members_List&amp;mode=group&amp;g=' . $row['group_id']) . '&quot;&gt;' . $row['groupname'] . '&lt;/a&gt;';
++		$forum_moderators[$row['forum_id']][] = empty($row['user_id']) ? '&lt;a href=&quot;' . generate_link('Members_List&amp;mode=group&amp;g=' . $row['group_id']) . '&quot;&gt;' . (isset($_CLASS['core_user']-&gt;lang['G_' . $row['group_name']]) ? $_CLASS['core_user']-&gt;lang['G_' . $row['group_name']] : $row['group_name']) . '&lt;/a&gt;' : '&lt;a href=&quot;' . generate_link('Members_List&amp;mode=viewprofile&amp;u=' . $row['user_id']) . '&quot;&gt;' . $row['username'] . '&lt;/a&gt;';
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+@@ -618,7 +616,7 @@
+ 	);
+ }
+ 
+-// Marks a topic or form as read
++// Marks a topic or forum as read
+ function markread($mode, $forum_id = 0, $topic_id = 0, $marktime = false)
+ {
+ 	global $config, $_CLASS, $_CORE_CONFIG;
+@@ -694,12 +692,19 @@
+ 			}
+ 			else
+ 			{
+-				$tracking = (isset($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) ? unserialize(stripslashes($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) : array();
++				$tracking = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
++				
++				if (!is_array($tracking))
++				{
++					$tracking = array();
++				}
+ 
+ 				foreach ($forum_id as $f_id)
+ 				{
+-					unset($tracking[$f_id]);
+-					$tracking[$f_id][0] = base_convert($time - $config['board_startdate'], 10, 36);
++					$forum_id36 = base_convert($f_id, 10, 36);
++
++					unset($tracking[$forum_id36]);
++					$tracking[$forum_id36][0] = base_convert($time, 10, 36);
+ 				}
+ 
+ 				$_CLASS['core_user']-&gt;set_cookie('track', serialize($tracking), time() + 31536000);
+@@ -732,11 +737,13 @@
+ 			}
+ 			else
+ 			{
+-				$tracking = array();
+-				if (isset($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track']))
++				$tracking = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
++
++				if (!is_array($tracking))
+ 				{
+-					$tracking = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
+-
++					$tracking = array();
++				}
++					/*
+ 					// If the cookie grows larger than 2000 characters we will remove
+ 					// the smallest value
+ 					if (strlen($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track']) &gt; 2000)
+@@ -751,18 +758,21 @@
+ 							}
+ 						}
+ 						unset($tracking[$m_fkey][$m_tkey]);
+-					}
+-				}
++					}*/
+ 
+-				if (isset($tracking[$forum_id]) &amp;&amp; base_convert($tracking[$forum_id][0], 36, 10) &lt; $time)
++				$topic_id36 = base_convert($topic_id, 10, 36);
++				$forum_id36 = base_convert($forum_id, 10, 36);
++
++				if (isset($tracking[$forum_id36][$topic_id36]) &amp;&amp; base_convert($tracking[$forum_id36][$topic_id36], 36, 10) &lt; $time)
+ 				{
+-					$tracking[$forum_id][base_convert($topic_id, 10, 36)] = base_convert($time - $config['board_startdate'], 10, 36);
++					$tracking[$forum_id36][$topic_id36] = base_convert($time, 10, 36);
+ 
+ 					$_CLASS['core_user']-&gt;set_cookie('track', serialize($tracking), time() + 31536000);
+ 				}
+-				else if (!isset($tracking[$forum_id]))
++				elseif (!isset($tracking[$forum_id36][$topic_id36]))
+ 				{
+-					$tracking[$forum_id][0] = base_convert($time - $config['board_startdate'], 10, 36);
++					$tracking[$forum_id36][$topic_id36] = base_convert($time, 10, 36);
++
+ 					$_CLASS['core_user']-&gt;set_cookie('track', serialize($tracking), time() + 31536000);
+ 				}
+ 				unset($tracking);
+@@ -1376,7 +1386,6 @@
+ 		'S_USER_LANG'			=&gt; $_CLASS['core_user']-&gt;data['user_lang'], 
+ 		'S_USER_BROWSER' 		=&gt; ($_CLASS['core_user']-&gt;data['session_browser']) ? $_CLASS['core_user']-&gt;data['session_browser'] : $_CLASS['core_user']-&gt;lang['UNKNOWN_BROWSER'],
+ 		'S_CONTENT_DIRECTION' 	=&gt; $_CLASS['core_user']-&gt;lang['DIRECTION'],
+-		'S_CONTENT_ENCODING' 	=&gt; 'UTF-8',
+ 		'S_CONTENT_DIR_LEFT' 	=&gt; $_CLASS['core_user']-&gt;lang['LEFT'],
+ 		'S_CONTENT_DIR_RIGHT' 	=&gt; $_CLASS['core_user']-&gt;lang['RIGHT'],
+ 		'S_TIMEZONE'			=&gt; ($_CLASS['core_user']-&gt;data['user_dst'] || (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $_CORE_CONFIG['global']['default_dst'])) ? sprintf($_CLASS['core_user']-&gt;lang['ALL_TIMES'], $_CLASS['core_user']-&gt;lang['tz'][$tz/3600], $_CLASS['core_user']-&gt;lang['tz']['dst']) : sprintf($_CLASS['core_user']-&gt;lang['ALL_TIMES'], $_CLASS['core_user']-&gt;lang['tz'][$tz/3600], ''),
+
+Modified: cms/trunk/includes/forums/functions_admin.php
+===================================================================
+--- cms/trunk/includes/forums/functions_admin.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/forums/functions_admin.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -657,7 +657,7 @@
+ 
+ 	switch ($_CLASS['core_db']-&gt;db_layer)
+ 	{
+-		case 'mysql4':
++		case 'mysql':
+ 		case 'mysqli':
+ 			$sql = 'DELETE t.*
+ 				FROM ' . FORUMS_TOPICS_TABLE . ' t, ' . FORUMS_TOPICS_TABLE . ' t2
+@@ -777,7 +777,7 @@
+ 		case 'topic_moved':
+ 			switch ($_CLASS['core_db']-&gt;db_layer)
+ 			{
+-				case 'mysql4':
++				case 'mysql':
+ 				case 'mysqli':
+ 					$sql = 'DELETE FROM ' . FORUMS_TOPICS_TABLE . '
+ 						USING ' . FORUMS_TOPICS_TABLE . ' t1, ' . FORUMS_TOPICS_TABLE . &quot; t2
+@@ -814,7 +814,7 @@
+ 		case 'topic_approved':
+ 			switch ($_CLASS['core_db']-&gt;db_layer)
+ 			{
+-				case 'mysql4':
++				case 'mysql':
+ 				case 'mysqli':
+ 					$sql = 'UPDATE ' . FORUMS_TOPICS_TABLE . ' t, ' . FORUMS_POSTS_TABLE . &quot; p
+ 						SET t.topic_approved = p.post_approved
+@@ -1596,59 +1596,40 @@
+ 	global $_CLASS;
+ 
+ 	// Clear table
+-	$sql = ($_CLASS['core_db']-&gt;db_layer != 'sqlite') ? 'TRUNCATE ' . MODERATOR_TABLE : 'DELETE FROM ' . MODERATOR_TABLE;
+-	$_CLASS['core_db']-&gt;query($sql);
++	//$sql = (strpos($_CLASS['core_db']-&gt;db_layer, 'sqlite') === false) ? 'TRUNCATE ' . MODERATOR_TABLE : 'DELETE FROM ' . MODERATOR_TABLE;
++	$_CLASS['core_db']-&gt;query('TRUNCATE ' . FORUMS_MODERATOR_TABLE);
+ 
+ 	// Holding array
+ 	$m_sql = array();
+ 	$user_id_sql = '';
+ 
+ 	$sql = 'SELECT a.forum_id, u.user_id, u.username
+-		FROM  ' . ACL_OPTIONS_TABLE . '  o, ' . ACL_USERS_TABLE . ' a,  ' . USERS_TABLE . &quot;  u
++		FROM  ' . FORUMS_ACL_OPTIONS_TABLE . '  o, ' . FORUMS_ACL_TABLE . ' a,  ' . USERS_TABLE . &quot;  u
+ 		WHERE o.auth_option = 'm_'
+ 			AND a.auth_option_id = o.auth_option_id
+-			AND a.auth_setting = &quot; . ACL_YES . ' 
++			AND a.auth_setting = &quot; . ACL_YES . '
+ 			AND u.user_id = a.user_id';
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$m_sql['f_' . $row['forum_id'] . '_u_' . $row['user_id']] = $row['forum_id'] . ', ' . $row['user_id'] . &quot;, '&quot; . $row['username'] . &quot;', NULL, NULL&quot;;
++		$m_sql['f_' . $row['forum_id'] . '_u_' . $row['user_id']] = $row['forum_id'] . ', ' . $row['user_id'] . &quot;, '&quot; . $row['username'] . &quot;', NULL, NULL, 1&quot;;
+ 		$user_id_sql .= (($user_id_sql) ? ', ' : '') . $row['user_id'];
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+-	// Remove users who have group memberships with DENY moderator permissions
+-	if ($user_id_sql)
+-	{
+-		$sql = 'SELECT a.forum_id, ug.user_id
+-			FROM  ' . ACL_OPTIONS_TABLE . '  o, ' . ACL_GROUPS_TABLE . ' a,  ' . USER_GROUP_TABLE . &quot;  ug
+-			WHERE o.auth_option = 'm_'
+-				AND a.auth_option_id = o.auth_option_id
+-				AND a.auth_setting = &quot; . ACL_NO . &quot; 
+-				AND a.group_id = ug.group_id
+-				AND ug.user_id IN ($user_id_sql)&quot;;
+-		$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-		{
+-			unset($m_sql['f_' . $row['forum_id'] . '_u_' . $row['user_id']]);
+-		}
+-		$_CLASS['core_db']-&gt;free_result($result);
+-	}
+-
+ 	$sql = 'SELECT a.forum_id, g.group_name, g.group_id
+-		FROM  ' . ACL_OPTIONS_TABLE . '  o, ' . ACL_GROUPS_TABLE . ' a,  ' . GROUPS_TABLE . &quot;  g
++		FROM  ' . FORUMS_ACL_OPTIONS_TABLE . '  o, ' . FORUMS_ACL_TABLE . ' a,  ' . GROUPS_TABLE . &quot;  g
+ 		WHERE o.auth_option = 'm_'
+ 			AND a.auth_option_id = o.auth_option_id
+ 			AND a.auth_setting = &quot; . ACL_YES . '
+ 			AND g.group_id = a.group_id
+-			AND g.group_type NOT IN (' . GROUP_HIDDEN . ', ' . GROUP_SPECIAL . ')';
++			AND g.group_type &lt;&gt; ' . GROUP_HIDDEN;
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$m_sql['f_' . $row['forum_id'] . '_g_' . $row['group_id']] = $row['forum_id'] . ', NULL, NULL, ' . $row['group_id'] . &quot;, '&quot; . $row['group_name'] . &quot;'&quot;;
++		$m_sql['f_' . $row['forum_id'] . '_g_' . $row['group_id']] = $row['forum_id'] . ', NULL, NULL, ' . $row['group_id'] . &quot;, '&quot; . $row['group_name'] . &quot;', 1&quot;;
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+@@ -1656,29 +1637,30 @@
+ 	{
+ 		switch ($_CLASS['core_db']-&gt;db_layer)
+ 		{
+-			case 'mysql':
+-			
+-				$sql = 'INSERT INTO ' . MODERATOR_TABLE . ' (forum_id, user_id, username, group_id, groupname) 
++			case 'mysql3':
++				$sql = 'INSERT INTO ' . FORUMS_MODERATOR_TABLE . ' (forum_id, user_id, username, group_id, group_name, display_on_index) 
+ 					VALUES ' . implode(', ', preg_replace('#^(.*)$#', '(\1)',  $m_sql));
+ 				$_CLASS['core_db']-&gt;query($sql);
+-				break;
++			break;
+ 
+-			case 'mysql4':
++			case 'mysql':
+ 			case 'mysqli':
+ 			case 'mssql':
+ 			case 'sqlite':
+-				$sql = 'INSERT INTO ' . MODERATOR_TABLE . ' (forum_id, user_id, username, group_id, groupname)
++			case 'sqlite_pdo':
++				$sql = 'INSERT INTO ' . FORUMS_MODERATOR_TABLE . ' (forum_id, user_id, username, group_id, group_name, display_on_index)
+ 					 ' . implode(' UNION ALL ', preg_replace('#^(.*)$#', 'SELECT \1',  $m_sql));
+ 				$_CLASS['core_db']-&gt;query($sql);
+-				break;
++			break;
+ 
+ 			default:
+ 				foreach ($m_sql as $k =&gt; $sql)
+ 				{
+-					$sql = 'INSERT INTO ' . MODERATOR_TABLE . &quot; (forum_id, user_id, username, group_id, groupname) 
++					$sql = 'INSERT INTO ' . FORUMS_MODERATOR_TABLE . &quot; (forum_id, user_id, username, group_id, group_name, display_on_index) 
+ 						VALUES ($sql)&quot;;
+ 					$_CLASS['core_db']-&gt;query($sql);
+ 				}
++			break;
+ 		}
+ 	}
+ }
+@@ -1889,10 +1871,19 @@
+ 				$forum_id = array($forum_id);
+ 			}
+ 
++			$holding_auth = array();
++
+ 			// Set any flags as required
+ 			foreach ($auth as $auth_option =&gt; $setting)
+ 			{
++				if ($setting == ACL_NO)
++				{
++					unset($auth[$auth_option]);
++					continue;
++				}
++
+ 				$postion = strpos($auth_option, '_');
++
+ 				if ($postion == false)
+ 				{
+ 					continue;
+@@ -1900,9 +1891,9 @@
+ 
+ 				$flag = substr($auth_option, 0, $postion + 1);
+ 
+-				if (empty($auth[$flag]) &amp;&amp; (empty($holding_auth[$flag]) || ($holding_auth[$flag] == ACL_NO &amp;&amp; $setting == ACL_YES)))
++				if (empty($auth[$flag]))
+ 				{
+-					$holding_auth[$flag] =  $setting;
++					$auth[$flag] = $setting;
+ 				}
+ 			}
+ 
+@@ -1936,12 +1927,17 @@
+ 			$sql_ary = array();
+ 			foreach ($forum_id as $forum)
+ 			{
+-				$delete_option_ids = $update_option_ids =array();
++				$delete_option_ids = $update_option_ids = array();
+ 
+ 				foreach ($auth as $auth_option =&gt; $setting)
+ 				{
+-					$auth_option_id = $option_ids[$auth_option];
++					if (!isset($option_ids[$auth_option]))
++					{
++						continue;
++					}
+ 
++					$auth_option_id = $option_ids[$auth_option];
++					
+ 					switch ($setting)
+ 					{
+ 						case ACL_UNSET:
+@@ -1984,7 +1980,6 @@
+ 				}
+ 			}
+ 			unset($cur_auth);
+-
+ 			
+ 			foreach ($sql_ary as $sql_type =&gt; $sql_subary)
+ 			{
+@@ -1995,11 +1990,11 @@
+ 					case 'insert':
+ 						switch ($_CLASS['core_db']-&gt;db_layer)
+ 						{
+-							case 'mysql':
++							case 'mysql3':
+ 								$sql = 'VALUES ' . implode(', ', preg_replace('#^(.*?)$#', '(\1)', $sql_subary));
+ 							break;
+ 
+-							case 'mysql4':
++							case 'mysql':
+ 							case 'mysqli':
+ 							case 'mssql':
+ 							case 'sqlite':
+
+Modified: cms/trunk/includes/forums/functions_display.php
+===================================================================
+--- cms/trunk/includes/forums/functions_display.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/forums/functions_display.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -55,8 +55,7 @@
+ 	else
+ 	{
+ 		$sql_from = $lastread_select = $sql_lastread = '';
+-
+-		$tracking_topics = (isset($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) ? unserialize(stripslashes($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) : array();
++		$tracking_topics = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
+ 	}
+ 
+ 	$sql = &quot;SELECT f.* $lastread_select 
+@@ -154,9 +153,10 @@
+ 			}
+ 		}
+ 
+-		if (!$config['load_db_lastread'] || !$_CLASS['core_user']-&gt;is_user)
++		if (!$_CLASS['core_user']-&gt;is_user || !$config['load_db_lastread'])
+ 		{
+-			$row['mark_time'] = isset($tracking_topics[$forum_id][0]) ? base_convert($tracking_topics[$forum_id][0], 36, 10) + $config['board_startdate'] : 0;
++			$forum_id36 = base_convert($forum_id, 10, 36);
++			$row['mark_time'] = isset($tracking_topics[$forum_id36][0]) ? (int) base_convert($tracking_topics[$forum_id36][0], 36, 10) : 0;
+ 		}
+ 
+ 		if ($row['mark_time'] &lt; $row['forum_last_post_time'])
+@@ -182,7 +182,7 @@
+ 	// Grab moderators ... if necessary
+ 	if ($display_moderators)
+ 	{
+-		get_moderators($forum_moderators, $forum_ids);
++		$forum_moderators = get_moderators($forum_ids);
+ 	}
+ 
+ 	// Loop through the forums
+@@ -400,38 +400,16 @@
+ 					break;
+ 			}
+ 		}
+-		
+-		if ($_CLASS['core_user']-&gt;is_user)
+-		{
+-			$unread_topic = $new_votes = true;
+ 
+-			if ($mark_time &gt;= $topic_row['topic_last_post_time'])
+-			{
+-				$unread_topic = false;
+-			}
+-/*
+-			if ($mark_time &gt;= $topic_row['poll_last_vote'])
+-			{
+-				$new_votes = false;
+-			}
+-*/
+-		}
+-		/*else
++		$unread_topic = true;
++
++		if ($mark_time &gt;= $topic_row['topic_last_post_time'])
+ 		{
+ 			$unread_topic = false;
+-			//$unread_topic = $new_votes = false;
+-		}*/
+-	
+-//		$folder_new .= ($new_votes) ? '_vote' : '';
++		}
+ 
+ 		$folder_img = ($unread_topic) ? $folder_new : $folder;
+ 		$folder_alt = ($unread_topic) ? 'NEW_POSTS' : (($topic_row['topic_status'] == ITEM_LOCKED) ? 'TOPIC_LOCKED' : 'NO_NEW_POSTS');
+-
+-		// Posted image?
+-		if (!empty($topic_row['mark_type']))
+-		{
+-			$folder_img .= '_posted';
+-		}
+ 	}
+ 
+ 	if ($topic_row['poll_start'])
+
+Modified: cms/trunk/includes/templates/modules/Forums/index_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/index_body.html	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/templates/modules/Forums/index_body.html	2005-09-15 03:13:58 UTC (rev 123)
+@@ -23,9 +23,9 @@
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;50&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;!-- IF { $forumrow:CLICKS } --&gt;
+-		&lt;td class=&quot;row1&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt;onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
++		&lt;td class=&quot;row1&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
+ 		&lt;!-- ELSE --&gt;
+-		&lt;td class=&quot;row1&quot; colspan=&quot;4&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt;onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt;  width=&quot;100%&quot;&gt;
++		&lt;td class=&quot;row1&quot; colspan=&quot;4&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
+ 		&lt;!-- ENDIF --&gt;
+ 			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;
+ 			&lt;p class=&quot;forumdesc&quot;&gt;{ $forumrow:FORUM_DESC }&lt;/p&gt;&lt;/td&gt;
+@@ -36,7 +36,7 @@
+ 	&lt;!-- ELSE --&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; height=&quot;40&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt;onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
++		&lt;td class=&quot;row1&quot; height=&quot;40&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
+ 			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;
+ 			&lt;p class=&quot;forumdesc&quot;&gt;{ $forumrow:FORUM_DESC }&lt;/p&gt;
+ 			&lt;!-- IF { $forumrow:MODERATORS } --&gt;
+
+Modified: cms/trunk/includes/templates/modules/Forums/viewforum_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/templates/modules/Forums/viewforum_body.html	2005-09-15 03:13:58 UTC (rev 123)
+@@ -167,10 +167,10 @@
+ 			&lt;p class=&quot;gensmall&quot;&gt; [ { $GOTO_PAGE_IMG }{ $L_GOTO_PAGE }: { $topicrow:PAGINATION } ] &lt;/p&gt;
+ 			&lt;!-- ENDIF --&gt;
+ 		&lt;/td&gt;
+-		&lt;td class=&quot;row2&quot; align=&quot;center&quot; width=&quot;100&quot;&gt;&lt;p class=&quot;topicauthor&quot;&gt;{ $topicrow:TOPIC_AUTHOR }&lt;/p&gt;&lt;/td&gt;
++		&lt;td class=&quot;row2&quot; align=&quot;center&quot; width=&quot;100&quot; nowrap=&quot;nowrap&quot;&gt;&lt;p class=&quot;topicauthor&quot;&gt;{ $topicrow:TOPIC_AUTHOR }&lt;/p&gt;&lt;/td&gt;
+ 		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;50&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:REPLIES }&lt;/p&gt;&lt;/td&gt;
+ 		&lt;td class=&quot;row2&quot; align=&quot;center&quot; width=&quot;50&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:VIEWS }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;120&quot;&gt;
++		&lt;td class=&quot;row1&quot; align=&quot;center&quot; width=&quot;150&quot; nowrap=&quot;nowrap&quot;&gt;
+ 			&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:LAST_POST_TIME }&lt;/p&gt;
+ 			&lt;p class=&quot;topicdetails&quot;&gt;&lt;!-- IF { $topicrow:U_LAST_POST_AUTHOR } --&gt;&lt;a href=&quot;{ $topicrow:U_LAST_POST_AUTHOR }&quot;&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $topicrow:LAST_POST_AUTHOR }&lt;!-- ENDIF --&gt;
+ 			&lt;a href=&quot;{ $topicrow:U_LAST_POST }&quot;&gt;{ $topicrow:LAST_POST_IMG }&lt;/a&gt;
+
+Modified: cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html
+===================================================================
+--- cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/includes/templates/modules/Forums/viewforum_subforum.html	2005-09-15 03:13:58 UTC (rev 123)
+@@ -1,3 +1,5 @@
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/forums/forum_view.js&quot;&gt;&lt;/script&gt;
++
+ &lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;cat&quot; colspan=&quot;5&quot; align=&quot;right&quot;&gt;&lt;a class=&quot;nav&quot; href=&quot;{ $U_MARK_FORUMS }&quot;&gt;{ $L_MARK_FORUMS_READ }&lt;/a&gt;&nbsp;&lt;/td&gt;
+@@ -18,7 +20,8 @@
+ 	&lt;!-- ELSEIF { $forumrow:S_IS_LINK } --&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; height=&quot;40&quot;&gt;&lt;a class=&quot;forumlink&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;br /&gt;
++		&lt;td class=&quot;row1&quot; height=&quot;40&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
++			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;br /&gt;
+ 			&lt;!-- IF { $forumrow:FORUM_DESC } --&gt;
+ 			&lt;table cellspacing=&quot;5&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
+ 				&lt;tr&gt;
+@@ -32,7 +35,8 @@
+ 	&lt;!-- ELSE --&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;100%&quot; height=&quot;40&quot; &gt;&lt;a class=&quot;forumlink&quot;  href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;br /&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;100%&quot; height=&quot;40&quot;  id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt;&gt;
++			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;br /&gt;
+ 			&lt;!-- IF { $forumrow:FORUM_DESC } --&gt;
+ 			&lt;table cellspacing=&quot;5&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
+ 				&lt;tr&gt;
+
+Modified: cms/trunk/install/build_tables.php
+===================================================================
+--- cms/trunk/install/build_tables.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/install/build_tables.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -710,10 +710,10 @@
+ $_CLASS['core_db']-&gt;table_create('start', $table_prefix.'forums_moderator_cache');
+ 
+ $_CLASS['core_db']-&gt;add_table_field_int('forum_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_int('user_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_char('username', 50);
+-$_CLASS['core_db']-&gt;add_table_field_int('group_id', array('max' =&gt; 16000000));
+-$_CLASS['core_db']-&gt;add_table_field_char('groupname', 50);
++$_CLASS['core_db']-&gt;add_table_field_int('user_id', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('username', 50, true);
++$_CLASS['core_db']-&gt;add_table_field_int('group_id', array('max' =&gt; 16000000, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_char('group_name', 50, true);
+ $_CLASS['core_db']-&gt;add_table_field_int('display_on_index', array('max' =&gt; 1));
+ 
+ $_CLASS['core_db']-&gt;add_table_index('forum_id');
+
+Modified: cms/trunk/javascript/collapse.js
+===================================================================
+--- cms/trunk/javascript/collapse.js	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/javascript/collapse.js	2005-09-15 03:13:58 UTC (rev 123)
+@@ -48,19 +48,6 @@
+ 	document.cookie = cookie_name + '=' + '; expires=Thu, 01-Jan-70 00:00:01 GMT' +  '; path=/';
+ }
+ 
+-function array_search(needle, haystack, strict)
+-{
+-	for (var i in haystack)
+-	{
+-		if (haystack[i] == needle)
+-		{
+-			return i;
+-		}
+-	}
+-
+-	return null;
+-}
+-
+ function switch_collapse(identifier, no_slide, cookie)
+ {
+ 	var area = document.getElementById(identifier);
+
+Modified: cms/trunk/javascript/common.js
+===================================================================
+--- cms/trunk/javascript/common.js	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/javascript/common.js	2005-09-15 03:13:58 UTC (rev 123)
+@@ -72,7 +72,12 @@
+ {
+ 	return this.request.responseText;
+ }
+-
++
++core_ajax.prototype.state_not_ready = function()
++{
++	return (this.request.readyState &lt; 4);
++}
++
+ core_ajax.prototype.state_ready = function()
+ {
+ 	return (this.request.readyState == 4 &amp;&amp; this.request.status == 200);
+
+Modified: cms/trunk/javascript/menu.js
+===================================================================
+--- cms/trunk/javascript/menu.js	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/javascript/menu.js	2005-09-15 03:13:58 UTC (rev 123)
+@@ -9,6 +9,10 @@
+ *	
+ */
+ 
++// Move this to like a global javascript file
++var is_ie		= (navigator.appName == &quot;Microsoft Internet Explorer&quot;);
++var is_gecko	= (navigator.userAgent.indexOf('Gecko') != -1)
++
+ var slider_id = new Array();
+ var slider_height = new Array();
+ var active_menu = false;
+@@ -16,9 +20,8 @@
+ function get_offsets(element)
+ {
+ 	var offsets = new Array();
+-	var window_offset = (window.pageYOffset) ? window.pageYOffset : (document.body.scrollTop) ? document.body.scrollTop : document.documentElement.scrollTop;
+ 
+-	offsets['top']	= Number(window_offset) + element.offsetTop;
++	offsets['top']	= element.offsetTop;
+ 	offsets['left']	= element.offsetLeft;
+ 
+ 	while ((element = element.offsetParent) != null)
+@@ -35,7 +38,7 @@
+ 	var menu		= document.getElementById(object_name + '_menu');
+ 	var object		= document.getElementById(object_name);
+ 
+-	if (menu == null|| object == null)
++	if (menu == null || object == null)
+ 	{
+ 		return;
+ 	}
+@@ -91,8 +94,8 @@
+ */
+ 
+ 	menu.style.display	= 'none';
+-	menu.style.position	= 'absolute';
+-	menu.style.zIndex = 1000;
++	menu.style.position	= is_gecko ? 'fixed' : 'absolute';
++	menu.style.zIndex = 1;
+ 	object.style.cursor = 'pointer';
+ }
+ 
+@@ -119,7 +122,13 @@
+ 
+ 	menu.style.clip = 'rect(auto, auto, 0px, auto)';
+ 	menu.style.display	= '';
+-	
++
++	if (!is_gecko)
++	{
++		var window_offset = (window.pageYOffset) ? window.pageYOffset : (document.body.scrollTop) ? document.body.scrollTop : document.documentElement.scrollTop;
++		object_offsets['top']	= Number(window_offset) + object_offsets['top'];
++	}
++
+ 	if ((object_offsets['left'] + menu.offsetWidth) &gt; document.body.clientWidth)
+ 	{
+ 		// It to wide to show on the right so we have to put it on the left
+
+Modified: cms/trunk/modules/Forums/admin/index.php
+===================================================================
+--- cms/trunk/modules/Forums/admin/index.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/modules/Forums/admin/index.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -1,7 +1,7 @@
+ &lt;?php
+ /*
+ ||**************************************************************||
+-||  Viperal CMS &#169; :												||
++||  Viperal CMS &#194;&#169; :												||
+ ||**************************************************************||
+ ||																||
+ ||	Copyright (C) 2004, 2005									||
+
+Modified: cms/trunk/modules/Forums/ajax.php
+===================================================================
+--- cms/trunk/modules/Forums/ajax.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/modules/Forums/ajax.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -39,7 +39,7 @@
+ 			die;
+ 		}
+ 
+-		$title = mb_strtolower(htmlentities($title, ENT_QUOTES, 'UTF-8'));
++		$title = htmlentities($title, ENT_QUOTES, 'UTF-8');
+ 		$array = array('forum_name' =&gt; $title);
+ 		
+ 		$_CLASS['core_db']-&gt;report_error(false);
+
+Modified: cms/trunk/modules/Forums/index.php
+===================================================================
+--- cms/trunk/modules/Forums/index.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/modules/Forums/index.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -23,7 +23,7 @@
+ 
+ $file = get_variable('file', 'REQUEST', false);
+ 
+-$approved_files = array('viewforum', 'viewtopic', 'report', 'faq', 'posting', 'download', 'mcp', 'search');
++$approved_files = array('ajax', 'viewforum', 'viewtopic', 'report', 'faq', 'posting', 'download', 'mcp', 'search');
+ 
+ if (!$file || !in_array($file, $approved_files))
+ {
+
+Modified: cms/trunk/modules/Forums/viewforum.php
+===================================================================
+--- cms/trunk/modules/Forums/viewforum.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/modules/Forums/viewforum.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -56,6 +56,10 @@
+ 	trigger_error('NO_FORUM');
+ }
+ 
++// Configure style, language, etc.
++$_CLASS['core_user']-&gt;user_setup();
++$_CLASS['core_user']-&gt;add_lang('viewforum');
++
+ // Grab appropriate forum data
+ if (!$_CLASS['core_user']-&gt;is_user)
+ {
+@@ -63,6 +67,13 @@
+ 		FROM ' . FORUMS_FORUMS_TABLE . '
+ 		WHERE forum_id = ' . $forum_id .'
+ 		AND forum_status &lt;&gt; '.ITEM_DELETING;
++		
++	$tracking_topics = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
++	
++	if (!is_array($tracking_topics))
++	{
++		$tracking_topics = array();
++	}
+ }
+ else
+ {
+@@ -75,12 +86,19 @@
+ 	else
+ 	{
+ 		$sql_lastread = $lastread_select = '';
+-		$tracking_topics = (isset($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) ? unserialize(stripslashes($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) : array();
++		$tracking_topics = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
++	
++		if (!is_array($tracking_topics))
++		{
++			$tracking_topics = array();
++		}
+ 	}
+ 
+ 	$sql = &quot;SELECT f.*, fw.notify_status $lastread_select 
+ 		FROM &quot; . FORUMS_FORUMS_TABLE . ' f LEFT JOIN ' . FORUMS_WATCH_TABLE . ' fw ON (fw.forum_id = f.forum_id AND fw.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot;) $sql_lastread
+ 		WHERE f.forum_id = $forum_id&quot;;
++		
++	unset($sql_lastread, $lastread_select);
+ }
+ 
+ $result = $_CLASS['core_db']-&gt;query($sql);
+@@ -118,10 +136,8 @@
+ 	redirect(str_replace('&amp;', '&amp;', $forum_data['forum_link']));
+ }
+ 
+-// Configure style, language, etc.
+-$_CLASS['core_user']-&gt;user_setup();
++// Add Images
+ $_CLASS['core_user']-&gt;add_img();
+-$_CLASS['core_user']-&gt;add_lang('viewforum');
+ 
+ // Forum is passworded ... check whether access has been granted to this
+ // user this session, if not show login box
+@@ -137,7 +153,7 @@
+ generate_forum_rules($forum_data);
+ 
+ // Do we have subforums?
+-$active_forum_ary = $moderators = array();
++$active_forum_ary = array();
+ 
+ if ($forum_data['left_id'] != $forum_data['right_id'] - 1)
+ {
+@@ -147,361 +163,367 @@
+ {
+ 	$_CLASS['core_template']-&gt;assign('S_HAS_SUBFORUM', false);
+ }
+-get_moderators($moderators, $forum_id);
+ 
+-// Output forum listing if it is postable
+-if ($forum_data['forum_type'] == FORUM_POST || ($forum_data['forum_flags'] &amp; 16))
++if ($forum_data['forum_type'] != FORUM_POST &amp;&amp; !($forum_data['forum_flags'] &amp; 16))
+ {
+-	// Handle marking posts
+-	if ($mark_read == 'topics')
+-	{
+-		markread('forum', $forum_id);
+-		
+-		$_CLASS['core_display']-&gt;meta_refresh(3, generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id));
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'S_IS_POSTABLE'			=&gt; false,
++		'S_DISPLAY_ACTIVE'		=&gt; false,
++		'S_DISPLAY_SEARCHBOX'	=&gt; false,
++		'TOTAL_TOPICS'			=&gt; false
++	));
+ 
+-		$message = $_CLASS['core_user']-&gt;lang['TOPICS_MARKED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;' . generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id) . '&quot;&gt;', '&lt;/a&gt; ');
+-		trigger_error($message);
+-	}
++	page_header();
++	
++	make_jumpbox(generate_link('Forums&amp;file=viewforum'), $forum_id);
++	
++	$_CLASS['core_template']-&gt;display('modules/Forums/viewforum_body.html');
++}
+ 
+-	// Is a forum specific topic count required?
+-	if ($forum_data['forum_topics_per_page'])
+-	{
+-		$config['topics_per_page'] = $forum_data['forum_topics_per_page'];
+-	}
++$moderators = get_moderators($forum_id);
+ 
+-	// Do the forum Prune thang - cron type job ...
+-	if ($forum_data['prune_next'] &lt; time() &amp;&amp; $forum_data['enable_prune'])
+-	{
+-		require_once($site_file_root.'includes/forums/functions_admin.php');
++// Handle marking posts
++if ($mark_read == 'topics')
++{
++	markread('forum', $forum_id);
++	
++	$_CLASS['core_display']-&gt;meta_refresh(3, generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id));
+ 
+-		if ($forum_data['prune_days'])
+-		{
+-			auto_prune($forum_id, 'posted', $forum_data['forum_flags'], $forum_data['prune_days'], $forum_data['prune_freq']);
+-		}
+-		if ($forum_data['prune_viewed'])
+-		{
+-			auto_prune($forum_id, 'viewed', $forum_data['forum_flags'], $forum_data['prune_viewed'], $forum_data['prune_freq']);
+-		}
+-	}
++	$message = $_CLASS['core_user']-&gt;lang['TOPICS_MARKED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_FORUM'], '&lt;a href=&quot;' . generate_link('Forums&amp;file=viewforum&amp;f='.$forum_id) . '&quot;&gt;', '&lt;/a&gt; ');
++	trigger_error($message);
++}
+ 
+-	if ($_CLASS['auth']-&gt;acl_get('f_subscribe', $forum_id))
++// Is a forum specific topic count required?
++if ($forum_data['forum_topics_per_page'])
++{
++	$config['topics_per_page'] = $forum_data['forum_topics_per_page'];
++}
++
++/*
++Need test this first
++// Do the forum Prune thang - cron type job ...
++if ($forum_data['prune_next'] &lt; time() &amp;&amp; $forum_data['enable_prune'])
++{
++	require_once($site_file_root.'includes/forums/functions_admin.php');
++
++	if ($forum_data['prune_days'])
+ 	{
+-		$notify_status = (isset($forum_data['notify_status'])) ? $forum_data['notify_status'] : NULL;
+-		$s_watching_forum = watch_topic_forum('forum', $_CLASS['core_user']-&gt;data['user_id'], $forum_id, 0, $notify_status);
++		auto_prune($forum_id, 'posted', $forum_data['forum_flags'], $forum_data['prune_days'], $forum_data['prune_freq']);
+ 	}
+-	else
++	if ($forum_data['prune_viewed'])
+ 	{
+-		$s_watching_forum['link'] = $s_watching_forum['title'] = '';
++		auto_prune($forum_id, 'viewed', $forum_data['forum_flags'], $forum_data['prune_viewed'], $forum_data['prune_freq']);
+ 	}
++}
+ 
+-	gen_forum_auth_level('forum', $forum_id);
++*/
+ 
+-	// Topic ordering options
+-	$limit_days = array(0 =&gt; $_CLASS['core_user']-&gt;lang['ALL_TOPICS'], 1 =&gt; $_CLASS['core_user']-&gt;lang['1_DAY'], 7 =&gt; $_CLASS['core_user']-&gt;lang['7_DAYS'], 14 =&gt; $_CLASS['core_user']-&gt;lang['2_WEEKS'], 30 =&gt; $_CLASS['core_user']-&gt;lang['1_MONTH'], 90 =&gt; $_CLASS['core_user']-&gt;lang['3_MONTHS'], 180 =&gt; $_CLASS['core_user']-&gt;lang['6_MONTHS'], 364 =&gt; $_CLASS['core_user']-&gt;lang['1_YEAR']);
++if ($_CLASS['auth']-&gt;acl_get('f_subscribe', $forum_id))
++{
++	$notify_status = (isset($forum_data['notify_status'])) ? $forum_data['notify_status'] : NULL;
++	$s_watching_forum = watch_topic_forum('forum', $_CLASS['core_user']-&gt;data['user_id'], $forum_id, 0, $notify_status);
++}
++else
++{
++	$s_watching_forum['link'] = $s_watching_forum['title'] = '';
++}
+ 
+-	$sort_by_text = array('a' =&gt; $_CLASS['core_user']-&gt;lang['AUTHOR'], 't' =&gt; $_CLASS['core_user']-&gt;lang['POST_TIME'], 'r' =&gt; $_CLASS['core_user']-&gt;lang['REPLIES'], 's' =&gt; $_CLASS['core_user']-&gt;lang['SUBJECT'], 'v' =&gt; $_CLASS['core_user']-&gt;lang['VIEWS']);
+-	$sort_by_sql = array('a' =&gt; 't.topic_first_poster_name', 't' =&gt; 't.topic_last_post_time', 'r' =&gt; 't.topic_replies', 's' =&gt; 't.topic_title', 'v' =&gt; 't.topic_views');
++gen_forum_auth_level('forum', $forum_id);
+ 
+-	$sort_key = (!in_array($sort_key, array('a', 't', 'r', 's', 'v'))) ? 't' : $sort_key;
+-	
+-	$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
+-	gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
++// Topic ordering options
++$limit_days = array(0 =&gt; $_CLASS['core_user']-&gt;lang['ALL_TOPICS'], 1 =&gt; $_CLASS['core_user']-&gt;lang['1_DAY'], 7 =&gt; $_CLASS['core_user']-&gt;lang['7_DAYS'], 14 =&gt; $_CLASS['core_user']-&gt;lang['2_WEEKS'], 30 =&gt; $_CLASS['core_user']-&gt;lang['1_MONTH'], 90 =&gt; $_CLASS['core_user']-&gt;lang['3_MONTHS'], 180 =&gt; $_CLASS['core_user']-&gt;lang['6_MONTHS'], 364 =&gt; $_CLASS['core_user']-&gt;lang['1_YEAR']);
+ 
+-	// Limit topics to certain time frame, obtain correct topic count
+-	if ($sort_days)
+-	{
+-		$min_post_time = time() - ($sort_days * 86400);
++$sort_by_text = array('a' =&gt; $_CLASS['core_user']-&gt;lang['AUTHOR'], 't' =&gt; $_CLASS['core_user']-&gt;lang['POST_TIME'], 'r' =&gt; $_CLASS['core_user']-&gt;lang['REPLIES'], 's' =&gt; $_CLASS['core_user']-&gt;lang['SUBJECT'], 'v' =&gt; $_CLASS['core_user']-&gt;lang['VIEWS']);
++$sort_by_sql = array('a' =&gt; 't.topic_first_poster_name', 't' =&gt; 't.topic_last_post_time', 'r' =&gt; 't.topic_replies', 's' =&gt; 't.topic_title', 'v' =&gt; 't.topic_views');
+ 
+-		$sql = 'SELECT COUNT(topic_id) AS num_topics
+-			FROM ' . FORUMS_TOPICS_TABLE . &quot;
+-			WHERE forum_id = $forum_id
+-				AND topic_type &lt;&gt; &quot; . POST_ANNOUNCE . &quot; 
+-				AND topic_last_post_time &gt;= $min_post_time
+-			&quot; . (($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND topic_approved = 1');
+-		$result = $_CLASS['core_db']-&gt;query($sql);
++$sort_key = (!in_array($sort_key, array('a', 't', 'r', 's', 'v'))) ? 't' : $sort_key;
+ 
+-		if (isset($_POST['sort']))
+-		{
+-			$start = 0;
+-		}
++$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
++gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
+ 
+-		$topics_count = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['num_topics'] : 0;
+-		$sql_limit_time = &quot;AND t.topic_last_post_time &gt;= $min_post_time&quot;;
++// Limit topics to certain time frame, obtain correct topic count
++if ($sort_days)
++{
++	$min_post_time = time() - ($sort_days * 86400);
++
++	$sql = 'SELECT COUNT(topic_id) AS num_topics
++		FROM ' . FORUMS_TOPICS_TABLE . &quot;
++		WHERE forum_id = $forum_id
++			AND topic_type &lt;&gt; &quot; . POST_ANNOUNCE . &quot; 
++			AND topic_last_post_time &gt;= $min_post_time
++		&quot; . (($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? '' : 'AND topic_approved = 1');
++	$result = $_CLASS['core_db']-&gt;query($sql);
++
++	if (isset($_POST['sort']))
++	{
++		$start = 0;
+ 	}
++
++	$topics_count = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['num_topics'] : 0;
++	$sql_limit_time = &quot;AND t.topic_last_post_time &gt;= $min_post_time&quot;;
++}
++else
++{
++	if ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id))
++	{
++		$topics_count = ($forum_data['forum_topics_real']) ? $forum_data['forum_topics_real'] : 1;
++	}
+ 	else
+ 	{
+-		if ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id))
+-		{
+-			$topics_count = ($forum_data['forum_topics_real']) ? $forum_data['forum_topics_real'] : 1;
+-		}
+-		else
+-		{
+-			$topics_count = ($forum_data['forum_topics']) ? $forum_data['forum_topics'] : 1;
+-		}
+-
+-		$sql_limit_time = '';
++		$topics_count = ($forum_data['forum_topics']) ? $forum_data['forum_topics'] : 1;
+ 	}
+ 
+-	// Basic pagewide vars
+-	$post_alt = ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;lang['FORUM_LOCKED'] : $_CLASS['core_user']-&gt;lang['POST_NEW_TOPIC'];
+-	$pagination = generate_pagination(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&quot;, $topics_count, $config['topics_per_page'], $start);
++	$sql_limit_time = '';
++}
+ 
+-	$_CLASS['core_template']-&gt;assign_array(array(
+-		'PAGINATION'		=&gt; $pagination['formated'],
+-		'PAGINATION_ARRAY'	=&gt; $pagination['array'],
+-		'PAGE_NUMBER'		=&gt; on_page($topics_count, $config['topics_per_page'], $start),
+-		'TOTAL_TOPICS'		=&gt; ($forum_data['forum_flags'] &amp; 16) ? false : (($topics_count == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPIC'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPICS'], $topics_count)),
+-		'MODERATORS'		=&gt; (!empty($moderators[$forum_id])) ? implode(', ', $moderators[$forum_id]) : '',
++// Basic pagewide vars
++$post_alt = ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;lang['FORUM_LOCKED'] : $_CLASS['core_user']-&gt;lang['POST_NEW_TOPIC'];
++$pagination = generate_pagination(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&quot;, $topics_count, $config['topics_per_page'], $start);
+ 
+-		'POST_IMG' 				=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;img('btn_locked', $post_alt) : $_CLASS['core_user']-&gt;img('btn_post', $post_alt),
+-		'FOLDER_IMG' 			=&gt; $_CLASS['core_user']-&gt;img('folder', 'NO_NEW_POSTS'),
+-		'FOLDER_NEW_IMG' 		=&gt; $_CLASS['core_user']-&gt;img('folder_new', 'NEW_POSTS'),
+-		'FOLDER_HOT_IMG' 		=&gt; $_CLASS['core_user']-&gt;img('folder_hot', 'NO_NEW_POSTS_HOT'),
+-		'FOLDER_HOT_NEW_IMG'	=&gt; $_CLASS['core_user']-&gt;img('folder_hot_new', 'NEW_POSTS_HOT'),
+-		'FOLDER_LOCKED_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('folder_locked', 'NO_NEW_POSTS_LOCKED'),
+-		'FOLDER_LOCKED_NEW_IMG' =&gt; $_CLASS['core_user']-&gt;img('folder_locked_new', 'NEW_POSTS_LOCKED'),
+-		'FOLDER_STICKY_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('folder_sticky', 'POST_STICKY'),
+-		'FOLDER_STICKY_NEW_IMG' =&gt; $_CLASS['core_user']-&gt;img('folder_sticky_new', 'POST_STICKY'),
+-		'FOLDER_ANNOUNCE_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('folder_announce', 'POST_ANNOUNCEMENT'),
+-		'FOLDER_ANNOUNCE_NEW_IMG'=&gt; $_CLASS['core_user']-&gt;img('folder_announce_new', 'POST_ANNOUNCEMENT'),
+-		'FOLDER_MOVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('folder_moved', 'TOPIC_MOVED'),
++$_CLASS['core_template']-&gt;assign_array(array(
++	'PAGINATION'		=&gt; $pagination['formated'],
++	'PAGINATION_ARRAY'	=&gt; $pagination['array'],
++	'PAGE_NUMBER'		=&gt; on_page($topics_count, $config['topics_per_page'], $start),
++	'TOTAL_TOPICS'		=&gt; ($forum_data['forum_flags'] &amp; 16) ? false : (($topics_count == 1) ? $_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPIC'] : sprintf($_CLASS['core_user']-&gt;lang['VIEW_FORUM_TOPICS'], $topics_count)),
++	'MODERATORS'		=&gt; empty($moderators[$forum_id]) ? '' : implode(', ', $moderators[$forum_id]),
+ 
+-		'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', 'TOPIC_REPORTED'),
+-		'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', 'TOPIC_UNAPPROVED'),
+-		'GOTO_PAGE_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_post', 'GOTO_PAGE'),
+-		'L_NO_TOPICS' 			=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;lang['POST_FORUM_LOCKED'] : $_CLASS['core_user']-&gt;lang['NO_TOPICS'],
++	'POST_IMG' 				=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;img('btn_locked', $post_alt) : $_CLASS['core_user']-&gt;img('btn_post', $post_alt),
++	'FOLDER_IMG' 			=&gt; $_CLASS['core_user']-&gt;img('folder', 'NO_NEW_POSTS'),
++	'FOLDER_NEW_IMG' 		=&gt; $_CLASS['core_user']-&gt;img('folder_new', 'NEW_POSTS'),
++	'FOLDER_HOT_IMG' 		=&gt; $_CLASS['core_user']-&gt;img('folder_hot', 'NO_NEW_POSTS_HOT'),
++	'FOLDER_HOT_NEW_IMG'	=&gt; $_CLASS['core_user']-&gt;img('folder_hot_new', 'NEW_POSTS_HOT'),
++	'FOLDER_LOCKED_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('folder_locked', 'NO_NEW_POSTS_LOCKED'),
++	'FOLDER_LOCKED_NEW_IMG' =&gt; $_CLASS['core_user']-&gt;img('folder_locked_new', 'NEW_POSTS_LOCKED'),
++	'FOLDER_STICKY_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('folder_sticky', 'POST_STICKY'),
++	'FOLDER_STICKY_NEW_IMG' =&gt; $_CLASS['core_user']-&gt;img('folder_sticky_new', 'POST_STICKY'),
++	'FOLDER_ANNOUNCE_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('folder_announce', 'POST_ANNOUNCEMENT'),
++	'FOLDER_ANNOUNCE_NEW_IMG'=&gt; $_CLASS['core_user']-&gt;img('folder_announce_new', 'POST_ANNOUNCEMENT'),
++	'FOLDER_MOVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('folder_moved', 'TOPIC_MOVED'),
+ 
+-		'S_IS_POSTABLE'			=&gt; ($forum_data['forum_type'] == FORUM_POST) ? true : false,
+-		'S_DISPLAY_ACTIVE'		=&gt; ($forum_data['forum_type'] == FORUM_CAT &amp;&amp; $forum_data['forum_flags'] &amp; 16) ? true : false, 
+-		'S_SELECT_SORT_DIR'		=&gt; $s_sort_dir,
+-		'S_SELECT_SORT_KEY'		=&gt; $s_sort_key,
+-		'S_SELECT_SORT_DAYS'	=&gt; $s_limit_days,
+-		'S_TOPIC_ICONS'			=&gt; ($forum_data['forum_type'] == FORUM_CAT &amp;&amp; $forum_data['forum_flags'] &amp; 16) ? max($active_forum_ary['enable_icons']) : (($forum_data['enable_icons']) ? true : false), 
+-		'S_WATCH_FORUM_LINK'	=&gt; $s_watching_forum['link'],
+-		'S_WATCH_FORUM_TITLE'	=&gt; $s_watching_forum['title'],
+-		'S_FORUM_ACTION' 		=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;start=$start&quot;),
+-		'S_DISPLAY_SEARCHBOX'	=&gt; ($_CLASS['auth']-&gt;acl_get('f_search', $forum_id)) ? true : false, 
+-		'S_SEARCHBOX_ACTION'	=&gt; generate_link('Forums&amp;file=search&amp;search_forum[]='.$forum_id), 
++	'REPORTED_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_reported', 'TOPIC_REPORTED'),
++	'UNAPPROVED_IMG'		=&gt; $_CLASS['core_user']-&gt;img('icon_unapproved', 'TOPIC_UNAPPROVED'),
++	'GOTO_PAGE_IMG'			=&gt; $_CLASS['core_user']-&gt;img('icon_post', 'GOTO_PAGE'),
++	'L_NO_TOPICS' 			=&gt; ($forum_data['forum_status'] == ITEM_LOCKED) ? $_CLASS['core_user']-&gt;lang['POST_FORUM_LOCKED'] : $_CLASS['core_user']-&gt;lang['NO_TOPICS'],
+ 
+- 		'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_gets('m_', $forum_id)) ? generate_link(&quot;Forums&amp;file=mcp&amp;f=$forum_id&amp;mode=forum_view&quot;) : '', 
+-		'U_POST_NEW_TOPIC'	=&gt; generate_link('Forums&amp;file=posting&amp;mode=post&amp;f='.$forum_id), 
+-		'U_VIEW_FORUM'		=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&amp;start=$start&quot;), 
+-		'U_MARK_TOPICS' 	=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;mark=topics&quot;))
+-	);
++	'S_IS_POSTABLE'			=&gt; ($forum_data['forum_type'] == FORUM_POST) ? true : false,
++	'S_DISPLAY_ACTIVE'		=&gt; ($forum_data['forum_type'] == FORUM_CAT &amp;&amp; $forum_data['forum_flags'] &amp; 16) ? true : false, 
++	'S_SELECT_SORT_DIR'		=&gt; $s_sort_dir,
++	'S_SELECT_SORT_KEY'		=&gt; $s_sort_key,
++	'S_SELECT_SORT_DAYS'	=&gt; $s_limit_days,
++	'S_TOPIC_ICONS'			=&gt; ($forum_data['forum_type'] == FORUM_CAT &amp;&amp; $forum_data['forum_flags'] &amp; 16) ? max($active_forum_ary['enable_icons']) : (($forum_data['enable_icons']) ? true : false), 
++	'S_WATCH_FORUM_LINK'	=&gt; $s_watching_forum['link'],
++	'S_WATCH_FORUM_TITLE'	=&gt; $s_watching_forum['title'],
++	'S_FORUM_ACTION' 		=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;start=$start&quot;),
++	'S_DISPLAY_SEARCHBOX'	=&gt; ($_CLASS['auth']-&gt;acl_get('f_search', $forum_id)) ? true : false, 
++	'S_SEARCHBOX_ACTION'	=&gt; generate_link('Forums&amp;file=search&amp;search_forum[]='.$forum_id), 
+ 
+-	// Grab icons
+-	$icons = obtain_icons();
++	'U_MCP' 			=&gt; ($_CLASS['auth']-&gt;acl_gets('m_', $forum_id)) ? generate_link(&quot;Forums&amp;file=mcp&amp;f=$forum_id&amp;mode=forum_view&quot;) : '', 
++	'U_POST_NEW_TOPIC'	=&gt; generate_link('Forums&amp;file=posting&amp;mode=post&amp;f='.$forum_id), 
++	'U_VIEW_FORUM'		=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;$u_sort_param&amp;start=$start&quot;), 
++	'U_MARK_TOPICS' 	=&gt; generate_link(&quot;Forums&amp;file=viewforum&amp;f=$forum_id&amp;mark=topics&quot;))
++);
+ 
+-	// Grab all topic data
+-	$rowset = $announcement_list = $topic_list = array();
++// Grab icons
++$icons = obtain_icons();
+ 
+-	$sql_from = FORUMS_TOPICS_TABLE.' t ';
+-	$sql_select = '';
++// Grab all topic data
++$rowset = $announcement_list = $topic_list = array();
+ 
+-	if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['load_db_lastread'])
+-	{
+-		$sql_from .= ' LEFT JOIN ' . FORUMS_TRACK_TABLE . ' tt ON (tt.topic_id = t.topic_id AND tt.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ')';
+-		$sql_select .= ', tt.mark_time';
+-	}
++$sql_from = FORUMS_TOPICS_TABLE.' t ';
++$sql_select = '';
+ 
+-	$sql_approved = $_CLASS['auth']-&gt;acl_get('m_approve', $forum_id) ? '' : 'AND t.topic_approved = 1';
++if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['load_db_lastread'])
++{
++	$sql_from .= ' LEFT JOIN ' . FORUMS_TRACK_TABLE . ' tt ON (tt.topic_id = t.topic_id AND tt.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . ')';
++	$sql_select .= ', tt.mark_time';
++}
+ 
+-	if ($forum_data['forum_type'] == FORUM_POST)
++$sql_approved = $_CLASS['auth']-&gt;acl_get('m_approve', $forum_id) ? '' : 'AND t.topic_approved = 1';
++
++if ($forum_data['forum_type'] == FORUM_POST)
++{
++	// Obtain announcements ... removed sort ordering, sort by time in all cases
++	$sql = &quot;SELECT DISTINCT t.* $sql_select 
++		FROM $sql_from 
++		WHERE t.forum_id IN ($forum_id, 0)
++			AND t.topic_type IN (&quot; . POST_ANNOUNCE . ', ' . POST_GLOBAL . ')
++		ORDER BY t.topic_time DESC';
++	$result = $_CLASS['core_db']-&gt;query($sql);
++
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		// Obtain announcements ... removed sort ordering, sort by time in all cases
+-		$sql = &quot;SELECT DISTINCT t.* $sql_select 
+-			FROM $sql_from 
+-			WHERE t.forum_id IN ($forum_id, 0)
+-				AND t.topic_type IN (&quot; . POST_ANNOUNCE . ', ' . POST_GLOBAL . ')
+-			ORDER BY t.topic_time DESC';
+-		$result = $_CLASS['core_db']-&gt;query($sql);
+-
+-		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+-		{
+-			$rowset[$row['topic_id']] = $row;
+-			$announcement_list[] = $row['topic_id'];
+-		}
+-		$_CLASS['core_db']-&gt;free_result($result);
++		$rowset[$row['topic_id']] = $row;
++		$announcement_list[] = $row['topic_id'];
+ 	}
++	$_CLASS['core_db']-&gt;free_result($result);
++}
+ 
+-	// If the user is trying to reach late pages, start searching from the end
+-	$store_reverse = false;
+-	$sql_limit = $config['topics_per_page'];
++// If the user is trying to reach late pages, start searching from the end
++$store_reverse = false;
++$sql_limit = $config['topics_per_page'];
+ 
+ // what's this store_reverse all about ?
+-	if ($start &gt; $topics_count / 2)
++if ($start &gt; $topics_count / 2)
++{
++	$store_reverse = true;
++
++	if ($start + $config['topics_per_page'] &gt; $topics_count)
+ 	{
+-		$store_reverse = true;
++		$sql_limit = min($config['topics_per_page'], max(1, $topics_count - $start));
++	}
+ 
+-		if ($start + $config['topics_per_page'] &gt; $topics_count)
+-		{
+-			$sql_limit = min($config['topics_per_page'], max(1, $topics_count - $start));
+-		}
++	// Select the sort order
++	$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
++	$sql_start = max(0, $topics_count - $sql_limit - $start);
++}
++else
++{
++	// Select the sort order
++	$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
++	$sql_start = $start;
++}
+ 
+-		// Select the sort order
+-		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
+-		$sql_start = max(0, $topics_count - $sql_limit - $start);
++// Obtain other topics
++$sql_where = ($forum_data['forum_type'] == FORUM_POST || empty($active_forum_ary)) ? &quot;= $forum_id&quot; : 'IN (' . implode(', ', $active_forum_ary['forum_id']) . ')';
++$sql = &quot;SELECT t.* $sql_select
++	FROM $sql_from
++	WHERE t.forum_id $sql_where
++		AND t.topic_type NOT IN (&quot; . POST_ANNOUNCE . ', ' . POST_GLOBAL . &quot;) 
++		$sql_approved 
++		$sql_limit_time
++	ORDER BY t.topic_type &quot; . ((!$store_reverse) ? 'DESC' : 'ASC') . ', ' . $sql_sort_order;
++$result = $_CLASS['core_db']-&gt;query_limit($sql, $sql_limit, $sql_start);
++
++while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++{
++	$rowset[$row['topic_id']] = $row;
++	$topic_list[] = $row['topic_id'];
++}
++$_CLASS['core_db']-&gt;free_result($result);
++
++$topic_list = ($store_reverse) ? array_merge($announcement_list, array_reverse($topic_list)) : array_merge($announcement_list, $topic_list);
++
++// we only update the mark if this is made into an (int) time
++// We don't check when $start is used
++$mark_forum_read = ($sql_start || $sql_limit != $config['topics_per_page'] || $sql_limit_time) ? false : true;
++
++// Okay, lets dump out the page ...
++if (!empty($topic_list))
++{
++	if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['load_db_lastread'])
++	{
++		$mark_time_forum = $forum_data['mark_time'];
+ 	}
+ 	else
+ 	{
+-		// Select the sort order
+-		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+-		$sql_start = $start;
++		$forum_id36 = ($row['topic_type'] == POST_GLOBAL) ? 0 : base_convert($forum_id, 10, 36);
++		$mark_time_forum = isset($tracking_topics[$forum_id36][0]) ? (int) base_convert($tracking_topics[$forum_id36][0], 36, 10) : 0;
+ 	}
+ 
+-	// Obtain other topics
+-	$sql_where = ($forum_data['forum_type'] == FORUM_POST || empty($active_forum_ary)) ? &quot;= $forum_id&quot; : 'IN (' . implode(', ', $active_forum_ary['forum_id']) . ')';
+-	$sql = &quot;SELECT t.* $sql_select
+-		FROM $sql_from
+-		WHERE t.forum_id $sql_where
+-			AND t.topic_type NOT IN (&quot; . POST_ANNOUNCE . ', ' . POST_GLOBAL . &quot;) 
+-			$sql_approved 
+-			$sql_limit_time
+-		ORDER BY t.topic_type &quot; . ((!$store_reverse) ? 'DESC' : 'ASC') . ', ' . $sql_sort_order;
+-	$result = $_CLASS['core_db']-&gt;query_limit($sql, $sql_limit, $sql_start);
+-
+-	while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	$s_type_switch = 0;
++	foreach ($topic_list as $topic_id)
+ 	{
+-		$rowset[$row['topic_id']] = $row;
+-		$topic_list[] = $row['topic_id'];
+-	}
+-	$_CLASS['core_db']-&gt;free_result($result);
++		$row =&amp; $rowset[$topic_id];
+ 
+-	$topic_list = ($store_reverse) ? array_merge($announcement_list, array_reverse($topic_list)) : array_merge($announcement_list, $topic_list);
+-
+-	// we only update the mark if this is made into an (int) time
+-	// We don't check when $start is used
+-	$mark_forum_read = ($sql_start || $sql_limit != $config['topics_per_page'] || $sql_limit_time) ? false : true;
+-
+-	// Okay, lets dump out the page ...
+-	if (!empty($topic_list))
+-	{
+-		if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['load_db_lastread'])
++		if ($config['load_db_lastread'] &amp;&amp; $_CLASS['core_user']-&gt;is_user)
+ 		{
+-			$mark_time_forum = $forum_data['mark_time'];
++			$mark_time_topic = $row['mark_time'];
+ 		}
+ 		else
+ 		{
+-			$mark_time_forum = (isset($tracking_topics[$forum_id][0])) ? base_convert($tracking_topics[$forum_id][0], 36, 10) + $config['board_startdate'] : 0;
++			$topic_id36 = base_convert($topic_id, 10, 36);
++			$mark_time_topic = isset($tracking_topics[$forum_id36][$topic_id36]) ? (int) base_convert($tracking_topics[$forum_id36][$topic_id36], 36, 10) : 0;
+ 		}
+ 
+-		$s_type_switch = 0;
+-		foreach ($topic_list as $topic_id)
++		/*
++			Is the topic mark time that greater than the forums mark time ? 
++				If so, check to see if the topic has any new post/or another topic had a new post.
++					Set $mark_forum_read to the highest topic_last_post_time if there's no new posts
++		*/
++		if (!$mark_time_forum || ($mark_time_forum &lt; $mark_time_topic))
+ 		{
+-			$row =&amp; $rowset[$topic_id];
+-
+-			if ($config['load_db_lastread'] &amp;&amp; $_CLASS['core_user']-&gt;is_user)
++			if ($mark_forum_read)
+ 			{
+-				$mark_time_topic = $row['mark_time'];
++				$mark_forum_read = ($row['topic_last_post_time'] &lt; $mark_time_topic) ? (int) $mark_time_topic : false;
+ 			}
+-			else
+-			{
+-				$topic_id36 = base_convert($topic_id, 10, 36);
+-				$forum_id36 = ($row['topic_type'] == POST_GLOBAL) ? 0 : $forum_id;
+-				$mark_time_topic = (isset($tracking_topics[$forum_id36][$topic_id36])) ? base_convert($tracking_topics[$forum_id36][$topic_id36], 36, 10) + $config['board_startdate'] : 0;
+-			
+-			}
++			$mark_time = $mark_time_topic;
++		}
++		else
++		{
++			$mark_time = $mark_time_forum;
++		}
+ 
+-			/*
+-				Is the topic mark time that greater than the forums mark time ? 
+-					If so, check to see if the topic has any new post/or another topic had a new post.
+-						Set $mark_forum_read to the highest topic_last_post_time if there's no new posts
+-			*/
+-			if (!$mark_time_forum || ($mark_time_forum &lt; $mark_time_topic))
+-			{
+-				if ($mark_forum_read)
+-				{
+-					$mark_forum_read = ($row['topic_last_post_time'] &lt;= $mark_time_topic) ? (int) $mark_time_topic : false;
+-				}
+-				$mark_time = $mark_time_topic;
+-			}
+-			else
+-			{
+-				$mark_time = $mark_time_forum;
+-			}
++		// This will allow the style designer to output a different header
++		// or even seperate the list of announcements from sticky and normal
++		// topics
++		$s_type_switch_test = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
+ 
+-			// This will allow the style designer to output a different header
+-			// or even seperate the list of announcements from sticky and normal
+-			// topics
+-			$s_type_switch_test = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
++		// Replies
++		$replies = ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? (int) $row['topic_replies_real'] : (int) $row['topic_replies'];
+ 
+-			// Replies
+-			$replies = ($_CLASS['auth']-&gt;acl_get('m_approve', $forum_id)) ? (int) $row['topic_replies_real'] : (int) $row['topic_replies'];
++		if ($row['topic_status'] == ITEM_MOVED)
++		{
++			$topic_id = $row['topic_moved_id'];
++		}
+ 
+-			if ($row['topic_status'] == ITEM_MOVED)
+-			{
+-				$topic_id = $row['topic_moved_id'];
+-			}
+- 
+-			// Get folder img, topic status/type related informations
+-			$folder_img = $folder_alt = $topic_type = '';
+-			$unread_topic = topic_status($row, $replies, $mark_time, $folder_img, $folder_alt, $topic_type);
+-			
+-			$newest_post_img = ($unread_topic) ? '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=unread#unread&quot;) . '&quot;&gt;' . $_CLASS['core_user']-&gt;img('icon_post_newest', 'VIEW_NEWEST_POST') . '&lt;/a&gt; ' : '';
++		// Get folder img, topic status/type related informations
++		$folder_img = $folder_alt = $topic_type = '';
++		$unread_topic = topic_status($row, $replies, $mark_time, $folder_img, $folder_alt, $topic_type);
++		
++		$newest_post_img = ($unread_topic) ? '&lt;a href=&quot;' . generate_link(&quot;Forums&amp;file=viewtopic&amp;t=$topic_id&amp;view=unread#unread&quot;) . '&quot;&gt;' . $_CLASS['core_user']-&gt;img('icon_post_newest', 'VIEW_NEWEST_POST') . '&lt;/a&gt; ' : '';
+ 
+-			// Generate all the URIs ...
+-			$view_topic_url = 'Forums&amp;file=viewtopic&amp;t='.$topic_id;
++		// Generate all the URIs ...
++		$view_topic_url = 'Forums&amp;file=viewtopic&amp;t='.$topic_id;
+ 
+-			$pagination = generate_pagination('Forums&amp;file=viewtopic&amp;&amp;t='.$topic_id, $replies, $config['posts_per_page']);
++		$pagination = generate_pagination('Forums&amp;file=viewtopic&amp;&amp;t='.$topic_id, $replies, $config['posts_per_page']);
+ 
+-			// Send vars to template
+-			$_CLASS['core_template']-&gt;assign_vars_array('topicrow', array(
+-				'FORUM_ID' 			=&gt; $forum_id,
+-				'TOPIC_ID' 			=&gt; $topic_id,
+-				'TOPIC_AUTHOR' 		=&gt; topic_topic_author($row),
+-				'FIRST_POST_TIME' 	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_time']),
+-				'LAST_POST_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']),
+-				'LAST_VIEW_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_view_time']),
+-				'LAST_POST_AUTHOR' 	=&gt; ($row['topic_last_poster_name'] != '') ? $row['topic_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'],
+-				'PAGINATION'		=&gt; $pagination['formated'],
+-				'PAGINATION_ARRAY'	=&gt; $pagination['array'],
+-				'REPLIES' 			=&gt; $replies,
+-				'VIEWS' 			=&gt; (int) $row['topic_views'],
+-				'TOPIC_TITLE' 		=&gt; censor_text($row['topic_title']),
+-				'TOPIC_TYPE' 		=&gt; $topic_type,
++		// Send vars to template
++		$_CLASS['core_template']-&gt;assign_vars_array('topicrow', array(
++			'FORUM_ID' 			=&gt; $forum_id,
++			'TOPIC_ID' 			=&gt; $topic_id,
++			'TOPIC_AUTHOR' 		=&gt; topic_topic_author($row),
++			'FIRST_POST_TIME' 	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_time']),
++			'LAST_POST_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']),
++			'LAST_VIEW_TIME'	=&gt; $_CLASS['core_user']-&gt;format_date($row['topic_last_view_time']),
++			'LAST_POST_AUTHOR' 	=&gt; ($row['topic_last_poster_name'] != '') ? $row['topic_last_poster_name'] : $_CLASS['core_user']-&gt;lang['GUEST'],
++			'PAGINATION'		=&gt; $pagination['formated'],
++			'PAGINATION_ARRAY'	=&gt; $pagination['array'],
++			'REPLIES' 			=&gt; $replies,
++			'VIEWS' 			=&gt; (int) $row['topic_views'],
++			'TOPIC_TITLE' 		=&gt; censor_text($row['topic_title']),
++			'TOPIC_TYPE' 		=&gt; $topic_type,
+ 
+-				'LAST_POST_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'),
+-				'NEWEST_POST_IMG' 	=&gt; $newest_post_img,
+-				'TOPIC_FOLDER_IMG' 	=&gt; $_CLASS['core_user']-&gt;img($folder_img, $folder_alt),
+-				//'TOPIC_FOLDER_IMG_SRC'	=&gt; $_CLASS['core_user']-&gt;img($folder_img, $folder_alt, false, '', 'src'),
+-				'TOPIC_ICON_IMG'        =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
+-				'TOPIC_ICON_IMG_WIDTH'  =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['width'] : '',
+-				'TOPIC_ICON_IMG_HEIGHT' =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
+-				'ATTACH_ICON_IMG'       =&gt; ($_CLASS['auth']-&gt;acl_gets('f_download', 'u_download', $forum_id) &amp;&amp; $row['topic_attachment']) ? $_CLASS['core_user']-&gt;img('icon_attach', $_CLASS['core_user']-&gt;lang['TOTAL_ATTACHMENTS']) : '',
++			'LAST_POST_IMG' 	=&gt; $_CLASS['core_user']-&gt;img('icon_post_latest', 'VIEW_LATEST_POST'),
++			'NEWEST_POST_IMG' 	=&gt; $newest_post_img,
++			'TOPIC_FOLDER_IMG' 	=&gt; $_CLASS['core_user']-&gt;img($folder_img, $folder_alt),
++			//'TOPIC_FOLDER_IMG_SRC'	=&gt; $_CLASS['core_user']-&gt;img($folder_img, $folder_alt, false, '', 'src'),
++			'TOPIC_ICON_IMG'        =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
++			'TOPIC_ICON_IMG_WIDTH'  =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['width'] : '',
++			'TOPIC_ICON_IMG_HEIGHT' =&gt; (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
++			'ATTACH_ICON_IMG'       =&gt; ($_CLASS['auth']-&gt;acl_gets('f_download', 'u_download', $forum_id) &amp;&amp; $row['topic_attachment']) ? $_CLASS['core_user']-&gt;img('icon_attach', $_CLASS['core_user']-&gt;lang['TOTAL_ATTACHMENTS']) : '',
+ 
+-				'S_TOPIC_TYPE'			=&gt; $row['topic_type'], 
+-				'S_UNREAD_TOPIC'		=&gt; $unread_topic,
++			'S_TOPIC_TYPE'			=&gt; $row['topic_type'], 
++			'S_UNREAD_TOPIC'		=&gt; $unread_topic,
+ 
+-				'S_TOPIC_REPORTED'		=&gt; (!empty($row['topic_reported']) &amp;&amp; $_CLASS['auth']-&gt;acl_gets('m_', $forum_id)) ? true : false,
+-				'S_TOPIC_UNAPPROVED'	=&gt; (!$row['topic_approved'] &amp;&amp; $_CLASS['auth']-&gt;acl_gets('m_approve', $forum_id)) ? true : false,
++			'S_TOPIC_REPORTED'		=&gt; (!empty($row['topic_reported']) &amp;&amp; $_CLASS['auth']-&gt;acl_gets('m_', $forum_id)) ? true : false,
++			'S_TOPIC_UNAPPROVED'	=&gt; (!$row['topic_approved'] &amp;&amp; $_CLASS['auth']-&gt;acl_gets('m_approve', $forum_id)) ? true : false,
+ 
+-				'U_LAST_POST'       =&gt; generate_link($view_topic_url . $SID . '&amp;p=' . $row['topic_last_post_id'] . '#' . $row['topic_last_post_id'], false, false, false),	
+-				'U_LAST_POST_AUTHOR'=&gt; ($_CLASS['core_user']-&gt;is_user &amp;&amp; $row['topic_last_poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']) : '',
+-				'U_VIEW_TOPIC'		=&gt; generate_link($view_topic_url),
+-				'U_MCP_REPORT'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;mode=reports&amp;t=$topic_id&quot;),
+-				'U_MCP_QUEUE'       =&gt; generate_link('Forums&amp;file=mcp&amp;i=queue&amp;mode=approve_details&amp;t='.$topic_id),
+-				'S_TOPIC_TYPE_SWITCH'   =&gt; ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test)
+-			);
++			'U_LAST_POST'       =&gt; generate_link($view_topic_url . $SID . '&amp;p=' . $row['topic_last_post_id'] . '#' . $row['topic_last_post_id'], false, false, false),	
++			'U_LAST_POST_AUTHOR'=&gt; ($_CLASS['core_user']-&gt;is_user &amp;&amp; $row['topic_last_poster_id']) ? generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']) : '',
++			'U_VIEW_TOPIC'		=&gt; generate_link($view_topic_url),
++			'U_MCP_REPORT'		=&gt; generate_link(&quot;Forums&amp;file=mcp&amp;mode=reports&amp;t=$topic_id&quot;),
++			'U_MCP_QUEUE'       =&gt; generate_link('Forums&amp;file=mcp&amp;i=queue&amp;mode=approve_details&amp;t='.$topic_id),
++			'S_TOPIC_TYPE_SWITCH'   =&gt; ($s_type_switch == $s_type_switch_test) ? -1 : $s_type_switch_test)
++		);
+ 
+-			$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
+-		}
++		$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
+ 	}
++}
+ 
+-	// Update the marktime only if $mark_forum_read is set to a time
+-	if ($forum_data['forum_type'] == FORUM_POST &amp;&amp; is_int($mark_forum_read))
+-	{
+-		markread('forum', $forum_id, false, $mark_forum_read);
+-	}
+-}
+-else
++// Update the marktime only if $mark_forum_read is set to a time
++if ($forum_data['forum_type'] == FORUM_POST &amp;&amp; is_int($mark_forum_read))
+ {
+-	$_CLASS['core_template']-&gt;assign_array(array(
+-		'S_IS_POSTABLE'			=&gt; false,
+-		'S_DISPLAY_ACTIVE'		=&gt; false,
+-		'S_DISPLAY_SEARCHBOX'	=&gt; false,
+-		'TOTAL_TOPICS'			=&gt; false
+-	));
+-
++	markread('forum', $forum_id, false, $mark_forum_read);
+ }
+ 
+ page_header();
+
+Modified: cms/trunk/modules/Forums/viewtopic.php
+===================================================================
+--- cms/trunk/modules/Forums/viewtopic.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/modules/Forums/viewtopic.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -170,7 +170,8 @@
+ 	f.forum_id, f.forum_password, f.forum_rules, f.forum_rules_link, f.forum_rules_flags, f.forum_rules_bbcode_uid,
+ 	f.forum_rules_bbcode_bitfield' . $extra_fields . '
+ 		FROM ' . FORUMS_FORUMS_TABLE . ' f, ' . FORUMS_TOPICS_TABLE . &quot; t  $join_sql_table 
+-		WHERE t.topic_id = $topic_id&quot;;
++		WHERE t.topic_id = $topic_id
++		AND f.forum_id = $forum_id&quot;;
+ 
+ $result = $_CLASS['core_db']-&gt;query($sql);
+ $topic_data = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+@@ -1246,22 +1247,43 @@
+ // Mark topics read
+ if ($update_mark)
+ {
+-	// Now lets get the all topics that are in the markable range,
+-	// with is the max topics displayed on the forum's viewforum page
++	if ($_CLASS['core_user']-&gt;is_user &amp;&amp; $config['load_db_lastread'])
++	{
++		// Now lets get the all topics that are in the markable range,
++		// with is the max topics displayed on the forum's viewforum page
+ 
+-	// Get the user's last mark time for this forums
+-	$sql = 'SELECT mark_time FROM '.FORUMS_TRACK_TABLE . ' 
+-		WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot; 
+-			AND forum_id = $forum_id AND topic_id = 0&quot;;
++		// Get the user's last mark time for this forums
++// add user view options
++		$sql = 'SELECT mark_time FROM '.FORUMS_TRACK_TABLE . ' 
++			WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot; 
++				AND forum_id = $forum_id AND topic_id = 0&quot;;
++	
++		$result = $_CLASS['core_db']-&gt;query($sql);
++		$mark_time_forum = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['mark_time'] : 0;
++		$_CLASS['core_db']-&gt;free_result($result);
++			
++		$sql = 'SELECT t.topic_id, t.topic_last_post_time, tr.mark_time FROM ' . FORUMS_TOPICS_TABLE . ' t
++				LEFT JOIN ' . FORUMS_TRACK_TABLE . ' tr ON (tr.topic_id = t.topic_id AND tr.user_id = '.$_CLASS['core_user']-&gt;data['user_id'].&quot;)
++					WHERE t.forum_id = $forum_id
++						ORDER BY t.topic_last_post_time DESC&quot;;
++	}
++	else
++	{
++		$tracking = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
+ 
+-	$result = $_CLASS['core_db']-&gt;query($sql);
+-	$forum_marktime = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['mark_time'] : 0;
+-	$_CLASS['core_db']-&gt;free_result($result);
++		if (!is_array($tracking))
++		{
++			$tracking = array();
++		}
+ 		
+-	$sql = 'SELECT t.topic_id, t.topic_last_post_time, tr.mark_time FROM ' . FORUMS_TOPICS_TABLE . ' t
+-			LEFT JOIN ' . FORUMS_TRACK_TABLE . ' tr ON (tr.topic_id = t.topic_id AND tr.user_id = '.$_CLASS['core_user']-&gt;data['user_id'].&quot;)
+-				WHERE t.forum_id = $forum_id
++		$forum_id36 = base_convert($forum_id, 10, 36);
++		$mark_time_forum = isset($tracking[$forum_id36][0]) ? (int) base_convert($tracking[$forum_id36][0], 36, 10) : 0;
++
++// add user view options
++		$sql = 'SELECT topic_id, topic_last_post_time FROM ' . FORUMS_TOPICS_TABLE . &quot;
++					WHERE forum_id = $forum_id
+ 					ORDER BY topic_last_post_time DESC&quot;;
++	}
+ 
+ 	$result = $_CLASS['core_db']-&gt;query_limit($sql, $config['topics_per_page']);
+ 	$update_forum_mark = true;
+@@ -1271,16 +1293,23 @@
+ 		// DESC order so the first post is the last post
+ 		$last_forum_post = $row['topic_last_post_time'];
+ 
++// add user view options
+ 		do
+ 		{
+-			$last_mark_time = max($row['mark_time'], $forum_marktime);
++			if (!$_CLASS['core_user']-&gt;is_user || !$config['load_db_lastread'])
++			{
++				$topic_id36 = base_convert($topic_id, 10, 36);
++				$row['mark_time'] = isset($tracking[$forum_id36][$topic_id36]) ? (int) base_convert($tracking[$forum_id36][$topic_id36], 36, 10) : 0;
++			}
+ 
++			$last_mark_time = max($row['mark_time'], $mark_time_forum);
++
+ 			if ($row['topic_last_post_time'] &gt; $last_mark_time &amp;&amp; $row['topic_id'] != $topic_id)
+ 			{
+ 				// We have a winner/loser
+ 				// Set so the forum isn't marked
+ 				$update_forum_mark = false;
+-
++echo 'test';
+ 				break;
+ 			}
+ 		}
+@@ -1336,23 +1365,30 @@
+ 	}
+ 	else
+ 	{
+-		$topic_last_read = 0;
++		$tracking = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_track', 'COOKIE'));
+ 
+-		if (isset($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track']))
++		if (!is_array($tracking))
+ 		{
+-			$tracking_topics = unserialize(stripslashes($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track']));
++			return 0;
++		}
+ 
+-			if (isset($tracking_topics[$forum_id]))
+-			{
+-				$topic_last_read = base_convert(max($tracking_topics[$forum_id]), 36, 10);
+-				$topic_last_read = max($topic_last_read, $_CLASS['core_user']-&gt;data['session_last_visit']);
+-			}
++		$forum_id36 = base_convert($forum_id, 10, 36);
++		$topic_id36 = base_convert($topic_id, 10, 36);
+ 
+-			unset($tracking_topics);
++		$topic_last_read = $forum_last_read = 0;
++
++		if (isset($tracking[$forum_id36][0]))
++		{
++			$forum_last_read = (int) base_convert($tracking[$forum_id36][0], 36, 10);
+ 		}
++
++		if (isset($tracking[$forum_id36][$topic_id36]))
++		{
++			$topic_last_read = (int) base_convert($tracking[$forum_id36][$topic_id36], 36, 10);
++		}
++
++		return (int) max($forum_last_read, $topic_last_read);
+ 	}
+-
+-	return $topic_last_read;
+ }
+ 
+ ?&gt;
+\ No newline at end of file
+
+Copied: cms/trunk/modules/Quick_Message/configurator.php (from rev 108, cms/trunk/modules/Quick_Message/install.php)
+
+Deleted: cms/trunk/modules/Quick_Message/install.php
+===================================================================
+--- cms/trunk/modules/Quick_Message/install.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/modules/Quick_Message/install.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -1,91 +0,0 @@
+-&lt;?php
+-/*
+-||**************************************************************||
+-||  Viperal CMS &#194;&#169; :												||
+-||**************************************************************||
+-||																||
+-||	Copyright (C) 2004, 2005									||
+-||  By Ryan Marshall ( Viperal )								||
+-||																||
+-||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
+-||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
+-||																||
+-||**************************************************************||
+-||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
+-||**************************************************************||
+-||  Viperal CMS is released under the terms and conditions		||
+-||  of the GNU General Public License version 2					||
+-||																||
+-||**************************************************************||
+-
+-$Id$
+-*/
+-
+-if (!defined('VIPERAL'))
+-{
+-    die;
+-}
+-
+-global $table_prefix;
+-
+-if (!defined('QUICK_MESSAGE_TABLE'))
+-{
+-	define('QUICK_MESSAGE_TABLE', $table_prefix.'quick_message');
+-}
+-
+-class Quick_Message_install
+-{
+-	function install()
+-	{
+-		global $_CLASS;
+-
+-		$_CLASS['core_db']-&gt;table_create('start', QUICK_MESSAGE_TABLE);
+-		
+-		$_CLASS['core_db']-&gt;add_table_field_int('message_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+-		$_CLASS['core_db']-&gt;add_table_field_text('message_text', 200);
+-		$_CLASS['core_db']-&gt;add_table_field_int('message_time', array('max' =&gt; 200000000));
+-		$_CLASS['core_db']-&gt;add_table_field_int('poster_id', array('max' =&gt; 16000000));
+-		$_CLASS['core_db']-&gt;add_table_field_char('poster_name', 80);
+-		$_CLASS['core_db']-&gt;add_table_field_char('poster_ip', 18);
+-		
+-		$_CLASS['core_db']-&gt;add_table_index('message_id', 'primary');
+-		$_CLASS['core_db']-&gt;add_table_index('message_time');
+-		
+-		$_CLASS['core_db']-&gt;table_create('commit');
+-		
+-		// use set config ?
+-		set_core_config('quick_message', 'anonymous_posting', 2, false, true);
+-		set_core_config('quick_message', 'delete_time', 300, false, true);
+-		set_core_config('quick_message', 'height', 200, false, true);
+-		set_core_config('quick_message', 'last_post_check', 150, false, true);
+-		set_core_config('quick_message', 'length_max', 150, false, true);
+-
+-		$_CLASS['core_cache']-&gt;destroy('core_config');
+-
+-		$array = array(
+-			'message_text'	=&gt; 'Lets do this !',
+-			'message_time'	=&gt; (int) $_CLASS['core_user']-&gt;time,
+-			'poster_id'		=&gt; 0,
+-			'poster_name'	=&gt; (string) '',
+-			'poster_ip'		=&gt; (string) ''
+-		);
+-
+-		$_CLASS['core_db']-&gt;query('INSERT INTO ' . QUICK_MESSAGE_TABLE . ' '. $_CLASS['core_db']-&gt;sql_build_array('INSERT', $array));
+-
+-		return true;
+-	}
+-
+-	function uninstall()
+-	{
+-		global $_CLASS;
+-
+-		$_CLASS['core_db']-&gt;report_error(false);
+-
+-		$_CLASS['core_db']-&gt;query('DROP TABLE ' . QUICK_MESSAGE_TABLE);
+-		$_CLASS['core_db']-&gt;query('DELETE FROM ' . CORE_CONFIG_TABLE . &quot; WHERE config_section = 'quick_message'&quot;);
+-
+-		$_CLASS['core_db']-&gt;report_error(true);
+-	}
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+Copied: cms/trunk/modules/articles/configurator.php (from rev 108, cms/trunk/modules/articles/install.php)
+
+Deleted: cms/trunk/modules/articles/install.php
+===================================================================
+--- cms/trunk/modules/articles/install.php	2005-09-14 00:12:31 UTC (rev 122)
++++ cms/trunk/modules/articles/install.php	2005-09-15 03:13:58 UTC (rev 123)
+@@ -1,103 +0,0 @@
+-&lt;?php
+-/*
+-||**************************************************************||
+-||  Viperal CMS &#194;&#169; :												||
+-||**************************************************************||
+-||																||
+-||	Copyright (C) 2004, 2005									||
+-||  By Ryan Marshall ( Viperal )								||
+-||																||
+-||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
+-||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
+-||																||
+-||**************************************************************||
+-||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
+-||**************************************************************||
+-||  Viperal CMS is released under the terms and conditions		||
+-||  of the GNU General Public License version 2					||
+-||																||
+-||**************************************************************||
+-
+-$Id$
+-*/
+-
+-if (!defined('VIPERAL'))
+-{
+-    die;
+-}
+-
+-global $prefix;
+-
+-if (!defined('ARTICLES_TABLE'))
+-{
+-	define('ARTICLES_TABLE', $table_prefix.'articles');
+-}
+-
+-class articles_install
+-{
+-	var $error = array();
+-	
+-	function install()
+-	{
+-		global $_CLASS;
+-
+-		$_CLASS['core_db']-&gt;table_create('start', ARTICLES_TABLE);
+-		
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+-		$_CLASS['core_db']-&gt;add_table_field_char('articles_title', 80);
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_posted', array('max' =&gt; 200000000));
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_starts', array('max' =&gt; 200000000, 'null' =&gt; true));
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_expires', array('max' =&gt; 200000000, 'null' =&gt; true));
+-		$_CLASS['core_db']-&gt;add_table_field_text('articles_intro', 60000, true);
+-		$_CLASS['core_db']-&gt;add_table_field_text('articles_text', 10000000);
+-		$_CLASS['core_db']-&gt;add_table_field_text('articles_notes', 60000, true);
+-
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_order', array('max' =&gt; 16000000));
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_type', array('max' =&gt; 10));
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_status', array('max' =&gt; 10));
+-		$_CLASS['core_db']-&gt;add_table_field_text('articles_auth', 60000, true);
+-
+-		$_CLASS['core_db']-&gt;add_table_field_int('poster_id', array('max' =&gt; 16000000));
+-		$_CLASS['core_db']-&gt;add_table_field_char('poster_name', 80, true);
+-		$_CLASS['core_db']-&gt;add_table_field_char('poster_ip', 18);
+-		$_CLASS['core_db']-&gt;add_table_field_char('approver_id', 18, true);
+-		$_CLASS['core_db']-&gt;add_table_field_char('approver_name', 80, true);
+-
+-		$_CLASS['core_db']-&gt;add_table_index('articles_id', 'primary');
+-		$_CLASS['core_db']-&gt;add_table_index('articles_starts');
+-		$_CLASS['core_db']-&gt;add_table_index('articles_expires');
+-		//$_CLASS['core_db']-&gt;add_table_index('articles_type');
+-		$_CLASS['core_db']-&gt;add_table_index('articles_order');
+-		$_CLASS['core_db']-&gt;add_table_index('articles_status');
+-
+-		$_CLASS['core_db']-&gt;table_create('commit');
+-
+-		$array = array(
+-			'articles_title'	=&gt; 'Welcome Post',
+-			'articles_posted'	=&gt; (int) $_CLASS['core_user']-&gt;time,
+-			'articles_text'		=&gt; '&lt;p align=&quot;center&quot;&gt;I need something snappy here&lt;/p&gt;',
+-			'articles_order'	=&gt; 1,
+-			'articles_type'		=&gt; 1,
+-			'articles_status'	=&gt; STATUS_ACTIVE,
+-			'poster_id'			=&gt; 0,
+-			'poster_ip'			=&gt; (string) ''
+-		);
+-
+-		$_CLASS['core_db']-&gt;query('INSERT INTO ' . ARTICLES_TABLE . ' '. $_CLASS['core_db']-&gt;sql_build_array('INSERT', $array));
+-
+-		return true;
+-	}
+-
+-	function uninstall()
+-	{
+-		global $_CLASS;
+-
+-		$_CLASS['core_db']-&gt;report_error(false);
+-
+-		$_CLASS['core_db']-&gt;query('DROP TABLE ' . ARTICLES_TABLE);
+-
+-		$_CLASS['core_db']-&gt;report_error(true);
+-	}
+-}
+-
+-?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000043.html">[Viperals-svncheckins] r122 - cms/trunk/images
+</A></li>
+	<LI>Next message: <A HREF="000045.html">[Viperals-svncheckins] r124 - in cms/trunk/modules: Quick_Message articles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

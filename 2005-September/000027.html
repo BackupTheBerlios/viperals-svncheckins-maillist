@@ -1,0 +1,533 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r106 - in cms/trunk: includes/templates includes/templates/installer install
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r106%20-%20in%20cms/trunk%3A%20includes/templates%20includes/templates/installer%20install&In-Reply-To=%3C200509091605.j89G5pBk027067%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000026.html">
+   <LINK REL="Next"  HREF="000028.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r106 - in cms/trunk: includes/templates includes/templates/installer install</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r106%20-%20in%20cms/trunk%3A%20includes/templates%20includes/templates/installer%20install&In-Reply-To=%3C200509091605.j89G5pBk027067%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r106 - in cms/trunk: includes/templates includes/templates/installer install">viperal at berlios.de
+       </A><BR>
+    <I>Fri Sep  9 18:05:51 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000026.html">[Viperals-svncheckins] r105 - in cms/branches/1.0alpha1: includes/templates/admin includes/templates/admin/articles modules/articles modules/articles/admin
+</A></li>
+        <LI>Next message: <A HREF="000028.html">[Viperals-svncheckins] r107 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/blocks branches/1.0alpha1/includes branches/1.0alpha1/includes/db branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates branches/1.0alpha1/includes/templates/installer branches/1.0alpha1/install branches/1.0alpha1/modules/Quick_Message branches/1.0alpha1/modules/articles branches/1.0alpha1/modules/articles/admin trunk trunk/admin trunk/blocks trunk/includes trunk/includes/db trunk/includes/display trunk/includes/templates trunk/install trunk/modules/Quick_Message trunk/modules/articles trunk/modules/articles/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-09 18:05:50 +0200 (Fri, 09 Sep 2005)
+New Revision: 106
+
+Added:
+   cms/trunk/includes/templates/installer/
+   cms/trunk/includes/templates/installer/agreement.html
+   cms/trunk/includes/templates/installer/stage1.html
+Modified:
+   cms/trunk/install/installer.php
+Log:
+
+
+Added: cms/trunk/includes/templates/installer/agreement.html
+===================================================================
+--- cms/trunk/includes/templates/installer/agreement.html	2005-09-09 01:31:49 UTC (rev 105)
++++ cms/trunk/includes/templates/installer/agreement.html	2005-09-09 16:05:50 UTC (rev 106)
+@@ -0,0 +1,113 @@
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
++&lt;style type=&quot;text/css&quot;&gt;
++&lt;!--
++body
++{
++    font-family: Verdana, Helvetica, sans-serif;
++    font-size: 10px;
++    margin: 0%;
++    padding: 0px;
++    background-color: white;
++    background: url(../images/bg.gif);
++}
++
++.error { color: red; }
++
++#container
++{
++	position: absolute;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: -130px;
++}
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
++}
++
++.spacer
++{
++	background-color: #ECECEC;
++}
++
++.button
++{
++	background-color: #DCE1E5;
++	border: 1px solid #ccc;
++	color: black;
++}
++
++th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
++.tablebg { background-color: #A9B8C2; }
++
++.row1 { background-color: #ECECEC; padding: 4px; }
++.row2 { background-color: #DCE1E5; padding: 4px; }
++.row3 { background-color: #C0C8D0; padding: 4px; }
++
++a:link { color: #005784; text-decoration: none; }
++a:active { color: #005784; text-decoration: none; }
++a:visited { color: #005784; text-decoration: none; }
++a:hover { color: #000000; text-decoration: none; }
++
++form { margin: 0px; padding: 0px; border: 0px; }
++input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
++select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++
++--&gt;
++&lt;/style&gt;
++
++&lt;body&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
++			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;tr&gt;
++							&lt;th style=&quot;text-align: center;&quot;&gt;Agreement&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot;&gt;
++								&lt;p&gt;
++									Because the program is licensed free of charge, there is &lt;b&gt;NO WARRANTY
++								FOR THE PROGRAM&lt;/b&gt;, to the extent permitted by applicable law.  except when
++								otherwise stated in writing the copyright holders and/or other parties
++								provide the program &quot;as is&quot; without warranty of any kind, either expressed
++								or implied, including, but not limited to, the implied warranties of
++								merchantability and fitness for a particular purpose.  the entire risk as
++								to the quality and performance of the program is with you.  should the
++								program prove defective, you assume the cost of all necessary servicing,
++								repair or correction.&lt;/p&gt;
++								&lt;p&gt;
++									&lt;b&gt;Please note&lt;/b&gt;, that while most of this program is mostly licensed under &lt;a href=&quot;<A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A>&quot;&gt;GNU GPL&lt;/a&gt; . It &lt;b&gt;does&lt;/b&gt; include a few non GNU GPL licenses, your take responsibly  for looking at each file and/or folder for the it license and following it to it extent. 
++									&lt;br/&gt;&lt;br/&gt;None of these license hinders free redistribution, nor use of this software for individual or business related site&lt;/p&gt;
++								&lt;p&gt;
++									&lt;b&gt;If you agree to these terms and those of all the distrubuted licenses, Please hit agree.&lt;/b&gt;&lt;/p&gt;
++								&lt;p&gt;				
++							&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;th style=&quot;text-align: center;&quot;&gt;
++								&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;1&quot; /&gt;
++								&lt;input type=&quot;submit&quot; name=&quot;agreement_signed&quot; value=&quot;I Agree&quot; class=&quot;formfield&quot; /&gt;
++							&lt;/th&gt;
++						&lt;/tr&gt;
++					&lt;/tbody&gt;
++				&lt;/table&gt;
++			&lt;/form&gt;
++		&lt;/div&gt;
++	&lt;/div&gt;
++&lt;/body&gt;
++
++&lt;/html&gt;
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/installer/stage1.html
+===================================================================
+--- cms/trunk/includes/templates/installer/stage1.html	2005-09-09 01:31:49 UTC (rev 105)
++++ cms/trunk/includes/templates/installer/stage1.html	2005-09-09 16:05:50 UTC (rev 106)
+@@ -0,0 +1,193 @@
++&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
++&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
++&lt;head&gt;
++&lt;title&gt;Viperal: Agreement&lt;/title&gt;
++&lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
++&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
++
++&lt;style type=&quot;text/css&quot;&gt;
++&lt;!--
++body
++{
++    font-family: Verdana, Helvetica, sans-serif;
++    font-size: 10px;
++    margin: 0%;
++    padding: 0px;
++    background-color: white;
++    background: url(../images/bg.gif);
++}
++
++.error { color: red; }
++
++#container
++{
++	position: absolute;
++	top: 50%;
++	left: 0px;
++	width: 100%;
++	margin-top: -130px;
++}
++
++#wrapper
++{
++	position: relative;
++	text-align: left;
++	width: 500px;
++	margin: 0px auto;
++}
++
++.spacer
++{
++	background-color: #ECECEC;
++}
++
++.button
++{
++	background-color: #DCE1E5;
++	border: 1px solid #ccc;
++	color: black;
++}
++
++th { height: 28px; color: #FFA34F; font-size: 110%; font-weight: bold; background-color: #006699;white-space: nowrap; }
++.tablebg { background-color: #A9B8C2; }
++
++.row1 { background-color: #ECECEC; padding: 4px; }
++.row2 { background-color: #DCE1E5; padding: 4px; }
++.row3 { background-color: #C0C8D0; padding: 4px; }
++
++a:link { color: #005784; text-decoration: none; }
++a:active { color: #005784; text-decoration: none; }
++a:visited { color: #005784; text-decoration: none; }
++a:hover { color: #000000; text-decoration: none; }
++
++form { margin: 0px; padding: 0px; border: 0px; }
++input { font-weight: normal; background-color: #FAFAFA; border-style: solid; border-width: 1px; border-color: #ccc; color: black; font-family: Verdana, serif; font-size: 100%; }
++select { color: black; background-color: white; font-family: Verdana, serif; font-size: 100%; font-weight: normal; border-color: black; border-style: solid; border-width: 1px; }
++.post { background-color: white; border-style: solid; border-width: 1px; border-color: #ccc;}
++
++--&gt;
++&lt;/style&gt;
++&lt;script language=&quot;Javascript&quot; type=&quot;text/javascript&quot;&gt;
++&lt;!--
++var old_value = 'all';
++
++function change_option(name)
++{
++	var area = document.getElementById(name);
++
++	if (!area)
++	{
++		if (old_value == 'all')
++		{
++			return;
++		}
++		else
++		{
++			name = 'all'
++			area = document.getElementById(name);
++		}
++	}
++
++	area.style.display = '';
++
++	var i = 1;
++
++	while (true)
++	{
++		area = document.getElementById(name + '_' + i);
++
++		if (!area)
++		{
++			break;
++		}
++
++		area.style.display = '';
++		i += 1;
++	}
++
++	area = document.getElementById(old_value);
++	area.style.display = 'none';
++	
++	var i = 1;
++
++	while (true)
++	{
++		area = document.getElementById(old_value + '_' + i);
++
++		if (!area)
++		{
++			break;
++		}
++
++		area.style.display = 'none';
++		i += 1;
++	}
++
++	old_value = name;
++}
++
++//--&gt;
++&lt;/script&gt;
++&lt;body&gt;
++	&lt;div id=&quot;container&quot;&gt;
++		&lt;div id=&quot;wrapper&quot;&gt;
++			&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
++				&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
++					&lt;tbody&gt;
++						&lt;tr&gt;
++							&lt;th colspan=&quot;2&quot;&gt;Database Configuration&lt;/th&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database type: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;select name=&quot;dbms&quot; onchange=&quot;change_option(this.value);&quot;&gt;{ $database_options }&lt;/select&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;sqlite&quot; style=&quot;display: none;&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file&quot; value=&quot;&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;sqlite_pdo&quot; style=&quot;display: none;&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database File: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;file&quot; value=&quot;&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server hostname: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;server&quot; value=&quot;&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_1&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database server port: &lt;/b&gt;&lt;br&gt;&lt;span class=&quot;gensmall&quot;&gt;Leave this blank unless you know the server operates on a non-standard port.&lt;/span&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;port&quot; value=&quot;&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_2&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database name: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;database&quot; value=&quot;&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_3&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database username: &lt;/b&gt;&lt;/td&gt;
++					
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;username&quot; value=&quot;&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr id=&quot;all_4&quot;&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Database password: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;password&quot; value=&quot;&quot; type=&quot;password&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for tables: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;table_prefix&quot; value=&quot;cms_&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;td class=&quot;row1&quot; width=&quot;50%&quot;&gt;&lt;b&gt;Prefix for user table: &lt;/b&gt;&lt;/td&gt;
++							&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;user_prefix&quot; value=&quot;cms_&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++						&lt;/tr&gt;
++						&lt;tr&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;stage&quot; value=&quot;1&quot; /&gt;
++							&lt;input type=&quot;hidden&quot; name=&quot;agreement_signed&quot; value=&quot;1&quot; /&gt;
++							&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; name=&quot;test&quot; value=&quot;Test Connection&quot; type=&quot;submit&quot;&gt; &lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Continue&quot; type=&quot;submit&quot;&gt;&lt;/th&gt;
++						&lt;/tr&gt;
++					&lt;/tbody&gt;
++				&lt;/table&gt;
++			&lt;/form&gt;
++		&lt;/div&gt;
++	&lt;/div&gt;
++&lt;/body&gt;
++
++&lt;/html&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/install/installer.php
+===================================================================
+--- cms/trunk/install/installer.php	2005-09-09 01:31:49 UTC (rev 105)
++++ cms/trunk/install/installer.php	2005-09-09 16:05:50 UTC (rev 106)
+@@ -21,5 +21,131 @@
+ $Id$
+ */
+ 
+-// LOL, MADE YOU LOOK
++error_reporting(E_ALL);
++
++//echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
++$site_file_root = 'C:/Program Files/Apache Group/Apache2/cms/';
++
++if (!extension_loaded('mbstring'))
++{
++	require_once($site_file_root.'includes/compatiblity/mbstring.php');
++}
++
++set_magic_quotes_runtime(0);
++mb_internal_encoding('UTF-8');
++
++define('STRIP_SLASHES', get_magic_quotes_gpc());
++
++// Remove registered globals
++if ((bool) ini_get('register_globals'))
++{
++	foreach ($_REQUEST as $var_name =&gt; $value)
++	{
++		unset($$var_name);
++	}
++}
++
++require_once($site_file_root.'includes/functions.php');
++require_once($site_file_root.'includes/display/template.php');
++
++load_class(false, 'core_template');
++
++$_REQUEST['stage'] = isset($_REQUEST['stage']) ? (int) $_REQUEST['stage'] : 0;
++
++if ($_REQUEST['stage'] &amp;&amp; !$_POST['agreement_signed'])
++{
++	$_REQUEST['stage'] = 0;
++}
++
++Switch ($_REQUEST['stage'])
++{
++	case 1:
++		$holding_array = array(
++			'mysql'		=&gt; array(
++				'lang'			=&gt; 'MySQL',
++				'extension'		=&gt; 'mysql', 
++			),
++			'mysql3'			=&gt; array(
++				'lang'			=&gt; 'MySQL3',
++				'extension'		=&gt; 'mysql',
++			),
++			'mysqli'	=&gt; array(
++				'lang'			=&gt; 'MySQL 4.1.x',
++				'extension'		=&gt; 'mysqli', 
++			),
++			'mssql'		=&gt; array(
++				'lang'			=&gt; 'MS SQL Server 7/2000',
++				'extension'		=&gt; 'mssql', 
++			),
++			'postgres' =&gt; array(
++				'lang'			=&gt; 'PostgreSQL',
++				'extension'		=&gt; 'pgsql', 
++			),
++			'sqlite'		=&gt; array(
++				'lang'			=&gt; 'SQLite',
++				'extension'		=&gt; 'sqlite', 
++			),
++			'sqlite_pdo'		=&gt; array(
++				'lang'			=&gt; 'SQLite 3 (PDO)',
++				'extension'		=&gt; 'pdo_sqlite', 
++			)
++		);
++		
++		$database_array = array();
++		$database_options = '';
++
++		foreach ($holding_array as $name =&gt; $setting)
++		{
++			if (extension_loaded($setting['extension']))
++			{
++				$database_options .= '&lt;option value=&quot;' . $name . '&quot;&gt;' . $setting['lang'] . '&lt;/option&gt;';
++				$database_array[$name] = $setting;
++			}
++		}
++
++		$php_config = array(
++			/*array(
++				'lang'	=&gt; 'PHP version',
++				'recommended'	=&gt; '4.2.3 +',
++				'current'		=&gt; PHP_VERSION
++			),*/
++			array(
++				'lang'	=&gt; 'Safe Mode',
++				'ini'	=&gt; 'safe_mode',
++				'recommended'	=&gt; false,
++				'current'		=&gt; (bool) ini_get('safe_mode')
++			),
++			array(
++				'lang'	=&gt; 'Magic Quotes GPC',
++				'ini'	=&gt; 'magic_quotes_gpc',
++				'recommended'	=&gt; false,
++				'current'		=&gt; (bool) ini_get('magic_quotes_gpc')
++			),
++			array(
++				'lang'	=&gt; 'Register Globals',
++				'ini'	=&gt; 'register_globals',
++				'recommended'	=&gt; false,
++				'current'		=&gt; (bool) ini_get('register_globals')
++			),
++			array(
++				'lang'	=&gt; 'Output Buffering',
++				'ini'	=&gt; 'output_buffering',
++				'recommended'	=&gt; false,
++				'current'		=&gt; (bool) ini_get('output_buffering')
++			),
++		);
++
++		$_CLASS['core_template']-&gt;assign_array(array(
++			'database_options'	=&gt; $database_options,
++			'php_config'		=&gt; $php_config,
++		));
++		
++		$_CLASS['core_template']-&gt;display('installer/stage1.html');
++	break;
++
++	default:
++	case 0:
++		$_CLASS['core_template']-&gt;display('installer/agreement.html');
++	break;
++}
+ ?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000026.html">[Viperals-svncheckins] r105 - in cms/branches/1.0alpha1: includes/templates/admin includes/templates/admin/articles modules/articles modules/articles/admin
+</A></li>
+	<LI>Next message: <A HREF="000028.html">[Viperals-svncheckins] r107 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/blocks branches/1.0alpha1/includes branches/1.0alpha1/includes/db branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates branches/1.0alpha1/includes/templates/installer branches/1.0alpha1/install branches/1.0alpha1/modules/Quick_Message branches/1.0alpha1/modules/articles branches/1.0alpha1/modules/articles/admin trunk trunk/admin trunk/blocks trunk/includes trunk/includes/db trunk/includes/display trunk/includes/templates trunk/install trunk/modules/Quick_Message trunk/modules/articles trunk/modules/articles/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,3129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r81 - in trunk: . images/mimetypes images/smilies includes includes/auth includes/cache includes/db includes/display includes/forums javascript modules/Control_Panel/ucp modules/Forums modules/Quick_Message
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-August/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r81%20-%20in%20trunk%3A%20.%20images/mimetypes%20images/smilies%20includes%20includes/auth%20includes/cache%20includes/db%20includes/display%20includes/forums%20javascript%20modules/Control_Panel/ucp%20modules/Forums%20modules/Quick_Message&In-Reply-To=%3C200508100242.j7A2gAPa027146%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000004.html">
+   <LINK REL="Next"  HREF="000006.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r81 - in trunk: . images/mimetypes images/smilies includes includes/auth includes/cache includes/db includes/display includes/forums javascript modules/Control_Panel/ucp modules/Forums modules/Quick_Message</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r81%20-%20in%20trunk%3A%20.%20images/mimetypes%20images/smilies%20includes%20includes/auth%20includes/cache%20includes/db%20includes/display%20includes/forums%20javascript%20modules/Control_Panel/ucp%20modules/Forums%20modules/Quick_Message&In-Reply-To=%3C200508100242.j7A2gAPa027146%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r81 - in trunk: . images/mimetypes images/smilies includes includes/auth includes/cache includes/db includes/display includes/forums javascript modules/Control_Panel/ucp modules/Forums modules/Quick_Message">viperal at berlios.de
+       </A><BR>
+    <I>Wed Aug 10 04:42:10 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000004.html">[Viperals-svncheckins] r80 - trunk/javascript
+</A></li>
+        <LI>Next message: <A HREF="000006.html">[Viperals-svncheckins] r82 - in trunk: . admin admin/functions blocks images includes includes/auth includes/cache includes/db includes/display modules/Contact modules/Control_Panel modules/Control_Panel/ucp modules/Forums modules/Quick_Message themes/viperal themes/viperal/images themes/viperal/style themes/viperal/style/images themes/viperal/template themes/viperal/template/modules/News
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#5">[ date ]</a>
+              <a href="thread.html#5">[ thread ]</a>
+              <a href="subject.html#5">[ subject ]</a>
+              <a href="author.html#5">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-08-10 04:42:08 +0200 (Wed, 10 Aug 2005)
+New Revision: 81
+
+Modified:
+   trunk/core.php
+   trunk/images/mimetypes/
+   trunk/images/smilies/
+   trunk/includes/auth/auth.php
+   trunk/includes/cache/cache_file.php
+   trunk/includes/core_rss.php
+   trunk/includes/db/mssql.php
+   trunk/includes/db/mysql.php
+   trunk/includes/db/mysqli.php
+   trunk/includes/db/postgres.php
+   trunk/includes/display/blocks.php
+   trunk/includes/display/display.php
+   trunk/includes/forums/functions.php
+   trunk/includes/forums/functions_messenger.php
+   trunk/includes/forums/functions_posting.php
+   trunk/includes/forums/functions_privmsgs.php
+   trunk/includes/functions.php
+   trunk/includes/functions_user.php
+   trunk/includes/mailer.php
+   trunk/includes/session.php
+   trunk/includes/user.php
+   trunk/javascript/collapse.js
+   trunk/modules/Control_Panel/ucp/ucp_groups.php
+   trunk/modules/Control_Panel/ucp/ucp_main.php
+   trunk/modules/Control_Panel/ucp/ucp_pm.php
+   trunk/modules/Control_Panel/ucp/ucp_pm_compose.php
+   trunk/modules/Control_Panel/ucp/ucp_pm_options.php
+   trunk/modules/Control_Panel/ucp/ucp_pm_viewfolder.php
+   trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php
+   trunk/modules/Control_Panel/ucp/ucp_profile.php
+   trunk/modules/Forums/faq.php
+   trunk/modules/Forums/posting.php
+   trunk/modules/Forums/viewtopic.php
+   trunk/modules/Quick_Message/index.php
+Log:
+Beginning of true UTF-8 (Unicode) support. Will adjust for older software versions ( mainly database ).
+
+Extended collapse.js, should also perform better ( not like it was a problem :-) )
+
+beginning of core auth changes, have alot of extending to do
+
+Other changes ..
+
+Modified: trunk/core.php
+===================================================================
+--- trunk/core.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/core.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -20,7 +20,8 @@
+ 
+ set_magic_quotes_runtime(0);
+ error_reporting(E_ALL);
+-//error_reporting(0);
++mb_internal_encoding('UTF-8');
++//mb_http_output('UTF-8');
+ 
+ // Remove registered globals
+ if ((bool) ini_get('register_globals'))
+@@ -29,21 +30,21 @@
+ 	{
+ 		unset($$var_name);
+ 	}
+-	unset($variable, $value);
+ }
+ 
+-define('STRIP', get_magic_quotes_gpc());
++define('STRIP_SLASHES', get_magic_quotes_gpc());
+ 
+ $starttime = explode(' ', microtime());
+ $starttime = $starttime[1] + $starttime[0];
+ 
+ // Move to index files
+ $base_memory_usage = function_exists('memory_get_usage') ? memory_get_usage() : 0;
+-           
++
+ require($site_file_root.'includes/functions.php');
+ require($site_file_root.'config.php');
+ require($site_file_root.'includes/tables.php');
+ require($site_file_root.'includes/handler.php');
++require($site_file_root.'includes/mailer.php');
+ require($site_file_root.'includes/db/'.$site_db['type'].'.php');
+ require($site_file_root.'includes/display/template.php');
+ require($site_file_root.'includes/cache/cache.php');
+@@ -57,7 +58,7 @@
+ 
+ // Set error handler
+ $_CLASS['core_error_handler']-&gt;start();
+-$_CLASS['core_error_handler']-&gt;stop();
++//$_CLASS['core_error_handler']-&gt;stop();
+ //error_reporting(E_ERROR | E_WARNING | E_PARSE);
+ 
+ if (function_exists('register_shutdown_function'))
+@@ -145,18 +146,4 @@
+ 	// error here
+ }
+ 
+-/*
+-if ((time() - $config['cache_gc']) &gt; $config['cache_last_gc'])
+-{
+-	//$_CLASS['core_cache']-&gt;gc();
+-	set_config('cache_last_gc', time(), true);
+-}
+-
+-// maybe add to register_shutdown_function()
+-If ($_CORE_CONFIG['server']['optimize_rate'] &amp;&amp; ($_CORE_CONFIG['server']['optimize_last'] + $_CORE_CONFIG['server']['optimize_rate']) &lt; time())
+-{
+-	set_core_config('server', 'optimize_last', time());
+-	$_CLASS['core_db']-&gt;sql_optimize_tables();
+-	//optimize_cache();
+-}*/
+ ?&gt;
+\ No newline at end of file
+
+
+Property changes on: trunk/images/mimetypes
+___________________________________________________________________
+Name: svn:ignore
+   + Thumbs.db
+
+
+
+Property changes on: trunk/images/smilies
+___________________________________________________________________
+Name: svn:ignore
+   + Thumbs.db
+
+
+Modified: trunk/includes/auth/auth.php
+===================================================================
+--- trunk/includes/auth/auth.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/auth/auth.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -283,10 +283,8 @@
+ 	{
+ 		global $_CLASS, $site_file_root;
+ 
+-		$options['groups_allowed'] = empty($options['groups_allowed']) ? array() : $options['groups_allowed'];
+-		$options['users_allowed'] = empty($options['users_allowed']) ? array() : $options['users_allowed'];
+-		$options['groups_disallowed'] = empty($options['groups_disallowed']) ? array() : $options['groups_disallowed'];
+-		$options['users_disallowed'] = empty($options['users_disallowed']) ? array() : $options['users_disallowed'];
++		$options['groups'] = empty($options['groups']) ? array() : $options['groups'];
++		$options['users'] = empty($options['users']) ? array() : $options['users'];
+ 
+ 		$mode = $return = false;
+ 		$checks = array('add', 'remove', 'set');
+@@ -308,57 +306,72 @@
+ 			switch ($mode)
+ 			{
+ 				case 'add':
+-					// Allowed
+ 					$setup['groups'] = get_variable('groups_add', 'POST', array(), 'array');
+ 					$setup['users'] = explode(&quot;\n&quot;, get_variable('users_add', 'POST'));
+-		
++
+ 					if (count($setup['users']))
+ 					{
+-						$ids['users'] = user_get_id($setup['users']);
++						$setup['users'] = user_get_id($setup['users']);
+ 					}
+-		
++
+ 					if (count($setup['groups']))
+ 					{
+ 						$sql = 'SELECT group_id
+ 							FROM ' . GROUPS_TABLE . '
+ 							WHERE group_id IN ('.implode(', ', array_map('intval', $setup['groups'])).')';
+ 						$result = $_CLASS['core_db']-&gt;query($sql);
+-		
++
++						$setup['groups'] = array();
++
+ 						while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 						{
+-							$ids['groups'][] = $row['group_id'];
++							$setup['groups'][] = $row['group_id'];
+ 						}
+ 						$_CLASS['core_db']-&gt;free_result($result);
+ 					}
+ 
+-					$function = (true) ? 'array_merge' : 'array_diff';
++					foreach ($setup['groups'] as $id)
++					{
++						$options['groups'][$id] = array('status' =&gt; 1);
++					}
+ 
+-					$options['groups_allowed'] = $function($options['groups_allowed'], $ids['groups']);
+-					$options['users_allowed'] = $function($options['users_allowed'], $ids['users']);
++					foreach ($setup['users'] as $id)
++					{
++						$options['users'][$id] = array('status' =&gt; 1);
++					}
++
++					unset($setup);
++					//print_r($options);
+ 				break;
+-			
+-				case 'ss':
+-					$options['groups_disallowed'] = array_diff(array_merge($options['groups_disallowed'], $dg_add), $dg_remove, $options['groups_allowed']);
+-					$options['users_disallowed'] = array_diff(array_merge($options['users_disallowed'], $user_ids['disallowed']), $du_remove, $options['users_allowed']);
+-		
+-					print_r($ids);
+-					die;
+-					$current['groups_allowed'] = get_variable('g_current', 'POST', array(), 'array');
+-					$current['users_allowed'] = get_variable('u_current', 'POST', array(), 'array');
+-					$current['groups_disallowed'] = get_variable('dg_current', 'POST', array(), 'array');
+-					$current['users_disallowed'] = get_variable('du_current', 'POST', array(), 'array');
+-		
+-			
+-		
+-					$options['groups_allowed'] = array_diff(array_merge($options['groups_allowed'], $g_add), $g_remove);
+-					$options['users_allowed'] = array_diff(array_merge($options['users_allowed'], $user_ids['allowed']), $u_remove);
+-			
+-					$options['groups_disallowed'] = array_diff(array_merge($options['groups_disallowed'], $dg_add), $dg_remove, $options['groups_allowed']);
+-					$options['users_disallowed'] = array_diff(array_merge($options['users_disallowed'], $user_ids['disallowed']), $du_remove, $options['users_allowed']);
+-		
+-					$return = null;
++
++				case 'remove':
++					$ids['groups'] = array_map('intval', get_variable('groups_current', 'POST', array(), 'array'));
++					$ids['users'] = array_map('intval', get_variable('users_current', 'POST', array(), 'array'));
+ 					
++					$function = ($mode == 'add') ? 'array_merge' : 'array_diff';
++
++					foreach ($options['groups'] as $key =&gt; $ignore)
++					{
++						if (in_array($key, $ids['groups']))
++						{
++							unset($options['groups'][$key]);
++						}
++					}
++
++					foreach ($options['users'] as $key =&gt; $ignore)
++					{
++						if (in_array($key, $ids['users']))
++						{
++							unset($options['users'][$key]);
++						}
++					}
++
++					//print_r($options);
+ 				break;
++			
++				case 'set':
++
++				break;
+ 			}
+ 
+ 			foreach ($options as $option)
+@@ -370,39 +383,38 @@
+ 				}
+ 			}
+ 		}
++
+ 		$group_list = $allowed_group_list = $disallowed_group_list = $allowed_user_list = $disallowed_user_list = '';
++		$groups_ids = array_keys($options['users']);
+ 
+-		$set_users = array_merge($options['users_allowed'], $options['users_disallowed']);
+-		$set_groups = array_merge($options['groups_allowed'], $options['groups_disallowed']);
+-
+-		if (count($set_users))
++		if (!empty($options['users']))
+ 		{
+ 			$sql = 'SELECT user_id, username, user_colour
+ 				FROM ' . USERS_TABLE . '
+-				WHERE user_id IN ('.implode(', ', $set_users).')
++				WHERE user_id IN ('.implode(', ', array_keys($options['users'])).')
+ 					ORDER BY username';
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+-				$user_list = (in_array($row['user_id'], $options['users_allowed'])) ? 'allowed_user_list' : 'disallowed_user_list';
++				$user_list = ($options['users'][$row['user_id']]['status'] === 1) ? 'allowed_user_list' : 'disallowed_user_list';
+ 
+ 				$$user_list .= '&lt;option ' . (($row['user_colour']) ? ' style=&quot;color: #'.$row['user_colour'].';&quot;' : '') . ' value=&quot;' . $row['user_id'] . '&quot;&gt;' . $row['username'] . '&lt;/option&gt;';
+ 			}
+ 			$_CLASS['core_db']-&gt;free_result($result);
+ 		}
+ 
+-		if (count($set_groups))
++		if (!empty($groups_ids))
+ 		{
+ 			$sql = 'SELECT group_id, group_name, group_type 
+ 				FROM ' . GROUPS_TABLE . '
+-				WHERE group_id IN ('.implode(', ', $set_groups).')
++				WHERE group_id IN ('.implode(', ', array_keys($options['groups'])).')
+ 					ORDER BY group_type DESC, group_name';
+ 			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+-				$group_list = (in_array($row['group_id'], $options['groups_allowed'])) ? 'allowed_group_list' : 'disallowed_group_list';
++				$group_list = ($options['groups'][$row['group_id']]['status'] === 1) ? 'allowed_group_list' : 'disallowed_group_list';
+ 				
+ 				$$group_list .= '&lt;option' . (($row['group_type'] == GROUP_SPECIAL) ? ' style=&quot;color: #006699;&quot;' : '') . ' value=&quot;' . $row['group_id'] . '&quot;&gt;' . (($row['group_type'] == GROUP_SPECIAL) ? $_CLASS['core_user']-&gt;lang['G_' . $row['group_name']] : $row['group_name']) . '&lt;/option&gt;';
+ 				
+@@ -412,7 +424,7 @@
+ 
+ 		$sql = 'SELECT group_id, group_name, group_type 
+ 			FROM ' . GROUPS_TABLE . 
+-				((!empty($set_groups)) ? ' WHERE group_id NOT IN ('.implode(', ', $set_groups).')' : '').'
++				(empty($groups_ids) ? '' : ' WHERE group_id NOT IN ('.implode(', ', $groups_ids).')').'
+ 					ORDER BY group_type DESC, group_name';
+ 		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+
+Modified: trunk/includes/cache/cache_file.php
+===================================================================
+--- trunk/includes/cache/cache_file.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/cache/cache_file.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -58,13 +58,7 @@
+ 
+ 		$file_data = &quot;&lt;?php $protection_code \$this-&gt;vars['$name'] = &quot;.var_export($data, true).&quot;; \n\$this-&gt;expires['$name'] = $expires;  ?&gt;&quot;;
+ 
+-		if ($fp = @fopen($this-&gt;cache_dir . &quot;cache_$name.php&quot;, 'wb'))
+-		{
+-			@flock($fp, LOCK_EX);
+-			fwrite($fp, $file_data);
+-			@flock($fp, LOCK_UN);
+-			fclose($fp);
+-		}
++		file_put_contents($this-&gt;cache_dir.&quot;cache_$name.php&quot;, $file_data);
+ 
+ 		$this-&gt;vars[$name] = $data;
+ 		$this-&gt;expires[$name] = $expires;
+
+Modified: trunk/includes/core_rss.php
+===================================================================
+--- trunk/includes/core_rss.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/core_rss.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -125,17 +125,17 @@
+ 
+ 		$data = strtolower(trim(fgets($this-&gt;fp, 300)));
+ 
+-		if (strpos($data, '200') === false)
++		if (mb_strpos($data, '200') === false)
+ 		{
+ 			echo $data;
+ 
+-			if (strpos($data, '301') === true || strpos($data, '301') === true)
++			if (mb_strpos($data, '301') === true || mb_strpos($data, '301') === true)
+ 			{
+ 				while (!empty($data))
+ 				{
+ 					$data = strtolower(trim(fgets($this-&gt;fp, 300)));
+ 
+-					if (strpos('location:', $data) == true)
++					if (mb_strpos('location:', $data) == true)
+ 					{
+ 						$new_url = trim(eregi_replace('location:', '', $data));
+ 						
+@@ -161,19 +161,19 @@
+ 		{
+ 			$data = strtolower(trim(fgets($this-&gt;fp, 300)));
+ 			
+-			if (strpos($data, 'content-type') !== false &amp;&amp; strpos($data, 'xml') === false)
++			if (mb_strpos($data, 'content-type') !== false &amp;&amp; mb_strpos($data, 'xml') === false)
+ 			{
+ 				$this-&gt;Close_connection();
+ 				$this-&gt;error = 'Document type is invalid';
+ 				return false;
+ 			}
+ 			
+-			if (strpos($data, 'last-modified') !== false)
++			if (mb_strpos($data, 'last-modified') !== false)
+ 			{
+ 				//
+ 			}
+ 
+-			if (strpos($data, 'content-encoding') !== false &amp;&amp; strpos($data, 'gzip') !== false)
++			if (mb_strpos($data, 'content-encoding') !== false &amp;&amp; mb_strpos($data, 'gzip') !== false)
+ 			{
+ 				$compressed = true;
+ 			}
+@@ -232,7 +232,7 @@
+ 
+ 		$element = strtolower($element);
+ 
+-		if (strpos($element, ':'))
++		if (mb_strpos($element, ':'))
+ 		{
+ 			list($element) = explode(':', $element, 2);
+ 		}
+@@ -319,7 +319,7 @@
+ 	{
+ 		$element = strtolower($element);
+ 
+-		if (strpos($element, ':' ))
++		if (mb_strpos($element, ':' ))
+ 		{
+ 			list($element) = explode(':', $element, 2);
+ 		}
+
+Modified: trunk/includes/db/mssql.php
+===================================================================
+--- trunk/includes/db/mssql.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/db/mssql.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -545,8 +545,11 @@
+ 				{
+ 					$fields .= &quot;, \n&quot;;
+ 				}
++				
++				//#MyTempTable -- local temp tables
++				//##MyTempTable -- Global temp tables
+ 
+-				$table = 'CREATE TABLE '.$this-&gt;_table_name.&quot; ( \n&quot; .$fields. $indexs .&quot; \n ) ENGINE=InnoDB;&quot;;
++				$table = 'CREATE TABLE ['.$this-&gt;_table_name.&quot;] ( \n&quot; .$fields. $indexs .&quot; \n ) ENGINE=InnoDB;&quot;;
+ 				// Let users choose transaction safe InnoDB or MyISAM
+ 				// ENGINE=MyISAM
+ 				if ($option == 'return')
+
+Modified: trunk/includes/db/mysql.php
+===================================================================
+--- trunk/includes/db/mysql.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/db/mysql.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -16,7 +16,7 @@
+ class db_mysql
+ {
+ 	var $link_identifier = false;
+-	var $db_layer = 'mysql4';
++	var $db_layer = 'mysql';
+ 
+ 	var $last_result;
+ 	var $return_on_error;
+@@ -46,11 +46,22 @@
+ 		}
+ 
+ 		$this-&gt;link_identifier = ($db['persistent']) ? @mysql_pconnect($db['server'], $db['username'], $db['password']) : @mysql_connect($db['server'], $db['username'], $db['password']);
+-
+ 		if ($this-&gt;link_identifier)
+ 		{
+ 			if (@mysql_select_db($db['database']))
+ 			{
++				mysql_query('SET NAMES utf8',$this-&gt;link_identifier);
++
++				//mysql_query('SET character_set_results = NULL', $this-&gt;link_identifier);
++
++				/*
++				$result = mysql_query(&quot;show variables like 'col%'&quot;,$this-&gt;link_identifier);
++				while ($value = mysql_fetch_assoc($result))
++				{
++					print_r($value);
++					echo '&lt;br&gt;';
++				}
++				*/
+ 				return $this-&gt;link_identifier;
+ 			}
+ 
+@@ -177,7 +188,7 @@
+ 
+ 	function sql_query($query = false)
+ 	{
+-		return @mysql_query($query, $this-&gt;link_identifier);
++		return mysql_query($query, $this-&gt;link_identifier);
+ 	}
+ 
+ 	function query_limit($query = false, $total = false, $offset = 0, $backtrace = false) 
+@@ -319,7 +330,7 @@
+ 		return @mysql_fetch_array($result);
+ 	}
+ 	
+-	function insert_id()
++	function insert_id($table, $column)
+ 	{
+ 		return ($this-&gt;link_identifier) ? @mysql_insert_id($this-&gt;link_identifier) : false;
+ 	}
+@@ -502,7 +513,7 @@
+ 					$fields .= &quot;, \n&quot;;
+ 				}
+ 
+-				$table = 'CREATE TABLE '.$this-&gt;_table_name.&quot; ( \n&quot; .$fields. $indexs .&quot; \n ) ENGINE=InnoDB;&quot;;
++				$table = 'CREATE TABLE '.$this-&gt;_table_name.&quot; ( \n&quot; .$fields. $indexs .&quot; \n ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;&quot;;
+ 				// Let users choose transaction safe InnoDB or MyISAM
+ 				// ENGINE=MyISAM
+ 				if ($option == 'return')
+
+Modified: trunk/includes/db/mysqli.php
+===================================================================
+--- trunk/includes/db/mysqli.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/db/mysqli.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -51,6 +51,11 @@
+ 		{
+ 			if (@mysqli_select_db($this-&gt;link_identifier, $db['database']))
+ 			{
++				mysqli_query($this-&gt;link_identifier, 'SET NAMES utf8');
++
++				//mysqli_query($this-&gt;link_identifier, 'SET character_set_results = NULL');
++				//mysqli_set_charset($this-&gt;link_identifier, &quot;utf8&quot;);
++
+ 				return $this-&gt;link_identifier;
+ 			}
+ 
+@@ -260,7 +265,7 @@
+ 				{
+ 					$values[] = &quot;$key = '&quot; . $this-&gt;escape($value) . &quot;'&quot;;
+ 				}
+-				elseif (is_null($var))
++				elseif (is_null($value))
+ 				{
+ 					$values[] = &quot;$key = NULL&quot;;
+ 				}
+@@ -329,7 +334,7 @@
+ 		return @mysqli_fetch_array($result);
+ 	}
+ 
+-	function insert_id()
++	function insert_id($table, $column)
+ 	{
+ 		return ($this-&gt;link_identifier) ? @mysqli_insert_id($this-&gt;link_identifier) : false;
+ 	}
+@@ -509,7 +514,7 @@
+ 					$fields .= &quot;, \n&quot;;
+ 				}
+ 
+-				$table = 'CREATE TABLE '.$this-&gt;table_name.&quot; ( \n&quot; .$fields. $indexs .&quot; \n ) ENGINE=InnoDB;&quot;;
++				$table = 'CREATE TABLE '.$this-&gt;table_name.&quot; ( \n&quot; .$fields. $indexs .&quot; \n ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;&quot;;
+ 				// Let users choose transaction safe InnoDB or MyISAM
+ 				// ENGINE=MyISAM
+ 				if ($option == 'return')
+
+Modified: trunk/includes/db/postgres.php
+===================================================================
+--- trunk/includes/db/postgres.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/db/postgres.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -72,6 +72,8 @@
+ 
+ 		if ($this-&gt;link_identifier)
+ 		{
++			pg_set_client_encoding($this-&gt;link_identifier, 'UNICODE');
++			//pg_query($this-&gt;link_identifier, &quot;SET CLIENT_ENCODING TO 'value'&quot;); SET NAMES 'value'
+ 			return $this-&gt;link_identifier;
+ 		}
+ 
+@@ -522,10 +524,10 @@
+ 				$fields = implode(&quot;, \n&quot;, $this-&gt;_fields);
+ 				$indexs = ($this-&gt;_indexs) ? &quot;\n\n&quot;.implode(&quot;\n&quot;, $this-&gt;_indexs) :  '';
+ 
+-				$oid = ($this-&gt;_table_oid) ? ' WITH OIDS' : ' WITHOUT OIDS';
++				$oid = ($this-&gt;_table_oid) ? 'WITH OIDS' : 'WITHOUT OIDS';
+ 
+-				$table = 'CREATE TABLE '.$this-&gt;_table_name.&quot; ( \n&quot; .$fields.&quot; \n )\n$oid;$indexs&quot;;
+-
++				$table = 'CREATE TABLE '.$this-&gt;_table_name.&quot; ( \n&quot; .$fields.&quot; \n )\n $oid;$indexs&quot;;
++//WITH ENCODING='UNICODE'  ( for create table )
+ 				if ($option == 'return')
+ 				{
+ 					return $table;
+
+Modified: trunk/includes/display/blocks.php
+===================================================================
+--- trunk/includes/display/blocks.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/display/blocks.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -283,16 +283,14 @@
+ 		$postion = ($this-&gt;block['position'] == BLOCK_MESSAGE_TOP) ? 'top' : 'bottom';
+ 		
+ 		$_CLASS['core_template']-&gt;assign_vars_array('message_block_'.$postion, array(
+-				'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['title']),
+-				'TITLE'		=&gt; $this-&gt;block['title'],
+-				'CONTENT'	=&gt; $this-&gt;block['content'],
+-				'EXPIRES'	=&gt; $expires,
+-				'EDIT_LINK'	=&gt; $edit_link,
+-				'L_EDIT'	=&gt; $_CLASS['core_user']-&gt;lang['EDIT'],
+-				'HIDE'		=&gt; hideblock($this-&gt;block['id']) ? 'style=&quot;display: none&quot;' : '',
+-				'ID'		=&gt; $this-&gt;block['id'],
+-			)
+-		);
++				//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['title']),
++				'title'		=&gt; $this-&gt;block['title'],
++				'collapsed'	=&gt; collapsed_items('block_'.$this-&gt;block['id']),
++				'content'	=&gt; $this-&gt;block['content'],
++				'expires'	=&gt; $expires,
++				'edit_link'	=&gt; $edit_link,
++				'id'		=&gt; $this-&gt;block['id'],
++		));
+ 	}
+ 	
+ 	function block_side()
+@@ -302,14 +300,12 @@
+ 		$position = ($this-&gt;block['position'] == BLOCK_RIGHT) ? 'right' : 'left';
+ 		
+ 		$_CLASS['core_template']-&gt;assign_vars_array('block_'.$position, array(
+-			'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['title']),
+-			'TITLE'		=&gt; $this-&gt;block['title'],
+-			'CONTENT'	=&gt; $this-&gt;content,
+-			'ID'		=&gt; $this-&gt;block['id'],
+-			'COLLAPSE'	=&gt; hideblock($this-&gt;block['id']) ? 'style=&quot;display: none&quot;' : '',
+-			'TEMPLATE'	=&gt; $this-&gt;template,
+-			)
+-		);
++			//'TITLE'		=&gt; $_CLASS['core_user']-&gt;get_lang($this-&gt;block['title']),
++			'title'		=&gt; $this-&gt;block['title'],
++			'content'	=&gt; $this-&gt;content,
++			'collapsed'	=&gt; collapsed_items('block_'.$this-&gt;block['id']),
++			'id'		=&gt; $this-&gt;block['id'],
++		));
+ 	}
+ 	
+ 	function block_html()
+@@ -389,8 +385,7 @@
+ 			$this-&gt;block['rss_expires'] = ($this-&gt;block['rss_rate']) ? time() + $this-&gt;block['rss_rate'] : 0;
+ 			
+ 			$sql = 'UPDATE '.BLOCKS_TABLE.&quot;
+-				SET content='&quot;.$_CLASS['core_db']-&gt;escape($this-&gt;content).&quot;'
+-				, rss_expires='&quot;.$this-&gt;block['rss_expires'].&quot;' 
++				SET content='&quot;.$_CLASS['core_db']-&gt;escape($this-&gt;content).&quot;', rss_expires='&quot;.$this-&gt;block['rss_expires'].&quot;' 
+ 					WHERE id=&quot;.$this-&gt;block['id'];
+ 				
+ 			$_CLASS['core_db']-&gt;query($sql);
+
+Modified: trunk/includes/display/display.php
+===================================================================
+--- trunk/includes/display/display.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/display/display.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -88,7 +88,7 @@
+ 	{
+ 		global $_CLASS;
+ 
+-		header('Content-Type: text/html; charset='.$_CLASS['core_user']-&gt;lang['ENCODING']);
++		header('Content-Type: text/html; charset=UTF-8');
+ 		header('Content-language: ' . $_CLASS['core_user']-&gt;lang['LANG']);
+ 
+ 		header('P3P: CP=&quot;CAO DSP COR CURa ADMa DEVa OUR IND PHY ONL UNI COM NAV INT DEM PRE&quot;');
+@@ -162,7 +162,7 @@
+ 			'SITE_LANG'			=&gt;	$_CLASS['core_user']-&gt;lang['LANG'],
+ 			'SITE_TITLE'		=&gt;	$_CORE_CONFIG['global']['site_name'].': '.$_CORE_MODULE['title'],
+ 			'SITE_BASE'			=&gt;	generate_base_url(),
+-			'SITE_CHARSET'		=&gt;	$_CLASS['core_user']-&gt;lang['ENCODING'],
++			'SITE_CHARSET'		=&gt;	'UTF-8',
+ 			'SITE_NAME'			=&gt;	$_CORE_CONFIG['global']['site_name'],
+ 			'SITE_URL'			=&gt;	$_CORE_CONFIG['global']['site_url'],
+ 			'HEADER_MESSAGE'	=&gt;	$this-&gt;message,
+@@ -196,7 +196,6 @@
+ 		if (!$this-&gt;displayed['header'])
+ 		{
+ 			script_close($save);
+-			die;
+ 		}
+ 
+ 		if ($_CORE_MODULE = $this-&gt;get_module())
+@@ -228,7 +227,7 @@
+ 	*/
+ 	function footer_debug()
+ 	{
+-		global $_CORE_CONFIG, $SID, $mainindex, $SID, $_CLASS, $starttime;
++		global $_CORE_CONFIG, $_CLASS, $starttime;
+ 
+ 		$mtime = explode(' ', microtime());
+ 		$totaltime = ($mtime[0] + $mtime[1] - $starttime) - $_CLASS['core_db']-&gt;queries_time;
+@@ -290,6 +289,19 @@
+ 	}
+ }
+ 
++function collapsed_items($marker, $cookie = 'collapsed_items') 
++{
++    static $collapsed_items_array = array();
++
++    if (!isset($collapsed_items_array[$cookie]))
++    {
++		$cookie_data = get_variable($cookie, 'COOKIE');
++		$collapsed_items_array[$cookie] = ($cookie_data) ? explode(':', $cookie_data) : array();
++    }
++
++    return in_array($marker, $collapsed_items_array[$cookie]);
++}
++
+ function hideblock($id) 
+ {
+     // From cpgnuke - <A HREF="http://dragonflycms.org/">http://dragonflycms.org/</A>
+
+Modified: trunk/includes/forums/functions.php
+===================================================================
+--- trunk/includes/forums/functions.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/forums/functions.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -497,8 +497,6 @@
+ 	return;
+ }
+ 
+-// Pick a language, any language ...
+-// this need replacing big time
+ function language_select($default = '')
+ {
+ }
+@@ -1013,12 +1011,10 @@
+ }
+ 
+ // Generate forum login box
+-function login_forum_box(&amp;$forum_data)
++function login_forum_box($forum_data)
+ {
+ 	global $config, $_CLASS;
+ 
+-	$password = request_var('password', '');
+-
+ 	$sql = 'SELECT forum_id
+ 		FROM ' . FORUMS_ACCESS_TABLE .&quot;
+ 		WHERE forum_id = '&quot;.$forum_data['forum_id'].&quot;'
+@@ -1033,6 +1029,8 @@
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
++	$password = request_var('password', '');
++
+ 	if ($password)
+ 	{
+ 		// Remove expired authorised sessions
+@@ -1067,14 +1065,11 @@
+ 		$_CLASS['core_template']-&gt;assign('LOGIN_ERROR', $_CLASS['core_user']-&gt;lang['WRONG_PASSWORD']);
+ 	}
+ 	
+-	$_CLASS['core_display']-&gt;display_head();
+-
+ 	page_header();
+ 	
+ 	$_CLASS['core_template']-&gt;display('modules/Forums/login_forum.html');
+ 
+-	$_CLASS['core_display']-&gt;display_footer();
+-
++	script_close();
+ }
+ 
+ // Bump Topic Check - used by posting and viewtopic
+@@ -1431,7 +1426,7 @@
+ 		'S_USER_LANG'			=&gt; $_CLASS['core_user']-&gt;data['user_lang'], 
+ 		'S_USER_BROWSER' 		=&gt; ($_CLASS['core_user']-&gt;data['session_browser']) ? $_CLASS['core_user']-&gt;data['session_browser'] : $_CLASS['core_user']-&gt;lang['UNKNOWN_BROWSER'],
+ 		'S_CONTENT_DIRECTION' 	=&gt; $_CLASS['core_user']-&gt;lang['DIRECTION'],
+-		'S_CONTENT_ENCODING' 	=&gt; $_CLASS['core_user']-&gt;lang['ENCODING'],
++		'S_CONTENT_ENCODING' 	=&gt; 'UTF-8',
+ 		'S_CONTENT_DIR_LEFT' 	=&gt; $_CLASS['core_user']-&gt;lang['LEFT'],
+ 		'S_CONTENT_DIR_RIGHT' 	=&gt; $_CLASS['core_user']-&gt;lang['RIGHT'],
+ 		'S_TIMEZONE'			=&gt; ($_CLASS['core_user']-&gt;data['user_dst'] || (!$_CLASS['core_user']-&gt;is_user &amp;&amp; $_CORE_CONFIG['global']['default_dst'])) ? sprintf($_CLASS['core_user']-&gt;lang['ALL_TIMES'], $_CLASS['core_user']-&gt;lang['tz'][$tz/3600], $_CLASS['core_user']-&gt;lang['tz']['dst']) : sprintf($_CLASS['core_user']-&gt;lang['ALL_TIMES'], $_CLASS['core_user']-&gt;lang['tz'][$tz/3600], ''),
+@@ -1454,37 +1449,7 @@
+ 		'TRANSLATION_INFO'	=&gt; 'Ported by &lt;a href=&quot;<A HREF="http://www.viperal.com/">http://www.viperal.com/</A>&quot; target=&quot;viperal&quot;&gt;Viperal&lt;/a&gt;',
+ 		'U_ACP'				=&gt; ($_CLASS['core_user']-&gt;is_admin &amp;&amp; $_CLASS['auth']-&gt;acl_get('a_')) ? generate_link('Forums', array('admin' =&gt; true)) : '',
+ 		'L_ACP'				=&gt; $_CLASS['core_user']-&gt;lang['ACP']
+-		)
+-	);
+-	
+-/*	// Call cron-type script
+-	if (!defined('IN_CRON'))
+-	{
+-		$cron_type = '';
+-
+-		if (time() - $config['queue_interval'] &gt; $config['last_queue_run'] &amp;&amp; !defined('IN_ADMIN') &amp;&amp; file_exists($phpbb_root_path . 'cache/queue.' . $phpEx))
+-		{
+-			// Process email queue
+-			$cron_type = 'queue';
+-		}
+-		else if (method_exists($cache, 'tidy') &amp;&amp; time() - $config['cache_gc'] &gt; $config['cache_last_gc'])
+-		{
+-			// Tidy the cache
+-			$cron_type = 'tidy_cache';
+-		}
+-		else if (time() - (7 * 24 * 3600) &gt; $config['database_last_gc'])
+-		{
+-			// Tidy some table rows every week
+-			$cron_type = 'tidy_database';
+-		}
+-
+-		if ($cron_type)
+-		{
+-			echo 'test';
+-			$_CLASS['core_template']-&gt;assign('RUN_CRON_TASK', '&lt;img src=&quot;'.generate_link('Forums&amp;file=cron&amp;cron_type=' . $cron_type).'&quot; width=&quot;1&quot; height=&quot;1&quot; /&gt;');
+-		}
+-	}
+-	return;*/
++	));
+ }
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/forums/functions_messenger.php
+===================================================================
+--- trunk/includes/forums/functions_messenger.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/forums/functions_messenger.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -1198,6 +1198,7 @@
+ // from php.net and modified. There is an alternative encoding method which 
+ // may produce less output but it's questionable as to its worth in this 
+ // scenario IMO
++/*
+ function mail_encode($str, $encoding)
+ {
+ 	if ($encoding == '')
+@@ -1221,6 +1222,6 @@
+ 	$str = preg_replace('#' . preg_quote($spacer) . '$#', '', $str);
+ 
+ 	return $start . $str . $end;
+-}
++}*/
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/forums/functions_posting.php
+===================================================================
+--- trunk/includes/forums/functions_posting.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/forums/functions_posting.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -86,6 +86,8 @@
+ 
+ 		$_CLASS['core_template']-&gt;assign('T_SMILIES_PATH', &quot;{$config['smilies_path']}/&quot;);
+ 		$_CLASS['core_template']-&gt;display('modules/Forums/posting_smilies.html');
++
++		script_close();
+ 	}
+ }
+ 
+
+Modified: trunk/includes/forums/functions_privmsgs.php
+===================================================================
+--- trunk/includes/forums/functions_privmsgs.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/forums/functions_privmsgs.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -128,15 +128,15 @@
+ 		WHERE user_id = $user_id
+ 			AND folder_id &lt;&gt; &quot; . PRIVMSGS_NO_BOX . '
+ 		GROUP BY folder_id';
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$num_messages = $num_unread = array();
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$num_messages[(int) $row['folder_id']] = $row['num_messages'];
+ 		$num_unread[(int) $row['folder_id']] = $row['num_unread'];
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	// Make sure the default boxes are defined
+ 	foreach (array(PRIVMSGS_INBOX, PRIVMSGS_OUTBOX, PRIVMSGS_SENTBOX) as $default_folder)
+@@ -161,13 +161,13 @@
+ 	$sql = 'SELECT folder_id, folder_name, pm_count
+ 		FROM ' . PRIVMSGS_FOLDER_TABLE . &quot;
+ 			WHERE user_id = $user_id&quot;;
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 			
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$folder[$row['folder_id']] = array('folder_name' =&gt; $row['folder_name'], 'num_messages' =&gt; $row['pm_count'], 'unread_messages' =&gt; ((isset($num_unread[$row['folder_id']])) ? $num_unread[$row['folder_id']] : 0));
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$folder[PRIVMSGS_OUTBOX] = array('folder_name' =&gt; $_CLASS['core_user']-&gt;lang['PM_OUTBOX'], 'num_messages' =&gt; $num_messages[PRIVMSGS_OUTBOX], 'unread_messages' =&gt; $num_unread[PRIVMSGS_OUTBOX]);
+ 	$folder[PRIVMSGS_SENTBOX] = array('folder_name' =&gt; $_CLASS['core_user']-&gt;lang['PM_SENTBOX'], 'num_messages' =&gt; $num_messages[PRIVMSGS_SENTBOX], 'unread_messages' =&gt; $num_unread[PRIVMSGS_SENTBOX]);
+@@ -207,14 +207,14 @@
+ 				AND t.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . '
+ 				AND t.folder_id = ' . PRIVMSGS_SENTBOX . '
+ 			ORDER BY p.message_time ASC';
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, ($num_sentbox_messages - $message_limit));
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, ($num_sentbox_messages - $message_limit));
+ 
+ 		$delete_ids = array();
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$delete_ids[] = $row['msg_id'];
+ 		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 		delete_pm($_CLASS['core_user']-&gt;data['user_id'], $delete_ids, PRIVMSGS_SENTBOX);
+ 	}
+ }
+@@ -284,23 +284,23 @@
+ 		$sql = 'SELECT * 
+ 			FROM ' . PRIVMSGS_RULES_TABLE . &quot;
+ 			WHERE user_id = $user_id&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-		$user_rules = $_CLASS['core_db']-&gt;sql_fetchrowset($result);
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$user_rules = $_CLASS['core_db']-&gt;fetch_row_assocset($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		if (sizeof($user_rules))
+ 		{
+ 			$sql = 'SELECT zebra_id, friend, foe
+ 				FROM ' . ZEBRA_TABLE . &quot;
+ 				WHERE user_id = $user_id&quot;;
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				$zebra[$row['zebra_id']] = $row;
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 		}
+ 	}
+ 
+@@ -310,7 +310,7 @@
+ 			SET folder_id = ' . PRIVMSGS_NO_BOX . '
+ 			WHERE folder_id = ' . PRIVMSGS_HOLD_BOX . &quot;
+ 				AND user_id = $user_id&quot;;
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+ 	// Get those messages not yet placed into any box
+@@ -321,10 +321,10 @@
+ 			AND p.author_id = u.user_id
+ 			AND t.folder_id = &quot; . PRIVMSGS_NO_BOX . '
+ 			AND t.msg_id = p.msg_id';
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$action_ary = $move_into_folder = array();
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$row['to']		= explode(':', $row['to_address']);
+ 		$row['bcc']		= explode(':', $row['bcc_address']);
+@@ -349,7 +349,7 @@
+ 			$move_into_folder[PRIVMSGS_INBOX][] = $row['msg_id'];
+ 		}
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	// We place actions into arrays, to save queries.
+ 	$num_new = $num_unread = 0;
+@@ -424,7 +424,7 @@
+ 			WHERE msg_id IN (' . implode(', ', $unread_ids) . &quot;)
+ 				AND user_id = $user_id
+ 				AND folder_id = &quot; . PRIVMSGS_NO_BOX;
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+ 	// mark messages as important
+@@ -435,7 +435,7 @@
+ 			WHERE folder_id = ' . PRIVMSGS_NO_BOX . &quot;
+ 				AND user_id = $user_id
+ 				AND msg_id IN (&quot; . implode(', ', $important_ids) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+ 	// Move into folder
+@@ -450,13 +450,13 @@
+ 			FROM ' . PRIVMSGS_FOLDER_TABLE . '
+ 			WHERE folder_id IN (' . implode(', ', array_keys($move_into_folder)) . (($full_folder_action &gt;= 0) ? ', ' . $full_folder_action : '') . &quot;)
+ 				AND user_id = $user_id&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$folder[(int) $row['folder_id']] = (int) $row['pm_count'];
+ 		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		if (in_array(PRIVMSGS_INBOX, array_keys($move_into_folder)))
+ 		{
+@@ -465,10 +465,10 @@
+ 				WHERE user_id = $user_id
+ 					AND folder_id = &quot; . PRIVMSGS_INBOX . &quot;
+ 				GROUP BY folder_id&quot;;
+-			$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
++			$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 			
+ 			$folder[PRIVMSGS_INBOX] = (int) $_CLASS['core_db']-&gt;sql_fetchfield('num_messages', 0, $result);
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);			
++			$_CLASS['core_db']-&gt;free_result($result);			
+ 		}
+ 	}
+ 
+@@ -506,14 +506,14 @@
+ 						AND t.user_id = $user_id
+ 						AND t.folder_id = $dest_folder
+ 					ORDER BY p.message_time ASC&quot;;
+-				$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, (($folder[$dest_folder] + sizeof($msg_ary)) - $message_limit));
++				$result = $_CLASS['core_db']-&gt;query_limit($sql, (($folder[$dest_folder] + sizeof($msg_ary)) - $message_limit));
+ 
+ 				$delete_ids = array();
+-				while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+ 					$delete_ids[] = $row['msg_id'];
+ 				}
+-				$_CLASS['core_db']-&gt;sql_freeresult($result);
++				$_CLASS['core_db']-&gt;free_result($result);
+ 				delete_pm($user_id, $delete_ids, $dest_folder);
+ 			}
+ 		}
+@@ -526,7 +526,7 @@
+ 				WHERE folder_id = ' . PRIVMSGS_NO_BOX . &quot;
+ 					AND user_id = $user_id
+ 					AND msg_id IN (&quot; . implode(', ', $msg_ary) . ')';
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 		}
+ 		else
+ 		{
+@@ -536,7 +536,7 @@
+ 					AND user_id = $user_id
+ 					AND new = 1
+ 					AND msg_id IN (&quot; . implode(', ', $msg_ary) . ')';
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			if ($dest_folder != PRIVMSGS_INBOX)
+ 			{
+@@ -544,7 +544,7 @@
+ 					SET pm_count = pm_count + ' . (int) $_CLASS['core_db']-&gt;sql_affectedrows() . &quot;
+ 					WHERE folder_id = $dest_folder
+ 						AND user_id = $user_id&quot;;
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
+ 			}
+ 			else
+ 			{
+@@ -561,7 +561,7 @@
+ 			SET folder_id = ' . PRIVMSGS_SENTBOX . '
+ 			WHERE folder_id = ' . PRIVMSGS_OUTBOX . '
+ 				AND msg_id IN (' . implode(', ', array_keys($action_ary)) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+ 	// Update unread and new status field
+@@ -574,7 +574,7 @@
+ 			$set_sql .= 'user_new_privmsg = user_new_privmsg - ' . $num_new;
+ 		}
+ 		
+-		$_CLASS['core_db']-&gt;sql_query('UPDATE ' . USERS_TABLE . &quot; SET $set_sql WHERE user_id = $user_id&quot;);
++		$_CLASS['core_db']-&gt;query('UPDATE ' . USERS_TABLE . &quot; SET $set_sql WHERE user_id = $user_id&quot;);
+ 		$_CLASS['core_user']-&gt;data['user_new_privmsg'] -= $num_new;
+ 		$_CLASS['core_user']-&gt;data['user_unread_privmsg'] -= $num_unread;
+ 	}
+@@ -604,13 +604,13 @@
+ 				FROM ' . PRIVMSGS_FOLDER_TABLE . &quot;
+ 				WHERE folder_id = $dest_folder
+ 					AND user_id = $user_id&quot;;
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-			if (!($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)))
++			if (!($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)))
+ 			{
+ 				trigger_error('NOT_AUTHORIZED');
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 			if ($row['pm_count'] + sizeof($move_msg_ids) &gt; $message_limit)
+ 			{
+@@ -625,7 +625,7 @@
+ 				FROM ' . PRIVMSGS_TO_TABLE . '
+ 				WHERE folder_id = ' . PRIVMSGS_INBOX . &quot;
+ 					AND user_id = $user_id&quot;;
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 			if ($_CLASS['core_db']-&gt;sql_fetchfield('num_messages', 0, $result) + sizeof($move_msg_ids) &gt; $message_limit)
+ 			{
+ 				$message = sprintf($_CLASS['core_user']-&gt;lang['NOT_ENOUGH_SPACE_FOLDER'], $_CLASS['core_user']-&gt;lang['PM_INBOX']) . '&lt;br /&gt;&lt;br /&gt;';
+@@ -639,7 +639,7 @@
+ 			WHERE folder_id = $cur_folder_id
+ 				AND user_id = $user_id
+ 				AND msg_id IN (&quot; . implode(', ', $move_msg_ids) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 		$num_moved = $_CLASS['core_db']-&gt;sql_affectedrows();
+ 
+ 		// Update pm counts
+@@ -651,7 +651,7 @@
+ 					SET pm_count = pm_count - $num_moved
+ 					WHERE folder_id = $cur_folder_id
+ 						AND user_id = $user_id&quot;;
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
+ 			}
+ 
+ 			if ($dest_folder != PRIVMSGS_INBOX)
+@@ -660,7 +660,7 @@
+ 					SET pm_count = pm_count + $num_moved
+ 					WHERE folder_id = $dest_folder
+ 						AND user_id = $user_id&quot;;
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
+ 			}
+ 		}
+ 	}
+@@ -683,12 +683,12 @@
+ 		WHERE msg_id = $msg_id
+ 			AND user_id = $user_id
+ 			AND folder_id = $folder_id&quot;;
+-	$_CLASS['core_db']-&gt;sql_query($sql);
++	$_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$sql = 'UPDATE ' . USERS_TABLE . &quot; 
+ 		SET user_unread_privmsg = user_unread_privmsg - 1
+ 		WHERE user_id = $user_id&quot;;
+-	$_CLASS['core_db']-&gt;sql_query($sql);
++	$_CLASS['core_db']-&gt;query($sql);
+ }
+ 
+ // Handle all actions possible with marked messages
+@@ -714,7 +714,7 @@
+ 				WHERE folder_id = $cur_folder_id
+ 					AND user_id = $user_id
+ 					AND msg_id IN (&quot; . implode(', ', $msg_ids) . ')';
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			break;
+ 
+@@ -802,18 +802,18 @@
+ 		WHERE msg_id IN (' . implode(', ', array_map('intval', $msg_ids)) . &quot;)
+ 			AND folder_id = $folder_id
+ 			AND user_id = $user_id&quot;;
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$delete_rows = array();
+ 	$num_unread = $num_new = $num_deleted = 0;
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$num_unread += (int) $row['unread'];
+ 		$num_new += (int) $row['new'];
+ 
+ 		$delete_rows[$row['msg_id']] = 1;
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 	unset($msg_ids);
+ 
+ 	if (!sizeof($delete_rows))
+@@ -829,19 +829,19 @@
+ 		$sql = 'DELETE FROM ' . PRIVMSGS_TO_TABLE . &quot;
+ 			WHERE user_id = $user_id AND folder_id = &quot; . PRIVMSGS_OUTBOX . '
+ 				AND msg_id IN (' . implode(', ', array_keys($delete_rows)) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		// Update PM Information for safety
+ 		$sql = 'UPDATE ' . PRIVMSGS_TABLE . &quot; SET message_text = ''
+ 			WHERE msg_id IN (&quot; . implode(', ', array_keys($delete_rows)) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		// Set delete flag for those intended to receive the PM
+ 		// We do not remove the message actually, to retain some basic informations (sent time for example)
+ 		$sql = 'UPDATE ' . PRIVMSGS_TO_TABLE . '
+ 			SET deleted = 1
+ 			WHERE msg_id IN (' . implode(', ', array_keys($delete_rows)) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		$num_deleted = $_CLASS['core_db']-&gt;sql_affectedrows();
+ 	}
+@@ -852,7 +852,7 @@
+ 			WHERE user_id = $user_id
+ 				AND folder_id = $folder_id
+ 				AND msg_id IN (&quot; . implode(', ', array_keys($delete_rows)) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 		$num_deleted = $_CLASS['core_db']-&gt;sql_affectedrows();
+ 	}
+ 
+@@ -862,7 +862,7 @@
+ 		$sql = 'UPDATE ' . PRIVMSGS_FOLDER_TABLE . &quot; 
+ 			SET pm_count = pm_count - $num_deleted 
+ 			WHERE folder_id = $folder_id&quot;;
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+ 	// Update unread and new status field
+@@ -875,20 +875,20 @@
+ 			$set_sql .= 'user_new_privmsg = user_new_privmsg - ' . $num_new;
+ 		}
+ 		
+-		$_CLASS['core_db']-&gt;sql_query('UPDATE ' . USERS_TABLE . &quot; SET $set_sql WHERE user_id = $user_id&quot;);
++		$_CLASS['core_db']-&gt;query('UPDATE ' . USERS_TABLE . &quot; SET $set_sql WHERE user_id = $user_id&quot;);
+ 	}
+ 	
+ 	// Now we have to check which messages we can delete completely	
+ 	$sql = 'SELECT msg_id 
+ 		FROM ' . PRIVMSGS_TO_TABLE . '
+ 		WHERE msg_id IN (' . implode(', ', array_keys($delete_rows)) . ')';
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		unset($delete_rows[$row['msg_id']]);
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$delete_ids = implode(', ', array_keys($delete_rows));
+ 
+@@ -896,7 +896,7 @@
+ 	{
+ 		$sql = 'DELETE FROM ' . PRIVMSGS_TABLE . '
+ 			WHERE msg_id IN (' . $delete_ids . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ }
+ 
+@@ -955,10 +955,10 @@
+ 			$sql = 'SELECT user_id, username, user_colour 
+ 				FROM ' . USERS_TABLE . '
+ 				WHERE user_id IN (' . implode(', ', $u) . ')
+-					AND user_type IN (' . USER_NORMAL . ', ' . USER_FOUNDER . ')';
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++					AND user_type = ' . USER_NORMAL;
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				if ($check_type == 'to' || $author_id == $_CLASS['core_user']-&gt;data['user_id'] || $row['user_id'] == $_CLASS['core_user']-&gt;data['user_id'])
+ 				{
+@@ -972,7 +972,7 @@
+ 					}
+ 				}
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 		}
+ 
+ 		if (sizeof($g))
+@@ -982,16 +982,16 @@
+ 				$sql = 'SELECT group_name
+ 					FROM ' . GROUPS_TABLE . ' 
+ 						WHERE group_id IN (' . implode(', ', $g) . ')';
+-				$result = $_CLASS['core_db']-&gt;sql_query($sql);
++				$result = $_CLASS['core_db']-&gt;query($sql);
+ 		
+-				while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+ 					if ($check_type == 'to' || $author_id == $_CLASS['core_user']-&gt;data['user_id'] || $row['user_id'] == $_CLASS['core_user']-&gt;data['user_id'])
+ 					{
+ 						$address[] = $row['group_name'];
+ 					}
+ 				}
+-				$_CLASS['core_db']-&gt;sql_freeresult($result);
++				$_CLASS['core_db']-&gt;free_result($result);
+ 			}
+ 			else
+ 			{
+@@ -1000,9 +1000,9 @@
+ 						WHERE g.group_id IN (' . implode(', ', $g) . ')
+ 						AND g.group_id = ug.group_id
+ 						AND ug.user_pending = 0';
+-				$result = $_CLASS['core_db']-&gt;sql_query($sql);
++				$result = $_CLASS['core_db']-&gt;query($sql);
+ 		
+-				while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 				{
+ 					if (!isset($address['group'][$row['group_id']]))
+ 					{
+@@ -1017,7 +1017,7 @@
+ 						$address['user'][$row['user_id']]['in_group'] = $row['group_id'];
+ 					}
+ 				}
+-				$_CLASS['core_db']-&gt;sql_freeresult($result);
++				$_CLASS['core_db']-&gt;free_result($result);
+ 			}
+ 		}
+ 
+@@ -1126,14 +1126,14 @@
+ 				FROM ' . USER_GROUP_TABLE . '
+ 				WHERE group_id IN (' . implode(', ', array_keys($data['address_list']['g'])) . ')
+ 					AND user_pending = 0';
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 	
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				$field = ($data['address_list']['g'][$row['group_id']] == 'to') ? 'to' : 'bcc';
+ 				$recipients[$row['user_id']] = $field;
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 		}
+ 
+ 		if (!sizeof($recipients))
+@@ -1172,7 +1172,6 @@
+ 				'message_subject'	=&gt; $subject,
+ 				'message_text' 		=&gt; $data['message'],
+ 				'message_checksum'	=&gt; $data['message_md5'],
+-				'message_encoding'	=&gt; $_CLASS['core_user']-&gt;lang['ENCODING'],
+ 				'message_attachment'=&gt; (isset($data['filename_data']['physical_filename']) &amp;&amp; sizeof($data['filename_data'])) ? 1 : 0,
+ 				'bbcode_bitfield'	=&gt; $data['bbcode_bitfield'],
+ 				'bbcode_uid'		=&gt; $data['bbcode_uid'],
+@@ -1193,7 +1192,6 @@
+ 				'message_subject'	=&gt; $subject,
+ 				'message_text' 		=&gt; $data['message'],
+ 				'message_checksum'	=&gt; $data['message_md5'],
+-				'message_encoding'	=&gt; $_CLASS['core_user']-&gt;lang['ENCODING'],
+ 				'message_attachment'=&gt; (isset($data['filename_data']['physical_filename']) &amp;&amp; sizeof($data['filename_data'])) ? 1 : 0,
+ 				'bbcode_bitfield'	=&gt; $data['bbcode_bitfield'],
+ 				'bbcode_uid'		=&gt; $data['bbcode_uid']
+@@ -1201,35 +1199,35 @@
+ 			break;
+ 	}
+ 
++	$_CLASS['core_db']-&gt;transaction();
++
+ 	if (sizeof($sql_data))
+ 	{
+ 		if ($mode == 'post' || $mode == 'reply' || $mode == 'quote' || $mode == 'forward')
+ 		{
+-			$_CLASS['core_db']-&gt;sql_query('INSERT INTO ' . PRIVMSGS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_data));
+-			$data['msg_id'] = $_CLASS['core_db']-&gt;sql_nextid();
++			$_CLASS['core_db']-&gt;query('INSERT INTO ' . PRIVMSGS_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $sql_data));
++			$data['msg_id'] = $_CLASS['core_db']-&gt;insert_id(PRIVMSGS_TABLE, 'msg_id');
+ 		}
+ 		else if ($mode == 'edit')
+ 		{
+ 			$sql = 'UPDATE ' . PRIVMSGS_TABLE . ' 
+ 				SET message_edit_count = message_edit_count + 1, ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $sql_data) . ' 
+ 				WHERE msg_id = ' . $data['msg_id'];
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 		}
+ 	}
+ 	
+ 	if ($mode != 'edit')
+ 	{
+-		$_CLASS['core_db']-&gt;sql_transaction();
+-	
+ 		if ($sql)
+ 		{
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 		}
+ 		unset($sql);
+ 
+ 		foreach ($recipients as $user_id =&gt; $type)
+ 		{
+-			$_CLASS['core_db']-&gt;sql_query('INSERT INTO ' . PRIVMSGS_TO_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
++			$_CLASS['core_db']-&gt;query('INSERT INTO ' . PRIVMSGS_TO_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
+ 				'msg_id'	=&gt; $data['msg_id'],
+ 				'user_id'	=&gt; $user_id,
+ 				'author_id'	=&gt; $_CLASS['core_user']-&gt;data['user_id'],
+@@ -1243,12 +1241,12 @@
+ 		$sql = 'UPDATE ' . USERS_TABLE . ' 
+ 			SET user_new_privmsg = user_new_privmsg + 1, user_unread_privmsg = user_unread_privmsg + 1, user_last_privmsg = ' . time() . '
+ 			WHERE user_id IN (' . implode(', ', array_keys($recipients)) . ')';
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		// Put PM into outbox
+ 		if ($put_in_outbox)
+ 		{
+-			$_CLASS['core_db']-&gt;sql_query('INSERT INTO ' . PRIVMSGS_TO_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
++			$_CLASS['core_db']-&gt;query('INSERT INTO ' . PRIVMSGS_TO_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
+ 				'msg_id'	=&gt; (int) $data['msg_id'],
+ 				'user_id'	=&gt; (int) $_CLASS['core_user']-&gt;data['user_id'],
+ 				'author_id'	=&gt; (int) $_CLASS['core_user']-&gt;data['user_id'],
+@@ -1258,8 +1256,6 @@
+ 				'forwarded'	=&gt; ($mode == 'forward') ? 1 : 0))
+ 			);
+ 		}
+-
+-		$_CLASS['core_db']-&gt;sql_transaction('commit');
+ 	}
+ 
+ 	// Set user last post time
+@@ -1268,11 +1264,9 @@
+ 		$sql = 'UPDATE ' . USERS_TABLE . &quot;
+ 			SET user_lastpost_time = $current_time
+ 			WHERE user_id = &quot; . $_CLASS['core_user']-&gt;data['user_id'];
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+-	$_CLASS['core_db']-&gt;sql_transaction();
+-
+ 	// Submit Attachments
+ 	if (sizeof($data['attachment_data']) &amp;&amp; $data['msg_id'] &amp;&amp; in_array($mode, array('post', 'reply', 'quote', 'edit', 'forward')))
+ 	{
+@@ -1286,7 +1280,7 @@
+ 				$sql = 'UPDATE ' . ATTACHMENTS_TABLE . &quot; 
+ 					SET comment = '&quot; . $_CLASS['core_db']-&gt;sql_escape($attach_row['comment']) . &quot;' 
+ 					WHERE attach_id = &quot; . (int) $attach_row['attach_id'];
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
+ 			}
+ 			else
+ 			{
+@@ -1308,7 +1302,7 @@
+ 
+ 				$sql = 'INSERT INTO ' . ATTACHMENTS_TABLE . ' ' . 
+ 					$_CLASS['core_db']-&gt;sql_build_array('INSERT', $attach_sql);
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
+ 
+ 				$space_taken += $attach_row['filesize'];
+ 				$files_added++;
+@@ -1320,7 +1314,7 @@
+ 			$sql = 'UPDATE ' . PRIVMSGS_TABLE . '
+ 				SET message_attachment = 1
+ 				WHERE msg_id = ' . $data['msg_id'];
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 		}
+ 
+ 		if ($space_taken &amp;&amp; $files_added)
+@@ -1330,7 +1324,7 @@
+ 		}
+ 	}
+ 
+-	$_CLASS['core_db']-&gt;sql_transaction('commit');
++	$_CLASS['core_db']-&gt;transaction('commit');
+ 
+ 	// Delete draft if post was loaded...
+ 	$draft_id = request_var('draft_loaded', 0);
+@@ -1339,7 +1333,7 @@
+ 		$sql = 'DELETE FROM ' . DRAFTS_TABLE . &quot; 
+ 			WHERE draft_id = $draft_id 
+ 				AND user_id = &quot; . $_CLASS['core_user']-&gt;data['user_id'];
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 	}
+ 
+ 	// Send Notifications
+@@ -1361,18 +1355,18 @@
+ 	// Get banned User ID's
+ 	$sql = 'SELECT ban_userid 
+ 		FROM ' . BANLIST_TABLE;
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	unset($recipients[ANONYMOUS], $recipients[$_CLASS['core_user']-&gt;data['user_id']]);
+ 	
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		if (isset($row['ban_userid']))
+ 		{
+ 			unset($recipients[$row['ban_userid']]);
+ 		}
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	if (!sizeof($recipients))
+ 	{
+@@ -1384,10 +1378,10 @@
+ 	$sql = 'SELECT user_id, username, user_email, user_lang, user_notify_pm, user_notify_type, user_jabber
+ 		FROM ' . USERS_TABLE . &quot;
+ 		WHERE user_id IN ($recipient_list)&quot;;
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$msg_list_ary = array();
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		if ($row['user_notify_pm'] == 1 &amp;&amp; trim($row['user_email']))
+ 		{
+@@ -1400,7 +1394,7 @@
+ 			);
+ 		}
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 	
+ 	if (!sizeof($msg_list_ary))
+ 	{
+
+Modified: trunk/includes/functions.php
+===================================================================
+--- trunk/includes/functions.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/functions.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -59,6 +59,19 @@
+ 	return $is_bot;
+ }
+ 
++function check_collapsed_status($marker, $cookie = 'collapsed_items') 
++{
++    static $collapsed_items_array = array();
++
++    if (!isset($collapsed_items_array[$cookie]))
++    {
++		$cookie_data = get_variable($cookie, 'COOKIE');
++		$collapsed_items_array[$cookie] = ($cookie_data) ? explode(':', $cookie_data) : array();
++    }
++
++    return in_array($marker, $collapsed_items_array[$cookie]);
++}
++
+ /*
+ */
+ function check_load_status($return = false)
+@@ -247,6 +260,8 @@
+ function get_variable($var_name, $type, $default = false, $var_type = 'string')
+ {
+ 	$variable = null;
++	
++	$type = strtoupper($type);
+ 
+ 	switch ($type)
+ 	{
+@@ -376,7 +391,7 @@
+     return ($options['full']) ? generate_base_url().$link : $link;
+ }
+ 
+-function generate_pagination_formated($base_url, $total, $per_page = 10, $start = 0, $admin_link = false)
++function generate_pagination($base_url, $total, $per_page = 10, $start = 0, $admin_link = false)
+ {
+ 	global $_CLASS;
+ 
+@@ -392,8 +407,10 @@
+ 
+ 	$total_pages = ceil($total / $per_page);
+ 	$current_page = ($start) ? floor($start / $per_page) + 1 : 1;
+-	$display = '';
+ 
++	$display['formated'] = '';
++	$display['array'] = array();
++
+ 	if ($total_pages &gt; 8)
+ 	{
+ 		if ($current_page &lt; 4)
+@@ -406,7 +423,8 @@
+ 			$end = min($total_pages, $current_page + 2);
+ 			$start = ($end &gt; $total_pages - 2) ? $total_pages - 4 : $current_page - 2;
+ 
+-			$display = sprintf($wrapper['first'], generate_link($base_url, $admin_link), 1);
++			$display['array'][] = array('page' =&gt; 1, 'link' =&gt; generate_link($base_url, $admin_link), 'seperator' =&gt; 'after');
++			$display['formated'] = sprintf($wrapper['first'], generate_link($base_url, $admin_link), 1);
+ 		}
+ 	}
+ 	else
+@@ -417,64 +435,39 @@
+ 
+ 	for($i = $start; $i &lt;= $end; $i++)
+ 	{
++		$display['array'][] = array('page' =&gt; $i, 'link' =&gt; generate_link($base_url.'&amp;start='.(($i - 1) * $per_page)), 'seperator' =&gt; false);
++		
+ 		$this_wrapper = ($current_page == $i) ? $wrapper['current'] : $wrapper['normal'];
+-		$display .= sprintf($this_wrapper, generate_link($base_url.'&amp;start='.(($i - 1) * $per_page)), $i);
++		$display['formated'] .= sprintf($this_wrapper, generate_link($base_url.'&amp;start='.(($i - 1) * $per_page)), $i);
+ 	}
+ 
+ 	if ($end != $total_pages)
+ 	{
+-		$display .= sprintf($wrapper['last'], generate_link($base_url.'&amp;start='.(($total_pages - 1)  * $per_page), $admin_link), $total_pages);
++		$display['array'][] = array('page' =&gt; $total_pages, 'link' =&gt; generate_link($base_url.'&amp;start='.(($total_pages - 1) * $per_page), $admin_link), 'seperator' =&gt; 'before');
++		$display['formated'] .= sprintf($wrapper['last'], generate_link($base_url.'&amp;start='.(($total_pages - 1)  * $per_page), $admin_link), $total_pages);
+ 	}
+ 
+-	return $display;
++//TMP
++	return $display['formated'];
+ }
+ 
+-function generate_pagination_array($base_url, $total, $per_page = 10, $start = 0, $admin_link = false)
+-{
+-	global $_CLASS;
+-
+-	if ($total &lt;= $per_page)
+-	{
+-		return false;
+-	}
+-
+-	$total_pages = ceil($total / $per_page);
+-	$current_page = ($start) ? floor($start / $per_page) + 1 : 1;
+-	$display = array();
+-
+-	if ($total_pages &gt; 8)
+-	{
+-		if ($current_page &lt; 4)
+-		{
+-			$start = 1;
+-			$end = 5;
+-		}
+-		else
+-		{
+-			$start = $current_page - 2;
+-			$end = min($total_pages, $current_page + 2);
+-
+-			$display[] = array('page' =&gt; 1, 'link' =&gt; generate_link($base_url, $admin_link), 'seperator' =&gt; 'after');
+-		}
+-	}
+-	else
+-	{
+-		$start = 1;
+-		$end = $total_pages;
+-	}
+-
+-	for($i = $start; $i &lt;= $end; $i++)
+-	{
+-		$link = ($i == $current_page) ? false : generate_link($base_url.'&amp;start='.(($i - 1) * $per_page), $admin_link);
+-		$display[] = array('page' =&gt; $i, 'link' =&gt; $link, 'seperator' =&gt; false);
+-	}
+-	
+-	if ($end != $total_pages)
+-	{
+-		$display[] = array('page' =&gt; $total_pages, 'link' =&gt; generate_link($base_url.'&amp;start='.(($total_pages - 1) * $per_page), $admin_link), 'seperator' =&gt; 'before');
+-	}
+-	
+-	return $display;
++/*
++	Generates random strings
++*/
++function generate_string($length)
++{
++	// Add type
++	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
++
++	$string = '';
++	$num_chars = strlen($chars) - 1;
++
++	for ($i = 0; $i &lt; $length; ++$i)
++	{
++		$string .= substr($chars, mt_rand(0, $num_chars), 1);
++	}
++
++	return $string;
+ }
+ 
+ function gmtime()
+@@ -685,7 +678,7 @@
+ 	return $theme;
+ }
+ 
+-function modify_lines($text, $replacement = ' ')
++function modify_lines($text, $replacement = '')
+ {
+ 	return str_replace(array(&quot;\r\n&quot;, &quot;\r&quot;, &quot;\n&quot;), $replacement, $text);
+ }
+@@ -840,15 +833,4 @@
+ 	}
+ }
+ 
+-//REMOVE
+-function generate_pagination($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = false, $tpl_prefix = '')
+-{
+-	global $_CLASS;
+-		$_CLASS['core_template']-&gt;assign(array(
+-		$tpl_prefix . 'PREVIOUS_PAGE'	=&gt;  '',
+-		$tpl_prefix . 'NEXT_PAGE'	=&gt; '')
+-	);
+-
+-	return generate_pagination_formated($base_url, $num_items, $per_page, $start_item, false);
+-}
+ ?&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/functions_user.php
+===================================================================
+--- trunk/includes/functions_user.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/functions_user.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -13,50 +13,108 @@
+ //																//
+ //**************************************************************//
+ 
+-function user_get_id($names, &amp;$difference = array())
++function user_get_id($username, &amp;$difference = array())
+ {
+ 	global $_CLASS;
+ 
+-	$data = array('ids' =&gt; array(), 'names' =&gt; array());
++	$data = array('user_id' =&gt; array(), 'username' =&gt; array());
+ 
+ 	$sql = 'SELECT user_id, username
+ 				FROM ' . USERS_TABLE . &quot; 
+-				WHERE username IN ('&quot; . implode(&quot;' ,'&quot;, $_CLASS['core_db']-&gt;escape_array($names)) . &quot;')&quot;;
++				WHERE username IN ('&quot; . implode(&quot;' ,'&quot;, $_CLASS['core_db']-&gt;escape_array($username)) . &quot;')&quot;;
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$data['ids'][] = $row['user_id'];
+-		$data['names'][] = $row['username'];
++		$data['user_id'][] = $row['user_id'];
++		$data['username'][] = $row['username'];
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+-	$difference = array_diff($names, $data['names']);
+-	
+-	return $data['ids'];
++	$difference = array_diff($username, $data['username']);
++
++	return $data['user_id'];
+ }
+ 
+-function user_get_name($ids, &amp;$difference = array())
++function user_get_name($user_ids, &amp;$difference = array())
+ {
+ 	global $_CLASS;
+ 
+-	$data = array('ids' =&gt; array(), 'names' =&gt; array());
++	$user_ids = array_map('intval', $user_ids);
+ 
++	if (empty($user_ids))
++	{
++		return;
++	}
++
++	$data = array('user_id' =&gt; array(), 'username' =&gt; array());
++
+ 	$sql = 'SELECT user_id, username
+ 				FROM ' . USERS_TABLE . ' 
+-				WHERE user_id IN (' . implode(', ', array_map('intval', $ids)) . ')';
++				WHERE user_id IN (' . implode(', ', $user_ids) . ')';
+ 	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+-		$data['ids'][] = $row['user_id'];
+-		$data['names'][] = $row['username'];
++		$data['user_ids'][] = $row['user_id'];
++		$data['username'][] = $row['username'];
+ 	}
+ 	$_CLASS['core_db']-&gt;free_result($result);
+ 
+-	$difference = array_diff($ids, $data['ids']);
++	$difference = array_diff($user_ids, $data['user_ids']);
+ 
+-	return $data['names'];
++	return $data['username'];
+ }
+ 
++function groups_user_remove($group_ids, $user_ids)
++{
++	global $_CLASS;
++
++	$group_ids = is_array($group_ids) ? $group_ids : array($group_ids);
++	$user_ids = is_array($user_ids) ? $user_ids : array($user_ids);
++
++	$group_ids = array_map('intval', $group_ids);
++	$user_ids = array_map('intval', $user_ids);
++
++	if (empty($group_ids) || empty($user_ids))
++	{
++		return;
++	}
++
++	$sql = 'SELECT user_id FROM ' . USERS_TABLE . ' 
++				WHERE group_id IN (' . implode(', ', $group_ids) . ')
++				AND user_id IN (' . implode(', ', $group_ids) . ')';
++	$result = $_CLASS['core_db']-&gt;query($sql);
++
++	$defaults = array();
++
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++	{
++		$defaults[] = $row['user_id'];
++	}
++	$_CLASS['core_db']-&gt;free_result($result);
++	
++	// We move all users that are removed from the default groups to
++	// REGISTERED / REGISTERED_COPPA
++	if (!empty($defaults))
++	{
++// need to update/completion
++		$result = $_CLASS['core_db']-&gt;query('SELECT * FROM ' . GROUPS_TABLE . ' 	WHERE group_id = 4');
++
++		$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		$sql = 'UPDATE FROM '. USERS_TABLE .' 
++					SET group_id = 4, user_rank = -1
++					WHERE user_id IN (' . implode(', ', $group_ids) . ')';
++		$result = $_CLASS['core_db']-&gt;query($sql);
++	}
++
++	$sql = 'DELETE FROM ' . USER_GROUP_TABLE . '
++		WHERE group_id IN ('. implode(', ', $group_ids) . ')
++		AND user_id IN ('. implode(', ', $user_ids) .')';
++
++	$result = $_CLASS['core_db']-&gt;query($sql);
++}
++
+ ?&gt;
+\ No newline at end of file
+
+Modified: trunk/includes/mailer.php
+===================================================================
+--- trunk/includes/mailer.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/mailer.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -145,27 +145,27 @@
+ 
+ 		if ($this-&gt;html)
+ 		{
+-			// Seems a bit bugged, or it could be Mercury mailer :-(
+ 			// multipart
+ 			$text_boundary = trim('--'.((function_exists('sha1')) ? sha1(uniqid(mt_rand(), true)) : md5(uniqid(mt_rand(), true))));
+ 
+-			$headers[] = &quot;Content-Type: multipart/alternative;\n\t boundary=\&quot;$text_boundary\&quot;;&quot;;
++			$headers[] = 'Content-Type: multipart/alternative;';
++			$headers[] = &quot;\tboundary=\&quot;$text_boundary\&quot;&quot;;
+ 
+-			$message = 'This is a multi-part message in MIME format, Please use a MIME-compatible client';
++			$message .= 'This is a multi-part message in MIME format, Please use a MIME-compatible client';
+ 
+ 			// Plain text
+ 			$message .= &quot;\n\n$text_boundary\n&quot;;
+ 			$message .= 'Content-Type: text/plain; charset='.$this-&gt;encoding.&quot;\n&quot;; //format=
+-			$message .= &quot;Content-Transfer-Encoding: 8bit\n&quot;;
+-			$message .= &quot;\n&quot;.html_entity_decode(strip_tags(preg_replace('#&lt;br */?&gt;#i', &quot;\n&quot;, modify_lines($this-&gt;message))), ENT_QUOTES).&quot;\n&quot;;
++			$message .= &quot;Content-Transfer-Encoding: 8bit\n\n&quot;;
++			$message .= html_entity_decode(strip_tags(preg_replace('#&lt;br */?&gt;#i', &quot;\n&quot;, modify_lines($this-&gt;message))), ENT_QUOTES);
+ 
+ 			// HTML
+-			$message .= &quot;$text_boundary\n&quot;;
++			$message .= &quot;\n\n$text_boundary\n&quot;;
+ 			$message .= 'Content-Type: text/html; charset='.$this-&gt;encoding.&quot;\n&quot;;
+-			$message .= &quot;Content-Transfer-Encoding: 8bit\n&quot;;
+-			$message .= &quot;\n&quot;.$this-&gt;message.&quot;\n&quot;;
++			$message .= &quot;Content-Transfer-Encoding: 8bit\n\n&quot;;
++			$message .= $this-&gt;message;
+ 
+-			$message .= &quot;\n$text_boundary--\n&quot;;
++			$message .= &quot;\n\n$text_boundary--\n&quot;;
+ 		}
+ 		else
+ 		{
+@@ -203,7 +203,7 @@
+ 		}
+ 
+ 		if (function_exists($_CORE_CONFIG['email']['email_function_name']))
+-		{			
++		{//mb_send_mail
+ 			$result = $_CORE_CONFIG['email']['email_function_name']($to, $this-&gt;subject, $message, implode(&quot;\n&quot;, $headers));
+ 
+ 			if (!$result)
+@@ -399,7 +399,6 @@
+ 		fwrite($this-&gt;connection, 'To: '.implode(', ', $to_header).&quot;\r\n&quot;);
+ 		fwrite($this-&gt;connection, implode(&quot;\r\n&quot;, $this-&gt;headers).&quot;\r\n\r\n&quot;);
+ 
+-// Do my html and plain text mail thing, change it to a function maybe ?
+ 		fwrite($this-&gt;connection, $this-&gt;message.&quot;\r\n&quot;);
+ 
+ 		fwrite($this-&gt;connection, '.'.&quot;\r\n&quot;);
+
+Modified: trunk/includes/session.php
+===================================================================
+--- trunk/includes/session.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/session.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -28,9 +28,6 @@
+ 
+ 		$this-&gt;server_local = ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') ? true : false;
+ 
+-		$session_data = @unserialize(get_variable($_CORE_CONFIG['server']['cookie_name'] . '_data', 'COOKIE'));
+-// should spearate this, since I have to check to make sure the 2 values are in the array, would be easy to not do this
+-		$session_data = (is_array($session_data)) ? $session_data : array();
+ 		$session_data['session_id'] = get_variable('sid', 'GET');
+ 
+ 		if ($cookie_sid = get_variable($_CORE_CONFIG['server']['cookie_name'] . '_sid', 'COOKIE'))
+@@ -58,7 +55,7 @@
+ 
+ 			$this-&gt;data = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 			$_CLASS['core_db']-&gt;free_result($result);
+-//print_R($this-&gt;data);die;
++
+ 			if (isset($this-&gt;data['user_id']) &amp;&amp; ($this-&gt;data['user_id'] == ANONYMOUS || $this-&gt;data['user_status'] == USER_ACTIVE))
+ 			{
+ 				$valid  = true;
+@@ -72,7 +69,7 @@
+ 				{
+ 					$check_ip = implode('.', explode('.', $this-&gt;data['session_ip'], $_CORE_CONFIG['server']['ip_check']));
+ 					
+-					if ($check_ip != substr($this-&gt;ip, 0, strlen($check_ip)))
++					if ($check_ip != mb_substr($this-&gt;ip, 0, mb_strlen($check_ip)))
+ 					{
+ 						$valid  = false;
+ 					}
+
+Modified: trunk/includes/user.php
+===================================================================
+--- trunk/includes/user.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/includes/user.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -22,23 +22,23 @@
+ 
+ 	function core_user()
+ 	{
+-		$this-&gt;browser = substr((empty($_SERVER['HTTP_USER_AGENT']) ? getenv('HTTP_USER_AGENT') : $_SERVER['HTTP_USER_AGENT']), 0, 255);
++		$this-&gt;browser = mb_substr((empty($_SERVER['HTTP_USER_AGENT']) ? getenv('HTTP_USER_AGENT') : $_SERVER['HTTP_USER_AGENT']), 0, 255);
+ 		$this-&gt;url	= empty($_SERVER['REQUEST_URI']) ? getenv('REQUEST_URI') : $_SERVER['REQUEST_URI'];
+ 		$this-&gt;ip	= empty($_SERVER['REMOTE_ADDR']) ? getenv('REMOTE_ADDR') : $_SERVER['REMOTE_ADDR'];
+ 		$this-&gt;time	= gmtime();
+ 
+-		if (($pos = strpos($this-&gt;url, INDEX_PAGE.'?mod=')) !== false)
++		if (($pos = mb_strpos($this-&gt;url, INDEX_PAGE.'?mod=')) !== false)
+ 		{
+-			$pos = $pos + strlen(INDEX_PAGE.'?mod=');
+-			$this-&gt;url = substr($this-&gt;url, $pos);
++			$pos = $pos + mb_strlen(INDEX_PAGE.'?mod=');
++			$this-&gt;url = mb_substr($this-&gt;url, $pos);
+ 			
+-			if (($pos = strpos($this-&gt;url, 'sid')) !== false)
++			if (($pos = mb_strpos($this-&gt;url, 'sid')) !== false)
+ 			{
+-				$this-&gt;url = substr($this-&gt;url, 0, $pos - 1);
++				$this-&gt;url = mb_substr($this-&gt;url, 0, $pos - 1);
+ 			}
+ 
+ 			$this-&gt;url = htmlspecialchars(html_entity_decode($this-&gt;url, ENT_QUOTES));
+-			$this-&gt;url = substr($this-&gt;url, 0, 255);
++			$this-&gt;url = mb_substr($this-&gt;url, 0, 255);
+ 		}
+ 		else
+ 		{
+@@ -269,8 +269,9 @@
+ 		{
+ 			return $this-&gt;lang[$lang];
+ 		}
+-		
+-		return ucfirst(strtolower(preg_replace('/_/', ' ', $lang)));
++
++		//return ucfirst(mb_strtolower(preg_replace('/_/', ' ', $lang)));
++		return mb_convert_case(preg_replace('/_/', ' ', $lang), MB_CASE_TITLE);
+ 	}
+ 	
+ 	function get_img($img)
+@@ -311,7 +312,7 @@
+ 		
+ 		if ($lang_file)
+ 		{
+-			if (strpos($lang_file, '/') !== false)
++			if (mb_strpos($lang_file, '/') !== false)
+ 			{
+ 				include($site_file_root.&quot;language/$this-&gt;lang_name/$lang_file&quot;);
+ 
+
+Modified: trunk/javascript/collapse.js
+===================================================================
+--- trunk/javascript/collapse.js	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/javascript/collapse.js	2005-08-10 02:42:08 UTC (rev 81)
+@@ -51,73 +51,88 @@
+ 	return null;
+ }
+ 
+-function switch_collapse_area(id, name)
++function switch_collapse(id, name)
+ {
+ 	var area = document.getElementById(id);
+ 
+ 	if (area.style.display == 'none')
+ 	{
+-		area.style.display = '';
+-		var value = null;
++		area.style.display = '';
++		switch_collapse_save(id, false, name);
+ 	}
+ 	else
+ 	{
+ 		area.style.display = 'none';
+-		var value = id;
++		switch_collapse_save(id, id, name);
+ 	}
++}
+ 
++function switch_collapse_img(id, img_show, img_hide, name)
++{
++	var area = document.getElementById(id);
++	var img = document.getElementById(id+'_img');
++
++	if (area.style.display == 'none')
++	{
++		area.style.display = '';
++		img.src = img_show;
++
++		switch_collapse_save(id, false, name);
++	}
++	else
++	{
++		area.style.display = 'none';
++		img.src = img_hide;
++
++		switch_collapse_save(id, id, name);
++	}
++}
++
++function switch_collapse_save(id, save, name)
++{
+ 	// typeof name == 'undefined'
+ 	if (!name)
+ 	{
+ 		name = 'collapsed_items';
+ 	}
+ 
+-	// Best why to do it, if we don't want var name
+-	// it's a small script, shouldn't have any noticable speed impact
++	//alert(name);
++
+ 	var collapsed_cookie = get_cookie(name);
+ 	var collapsed_items = new Array();
+-
++	var set = false;
++
+ 	if (collapsed_cookie != null)
+ 	{
+ 		collapsed_cookie = collapsed_cookie.split(':');
+-	
++
+ 		for (var i in collapsed_cookie)
+ 		{
+-			collapsed_items[i] = collapsed_cookie[i];
+-		}
+-	}
+-
+-	var key = array_search(id, collapsed_items, false);
+-
+-	if (key != null)
+-	{
+-		if (value != null)
+-		{
+-			collapsed_items[key] == key;
+-		}
+-		else
+-		{
+-			var tmp = new Array();
+-	
+-			for (var i in collapsed_items)
+-			{
+-				// We do it like this to get any duplicate values ( simple gc -- well not really )
+-				if (collapsed_items[i] != id)
+-				{
+-					tmp.push(collapsed_items[i]);
+-				}
++			if (collapsed_cookie[i] == id)
++			{
++				if (set == false)
++				{
++					set = true;
++
++					if (save != false)
++					{
++						collapsed_items.push(id);
++					}
++				}
++			}
++			else
++			{
++				collapsed_items.push(collapsed_cookie[i]);
+ 			}
+-
+-			collapsed_items = tmp;
+ 		}
+-	}
+-	else
+-	{
+-		collapsed_items.push(id);
+ 	}
+-
+-	//alert(collapsed_items.join(':'));
+-
++
++	if (set == false &amp;&amp; save != false)
++	{
++		collapsed_items.push(id);
++	}
++
++	//alert(collapsed_items.join(':'));
+ 	if (collapsed_items.length)
+ 	{
+ 		var expires = new Date()
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_groups.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_groups.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_groups.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -15,13 +15,45 @@
+ {
+ 	function ucp_groups($id, $mode)
+ 	{
+-		global $config, $_CLASS, $SID;
++		global $_CLASS, $site_file_root;
+ 
+ 		$_CLASS['core_user']-&gt;add_lang('groups');
+ 
+-		$submit	= (!empty($_POST['submit'])) ? true : false;
+-		$delete	= (!empty($_POST['delete'])) ? true : false;
+-		
++		$submit	= !empty($_POST['submit']);
++		$group_ids = array_map('intval', request_var('mark', array(0)));
++
++		if ($submit)
++		{
++			require_once($site_file_root.'includes/functions_user.php');
++
++			switch ($_POST['mode'])
++			{
++				case 'resign':
++					
++					$sql = 'SELECT group_id	FROM  ' . GROUPS_TABLE . '
++								WHERE group_type = ' . GROUP_SPECIAL .'
++								AND group_id IN ('. implode(', ', $group_ids) .')';
++					$result = $_CLASS['core_db']-&gt;query($sql);
++
++					$special = array();
++					while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++					{
++						$special[] = $row['user_id'];
++					}
++					$_CLASS['core_db']-&gt;free_result($result);
++
++					$group_ids = array_diff($group_ids, $special);
++					unset($special);
++
++					groups_user_remove($group_ids, $_CLASS['core_user']-&gt;data['user_id']);
++				break;
++
++				case 'apply':
++					
++				break;		
++			}
++		}
++
+ 		$error = $data = array();
+ 
+ 		$sql = 'SELECT g.group_id, g.group_name, g.group_description, g.group_type, ug.user_status
+@@ -29,10 +61,10 @@
+ 			WHERE ug.user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . '
+ 				AND g.group_id = ug.group_id
+ 			ORDER BY g.group_type DESC, g.group_name';
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 		$group_id_ary = array();
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$block = ($row['user_status'] == STATUS_LEADER) ? 'leader' : (($row['user_status'] == STATUS_PENDING) ? 'pending' : 'member');
+ 
+@@ -48,9 +80,8 @@
+ 
+ 			$group_id_ary[] = $row['group_id'];
+ 		}
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
+-
+ 		// Hide hidden groups unless user is an admin with group privileges
+ 		$sql_and = ($_CLASS['auth']-&gt;acl_gets('a_group', 'a_groupadd', 'a_groupdel')) ? '&lt;&gt; ' . GROUP_SPECIAL : 'NOT IN (' . GROUP_SPECIAL . ', ' . GROUP_HIDDEN . ')';
+ 
+@@ -59,25 +90,25 @@
+ 			WHERE group_id NOT IN (' . implode(', ', $group_id_ary) . &quot;)
+ 				AND group_type $sql_and
+ 			ORDER BY group_type DESC, group_name&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-		while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++		while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$_CLASS['core_template']-&gt;assign_vars_array('nonmember', array(
+ 				'GROUP_ID'		=&gt; $row['group_id'],
+ 				'GROUP_NAME'	=&gt; ($row['group_type'] == GROUP_SPECIAL) ? $_CLASS['core_user']-&gt;lang['G_' . $row['group_name']] : $row['group_name'],
+ 				'GROUP_DESC'	=&gt; $row['group_description'],
+-				'GROUP_SPECIAL'	=&gt; ($row['group_type'] &lt;&gt; GROUP_SPECIAL) ? false : true,
++				'GROUP_SPECIAL'	=&gt; ($row['group_type'] == GROUP_SPECIAL),
+ 				'GROUP_CLOSED'	=&gt; ($row['group_type'] &lt;&gt; GROUP_CLOSED || $_CLASS['auth']-&gt;acl_gets('a_group', 'a_groupadd', 'a_groupdel')) ? false : true,
+ 
+ 				'U_VIEW_GROUP'	=&gt; generate_link('Members_List&amp;mode=group&amp;g=' . $row['group_id'])
+ 			));
+ 		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		$_CLASS['core_template']-&gt;assign(array(
+-			'S_CHANGE_DEFAULT' 	=&gt; ($_CLASS['auth']-&gt;acl_get('u_chggrp')),
+-			'S_DISPLAY_FORM'	=&gt; true,
++		'S_DISPLAY_FORM', true,
++		'S_UCP_ACTION' =&gt; ''
+ 		));
+ 
+ 		$this-&gt;display($_CLASS['core_user']-&gt;get_lang('UCP_GROUPS'), 'ucp_groups_membership.html');
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_main.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_main.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_main.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -303,8 +303,6 @@
+ 
+ 					$tracking_topics = (isset($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) ? unserialize(stripslashes($_COOKIE[$_CORE_CONFIG['server']['cookie_name'] . '_track'])) : array();
+ 				}
+-		
+-				$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 				$sql = &quot;SELECT f.*$lastread_select 
+ 					FROM $sql_from, &quot; . FORUMS_WATCH_TABLE . ' fw
+@@ -377,8 +375,6 @@
+ 				}
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 
+-				$sql_f_select = '';
+-				
+ 				// Subscribed Topics
+ 				$start = request_var('start', 0);
+ 
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_pm.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_pm.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_pm.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -115,9 +115,8 @@
+ 					'U_JS_RETURN_INBOX'	=&gt; $indox_link,
+ 					'S_NOT_LOGGED_IN'	=&gt; ($_CLASS['core_user']-&gt;data['user_id'] == ANONYMOUS) ? true : false,
+ 					'CLICK_TO_VIEW'		=&gt; sprintf($_CLASS['core_user']-&gt;lang['CLICK_VIEW_PRIVMSG'], '&lt;a href=&quot;' . $indox_link . '&quot; onclick=&quot;jump_to_inbox();return false;&quot; target=&quot;_new&quot;&gt;', '&lt;/a&gt;'),
+-					'U_INBOX'			=&gt; $indox_link)
+-					
+-				);
++					'U_INBOX'			=&gt; $indox_link
++				));
+ 
+ 				break;
+ 			
+@@ -143,10 +142,12 @@
+ 					FROM ' . GROUPS_TABLE . '
+ 					WHERE group_id = ' . $_CLASS['core_user']-&gt;data['group_id'];
+ 				$result = $_CLASS['core_db']-&gt;query($sql);
+-				$message_limit = (int) $_CLASS['core_db']-&gt;sql_fetchfield('group_message_limit', 0, $result);
+-				$_CLASS['core_db']-&gt;sql_freeresult($result);
++
++				list($message_limit) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++
++				$_CLASS['core_db']-&gt;free_result($result);
+ 				
+-				$_CLASS['core_user']-&gt;data['message_limit'] = (!$message_limit) ? $config['pm_max_msgs'] : $message_limit;
++				(int) $_CLASS['core_user']-&gt;data['message_limit'] = (!$message_limit) ? $config['pm_max_msgs'] : $message_limit;
+ 				
+ 				get_folder($_CLASS['core_user']-&gt;data['user_id'], $folder);
+ 
+@@ -161,7 +162,7 @@
+ 				$module = new ucp_main($id, $mode);
+ 				unset($module);
+ 				exit;
+-				break;
++			break;
+ 
+ 			case 'unread':
+ 			case 'view_messages':
+@@ -170,8 +171,8 @@
+ 					FROM ' . GROUPS_TABLE . '
+ 					WHERE group_id = ' . $_CLASS['core_user']-&gt;data['group_id'];
+ 				$result = $_CLASS['core_db']-&gt;query($sql);
+-				$message_limit = (int) $_CLASS['core_db']-&gt;sql_fetchfield('group_message_limit', 0, $result);
+-				$_CLASS['core_db']-&gt;sql_freeresult($result);
++				list($message_limit) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++				$_CLASS['core_db']-&gt;free_result($result);
+ 				
+ 				$_CLASS['core_user']-&gt;data['message_limit'] = (!$message_limit) ? $config['pm_max_msgs'] : $message_limit;
+ 				
+@@ -199,7 +200,7 @@
+ 					trigger_error('NO_AUTH_READ_MESSAGE');
+ 				}
+ 
+-				// First Handle Mark actions and moving messages
++// First Handle Mark actions and moving messages
+ 
+ 				// Move PM
+ 				if (isset($_REQUEST['move_pm']))
+@@ -246,7 +247,7 @@
+ 							AND user_id = &quot; . $_CLASS['core_user']-&gt;data['user_id'];
+ 					$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 					
+-					if (!($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)))
++					if (!($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)))
+ 					{
+ 						trigger_error('NO_MESSAGE');
+ 					}					
+@@ -273,7 +274,7 @@
+ 							ORDER BY p.message_time $sql_ordering&quot;;
+ 						$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 
+-						if (!($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)))
++						if (!($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)))
+ 						{
+ 							$message = ($view == 'next') ? 'NO_NEWER_PM' : 'NO_OLDER_PM';
+ 							trigger_error($message);
+@@ -293,7 +294,7 @@
+ 							AND p.msg_id = $msg_id&quot;;
+ 					$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 
+-					if (!($message_row = $_CLASS['core_db']-&gt;sql_fetchrow($result)))
++					if (!($message_row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)))
+ 					{
+ 						trigger_error('NO_MESSAGE');
+ 					}
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_pm_compose.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_pm_compose.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_pm_compose.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -180,15 +180,15 @@
+ 
+ 	if ($sql)
+ 	{
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 
+-		if (!($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)))
++		if (!($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)))
+ 		{
+ 			trigger_error('NO_MESSAGE');
+ 		}
+ 
+ 		extract($row);
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 		
+ 		$msg_id = (int) $msg_id;
+ 		$enable_urls = $enable_magic_url;
+@@ -299,11 +299,11 @@
+ 			WHERE post_msg_id = $msg_id
+ 				AND in_message = 1
+ 				ORDER BY filetime &quot; . ((!$config['display_order']) ? 'DESC' : 'ASC');
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-		$message_parser-&gt;attachment_data = array_merge($message_parser-&gt;attachment_data, $_CLASS['core_db']-&gt;sql_fetchrowset($result));
++		$message_parser-&gt;attachment_data = array_merge($message_parser-&gt;attachment_data, $_CLASS['core_db']-&gt;fetch_row_assocset($result));
+ 		
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 	}
+ 	
+ 	if (!in_array($action, array('quote', 'edit', 'delete', 'forward')))
+@@ -324,13 +324,13 @@
+ 			WHERE (forum_id = 0 AND topic_id = 0)
+ 				AND user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . 
+ 				(($draft_id) ? &quot; AND draft_id &lt;&gt; $draft_id&quot; : '');
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 
+-		if ($_CLASS['core_db']-&gt;sql_fetchrow($result))
++		if ($_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$drafts = true;
+ 		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 	}
+ 
+ 	if ($action == 'edit' || $action == 'forward')
+@@ -360,7 +360,7 @@
+ 				'save_time'	=&gt; $current_time,
+ 				'draft_subject' =&gt; $subject,
+ 				'draft_message' =&gt; $message));
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 	
+ 			$_CLASS['core_display']-&gt;meta_refresh(3, generate_link('Control_Panel&amp;i=pm&amp;mode='.$mode));
+ 
+@@ -382,9 +382,9 @@
+ 				AND topic_id = 0
+ 				AND forum_id = 0
+ 				AND user_id = &quot; . $_CLASS['core_user']-&gt;data['user_id'];
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 	
+-		if ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++		if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$_REQUEST['subject'] = $row['draft_subject'];
+ 			$_POST['message'] = $row['draft_message'];
+@@ -629,14 +629,14 @@
+ 		$result = array();
+ 		if (isset($address_list['u']) &amp;&amp; sizeof($address_list['u']))
+ 		{
+-			$result['u'] = $_CLASS['core_db']-&gt;sql_query('SELECT user_id as id, username as name, user_colour as colour 
++			$result['u'] = $_CLASS['core_db']-&gt;query('SELECT user_id as id, username as name, user_colour as colour 
+ 				FROM ' . USERS_TABLE . ' 
+ 				WHERE user_id IN (' . implode(', ', array_map('intval', array_keys($address_list['u']))) . ')');
+ 		}
+ 		
+ 		if (isset($address_list['g']) &amp;&amp; sizeof($address_list['g']))
+ 		{
+-			$result['g'] = $_CLASS['core_db']-&gt;sql_query('SELECT group_id as id, group_name as name, group_colour as colour 
++			$result['g'] = $_CLASS['core_db']-&gt;query('SELECT group_id as id, group_name as name, group_colour as colour 
+ 				FROM ' . GROUPS_TABLE . ' 
+ 				WHERE group_receive_pm = 1 AND group_id IN (' . implode(', ', array_map('intval', array_keys($address_list['g']))) . ')');
+ 		}
+@@ -646,11 +646,11 @@
+ 		{
+ 			if (isset($result[$type]) &amp;&amp; $result[$type])
+ 			{
+-				while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result[$type]))
++				while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result[$type]))
+ 				{
+ 					${$type}[$row['id']] = array('name' =&gt; $row['name'], 'colour' =&gt; $row['colour']);
+ 				}
+-				$_CLASS['core_db']-&gt;sql_freeresult($result[$type]);
++				$_CLASS['core_db']-&gt;free_result($result[$type]);
+ 			}
+ 		}
+ 
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_pm_options.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_pm_options.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_pm_options.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -53,7 +53,7 @@
+ 			$sql = 'UPDATE ' . USERS_TABLE . '
+ 				SET user_full_folder = ' . $set_folder_id . '
+ 				WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'];
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			$_CLASS['core_user']-&gt;data['user_full_folder'] = $set_folder_id;
+ 			
+@@ -74,28 +74,28 @@
+ 				FROM ' . PRIVMSGS_FOLDER_TABLE . &quot;
+ 				WHERE folder_name = '&quot; . $_CLASS['core_db']-&gt;sql_escape($folder_name) . &quot;'
+ 					AND user_id = &quot; . $_CLASS['core_user']-&gt;data['user_id'];
+-			$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
++			$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 
+-			if ($_CLASS['core_db']-&gt;sql_fetchrow($result))
++			if ($_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				trigger_error(sprintf($_CLASS['core_user']-&gt;lang['FOLDER_NAME_EXIST'], $folder_name));
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 			$sql = 'SELECT COUNT(folder_id) as num_folder
+ 				FROM ' . PRIVMSGS_FOLDER_TABLE . '
+ 					WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'];
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 			
+ 			if ($_CLASS['core_db']-&gt;sql_fetchfield('num_folder', 0, $result) &gt;= $config['pm_max_boxes'])
+ 			{
+ 				trigger_error('MAX_FOLDER_REACHED');
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 			$sql = 'INSERT INTO ' . PRIVMSGS_FOLDER_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', array(
+ 				'user_id' =&gt; (int) $_CLASS['core_user']-&gt;data['user_id'], 'folder_name' =&gt; $folder_name));
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			$message = $_CLASS['core_user']-&gt;lang['FOLDER_ADDED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_UCP'], '&lt;a href=&quot;' . $redirect_url . '&quot;&gt;', '&lt;/a&gt;');
+ 			$_CLASS['core_display']-&gt;meta_refresh(3, $redirect_url);
+@@ -120,9 +120,9 @@
+ 			FROM ' . PRIVMSGS_FOLDER_TABLE . '
+ 			WHERE user_id = '.$_CLASS['core_user']-&gt;data['user_id'].&quot;
+ 				AND folder_id = $rename_folder_id&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
+-		$folder_row = $_CLASS['core_db']-&gt;sql_fetchrow($result);
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
++		$folder_row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		if (!$folder_row)
+ 		{
+@@ -133,7 +133,7 @@
+ 			SET folder_name = '&quot; . $_CLASS['core_db']-&gt;sql_escape($new_folder_name) . &quot;'
+ 			WHERE folder_id = $rename_folder_id
+ 				AND user_id = &quot;.$_CLASS['core_user']-&gt;data['user_id'];
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		$message = $_CLASS['core_user']-&gt;lang['FOLDER_RENAMED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_UCP'], '&lt;a href=&quot;' . $redirect_url . '&quot;&gt;', '&lt;/a&gt;');
+ 		$_CLASS['core_display']-&gt;meta_refresh(3, $redirect_url);
+@@ -160,9 +160,9 @@
+ 			FROM ' . PRIVMSGS_FOLDER_TABLE . '
+ 			WHERE user_id = '.$_CLASS['core_user']-&gt;data['user_id'].&quot;
+ 				AND folder_id = $remove_folder_id&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
+-		$folder_row = $_CLASS['core_db']-&gt;sql_fetchrow($result);
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
++		$folder_row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		if (!$folder_row)
+ 		{
+@@ -182,14 +182,14 @@
+ 				FROM ' . PRIVMSGS_TO_TABLE . '
+ 				WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot;
+ 					AND folder_id = $remove_folder_id&quot;;
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 			$msg_ids = array();
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				$msg_ids[] = (int) $row['msg_id'];
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 			// First of all, copy all messages to another folder... or delete all messages
+ 			switch ($remove_action)
+@@ -216,7 +216,7 @@
+ 			$sql = 'DELETE FROM ' . PRIVMSGS_FOLDER_TABLE . '
+ 				WHERE user_id = '.$_CLASS['core_user']-&gt;data['user_id'].&quot;
+ 					AND folder_id = $remove_folder_id&quot;;
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			// Check full folder option. If the removed folder has been specified as destination switch back to inbox
+ 			if ($_CLASS['core_user']-&gt;data['user_full_folder'] == $remove_folder_id)
+@@ -224,7 +224,7 @@
+ 				$sql = 'UPDATE ' . USERS_TABLE . '
+ 					SET user_full_folder = ' . PRIVMSGS_INBOX . '
+ 					WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'];
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
+ 
+ 				$_CLASS['core_user']-&gt;data['user_full_folder'] = PRIVMSGS_INBOX;
+ 			}
+@@ -280,16 +280,16 @@
+ 		$sql = 'SELECT rule_id 
+ 			FROM ' . PRIVMSGS_RULES_TABLE . '
+ 			WHERE ' . $_CLASS['core_db']-&gt;sql_build_array('SELECT', $rule_ary);
+-		$result = $_CLASS['core_db']-&gt;sql_query($sql);
++		$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-		if ($_CLASS['core_db']-&gt;sql_fetchrow($result))
++		if ($_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			trigger_error('RULE_ALREADY_DEFINED');
+ 		}
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$_CLASS['core_db']-&gt;free_result($result);
+ 		
+ 		$sql = 'INSERT INTO ' . PRIVMSGS_RULES_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $rule_ary);
+-		$_CLASS['core_db']-&gt;sql_query($sql);
++		$_CLASS['core_db']-&gt;query($sql);
+ 
+ 		$message = $_CLASS['core_user']-&gt;lang['RULE_ADDED'] . '&lt;br /&gt;&lt;br /&gt;' . sprintf($_CLASS['core_user']-&gt;lang['RETURN_UCP'], '&lt;a href=&quot;' . $redirect_url . '&quot;&gt;', '&lt;/a&gt;');
+ 		$_CLASS['core_display']-&gt;meta_refresh(3, $redirect_url);
+@@ -315,7 +315,7 @@
+ 			$sql = 'DELETE FROM ' . PRIVMSGS_RULES_TABLE . '
+ 				WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . &quot;
+ 					AND rule_id = $delete_id&quot;;
+-			$_CLASS['core_db']-&gt;sql_query($sql);
++			$_CLASS['core_db']-&gt;query($sql);
+ 
+ 			$meta_info = generate_link(&quot;Control_Panel$SID&amp;i=pm&amp;mode=$mode&quot;);
+ 			$message = $_CLASS['core_user']-&gt;lang['RULE_DELETED'];
+@@ -337,9 +337,9 @@
+ 		FROM ' . PRIVMSGS_TO_TABLE . '
+ 		WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'] . '
+ 			AND folder_id = ' . PRIVMSGS_INBOX;
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
+-	$num_messages = $_CLASS['core_db']-&gt;sql_fetchfield('num_messages', 0, $result);
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$result = $_CLASS['core_db']-&gt;query($sql);
++	list($num_messages) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 	
+ 	$folder[PRIVMSGS_INBOX] = array(
+ 		'folder_name'	=&gt; $_CLASS['core_user']-&gt;lang['PM_INBOX'], 
+@@ -349,10 +349,10 @@
+ 	$sql = 'SELECT folder_id, folder_name, pm_count 
+ 		FROM ' . PRIVMSGS_FOLDER_TABLE . '
+ 			WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'];
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+ 	$num_user_folder = 0;
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$num_user_folder++;
+ 		$folder[$row['folder_id']] = array(
+@@ -360,7 +360,7 @@
+ 			'message_status'=&gt; sprintf($_CLASS['core_user']-&gt;lang['FOLDER_MESSAGE_STATUS'], $row['pm_count'], $message_limit)
+ 		);
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$s_full_folder_options = $s_to_folder_options = $s_folder_options = '';
+ 	
+@@ -623,26 +623,26 @@
+ 				$sql = 'SELECT user_id
+ 					FROM ' . USERS_TABLE . &quot;
+ 					WHERE username = '&quot; . $_CLASS['core_db']-&gt;sql_escape($rule_string) . &quot;'&quot;;
+-				$result = $_CLASS['core_db']-&gt;sql_query($sql);
++				$result = $_CLASS['core_db']-&gt;query($sql);
+ 				
+ 				if (!($rule_user_id = $_CLASS['core_db']-&gt;sql_fetchfield('user_id', 0, $result)))
+ 				{
+ 					$rule_string = '';
+ 				}
+-				$_CLASS['core_db']-&gt;sql_freeresult($result);
++				$_CLASS['core_db']-&gt;free_result($result);
+ 			}
+ 			else if (!$rule_string &amp;&amp; $rule_user_id)
+ 			{
+ 				$sql = 'SELECT username
+ 					FROM ' . USERS_TABLE . &quot;
+ 					WHERE user_id = $rule_user_id&quot;;
+-				$result = $_CLASS['core_db']-&gt;sql_query($sql);
++				$result = $_CLASS['core_db']-&gt;query($sql);
+ 				
+ 				if (!($rule_string = $_CLASS['core_db']-&gt;sql_fetchfield('username', 0, $result)))
+ 				{
+ 					$rule_user_id = 0;
+ 				}
+-				$_CLASS['core_db']-&gt;sql_freeresult($result);
++				$_CLASS['core_db']-&gt;free_result($result);
+ 			}
+ 
+ 			$_CLASS['core_template']-&gt;assign(array(
+@@ -687,9 +687,9 @@
+ 	$sql = 'SELECT *
+ 		FROM ' . PRIVMSGS_RULES_TABLE . '
+ 		WHERE user_id = ' . $user_id;
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 	
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$_CLASS['core_template']-&gt;assign_vars_array('rule', array(
+ 			'RULE_ID'	=&gt; $row['rule_id'],
+@@ -700,7 +700,7 @@
+ 			'FOLDER'	=&gt; ($row['rule_action'] == ACTION_PLACE_INTO_FOLDER) ? $folder[$row['rule_folder_id']]['folder_name'] : '')
+ 		);
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ }
+ 
+ ?&gt;
+\ No newline at end of file
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_pm_viewfolder.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_pm_viewfolder.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_pm_viewfolder.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -51,14 +51,14 @@
+ 	$sql = 'SELECT * 
+ 		FROM ' . ZEBRA_TABLE . ' 
+ 		WHERE user_id = ' . $_CLASS['core_user']-&gt;data['user_id'];
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$friend[$row['zebra_id']] = $row['friend'];
+ 		$foe[$row['zebra_id']] = $row['foe'];
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$_CLASS['core_template']-&gt;assign(array(
+ 		'S_UNREAD'		=&gt; ($type == 'unread'),
+@@ -97,13 +97,13 @@
+ 					$sql = ($ug_type == 'u') ? 'SELECT user_id as id, username as name, user_colour as colour FROM ' . USERS_TABLE . ' WHERE user_id' : 'SELECT group_id as id, group_name as name, group_colour as colour FROM ' . GROUPS_TABLE . ' WHERE group_id';
+ 					$sql .= ' IN (' . implode(', ', array_keys($recipient_list[$ug_type])) . ')';
+ 	
+-					$result = $_CLASS['core_db']-&gt;sql_query($sql);
++					$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-					while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++					while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 					{
+ 						$recipient_list[$ug_type][$row['id']] = array('name' =&gt; $row['name'], 'colour' =&gt; $row['colour']);
+ 					}
+-					$_CLASS['core_db']-&gt;sql_freeresult($result);
++					$_CLASS['core_db']-&gt;free_result($result);
+ 				}
+ 			}		
+ 
+@@ -229,15 +229,15 @@
+ 				AND t.user_id = $user_id
+ 				AND t.msg_id = p.msg_id
+ 				AND p.message_time &gt;= $min_post_time&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 
+ 		if (isset($_POST['sort']))
+ 		{
+ 			$start = 0;
+ 		}
+ 
+-		$pm_count = ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)) ? $row['pm_count'] : 0;
+-		$_CLASS['core_db']-&gt;sql_freeresult($result);
++		$pm_count = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['pm_count'] : 0;
++		$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 		$sql_limit_time = &quot;AND p.message_time &gt;= $min_post_time&quot;;
+ 	}
+@@ -264,9 +264,9 @@
+ 					WHERE folder_id = $folder_id
+ 						AND user_id = $user_id&quot;;
+ 			}
+-			$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
+-			$pm_count = ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)) ? $row['pm_count'] : 0;
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
++			$pm_count = ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $row['pm_count'] : 0;
++			$_CLASS['core_db']-&gt;free_result($result);
+ 		}
+ 
+ 		$sql_limit_time = '';
+@@ -327,14 +327,14 @@
+ 			$sql_limit_time
+ 		ORDER BY $sql_sort_order&quot;;
+ 
+-	$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, $sql_limit, $sql_start);
++	$result = $_CLASS['core_db']-&gt;query_limit($sql, $sql_limit, $sql_start);
+ 
+-	while($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++	while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 	{
+ 		$rowset[$row['msg_id']] = $row;
+ 		$pm_list[] = $row['msg_id'];
+ 	}
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$pm_list = ($store_reverse) ? array_reverse($pm_list) : $pm_list;
+ 
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_pm_viewmessage.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -93,13 +93,13 @@
+ 				WHERE post_msg_id = $msg_id
+ 					AND in_message = 1
+ 				ORDER BY filetime &quot; . ((!$config['display_order']) ? 'DESC' : 'ASC') . ', post_msg_id ASC';
+-			$result = $_CLASS['core_db']-&gt;sql_query($sql);
++			$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-			while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+ 				$attachments[] = $row;
+ 			}
+-			$_CLASS['core_db']-&gt;sql_freeresult($result);
++			$_CLASS['core_db']-&gt;free_result($result);
+ 	
+ 			// No attachments exist, but message table thinks they do so go ahead and reset attach flags
+ 			if (!sizeof($attachments))
+@@ -107,7 +107,7 @@
+ 				$sql = 'UPDATE ' . PRIVMSGS_TABLE . &quot; 
+ 					SET message_attachment = 0 
+ 					WHERE msg_id = $msg_id&quot;;
+-				$_CLASS['core_db']-&gt;sql_query($sql);
++				$_CLASS['core_db']-&gt;query($sql);
+ 			}
+ 		}
+ 		else
+@@ -247,9 +247,9 @@
+ 	$sort_dir = (!empty($_CLASS['core_user']-&gt;data['user_sortby_dir'])) ? $_CLASS['core_user']-&gt;data['user_sortby_dir'] : 'd';
+ 	$sql .= ($sort_dir == 'd') ? 'ASC' : 'DESC';
+ 
+-	$result = $_CLASS['core_db']-&gt;sql_query($sql);
++	$result = $_CLASS['core_db']-&gt;query($sql);
+ 
+-	if (!($row = $_CLASS['core_db']-&gt;sql_fetchrow($result)))
++	if (!($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)))
+ 	{
+ 		return false;
+ 	}
+@@ -275,8 +275,8 @@
+ 			$bbcode_bitfield |= $row['bbcode_bitfield'];
+ 		}
+ 	}
+-	while ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result));
+-	$_CLASS['core_db']-&gt;sql_freeresult($result);
++	while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
++	$_CLASS['core_db']-&gt;free_result($result);
+ 
+ 	$title = ($sort_dir == 'a') ? $row['message_subject'] : $title;
+ 
+@@ -382,10 +382,10 @@
+ 			FROM ' . SESSIONS_TABLE . &quot; 
+ 			WHERE session_user_id = $user_id
+ 			GROUP BY session_user_id&quot;;
+-		$result = $_CLASS['core_db']-&gt;sql_query_limit($sql, 1);
++		$result = $_CLASS['core_db']-&gt;query_limit($sql, 1);
+ 
+ 		$update_time = $config['load_online_time'] * 60;
+-		if ($row = $_CLASS['core_db']-&gt;sql_fetchrow($result))
++		if ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 		{
+ 			$user_row['online'] = (time() - $update_time &lt; $row['online_time'] &amp;&amp; ($row['viewonline'] &amp;&amp; $user_row['user_allow_viewonline'])) ? true : false;
+ 		} else {
+
+Modified: trunk/modules/Control_Panel/ucp/ucp_profile.php
+===================================================================
+--- trunk/modules/Control_Panel/ucp/ucp_profile.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Control_Panel/ucp/ucp_profile.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -61,7 +61,7 @@
+ 							array('username', $data['username'])),
+ 						'password_confirm'	=&gt; array('string', true, $_CORE_CONFIG['user']['min_pass_chars'], $_CORE_CONFIG['user']['max_pass_chars']), 
+ 						'new_password'		=&gt; array('string', true, $_CORE_CONFIG['user']['min_pass_chars'], $_CORE_CONFIG['user']['max_pass_chars']), 
+-						'cur_password'		=&gt; array('string', true, $_CORE_CONFIG['user']['min_pass_chars'], $_CORE_CONFIG['user']['max_pass_chars']), 
++						//'cur_password'		=&gt; array('string', true, $_CORE_CONFIG['user']['min_pass_chars'], $_CORE_CONFIG['user']['max_pass_chars']), 
+ 						'email'				=&gt; array(
+ 							array('string', false, 6, 60), 
+ 							array('email', $data['email'])),
+@@ -77,7 +77,7 @@
+ 						$error[] = 'NEW_PASSWORD_ERROR';
+ 					}
+ 
+-					if (($new_password || ($_CLASS['auth']-&gt;acl_get('u_chgemail') &amp;&amp; $email != $_CLASS['core_user']-&gt;data['user_email']) || ($username != $_CLASS['core_user']-&gt;data['username'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_chgname') &amp;&amp; $_CORE_CONFIG['user']['allow_namechange'])) &amp;&amp; md5($cur_password) != $_CLASS['core_user']-&gt;data['user_password'])
++					if (($new_password || ($_CLASS['auth']-&gt;acl_get('u_chgemail') &amp;&amp; $email != $_CLASS['core_user']-&gt;data['user_email']) || ($username != $_CLASS['core_user']-&gt;data['username'] &amp;&amp; $_CLASS['auth']-&gt;acl_get('u_chgname') &amp;&amp; $_CORE_CONFIG['user']['allow_namechange'])) &amp;&amp; encode_password($cur_password, $_CLASS['core_user']-&gt;data['user_password_encoding']) != $_CLASS['core_user']-&gt;data['user_password'])
+ 					{
+ 						$error[] = 'CUR_PASSWORD_ERROR';
+ 					}
+@@ -90,33 +90,21 @@
+ 					if (!sizeof($error))
+ 					{
+ 						$sql_ary = array(
+-							'username'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_chgname') &amp;&amp; $_CORE_CONFIG['user']['allow_namechange']) ? $username : $_CLASS['core_user']-&gt;data['username'], 
++							//'username'			=&gt; ($_CLASS['auth']-&gt;acl_get('u_chgname') &amp;&amp; $_CORE_CONFIG['user']['allow_namechange']) ? $username : $_CLASS['core_user']-&gt;data['username'], 
+ 							'user_email'		=&gt; ($_CLASS['auth']-&gt;acl_get('u_chgemail')) ? $email : $_CLASS['core_user']-&gt;data['user_email'], 
+-							'user_email_hash'	=&gt; ($_CLASS['auth']-&gt;acl_get('u_chgemail')) ? crc32(strtolower($email)) . strlen($email) : $_CLASS['core_user']-&gt;data['user_email_hash'], 
+-							'user_password'		=&gt; ($_CLASS['auth']-&gt;acl_get('u_chgpasswd') &amp;&amp; $new_password) ? md5($new_password) : $_CLASS['core_user']-&gt;data['user_password'], 
+-							'user_passchg'		=&gt; time(), 
++							//'user_password'		=&gt; ($_CLASS['auth']-&gt;acl_get('u_chgpasswd') &amp;&amp; $new_password) ? md5($new_password) : $_CLASS['core_user']-&gt;data['user_password'], 
++							//'user_passchg'		=&gt; time(), 
+ 						);
+ 
+ 						if ($_CORE_CONFIG['email']['email_enable'] &amp;&amp; $email != $_CLASS['core_user']-&gt;data['user_email'] &amp;&amp; ($_CORE_CONFIG['user']['require_activation'] == USER_ACTIVATION_SELF || $_CORE_CONFIG['user']['require_activation'] == USER_ACTIVATION_ADMIN))
+ 						{
+-							require_once($site_file_root.'includes/forums/functions_messenger.php');
++							$template_file = ($config['require_activation'] == USER_ACTIVATION_ADMIN) ? 'user_activate_inactive.html' : 'user_activate.html';
++							$mailer = new core_mailer;
+ 
+-							$server_url = generate_board_url();
+-
+-							$user_actkey = gen_rand_string(10);
+-							$key_len = 54 - strlen($server_url);
+-							$key_len = ($key_len &gt; 6) ? $key_len : 6;
+-							$user_actkey = substr($user_actkey, 0, $key_len);
+-
+-							$messenger = new messenger();
+-
+-							$template_file = ($config['require_activation'] == USER_ACTIVATION_ADMIN) ? 'user_activate_inactive' : 'user_activate';
+ 							$messenger-&gt;template($template_file, $_CLASS['core_user']-&gt;data['user_lang']);
+-							$messenger-&gt;subject($subject);
++							$mailer-&gt;subject($subject);
+ 
+-							$messenger-&gt;replyto($config['board_contact']);
+ 							$messenger-&gt;to($email, $username);
+-
+ 							$messenger-&gt;headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
+ 							$messenger-&gt;headers('X-AntiAbuse: User_id - ' . $_CLASS['core_user']-&gt;data['user_id']);
+ 							$messenger-&gt;headers('X-AntiAbuse: Username - ' . $_CLASS['core_user']-&gt;data['username']);
+@@ -129,6 +117,8 @@
+ 								'U_ACTIVATE'    =&gt; generate_link(&quot;Control_Panel&amp;mode=activate&amp;u={$_CLASS['core_user']-&gt;data['user_id']}&amp;k=$user_actkey&quot;, array('full' =&gt; true)))
+ 							);
+ 
++							$body = trim($_CLASS['core_template']-&gt;display('modules/Contact/email/index.html', true));
++
+ 							$messenger-&gt;send(NOTIFY_EMAIL);
+ 
+ 							if ($_CORE_CONFIG['user']['require_activation'] == USER_ACTIVATION_ADMIN)
+
+Modified: trunk/modules/Forums/faq.php
+===================================================================
+--- trunk/modules/Forums/faq.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Forums/faq.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -86,7 +86,7 @@
+ 		$_size = sizeof($help_block[$i]);
+ 		$faq_row_link = $faq_row = array();
+ 		
+-		for ($j = 0, $_size; $j &lt; $_size; $j++)
++		for ($j = 0; $j &lt; $_size; $j++)
+ 		{
+ 			$faq_row[] = array(
+ 				'FAQ_SECTION' 		=&gt; $i,
+
+Modified: trunk/modules/Forums/posting.php
+===================================================================
+--- trunk/modules/Forums/posting.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Forums/posting.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -43,21 +43,14 @@
+ 	url_redirect($redirect);
+ }
+ 
+-if (in_array($mode, array('post', 'reply', 'quote', 'edit', 'delete', 'popup')) &amp;&amp; !$forum_id)
+-{
+-	trigger_error('NO_FORUM');
+-}
+-
+-require_once($site_file_root.'includes/forums/message_parser.php');
+-require($site_file_root.'includes/forums/functions_admin.php');
+-require($site_file_root.'includes/forums/functions_posting.php');
+-
+-// What is all this following SQL for? Well, we need to know
+-// some basic information in all cases before we do anything.
+-
+ switch ($mode)
+ {
+ 	case 'post':
++		if (!$forum_id)
++		{
++			trigger_error('NO_FORUM');
++		}
++
+ 		$sql = 'SELECT *
+ 			FROM ' . FORUMS_TABLE . &quot;
+ 			WHERE forum_id = $forum_id&quot;;
+@@ -75,7 +68,7 @@
+ 			WHERE t.topic_id = $topic_id
+ 				AND f.forum_id = t.forum_id&quot;;
+ 	break;
+-	
++
+ 	case 'quote':
+ 	case 'edit':
+ 	case 'delete':
+@@ -95,11 +88,11 @@
+ 
+ 	case 'smilies':
+ 		generate_smilies('window', $forum_id);
+-		die;
+ 	break;
+ 
+ 	default:
+ 		trigger_error('NO_POST_MODE');
++	break;
+ }
+ 
+ $result = $_CLASS['core_db']-&gt;query($sql);
+@@ -112,6 +105,10 @@
+ 	trigger_error('NO_POST');
+ }
+ 
++require_once($site_file_root.'includes/forums/message_parser.php');
++require_once($site_file_root.'includes/forums/functions_admin.php');
++require_once($site_file_root.'includes/forums/functions_posting.php');
++
+ extract($posting_data);
+ 
+ if (!$_CLASS['auth']-&gt;acl_get('f_' . $mode, $forum_id) &amp;&amp; !$_CLASS['auth']-&gt;acl_get('m_'. $mode, $forum_id) &amp;&amp; $forum_type == FORUM_POST)
+@@ -1391,7 +1388,6 @@
+ 				'post_subject'		=&gt; $subject,
+ 				'post_text' 		=&gt; $data['message'],
+ 				'post_checksum'		=&gt; $data['message_md5'],
+-				'post_encoding'		=&gt; $_CLASS['core_user']-&gt;lang['ENCODING'],
+ 				'post_attachment'	=&gt; (isset($data['filename_data']['physical_filename']) &amp;&amp; sizeof($data['filename_data'])) ? 1 : 0,
+ 				'bbcode_bitfield'	=&gt; $data['bbcode_bitfield'],
+ 				'bbcode_uid'		=&gt; $data['bbcode_uid'],
+@@ -1442,7 +1438,6 @@
+ 				'post_edit_reason'	=&gt; $data['post_edit_reason'],
+ 				'post_edit_user'	=&gt; (int) $data['post_edit_user'],
+ 				'post_checksum'		=&gt; $data['message_md5'],
+-				'post_encoding'		=&gt; $_CLASS['core_user']-&gt;lang['ENCODING'],
+ 				'post_attachment'	=&gt; (isset($data['filename_data']['physical_filename']) &amp;&amp; sizeof($data['filename_data'])) ? 1 : 0,
+ 				'bbcode_bitfield'	=&gt; $data['bbcode_bitfield'],
+ 				'bbcode_uid'		=&gt; $data['bbcode_uid'],
+
+Modified: trunk/modules/Forums/viewtopic.php
+===================================================================
+--- trunk/modules/Forums/viewtopic.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Forums/viewtopic.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -38,7 +38,7 @@
+ 	trigger_error('NO_TOPIC');
+ }
+ 
+-$voted_id	= request_var('vote_id', array(0));;
++$voted_id	= request_var('vote_id', array(0));
+ $start		= request_var('start', 0);
+ $view		= request_var('view', '');
+ $update		= request_var('update', false);
+@@ -747,7 +747,6 @@
+ 		'post_approved'		=&gt; $row['post_approved'],
+ 		'post_reported'		=&gt; $row['post_reported'],
+ 		'post_text'			=&gt; $row['post_text'],
+-		'post_encoding'		=&gt; $row['post_encoding'],
+ 		'bbcode_uid'		=&gt; $row['bbcode_uid'],
+ 		'bbcode_bitfield'	=&gt; $row['bbcode_bitfield'],
+ 		'enable_html'		=&gt; $row['enable_html'],
+
+Modified: trunk/modules/Quick_Message/index.php
+===================================================================
+--- trunk/modules/Quick_Message/index.php	2005-08-09 04:12:16 UTC (rev 80)
++++ trunk/modules/Quick_Message/index.php	2005-08-10 02:42:08 UTC (rev 81)
+@@ -63,7 +63,7 @@
+ 		trigger_error($_CLASS['core_user']-&gt;lang['NO_MESSAGE']); 
+     }
+     
+-    $length = strlen($message);
++    $length = mb_strlen($message);
+     
+     if($length &lt; 2)
+     {
+@@ -74,11 +74,11 @@
+     { 
+ 		trigger_error($_CLASS['core_user']-&gt;lang['LONG_MESSAGE']);
+     }
+-   
++
+ 	$message 	= htmlentities($message, ENT_QUOTES, 'UTF-8');
+ 	$user_name 	= htmlentities($user_name, ENT_QUOTES, 'UTF-8');
+ 
+-    $result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) as count FROM '.$prefix.&quot;quick_message WHERE message='&quot;.$_CLASS['core_db']-&gt;escape($message).&quot;' AND time &gt;= '&quot;.(time() - $_CORE_CONFIG['quick_message']['lastpost_check']).&quot;' LIMIT 1&quot;);
++    $result = $_CLASS['core_db']-&gt;query('SELECT COUNT(*) as count FROM '.$prefix.&quot;quick_message WHERE message='&quot;.$_CLASS['core_db']-&gt;escape($message).&quot;' AND time &gt;= '&quot;.(time() - $_CORE_CONFIG['quick_message']['lastpost_check']).&quot;'&quot;);
+ 	$count = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+     $_CLASS['core_db']-&gt;free_result($result);
+ 
+@@ -95,14 +95,14 @@
+ 		'user_id'	=&gt; (int) $user_id ,
+ 		'message'	=&gt; (string) $message,
+ 		'time'		=&gt; (int)  $_CLASS['core_user']-&gt;time,
+-		'ip'		=&gt; (string) $_CLASS['core_user']-&gt;ip));
++		'ip'		=&gt; (string) $_CLASS['core_user']-&gt;ip
++	));
+ 		
+ 	$_CLASS['core_db']-&gt;query($sql);
+ 	
+ 	url_redirect(generate_link($_CLASS['core_user']-&gt;data['session_url']), false);
+ }
+ 
+-    
+ function show_messages($all = false)
+ {
+     global $prefix, $_CLASS, $config, $_CORE_CONFIG;
+@@ -110,13 +110,12 @@
+ 	$_CLASS['core_user']-&gt;add_lang();
+ 	$_CLASS['core_user']-&gt;add_img(false, 'Forums');
+ 
+-	$start = ($all) ? '' : get_variable('start', 'GET', '', 'integer');
++	$start = ($all) ? '' : get_variable('start', 'GET', 0, 'integer');
+ 	$limit = ($all) ? '' : $_CORE_CONFIG['quick_message']['number'];
+ 	
+-	$sql = 'SELECT * FROM '.$prefix.'quick_message ORDER BY time DESC';
+ 	//$sql = 'SELECT s.*, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height FROM '.$prefix.'quick_message s LEFT JOIN ' . USERS_TABLE . ' u  ON (u.user_id = s.user_id) ORDER BY time DESC';
+ 	
+-	$result = $_CLASS['core_db']-&gt;query_limit($sql, $limit, $start);
++	$result = $_CLASS['core_db']-&gt;query_limit('SELECT * FROM '.$prefix.'quick_message ORDER BY time DESC', $limit, $start);
+ 	$error = (!$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result)) ? $_CLASS['core_user']-&gt;lang['NO_POSTS'] : false;
+ 
+ 	$_CLASS['core_template']-&gt;assign(array(
+@@ -215,6 +214,7 @@
+ 	
+ 	$id = (int) get_variable('id', 'GET');
+ 	
++// we should only delete last message
+ 	$result = $_CLASS['core_db']-&gt;query('SELECT user_id, time, ip FROM '.$prefix.'quick_message WHERE id='.$id);
+ 	$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 	$_CLASS['core_db']-&gt;free_result($result);
+@@ -264,7 +264,7 @@
+ 		}
+ 	}
+ 	
+-	$length = strlen($user_name);
++	$length = mb_strlen($user_name);
+ 	
+ 	if ($length &lt; 2)
+ 	{
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000004.html">[Viperals-svncheckins] r80 - trunk/javascript
+</A></li>
+	<LI>Next message: <A HREF="000006.html">[Viperals-svncheckins] r82 - in trunk: . admin admin/functions blocks images includes includes/auth includes/cache includes/db includes/display modules/Contact modules/Control_Panel modules/Control_Panel/ucp modules/Forums modules/Quick_Message themes/viperal themes/viperal/images themes/viperal/style themes/viperal/style/images themes/viperal/template themes/viperal/template/modules/News
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#5">[ date ]</a>
+              <a href="thread.html#5">[ thread ]</a>
+              <a href="subject.html#5">[ subject ]</a>
+              <a href="author.html#5">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

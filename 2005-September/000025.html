@@ -1,0 +1,1685 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r104 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/admin/functions branches/1.0alpha1/includes branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates/admin/blocks branches/1.0alpha1/includes/templates/admin/messages branches/1.0alpha1/install branches/1.0alpha1/modules/articles trunk trunk/admin trunk/admin/functions trunk/includes trunk/includes/display trunk/includes/templates/admin trunk/includes/templates/admin/articles trunk/includes/templates/admin/blocks trunk/includes/templates/admin/messages trunk/includes/templates/admin/modules trunk/install trunk/modules/articles trunk/modules/articles/admin
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r104%20-%20in%20cms%3A%20branches/1.0alpha1%20branches/1.0alpha1/admin%20branches/1.0alpha1/admin/functions%20branches/1.0alpha1/includes%20branches/1.0alpha1/includes/display%20branches/1.0alpha1/includes/templates/admin/blocks%20branches/1.0alpha1/includes/templates/admin/messages%20branches/1.0alpha1/install%20branches/1.0alpha1/modules/articles%20trunk%20trunk/admin%20trunk/admin/functions%20trunk/includes%20trunk/includes/display%20trunk/includes/templates/admin%20trunk/includes/templates/admin/articles%20trunk/includes/templates/admin/blocks%20trunk/includes/templates/admin/messages%20trunk/includes/templates/admin/modules%20trunk/install%20trunk/modules/articles%20trunk/modules/articles/admin&In-Reply-To=%3C200509090119.j891Jnff017881%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000024.html">
+   <LINK REL="Next"  HREF="000026.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r104 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/admin/functions branches/1.0alpha1/includes branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates/admin/blocks branches/1.0alpha1/includes/templates/admin/messages branches/1.0alpha1/install branches/1.0alpha1/modules/articles trunk trunk/admin trunk/admin/functions trunk/includes trunk/includes/display trunk/includes/templates/admin trunk/includes/templates/admin/articles trunk/includes/templates/admin/blocks trunk/includes/templates/admin/messages trunk/includes/templates/admin/modules trunk/install trunk/modules/articles trunk/modules/articles/admin</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r104%20-%20in%20cms%3A%20branches/1.0alpha1%20branches/1.0alpha1/admin%20branches/1.0alpha1/admin/functions%20branches/1.0alpha1/includes%20branches/1.0alpha1/includes/display%20branches/1.0alpha1/includes/templates/admin/blocks%20branches/1.0alpha1/includes/templates/admin/messages%20branches/1.0alpha1/install%20branches/1.0alpha1/modules/articles%20trunk%20trunk/admin%20trunk/admin/functions%20trunk/includes%20trunk/includes/display%20trunk/includes/templates/admin%20trunk/includes/templates/admin/articles%20trunk/includes/templates/admin/blocks%20trunk/includes/templates/admin/messages%20trunk/includes/templates/admin/modules%20trunk/install%20trunk/modules/articles%20trunk/modules/articles/admin&In-Reply-To=%3C200509090119.j891Jnff017881%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r104 - in cms: branches/1.0alpha1 branches/1.0alpha1/admin branches/1.0alpha1/admin/functions branches/1.0alpha1/includes branches/1.0alpha1/includes/display branches/1.0alpha1/includes/templates/admin/blocks branches/1.0alpha1/includes/templates/admin/messages branches/1.0alpha1/install branches/1.0alpha1/modules/articles trunk trunk/admin trunk/admin/functions trunk/includes trunk/includes/display trunk/includes/templates/admin trunk/includes/templates/admin/articles trunk/includes/templates/admin/blocks trunk/includes/templates/admin/messages trunk/includes/templates/admin/modules trunk/install trunk/modules/articles trunk/modules/articles/admin">viperal at berlios.de
+       </A><BR>
+    <I>Fri Sep  9 03:19:49 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000024.html">[Viperals-svncheckins] r101 - / cms cms/trunk
+</A></li>
+        <LI>Next message: <A HREF="000026.html">[Viperals-svncheckins] r105 - in cms/branches/1.0alpha1: includes/templates/admin includes/templates/admin/articles modules/articles modules/articles/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#25">[ date ]</a>
+              <a href="thread.html#25">[ thread ]</a>
+              <a href="subject.html#25">[ subject ]</a>
+              <a href="author.html#25">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-09 03:19:33 +0200 (Fri, 09 Sep 2005)
+New Revision: 104
+
+Added:
+   cms/trunk/includes/templates/admin/articles/
+   cms/trunk/includes/templates/admin/articles/edit.html
+   cms/trunk/includes/templates/admin/articles/index.html
+   cms/trunk/includes/templates/admin/modules/edit.html
+   cms/trunk/modules/articles/admin/
+   cms/trunk/modules/articles/admin/index.php
+Modified:
+   cms/branches/1.0alpha1/admin/blocks.php
+   cms/branches/1.0alpha1/admin/functions/block_functions.php
+   cms/branches/1.0alpha1/admin/messages.php
+   cms/branches/1.0alpha1/feed.php
+   cms/branches/1.0alpha1/includes/display/blocks.php
+   cms/branches/1.0alpha1/includes/templates/admin/blocks/index.html
+   cms/branches/1.0alpha1/includes/templates/admin/messages/edit.html
+   cms/branches/1.0alpha1/includes/user.php
+   cms/branches/1.0alpha1/install/build_data.php
+   cms/branches/1.0alpha1/modules/articles/index.php
+   cms/branches/1.0alpha1/modules/articles/install.php
+   cms/trunk/admin/blocks.php
+   cms/trunk/admin/functions/block_functions.php
+   cms/trunk/admin/messages.php
+   cms/trunk/feed.php
+   cms/trunk/includes/display/blocks.php
+   cms/trunk/includes/templates/admin/blocks/index.html
+   cms/trunk/includes/templates/admin/messages/edit.html
+   cms/trunk/includes/user.php
+   cms/trunk/install/build_data.php
+   cms/trunk/modules/articles/index.php
+   cms/trunk/modules/articles/install.php
+Log:
+
+
+Modified: cms/branches/1.0alpha1/admin/blocks.php
+===================================================================
+--- cms/branches/1.0alpha1/admin/blocks.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/admin/blocks.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -38,7 +38,7 @@
+ 	{
+ 		if ($redirect)
+ 		{
+-			url_redirect(generate_link('blocks', array('admin' =&gt; true)));
++			redirect(generate_link('blocks', array('admin' =&gt; true)));
+ 			die;
+ 		}
+ 		return false;
+@@ -96,9 +96,9 @@
+ 	}
+ }
+ 
+-$result = $_CLASS['core_db']-&gt;query('SELECT block_id, block_title, block_type,  block_position, block_order, block_status, block_file, block_auth
+-	FROM ' . BLOCKS_TABLE . '
+-	WHERE block_position IN (' . BLOCK_RIGHT . ', ' . BLOCK_TOP . ', ' . BLOCK_BOTTOM . ', ' . BLOCK_LEFT . ') ORDER BY block_position, block_order ASC');
++$result = $_CLASS['core_db']-&gt;query('SELECT block_id, block_title, block_type,  block_position, block_order, block_status, block_starts, block_expires, block_file, block_auth
++	FROM ' . BLOCKS_TABLE . ' WHERE block_position IN (' . BLOCK_RIGHT . ', ' . BLOCK_TOP . ', ' . BLOCK_BOTTOM . ', ' . BLOCK_LEFT . ')
++	ORDER BY block_position, block_order ASC');
+ 
+ $block_position = array(BLOCK_RIGHT =&gt; 'right', BLOCK_TOP =&gt; 'centertop', BLOCK_BOTTOM =&gt; 'centerbottom', BLOCK_LEFT =&gt; 'left');
+ $in_position = false;
+@@ -143,6 +143,9 @@
+ 			'TITLE'			=&gt; $block['block_title'],
+ 			'TYPE'			=&gt; $_CLASS['core_user']-&gt;get_lang('TYPE_'.$block['block_type']),
+ 
++			'EXPIRES'		=&gt; ($block['block_expires'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($block['block_expires']) : false,
++			'STARTS'		=&gt; ($block['block_starts'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($block['block_starts']) : false,
++
+ 			'ORDER_DOWN' 	=&gt; ($block['block_order'] &lt; $weigth[$block['block_position']]),
+ 			'ORDER_UP'		=&gt; ($block['block_order'] &gt; 1),
+ 
+
+Modified: cms/branches/1.0alpha1/admin/functions/block_functions.php
+===================================================================
+--- cms/branches/1.0alpha1/admin/functions/block_functions.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/admin/functions/block_functions.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -187,10 +187,10 @@
+ 			trigger_error('Block deleted&lt;br/&gt;&lt;a href=&quot;'.$return_link.'&quot;&gt;Click here to return&lt;/a&gt;');	        
+ 		}
+ 	}
+-	
++
+ 	if ($return_link)
+ 	{
+-		url_redirect($return_link);
++		redirect($return_link);
+ 	}
+ }
+ 
+
+Modified: cms/branches/1.0alpha1/admin/messages.php
+===================================================================
+--- cms/branches/1.0alpha1/admin/messages.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/admin/messages.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -118,7 +118,7 @@
+ 		'EDIT_LINK'		=&gt; generate_link('messages&amp;mode=edit&amp;id='.$row['block_id'], array('admin' =&gt; true)),
+ 		'DELETE_LINK' 	=&gt; generate_link('messages&amp;mode=delete&amp;id='.$row['block_id'], array('admin' =&gt; true)),
+ 
+-		'EXPIRES'		=&gt; ($row['block_expires'] &amp;&amp; $row['block_expires'] &lt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['block_expires']) : false,
++		'EXPIRES'		=&gt; ($row['block_expires'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['block_expires']) : false,
+ 		'STARTS'		=&gt; ($row['block_starts'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['block_starts']) : false,
+ 		'TITLE'			=&gt; $row['block_title'],
+ 
+@@ -155,7 +155,7 @@
+ 		
+ 		if (!$block)
+ 		{
+-			url_redirect(generate_link('messages', array('admin' =&gt; true)));
++			redirect(generate_link('messages', array('admin' =&gt; true)));
+ 		}
+ 		
+ 		check_position($block['block_position']);
+@@ -200,7 +200,7 @@
+ 	}
+ 
+ 	$data['block_title'] = get_variable('title', 'POST', '');
+-	$data['block_content'] = trim(get_variable('content', 'POST', ''));
++	$data['block_content'] = get_variable('content', 'POST', '');
+ 	
+ 	foreach ($data as $field =&gt; $value)
+ 	{
+@@ -212,7 +212,7 @@
+ 	
+ 	$data['block_status']	= (get_variable('active', 'POST', STATUS_DISABLED, 'integer') === STATUS_DISABLED) ? STATUS_DISABLED : STATUS_ACTIVE;
+ 	$data['block_expires']	= get_variable('expires', 'POST', 0);
+-	$data['block_starts']	= get_variable('time', 'POST', '');
++	$data['block_starts']	= get_variable('starts', 'POST', '');
+ 	$data['block_position']	= get_variable('b_position', 'POST', BLOCK_MESSAGE_TOP, 'integer');
+ 	$data['block_type'] 	= get_variable('b_type', 'REQUEST', BLOCKTYPE_MESSAGE, 'integer');
+ 
+@@ -232,7 +232,7 @@
+ 
+ 	if ($data['block_starts'])
+ 	{
+-		$start = strtotime($data['block_start']);
++		$start = strtotime($data['block_starts']);
+ 
+ 		if (!$start || $start == -1)
+ 		{
+@@ -269,7 +269,7 @@
+ 
+ 		if (!$block)
+ 		{
+-			url_redirect(generate_link('messages', array('admin' =&gt; true)));
++			redirect(generate_link('messages', array('admin' =&gt; true)));
+ 		}
+ 
+ 		check_position($block['block_position']);
+
+Modified: cms/branches/1.0alpha1/feed.php
+===================================================================
+--- cms/branches/1.0alpha1/feed.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/feed.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -1,17 +1,26 @@
+ &lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
+ define('VIPERAL', 'FEED');
+ 
+ //echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+@@ -22,24 +31,33 @@
+ //error_reporting(0);
+ header('Content-Type: text/xml');
+ 
+-$result = $_CLASS['core_db']-&gt;query('SELECT news_id, news_title, news_time, news_intro, poster_name FROM '.$prefix.'news ORDER BY news_id DESC LIMIT 10');
++if (!defined('ARTICLES_TABLE'))
++{
++	define('ARTICLES_TABLE', $prefix.'articles');
++}
+ 
++$result = $_CLASS['core_db']-&gt;query_limit('SELECT articles_id, articles_title, articles_intro, articles_text, articles_posted, articles_starts, poster_name FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC', 10);
++
+ $last_post_time = 0;
+-	
++
++// Need to fix this, add auth and expires/start check ( will have to remove limit )
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ {
+-	if ($row['news_time'] &gt; $last_post_time)
++	$time = ($row['articles_starts']) ? $row['articles_starts'] : $row['articles_posted'];
++	$text = ($row['articles_intro']) ? $row['articles_intro'] : $row['articles_text'];
++
++	if ($time &gt; $last_post_time)
+ 	{
+-		$last_post_time = $row['news_time'];
++		$last_post_time = $time;
+ 	}
+-	
++
+ 	$_CLASS['core_template']-&gt;assign_vars_array('items', array(
+-		'TITLE' 			=&gt; htmlspecialchars($row['news_title'], ENT_QUOTES),
+-		'LINK' 				=&gt; generate_link('News&amp;mode=view&amp;id='.$row['news_id'], array('full' =&gt; true, 'sid' =&gt; false)),
+-		'DESCRIPTION' 		=&gt; htmlspecialchars(strip_tags($row['news_intro']), ENT_QUOTES),
+-		'DESCRIPTION_HTML' 	=&gt; htmlspecialchars($row['news_intro'], ENT_QUOTES),
+-		'TIME'				=&gt; date('M d Y H:i:s', $row['news_time']) .' GMT',
+-		'AUTHOR'			=&gt; $row['poster_name']
++		'TITLE' 			=&gt; htmlspecialchars($row['articles_title'], ENT_QUOTES, 'UTF-8'),
++		'LINK' 				=&gt; generate_link('articles&amp;mode=view&amp;id='.$row['articles_id'], array('full' =&gt; true, 'sid' =&gt; false)),
++		'DESCRIPTION' 		=&gt; htmlspecialchars(strip_tags($text), ENT_QUOTES, 'UTF-8'),
++		'DESCRIPTION_HTML' 	=&gt; htmlspecialchars($text, ENT_QUOTES, 'UTF-8'),
++		'TIME'				=&gt; date('M d Y H:i:s', $time) .' GMT',
++		'AUTHOR'			=&gt; htmlspecialchars($row['poster_name'], ENT_QUOTES, 'UTF-8')
+ 	));
+ }
+ $_CLASS['core_db']-&gt;free_result($result);
+@@ -54,11 +72,9 @@
+ 	'TIME'			=&gt; gmdate('M d Y H:i:s') .' GMT'
+ ));
+ 
+-//header('Last-Modified: '.$last_modified);
++header('Last-Modified: '.$last_post_time);
+ 
+-$feed = get_variable('feed', 'GET', false);
+-
+-Switch ($feed)
++Switch ($_GET['feed'])
+ {
+ 	case 'rdf':
+ 	case 'rss1':
+
+Modified: cms/branches/1.0alpha1/includes/display/blocks.php
+===================================================================
+--- cms/branches/1.0alpha1/includes/display/blocks.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/includes/display/blocks.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -151,7 +151,7 @@
+ 			{
+ 				continue;
+ 			}
+-//language check here.
++
+ 			if ($this-&gt;block['block_expires'] &amp;&amp; !$expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $this-&gt;block['block_expires']))
+ 			{
+ 				$_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET block_status = ' . STATUS_DISABLED . ' WHERE block_expires &gt; 0 AND block_expires &lt;= ' . $_CLASS['core_user']-&gt;time);
+@@ -167,18 +167,6 @@
+ 				continue;
+ 			}
+ 
+-			/*
+-			if ($this-&gt;block['block_modules'])
+-			{
+-				$this-&gt;block['block_modules'] = unserialize($this-&gt;block['block_modules']);
+-// Homepage needs it's own value
+-				if (!in_array($_CORE_MODULE['module_title'], $this-&gt;block['block_modules']['show'] || in_array($_CORE_MODULE['module_title'], $this-&gt;block['block_modules']['hide'])))
+-				{
+-					continue;
+-				}
+-			}
+-			*/
+-
+ 			$this-&gt;display_blocks();
+ 			$this-&gt;content = '';
+ 		}
+
+Modified: cms/branches/1.0alpha1/includes/templates/admin/blocks/index.html
+===================================================================
+--- cms/branches/1.0alpha1/includes/templates/admin/blocks/index.html	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/includes/templates/admin/blocks/index.html	2005-09-09 01:19:33 UTC (rev 104)
+@@ -33,6 +33,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $left_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $left_admin_blocks:EDIT_LINK }&quot;&gt;{ $left_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $left_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $left_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $left_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $left_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $left_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $left_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+@@ -76,6 +78,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $centertop_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $centertop_admin_blocks:EDIT_LINK }&quot;&gt;{ $centertop_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $centertop_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $centertop_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $centertop_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $centertop_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $centertop_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $centertop_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+@@ -120,6 +124,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $centerbottom_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $centerbottom_admin_blocks:EDIT_LINK }&quot;&gt;{ $centerbottom_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $centerbottom_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $centerbottom_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $centerbottom_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $centerbottom_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $centerbottom_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $centerbottom_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+@@ -162,6 +168,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $right_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $right_admin_blocks:EDIT_LINK }&quot;&gt;{ $right_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $right_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $right_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $right_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $right_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $right_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $right_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+
+Modified: cms/branches/1.0alpha1/includes/templates/admin/messages/edit.html
+===================================================================
+--- cms/branches/1.0alpha1/includes/templates/admin/messages/edit.html	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/includes/templates/admin/messages/edit.html	2005-09-09 01:19:33 UTC (rev 104)
+@@ -42,8 +42,8 @@
+ 			&lt;tr&gt; 
+ 				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_STARTS }: &lt;/b&gt;&lt;/td&gt;
+ 				&lt;td class=&quot;row2&quot; &gt;
+-					&lt;input class=&quot;post&quot; id=&quot;time&quot; name=&quot;time&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_STARTS }&quot; type=&quot;text&quot;&gt;
+-					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot; id=&quot;time_trigger&quot;/&gt;
++					&lt;input class=&quot;post&quot; id=&quot;starts&quot; name=&quot;starts&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_STARTS }&quot; type=&quot;text&quot;&gt;
++					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot; id=&quot;starts_trigger&quot;/&gt;
+ 				&lt;/td&gt;
+ 				&lt;td class=&quot;row1&quot; align=&quot;center&quot; rowspan=&quot;2&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;Current Server Time:&lt;br/&gt;{ $B_CURRENT_TIME }: &lt;/b&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+@@ -95,8 +95,8 @@
+ 
+   Calendar.setup(
+     {
+-      inputField  : &quot;time&quot;,         // ID of the input field
+-      button      : &quot;time_trigger&quot;       // ID of the button
++      inputField  : &quot;starts&quot;,         // ID of the input field
++      button      : &quot;starts_trigger&quot;       // ID of the button
+     }
+   );
+ &lt;/script&gt;
+
+Modified: cms/branches/1.0alpha1/includes/user.php
+===================================================================
+--- cms/branches/1.0alpha1/includes/user.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/includes/user.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -131,10 +131,10 @@
+ 		$result = $_CLASS['core_db']-&gt;query('SELECT * FROM ' . USERS_TABLE . ' WHERE user_id = '. $id);
+ 		$this-&gt;data = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 		$_CLASS['core_db']-&gt;free_result($result);
+-		
++
+ 		if (!$this-&gt;data)
+ 		{
+-			die;
++			die('Installlation problem');
+ // Error here, however this happen
+ 		}
+ 
+
+Modified: cms/branches/1.0alpha1/install/build_data.php
+===================================================================
+--- cms/branches/1.0alpha1/install/build_data.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/install/build_data.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -120,15 +120,15 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('users', 0, 2, '')&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('groups', 0, 2, '')&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('articles', 1, 2, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('articles', 1, 1, 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Contact', 1, 2, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Calender', 1, 2, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Calender', 1, 1, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Control_Panel', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Forums', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Members_List', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Recommend_Us', 1, 2, 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Submit_News', 1, 2, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Quick_Message', 1, 2, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Quick_Message', 1, 1, 1)&quot;);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':D', 'grin.png', 'Very Happy', 19, 19, 1, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':)', 'smile.png', 'Smile', 19, 19, 2, 0)&quot;);
+
+Modified: cms/branches/1.0alpha1/modules/articles/index.php
+===================================================================
+--- cms/branches/1.0alpha1/modules/articles/index.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/modules/articles/index.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -78,10 +78,11 @@
+ }
+ 
+ $start = get_variable('start', 'GET', false, 'int');
++$collapable_holding = array();
++$expire_updated = false;
+ $limit = 10;
+-$collapable_holding = array();
+ 
+-$sql = 'SELECT * FROM '.  ARTICLES_TABLE .' WHERE articles_status = ' . STATUS_ACTIVE . ' ORDER BY articles_order DESC';
++$sql = 'SELECT * FROM '.  ARTICLES_TABLE .' WHERE articles_status = ' . STATUS_ACTIVE . ' ORDER BY articles_order ASC';
+ $result = $_CLASS['core_db']-&gt;query_limit($sql, $limit, $start);
+ 
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+@@ -91,6 +92,19 @@
+ 	{
+ 		continue;
+ 	}
++	
++	if ($row['articles_expires'] &amp;&amp; !$expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $row['articles_expires']))
++	{
++		$_CLASS['core_db']-&gt;query('UPDATE '.ARTICLES_TABLE.' SET articles_status = ' . STATUS_DISABLED . ' WHERE articles_expires &gt; 0 AND articles_expires &lt;= ' . $_CLASS['core_user']-&gt;time);
++		$expire_updated = true;
++
++		continue;
++	}
++
++	if ($row['articles_starts'] &amp;&amp; ($row['articles_starts'] &gt; $_CLASS['core_user']-&gt;time))
++	{
++		continue;
++	}
+ 
+ 	$_CLASS['core_template']-&gt;assign_vars_array('articles', array(
+ 		'poster' 		=&gt; ($row['poster_name']) ? $row['poster_name'] : $_CLASS['core_user']-&gt;get_lang('ANONYMOUS'),
+
+Modified: cms/branches/1.0alpha1/modules/articles/install.php
+===================================================================
+--- cms/branches/1.0alpha1/modules/articles/install.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/branches/1.0alpha1/modules/articles/install.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -46,13 +46,13 @@
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+ 		$_CLASS['core_db']-&gt;add_table_field_char('articles_title', 80);
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_posted', array('max' =&gt; 200000000));
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_start', array('max' =&gt; 200000000, 'null' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_starts', array('max' =&gt; 200000000, 'null' =&gt; true));
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_expires', array('max' =&gt; 200000000, 'null' =&gt; true));
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_intro', 60000, true);
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_text', 10000000);
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_notes', 60000, true);
+ 
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_order', array('max' =&gt; 16000000, 'null' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_order', array('max' =&gt; 16000000));
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_type', array('max' =&gt; 10));
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_status', array('max' =&gt; 10));
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_auth', 60000, true);
+@@ -76,6 +76,7 @@
+ 			'articles_title'	=&gt; 'Welcome Post',
+ 			'articles_posted'	=&gt; (int) $_CLASS['core_user']-&gt;time,
+ 			'articles_text'		=&gt; '&lt;p align=&quot;center&quot;&gt;I need something snappy here&lt;/p&gt;',
++			'articles_order'	=&gt; 1,
+ 			'articles_type'		=&gt; 1,
+ 			'articles_status'	=&gt; STATUS_ACTIVE,
+ 			'poster_id'			=&gt; 0,
+
+Modified: cms/trunk/admin/blocks.php
+===================================================================
+--- cms/trunk/admin/blocks.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/admin/blocks.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -38,7 +38,7 @@
+ 	{
+ 		if ($redirect)
+ 		{
+-			url_redirect(generate_link('blocks', array('admin' =&gt; true)));
++			redirect(generate_link('blocks', array('admin' =&gt; true)));
+ 			die;
+ 		}
+ 		return false;
+@@ -96,9 +96,9 @@
+ 	}
+ }
+ 
+-$result = $_CLASS['core_db']-&gt;query('SELECT block_id, block_title, block_type,  block_position, block_order, block_status, block_file, block_auth
+-	FROM ' . BLOCKS_TABLE . '
+-	WHERE block_position IN (' . BLOCK_RIGHT . ', ' . BLOCK_TOP . ', ' . BLOCK_BOTTOM . ', ' . BLOCK_LEFT . ') ORDER BY block_position, block_order ASC');
++$result = $_CLASS['core_db']-&gt;query('SELECT block_id, block_title, block_type,  block_position, block_order, block_status, block_starts, block_expires, block_file, block_auth
++	FROM ' . BLOCKS_TABLE . ' WHERE block_position IN (' . BLOCK_RIGHT . ', ' . BLOCK_TOP . ', ' . BLOCK_BOTTOM . ', ' . BLOCK_LEFT . ')
++	ORDER BY block_position, block_order ASC');
+ 
+ $block_position = array(BLOCK_RIGHT =&gt; 'right', BLOCK_TOP =&gt; 'centertop', BLOCK_BOTTOM =&gt; 'centerbottom', BLOCK_LEFT =&gt; 'left');
+ $in_position = false;
+@@ -143,6 +143,9 @@
+ 			'TITLE'			=&gt; $block['block_title'],
+ 			'TYPE'			=&gt; $_CLASS['core_user']-&gt;get_lang('TYPE_'.$block['block_type']),
+ 
++			'EXPIRES'		=&gt; ($block['block_expires'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($block['block_expires']) : false,
++			'STARTS'		=&gt; ($block['block_starts'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($block['block_starts']) : false,
++
+ 			'ORDER_DOWN' 	=&gt; ($block['block_order'] &lt; $weigth[$block['block_position']]),
+ 			'ORDER_UP'		=&gt; ($block['block_order'] &gt; 1),
+ 
+
+Modified: cms/trunk/admin/functions/block_functions.php
+===================================================================
+--- cms/trunk/admin/functions/block_functions.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/admin/functions/block_functions.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -187,10 +187,10 @@
+ 			trigger_error('Block deleted&lt;br/&gt;&lt;a href=&quot;'.$return_link.'&quot;&gt;Click here to return&lt;/a&gt;');	        
+ 		}
+ 	}
+-	
++
+ 	if ($return_link)
+ 	{
+-		url_redirect($return_link);
++		redirect($return_link);
+ 	}
+ }
+ 
+
+Modified: cms/trunk/admin/messages.php
+===================================================================
+--- cms/trunk/admin/messages.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/admin/messages.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -118,7 +118,7 @@
+ 		'EDIT_LINK'		=&gt; generate_link('messages&amp;mode=edit&amp;id='.$row['block_id'], array('admin' =&gt; true)),
+ 		'DELETE_LINK' 	=&gt; generate_link('messages&amp;mode=delete&amp;id='.$row['block_id'], array('admin' =&gt; true)),
+ 
+-		'EXPIRES'		=&gt; ($row['block_expires'] &amp;&amp; $row['block_expires'] &lt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['block_expires']) : false,
++		'EXPIRES'		=&gt; ($row['block_expires'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['block_expires']) : false,
+ 		'STARTS'		=&gt; ($row['block_starts'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['block_starts']) : false,
+ 		'TITLE'			=&gt; $row['block_title'],
+ 
+@@ -155,7 +155,7 @@
+ 		
+ 		if (!$block)
+ 		{
+-			url_redirect(generate_link('messages', array('admin' =&gt; true)));
++			redirect(generate_link('messages', array('admin' =&gt; true)));
+ 		}
+ 		
+ 		check_position($block['block_position']);
+@@ -200,7 +200,7 @@
+ 	}
+ 
+ 	$data['block_title'] = get_variable('title', 'POST', '');
+-	$data['block_content'] = trim(get_variable('content', 'POST', ''));
++	$data['block_content'] = get_variable('content', 'POST', '');
+ 	
+ 	foreach ($data as $field =&gt; $value)
+ 	{
+@@ -212,7 +212,7 @@
+ 	
+ 	$data['block_status']	= (get_variable('active', 'POST', STATUS_DISABLED, 'integer') === STATUS_DISABLED) ? STATUS_DISABLED : STATUS_ACTIVE;
+ 	$data['block_expires']	= get_variable('expires', 'POST', 0);
+-	$data['block_starts']	= get_variable('time', 'POST', '');
++	$data['block_starts']	= get_variable('starts', 'POST', '');
+ 	$data['block_position']	= get_variable('b_position', 'POST', BLOCK_MESSAGE_TOP, 'integer');
+ 	$data['block_type'] 	= get_variable('b_type', 'REQUEST', BLOCKTYPE_MESSAGE, 'integer');
+ 
+@@ -232,7 +232,7 @@
+ 
+ 	if ($data['block_starts'])
+ 	{
+-		$start = strtotime($data['block_start']);
++		$start = strtotime($data['block_starts']);
+ 
+ 		if (!$start || $start == -1)
+ 		{
+@@ -269,7 +269,7 @@
+ 
+ 		if (!$block)
+ 		{
+-			url_redirect(generate_link('messages', array('admin' =&gt; true)));
++			redirect(generate_link('messages', array('admin' =&gt; true)));
+ 		}
+ 
+ 		check_position($block['block_position']);
+
+Modified: cms/trunk/feed.php
+===================================================================
+--- cms/trunk/feed.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/feed.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -1,17 +1,26 @@
+ &lt;?php
+-//**************************************************************//
+-//  Vipeal CMS:													//
+-//**************************************************************//
+-//																//
+-//  Copyright 2004 - 2005										//
+-//  By Ryan Marshall ( Viperal&#169;	)								//
+-//																//
+-//  <A HREF="http://www.viperal.com">http://www.viperal.com</A>										//
+-//																//
+-//  Viperal CMS is released under the terms and conditions		//
+-//  of the GNU General Public License version 2					//
+-//																//
+-//**************************************************************//
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
+ define('VIPERAL', 'FEED');
+ 
+ //echo str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/'; die;
+@@ -22,24 +31,33 @@
+ //error_reporting(0);
+ header('Content-Type: text/xml');
+ 
+-$result = $_CLASS['core_db']-&gt;query('SELECT news_id, news_title, news_time, news_intro, poster_name FROM '.$prefix.'news ORDER BY news_id DESC LIMIT 10');
++if (!defined('ARTICLES_TABLE'))
++{
++	define('ARTICLES_TABLE', $prefix.'articles');
++}
+ 
++$result = $_CLASS['core_db']-&gt;query_limit('SELECT articles_id, articles_title, articles_intro, articles_text, articles_posted, articles_starts, poster_name FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC', 10);
++
+ $last_post_time = 0;
+-	
++
++// Need to fix this, add auth and expires/start check ( will have to remove limit )
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ {
+-	if ($row['news_time'] &gt; $last_post_time)
++	$time = ($row['articles_starts']) ? $row['articles_starts'] : $row['articles_posted'];
++	$text = ($row['articles_intro']) ? $row['articles_intro'] : $row['articles_text'];
++
++	if ($time &gt; $last_post_time)
+ 	{
+-		$last_post_time = $row['news_time'];
++		$last_post_time = $time;
+ 	}
+-	
++
+ 	$_CLASS['core_template']-&gt;assign_vars_array('items', array(
+-		'TITLE' 			=&gt; htmlspecialchars($row['news_title'], ENT_QUOTES),
+-		'LINK' 				=&gt; generate_link('News&amp;mode=view&amp;id='.$row['news_id'], array('full' =&gt; true, 'sid' =&gt; false)),
+-		'DESCRIPTION' 		=&gt; htmlspecialchars(strip_tags($row['news_intro']), ENT_QUOTES),
+-		'DESCRIPTION_HTML' 	=&gt; htmlspecialchars($row['news_intro'], ENT_QUOTES),
+-		'TIME'				=&gt; date('M d Y H:i:s', $row['news_time']) .' GMT',
+-		'AUTHOR'			=&gt; $row['poster_name']
++		'TITLE' 			=&gt; htmlspecialchars($row['articles_title'], ENT_QUOTES, 'UTF-8'),
++		'LINK' 				=&gt; generate_link('articles&amp;mode=view&amp;id='.$row['articles_id'], array('full' =&gt; true, 'sid' =&gt; false)),
++		'DESCRIPTION' 		=&gt; htmlspecialchars(strip_tags($text), ENT_QUOTES, 'UTF-8'),
++		'DESCRIPTION_HTML' 	=&gt; htmlspecialchars($text, ENT_QUOTES, 'UTF-8'),
++		'TIME'				=&gt; date('M d Y H:i:s', $time) .' GMT',
++		'AUTHOR'			=&gt; htmlspecialchars($row['poster_name'], ENT_QUOTES, 'UTF-8')
+ 	));
+ }
+ $_CLASS['core_db']-&gt;free_result($result);
+@@ -54,11 +72,9 @@
+ 	'TIME'			=&gt; gmdate('M d Y H:i:s') .' GMT'
+ ));
+ 
+-//header('Last-Modified: '.$last_modified);
++header('Last-Modified: '.$last_post_time);
+ 
+-$feed = get_variable('feed', 'GET', false);
+-
+-Switch ($feed)
++Switch ($_GET['feed'])
+ {
+ 	case 'rdf':
+ 	case 'rss1':
+
+Modified: cms/trunk/includes/display/blocks.php
+===================================================================
+--- cms/trunk/includes/display/blocks.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/includes/display/blocks.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -151,7 +151,7 @@
+ 			{
+ 				continue;
+ 			}
+-//language check here.
++
+ 			if ($this-&gt;block['block_expires'] &amp;&amp; !$expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $this-&gt;block['block_expires']))
+ 			{
+ 				$_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET block_status = ' . STATUS_DISABLED . ' WHERE block_expires &gt; 0 AND block_expires &lt;= ' . $_CLASS['core_user']-&gt;time);
+
+Added: cms/trunk/includes/templates/admin/articles/edit.html
+===================================================================
+--- cms/trunk/includes/templates/admin/articles/edit.html	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/includes/templates/admin/articles/edit.html	2005-09-09 01:19:33 UTC (rev 104)
+@@ -0,0 +1,114 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;style type=&quot;text/css&quot;&gt;@import url(javascript/jscalendar/skins/aqua/theme.css);&lt;/style&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/jscalendar/calendar.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/jscalendar/calendar-setup.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/jscalendar/lang/calendar-en.js&quot;&gt;&lt;/script&gt;
++
++{ $A_TABLE_OPEN }
++
++&lt;form action=&quot;{ $B_ACTION }&quot; name=&quot;message&quot; method=&quot;post&quot;&gt;
++	&lt;table class=&quot;tablebg&quot; align=&quot;center&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
++		&lt;tbody&gt;
++			&lt;!-- IF { $B_ERROR } --&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row2&quot; align=&quot;center&quot; colspan=&quot;3&quot;&gt;
++					&lt;font class=&quot;error&quot;&gt;{ $B_ERROR }&lt;/font&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;!-- ENDIF --&gt;
++
++			&lt;tr&gt; 
++				&lt;th colspan=&quot;3&quot; height=&quot;28&quot; valign=&quot;middle&quot;&gt;{ $B_TITLE }&lt;/th&gt;
++			&lt;/tr&gt;
++		
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; width=&quot;20%&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_TITLE }: &lt;/b&gt;&lt;/td&gt;
++		
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;title&quot; size=&quot;50&quot; maxlength=&quot;100&quot; value=&quot;{ $B_TITLE }&quot; type=&quot;text&quot;&gt;&lt;!-- IF { $B_DELETE_LINK } --&gt; &lt;br/&gt; &lt;a href=&quot;{ $B_DELETE_LINK }&quot;&gt;{ $L_DELETE_THIS }&lt;/a&gt; &lt;!-- ENDIF --&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_ACTIVE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input name=&quot;active&quot; value=&quot;2&quot; &lt;!-- IF { $B_ACTIVE } --&gt; checked=&quot;checked&quot; &lt;!-- ENDIF --&gt; type=&quot;radio&quot;&gt;{ $L_YES }&nbsp;&nbsp;&lt;input name=&quot;active&quot; value=&quot;0&quot; &lt;!-- IF !{ $B_ACTIVE } --&gt; checked=&quot;checked&quot; &lt;!-- ENDIF --&gt; type=&quot;radio&quot;&gt;{ $L_NO }&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_STARTS }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; &gt;
++					&lt;input class=&quot;post&quot; id=&quot;starts&quot; name=&quot;starts&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_STARTS }&quot; type=&quot;text&quot;&gt;
++					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot; id=&quot;starts_trigger&quot;/&gt;
++				&lt;/td&gt;
++				&lt;td class=&quot;row1&quot; align=&quot;center&quot; rowspan=&quot;2&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;Current Server Time:&lt;br/&gt;{ $B_CURRENT_TIME }: &lt;/b&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_EXPIRES }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot;&gt;
++					&lt;input class=&quot;post&quot; id=&quot;expires&quot; name=&quot;expires&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_EXPIRES }&quot; type=&quot;text&quot; /&gt;
++					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot;  id=&quot;expires_trigger&quot; /&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; valign=&quot;top&quot; &gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_MESSAGE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5px&quot;&gt;&lt;/div&gt;
++				&lt;textarea name=&quot;text&quot; id=&quot;text&quot; editor_enabled=&quot;true&quot; style=&quot;width:90%; height:400px;&quot; cols=&quot;63&quot; rows=&quot;15&quot;&gt;{ $B_TEXT }&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; valign=&quot;top&quot; &gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_INTRO_MESSAGE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5px&quot;&gt;&lt;/div&gt;
++				&lt;textarea name=&quot;intro&quot; id=&quot;intro&quot; editor_enabled=&quot;true&quot; style=&quot;width:90%; height:200px;&quot; cols=&quot;63&quot; rows=&quot;15&quot;&gt;{ $B_INTRO }&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; valign=&quot;top&quot; &gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_ADMIN_NOTES }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;div id=&quot;message_preview&quot; style=&quot;display: none; padding:5px&quot;&gt;&lt;/div&gt;
++				&lt;textarea name=&quot;notes&quot; id=&quot;notes&quot; editor_enabled=&quot;false&quot; style=&quot;width:90%; height:150px;&quot; cols=&quot;63&quot; rows=&quot;15&quot;&gt;{ $B_NOTES }&lt;/textarea&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt;
++				&lt;td class=&quot;cat&quot; colspan=&quot;3&quot; align=&quot;center&quot; height=&quot;28&quot;&gt;
++					&lt;input type=&quot;hidden&quot; name=&quot;update&quot; value=&quot;{ $B_BID }&quot;&gt;
++					&lt;!-- &lt;input class=&quot;btnmain&quot; id=&quot;preview_fast&quot; value=&quot;{ $L_PREVIEW }&quot; type=&quot;button&quot; onclick=&quot;fast_preview(); return false;&quot;&gt; --&gt;
++					&lt;input class=&quot;btnmain&quot; name=&quot;submit&quot; value=&quot;Submit&quot; type=&quot;submit&quot;&gt;&nbsp;&nbsp;&lt;input class=&quot;btnlite&quot; value=&quot;Reset&quot; name=&quot;reset&quot; type=&quot;reset&quot;&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++		&lt;/tbody&gt;
++	&lt;/table&gt;
++&lt;/form&gt;
++
++{ $A_TABLE_CLOSE }
++
++&lt;script type=&quot;text/javascript&quot;&gt;
++
++function fast_preview()
++{
++	if(document.getElementById('preview_fast').value == '{ $L_PREVIEW }')
++	{
++		document.getElementById('preview_fast').value = 'Edit';
++		document.getElementById('message_preview').innerHTML = document.getElementById('content').value;
++		document.getElementById('message_preview').style.display = '';
++		document.getElementById('content').style.display = 'none';
++
++	}
++	else
++	{
++		document.getElementById('preview_fast').value = '{ $L_PREVIEW }';
++		document.getElementById('message_preview').innerHTML = '';
++		document.getElementById('message_preview').style.display = 'none';
++		document.getElementById('content').style.display = '';
++	}
++}
++
++  Calendar.setup(
++    {
++      inputField  : &quot;starts&quot;,         // ID of the input field
++      button      : &quot;starts_trigger&quot;       // ID of the button
++    }
++  );
++&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot;&gt;
++  Calendar.setup(
++    {
++      inputField  : &quot;expires&quot;,         // ID of the input field
++      button      : &quot;expires_trigger&quot;       // ID of the button
++    }
++  );
++&lt;/script&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/admin/articles/index.html
+===================================================================
+--- cms/trunk/includes/templates/admin/articles/index.html	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/includes/templates/admin/articles/index.html	2005-09-09 01:19:33 UTC (rev 104)
+@@ -0,0 +1,110 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++{ $A_TABLE_OPEN }
++
++&lt;table class=&quot;tablebg&quot; border=&quot;0&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
++    &lt;tbody&gt;
++		&lt;tr&gt;
++			&lt;th align=&quot;center&quot; width=&quot;25%&quot;&gt;{$L_TITLE}&lt;/th&gt;
++			&lt;th align=&quot;center&quot; colspan=&quot;2&quot;&gt;{ $L_ORDER }&lt;/th&gt;
++			&lt;th align=&quot;center&quot;&gt;{ $L_STATUS }&lt;/th&gt;
++			&lt;th align=&quot;center&quot;&gt;{ $L_FUNCTIONS }&lt;/th&gt;
++		&lt;/tr&gt;
++    &lt;!-- IF isset({ $top_admin_messages }) --&gt;
++    	&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;8&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_TOP_MESSAGES }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- LOOP $top_admin_messages --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $top_admin_messages:EDIT_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $top_admin_messages:EDIT_LINK }&quot; title=&quot;{ $L_EDIT }&quot;&gt;{ $top_admin_messages:TITLE }&lt;/a&gt;&lt;br /&gt;
++				&lt;!-- IF { $top_admin_messages:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $top_admin_messages:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $top_admin_messages:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $top_admin_messages:EXPIRES }&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
++				&lt;!-- IF { $top_admin_messages:ORDER_UP } --&gt;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_UP }&quot;&gt;&lt;img src=&quot;images/1uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_TOP }&quot;&gt;&lt;img src=&quot;images/2uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++				&lt;!-- IF { $top_admin_messages:ORDER_DOWN } --&gt;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_DOWN }&quot;&gt;&lt;img src=&quot;images/1downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $top_admin_messages:LINK_ORDER_BOTTOM }&quot;&gt;&lt;img src=&quot;images/2downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;  onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $top_admin_messages:ACTIVE_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $top_admin_messages:ACTIVE_LINK }&quot;&gt;{ $top_admin_messages:CHANGE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++			&lt;!-- IF { $top_admin_messages:EDIT_LINK } --&gt;
++				&lt;a href=&quot;{ $top_admin_messages:EDIT_LINK }&quot;&gt;{ $L_EDIT }&lt;/a&gt; |
++			&lt;!-- ENDIF --&gt;
++			&lt;a href=&quot;{ $top_admin_messages:AUTH_LINK }&quot;&gt;{ $L_PERMISSIONS }&lt;/a&gt;
++			&lt;!-- IF { $top_admin_messages:DELETE_LINK } --&gt;
++				 | &lt;a href=&quot;{ $top_admin_messages:DELETE_LINK }&quot;&gt;{ $L_DELETE }&lt;/a&gt;
++			&lt;!-- ENDIF --&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- ENDLOOP $top_admin_messages --&gt;
++	&lt;!-- ENDIF --&gt;
++
++	&lt;!-- IF isset({ $bottom_admin_messages }) --&gt;
++    	&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;8&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;{ $L_BOTTOM_MESSAGES }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- LOOP $bottom_admin_messages --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $bottom_admin_messages:EDIT_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:EDIT_LINK }&quot; title=&quot;{ $L_EDIT }&quot;&gt;{ $bottom_admin_messages:TITLE }&lt;/a&gt;&lt;br /&gt;
++				&lt;!-- IF { $bottom_admin_messages:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $bottom_admin_messages:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $bottom_admin_messages:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $bottom_admin_messages:EXPIRES }&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
++				&lt;!-- IF { $bottom_admin_messages:ORDER_UP } --&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_UP }&quot;&gt;&lt;img src=&quot;images/1uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_TOP }&quot;&gt;&lt;img src=&quot;images/2uparrow.png&quot; alt=&quot;{ $L_MOVE_UP }&quot; title=&quot;{ $L_MOVE_UP }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++				&lt;!-- IF { $bottom_admin_messages:ORDER_DOWN } --&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_DOWN }&quot;&gt;&lt;img src=&quot;images/1downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&nbsp;
++				&lt;a href=&quot;{ $bottom_admin_messages:LINK_ORDER_BOTTOM }&quot;&gt;&lt;img src=&quot;images/2downarrow.png&quot; alt=&quot;{ $L_MOVE_DOWN }&quot; title=&quot;{ $L_MOVE_DOWN }&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;  onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $bottom_admin_messages:ACTIVE_LINK }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $bottom_admin_messages:ACTIVE_LINK }&quot;&gt;{ $bottom_admin_messages:CHANGE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++			&lt;!-- IF { $bottom_admin_messages:EDIT_LINK } --&gt;
++			&lt;a href=&quot;{ $bottom_admin_messages:EDIT_LINK }&quot;&gt;{ $L_EDIT }&lt;/a&gt; |
++			&lt;!-- ENDIF --&gt;
++			&lt;a href=&quot;{ $bottom_admin_messages:AUTH_LINK }&quot;&gt;{ $L_PERMISSIONS }&lt;/a&gt;
++			&lt;!-- IF { $bottom_admin_messages:DELETE_LINK } --&gt;
++				| &lt;a href=&quot;{ $bottom_admin_messages:DELETE_LINK }&quot;&gt;{ $L_DELETE }&lt;/a&gt;
++			&lt;!-- ENDIF --&gt; &lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;8&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- ENDLOOP $bottom_admin_messages --&gt;
++	&lt;!-- ENDIF --&gt;
++	 		  &lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;8&quot;&gt;
++				&lt;form action=&quot;{ $LINK_ADD }&quot; method=&quot;post&quot;&gt;&lt;input class=&quot;button&quot; value=&quot;{ $L_ADD_NEW }&quot; name=&quot;regular&quot; type=&quot;submit&quot; /&gt;&lt;/form&gt;
++			&lt;/td&gt;
++		  &lt;/tr&gt;
++  &lt;/tbody&gt;
++&lt;/table&gt;
++
++{ $A_TABLE_CLOSE }
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/admin/blocks/index.html
+===================================================================
+--- cms/trunk/includes/templates/admin/blocks/index.html	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/includes/templates/admin/blocks/index.html	2005-09-09 01:19:33 UTC (rev 104)
+@@ -33,6 +33,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $left_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $left_admin_blocks:EDIT_LINK }&quot;&gt;{ $left_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $left_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $left_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $left_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $left_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $left_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $left_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+@@ -76,6 +78,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $centertop_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $centertop_admin_blocks:EDIT_LINK }&quot;&gt;{ $centertop_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $centertop_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $centertop_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $centertop_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $centertop_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $centertop_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $centertop_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+@@ -120,6 +124,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $centerbottom_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $centerbottom_admin_blocks:EDIT_LINK }&quot;&gt;{ $centerbottom_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $centerbottom_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $centerbottom_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $centerbottom_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $centerbottom_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $centerbottom_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $centerbottom_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+@@ -162,6 +168,8 @@
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $right_admin_blocks:EDIT_LINK }'; return false;&quot;&gt;
+ 				&lt;a href=&quot;{ $right_admin_blocks:EDIT_LINK }&quot;&gt;{ $right_admin_blocks:TITLE }&lt;/a&gt;
++				&lt;!-- IF { $right_admin_blocks:STARTS } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_STARTS }: &lt;/b&gt;{ $right_admin_blocks:STARTS }&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $right_admin_blocks:EXPIRES } --&gt;&lt;br /&gt;&lt;b&gt;{ $L_EXPIRES }: &lt;/b&gt;{ $right_admin_blocks:EXPIRES }&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $right_admin_blocks:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $right_admin_blocks:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot; &gt;
+
+Modified: cms/trunk/includes/templates/admin/messages/edit.html
+===================================================================
+--- cms/trunk/includes/templates/admin/messages/edit.html	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/includes/templates/admin/messages/edit.html	2005-09-09 01:19:33 UTC (rev 104)
+@@ -42,8 +42,8 @@
+ 			&lt;tr&gt; 
+ 				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_STARTS }: &lt;/b&gt;&lt;/td&gt;
+ 				&lt;td class=&quot;row2&quot; &gt;
+-					&lt;input class=&quot;post&quot; id=&quot;time&quot; name=&quot;time&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_STARTS }&quot; type=&quot;text&quot;&gt;
+-					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot; id=&quot;time_trigger&quot;/&gt;
++					&lt;input class=&quot;post&quot; id=&quot;starts&quot; name=&quot;starts&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_STARTS }&quot; type=&quot;text&quot;&gt;
++					&lt;img src=&quot;images/calender_small.png&quot; style=&quot;cursor: pointer;&quot; id=&quot;starts_trigger&quot;/&gt;
+ 				&lt;/td&gt;
+ 				&lt;td class=&quot;row1&quot; align=&quot;center&quot; rowspan=&quot;2&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;Current Server Time:&lt;br/&gt;{ $B_CURRENT_TIME }: &lt;/b&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+@@ -95,8 +95,8 @@
+ 
+   Calendar.setup(
+     {
+-      inputField  : &quot;time&quot;,         // ID of the input field
+-      button      : &quot;time_trigger&quot;       // ID of the button
++      inputField  : &quot;starts&quot;,         // ID of the input field
++      button      : &quot;starts_trigger&quot;       // ID of the button
+     }
+   );
+ &lt;/script&gt;
+
+Added: cms/trunk/includes/templates/admin/modules/edit.html
+===================================================================
+--- cms/trunk/includes/templates/admin/modules/edit.html	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/includes/templates/admin/modules/edit.html	2005-09-09 01:19:33 UTC (rev 104)
+@@ -0,0 +1,100 @@
++&lt;style type=&quot;text/css&quot;&gt;@import url(java/jscalendar/skins/aqua/theme.css);&lt;/style&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;java/jscalendar/calendar_stripped.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;java/jscalendar/lang/calendar-en.js&quot;&gt;&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot; src=&quot;java/jscalendar/calendar-setup.js&quot;&gt;&lt;/script&gt;
++{ $A_TABLE_OPEN }
++&lt;form action=&quot;{ $B_ACTION }&quot; method=&quot;post&quot;&gt;
++	&lt;table class=&quot;tablebg&quot; align=&quot;center&quot; border=&quot;0&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
++		&lt;tbody&gt;
++		{ if $B_ERROR }
++			&lt;tr&gt; 
++				&lt;td class=&quot;row2&quot; align=&quot;center&quot; colspan=&quot;3&quot;&gt;
++					&lt;font color=&quot;#990000&quot;&gt;{ $B_ERROR }&lt;/font&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++		{ /if }
++			&lt;tr&gt; 
++				&lt;th colspan=&quot;3&quot; height=&quot;28&quot; valign=&quot;middle&quot;&gt;{ $B_HEADER }&lt;/th&gt;
++			&lt;/tr&gt;
++		
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; width=&quot;20%&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_TITLE }: &lt;/b&gt;&lt;/td&gt;
++		
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;b_title&quot; size=&quot;40&quot; maxlength=&quot;100&quot; value=&quot;{ $B_TITLE }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_ACTIVE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input type=&quot;radio&quot; name=&quot;b_active&quot; value=&quot;1&quot;{ if $B_ACTIVE } checked=&quot;checked&quot; { /if }/&gt;&lt;span class=&quot;genmed&quot;&gt;{$L_YES}&lt;/span&gt;&nbsp;&nbsp;&lt;input type=&quot;radio&quot; name=&quot;b_active&quot; value=&quot;0&quot;{ if !$B_ACTIVE } checked=&quot;checked&quot; { /if }/&gt;&lt;span class=&quot;genmed&quot;&gt;{$L_NO}&lt;/span&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_STARTS }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; &gt;
++					&lt;input class=&quot;post&quot; id=&quot;b_time&quot; name=&quot;b_time&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_STARTS }&quot; type=&quot;text&quot; /&gt;
++					&lt;img src=&quot;java/jscalendar/calendar.png&quot; style=&quot;cursor: pointer;&quot; id=&quot;time_trigger&quot; /&gt;
++					{ if $B_STARTS }   Currently Set:  { $B_STARTS }{ /if }
++				&lt;/td&gt;
++				&lt;td class=&quot;row1&quot; align=&quot;center&quot; rowspan=&quot;2&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;Current Server Time:&lt;/b&gt;&lt;br/&gt;{ $B_CURRENT_TIME } &lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_EXPIRES }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot;&gt;
++					&lt;input class=&quot;post&quot; id=&quot;b_expires&quot; name=&quot;b_expires&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_EXPIRES }&quot; type=&quot;text&quot; /&gt;
++					&lt;img src=&quot;java/jscalendar/calendar.png&quot; style=&quot;cursor: pointer;&quot;  id=&quot;expires_trigger&quot; /&gt;
++					{ if $B_EXPIRES }    Currently Set:  { $B_EXPIRES }{ /if }
++				&lt;/td&gt;
++			&lt;/tr&gt;
++			{ if $B_POSITION }
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_POSITION }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;select name=&quot;b_position&quot;&gt;{ $B_POSITION }&lt;/select&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			{ /if }
++			{ if $B_RSS_SHOW }
++				&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_RSS_URL }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;b_url&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_RSS_URL }&quot; type=&quot;text&quot;&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_RSS_REFRESH }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; name=&quot;b_refresh&quot; size=&quot;35&quot; maxlength=&quot;100&quot; value=&quot;{ $B_RSS_REFRESH }&quot; type=&quot;text&quot;&gt;{ if $B_EXPIRES }    Currently Set:  { $B_EXPIRES }{ /if }&lt;/td&gt;
++			&lt;/tr&gt;
++			{ /if }
++			{ if $B_FILE }
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_FILE }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;select name=&quot;b_file&quot;&gt;{ $B_FILE }&lt;/select&gt; &lt;/td&gt;
++		
++			&lt;/tr&gt;
++			{ /if }
++			{ if $B_SHOW_CONTENT }
++			&lt;tr&gt; 
++				&lt;td class=&quot;row1&quot; valign=&quot;top&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_HTML_CONTENT }: &lt;/b&gt;&lt;/td&gt;
++				&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;textarea name=&quot;b_content&quot; id=&quot;b_content&quot; editor_enabled=&quot;true&quot; style=&quot;width:300px; height:200px&quot; cols=&quot;63&quot; rows=&quot;15&quot;&gt;{ $B_CONTENT }&lt;/textarea&gt;&lt;br /&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++			{ /if }
++			&lt;tr&gt;
++				&lt;td class=&quot;cat&quot; colspan=&quot;3&quot; align=&quot;center&quot; height=&quot;28&quot;&gt;
++				&lt;input class=&quot;btnmain&quot; name=&quot;submit&quot; value=&quot;Submit&quot; type=&quot;submit&quot;&gt;&nbsp;&nbsp;&lt;input class=&quot;btnlite&quot; value=&quot;Reset&quot; name=&quot;reset&quot; type=&quot;reset&quot;&gt;&lt;/td&gt;
++			&lt;/tr&gt;
++		&lt;/tbody&gt;
++	&lt;/table&gt;
++&lt;/form&gt;
++{literal}
++&lt;script type=&quot;text/javascript&quot;&gt;
++  Calendar.setup(
++    {
++      inputField  : &quot;b_time&quot;,
++      button      : &quot;time_trigger&quot;
++    }
++  );
++&lt;/script&gt;
++&lt;script type=&quot;text/javascript&quot;&gt;
++  Calendar.setup(
++    {
++      inputField  : &quot;b_expires&quot;,
++      button      : &quot;expires_trigger&quot;
++    }
++  );
++&lt;/script&gt;
++{/literal}
++{ $A_TABLE_CLOSE }
+\ No newline at end of file
+
+Modified: cms/trunk/includes/user.php
+===================================================================
+--- cms/trunk/includes/user.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/includes/user.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -131,10 +131,10 @@
+ 		$result = $_CLASS['core_db']-&gt;query('SELECT * FROM ' . USERS_TABLE . ' WHERE user_id = '. $id);
+ 		$this-&gt;data = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 		$_CLASS['core_db']-&gt;free_result($result);
+-		
++
+ 		if (!$this-&gt;data)
+ 		{
+-			die;
++			die('Installlation problem');
+ // Error here, however this happen
+ 		}
+ 
+
+Modified: cms/trunk/install/build_data.php
+===================================================================
+--- cms/trunk/install/build_data.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/install/build_data.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -120,15 +120,15 @@
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('users', 0, 2, '')&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_admin_options) VALUES ('groups', 0, 2, '')&quot;);
+ 
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('articles', 1, 2, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('articles', 1, 1, 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Contact', 1, 2, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Calender', 1, 2, 2)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Calender', 1, 1, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Control_Panel', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Forums', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Members_List', 1, 2, 2)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Recommend_Us', 1, 2, 1)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Submit_News', 1, 2, 1)&quot;);
+-$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Quick_Message', 1, 2, 1)&quot;);
++$_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;modules (module_name, module_type, module_status, module_sides) VALUES ('Quick_Message', 1, 1, 1)&quot;);
+ 
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':D', 'grin.png', 'Very Happy', 19, 19, 1, 0)&quot;);
+ $_CLASS['core_db']-&gt;query('INSERT INTO '.$install_prefix.&quot;smilies (smiley_code, smiley_src, smiley_description, smiley_width, smiley_height, smiley_order, smiley_type) VALUES (':)', 'smile.png', 'Smile', 19, 19, 2, 0)&quot;);
+
+Added: cms/trunk/modules/articles/admin/index.php
+===================================================================
+--- cms/trunk/modules/articles/admin/index.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/modules/articles/admin/index.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -0,0 +1,396 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#194;&#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++if (VIPERAL !== 'Admin') 
++{
++	die;
++}
++
++if (!defined('ARTICLES_TABLE'))
++{
++	define('ARTICLES_TABLE', $prefix.'articles');
++}
++
++if (isset($_REQUEST['mode']))
++{
++	if ($id = get_variable('id', 'GET', false, 'int'))
++	{
++		switch ($_REQUEST['mode'])
++		{
++			case 'change':
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_status FROM ' . ARTICLES_TABLE . ' WHERE articles_id = '.$id);
++				$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++			
++				if (!$article)
++				{
++					trigger_error('articles_NOT_FOUND');
++				}
++				
++				$status = ($article['articles_status'] == STATUS_ACTIVE) ? STATUS_DISABLED : STATUS_ACTIVE;
++				$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . &quot; SET articles_status = $status WHERE articles_id = $id&quot;);
++			break;
++			
++			case 'delete':
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_id='.$id);
++				$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++			
++				if (!$article)
++				{
++					trigger_error('articles_NOT_FOUND');
++				}
++			
++				if (display_confirmation())
++				{
++					$_CLASS['core_db']-&gt;query('DELETE from ' . ARTICLES_TABLE . ' where articles_id = '.$id);
++					$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order-1 WHERE articles_order &gt; ' . $article['articles_order']);
++				}
++			break;
++
++			case 'auth':
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_auth FROM ' . ARTICLES_TABLE . ' WHERE articles_id = '.$id);
++				$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++				
++				if (!$article)
++				{
++					trigger_error('articles_NOT_FOUND');
++				}
++				
++				$article['articles_auth'] = ($article['articles_auth']) ? unserialize($article['articles_auth']) : '';
++				
++				$_CLASS['core_display']-&gt;display_header();
++
++				$auth = $_CLASS['core_auth']-&gt;generate_auth_options($article['articles_auth']);
++
++				if ($auth !== false)
++				{
++					if (is_null($auth))
++					{
++						$article['articles_auth'] = '';
++						$auth = 'null';
++					}
++					else
++					{
++						$article['articles_auth'] = $auth;
++						$auth = &quot;'&quot;.$_CLASS['core_db']-&gt;escape(serialize($auth)).&quot;'&quot;;
++					}
++			
++					$_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . &quot; SET articles_auth = $auth WHERE articles_id = $id&quot;);
++				}
++
++				$_CLASS['core_display']-&gt;display_footer();
++			break;
++
++			case 'order':
++				$option = get_variable('option', 'GET', false);
++			
++				if (!$option || !in_array($option, array('down', 'up', 'bottom', 'top')))
++				{
++					break;
++				}
++
++				$result = $_CLASS['core_db']-&gt;query('SELECT articles_type, articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_id= ' . $id);
++				$articles = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++			
++				if (!$articles)
++				{
++					trigger_error('ARTICLE_NOT_FOUND');
++				}
++
++				settype($articles['articles_order'], 'integer');
++
++				switch ($option)
++				{
++					case 'down':
++						$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_type='.$articles['articles_type']);
++						list($max_order) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++						$_CLASS['core_db']-&gt;free_result($result);
++			
++						if ($articles['articles_order'] &lt; $max_order)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order-1 WHERE articles_type = '.$articles['articles_type'].' AND articles_order='.($articles['articles_order'] + 1));
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = '.($articles['articles_order'] + 1).' WHERE articles_id ='. $id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++			
++					case 'bottom':
++						$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE . ' WHERE articles_type='.$articles['articles_type']);
++						list($max_order) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++						$_CLASS['core_db']-&gt;free_result($result);
++			
++						if ($articles['articles_order'] &lt; $max_order)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order-1 WHERE articles_type='.$articles['articles_type'].' AND articles_order &gt; '.$articles['articles_order']);
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = '.$max_order.' WHERE articles_id = '.$id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++			
++					case 'up':
++						if ($articles['articles_order'] &amp;&amp; $articles['articles_order'] != 1)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order+1 WHERE articles_type='.$articles['articles_type'].' AND articles_order = '.($articles['articles_order'] - 1));
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order='.($articles['articles_order'] -1 ).' WHERE articles_id ='. $id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++			
++					case 'top':
++
++						if ($articles['articles_order'] != 1)
++						{
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = articles_order+1 WHERE articles_type='.$articles['articles_type'].' AND articles_order &lt; '.$articles['articles_order']);
++							$result = $_CLASS['core_db']-&gt;query('UPDATE ' . ARTICLES_TABLE . ' SET articles_order = 1 WHERE articles_id = '.$id);
++			
++							$_CLASS['core_cache']-&gt;destroy('articless');
++						}
++					break;
++				}
++			break;
++
++			case 'edit':
++				articles_edit($id);
++			break;
++		}
++	}
++
++	switch ($_REQUEST['mode'])
++	{
++		case 'add':
++			articles_edit(false);
++		break;
++		   
++		case 'save':
++			articles_save($id);
++		break;
++	}
++}
++
++// temp
++$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE);
++list($count) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++$_CLASS['core_db']-&gt;free_result($result);
++
++$result = $_CLASS['core_db']-&gt;query('SELECT articles_id, articles_title, articles_starts, articles_order, articles_expires, articles_status
++										FROM ' . ARTICLES_TABLE . ' ORDER BY articles_order ASC');
++
++while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
++{
++	$_CLASS['core_template']-&gt;assign_vars_array('top_admin_messages', array(
++		'ACTIVE'		=&gt; ($row['articles_status']) ? true : false,
++		'CHANGE'		=&gt; ($row['articles_status']) ? $_CLASS['core_user']-&gt;lang['DEACTIVATE'] : $_CLASS['core_user']-&gt;lang['ACTIVATE'],
++
++		'AUTH_LINK'		=&gt; generate_link('articles&amp;mode=auth&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'ACTIVE_LINK'	=&gt; generate_link('articles&amp;mode=change&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'VIEW_LINK' 	=&gt; generate_link('articles&amp;mode=show&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'EDIT_LINK'		=&gt; generate_link('articles&amp;mode=edit&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'DELETE_LINK' 	=&gt; generate_link('articles&amp;mode=delete&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++
++		'EXPIRES'		=&gt; ($row['articles_expires']) ? $_CLASS['core_user']-&gt;format_date($row['articles_expires']) : false,
++		'STARTS'		=&gt; ($row['articles_starts'] &gt; $_CLASS['core_user']-&gt;time) ? $_CLASS['core_user']-&gt;format_date($row['articles_starts']) : false,
++		'TITLE'			=&gt; $row['articles_title'],
++
++		'ORDER_DOWN' 		=&gt; ($row['articles_order'] &lt; $count),
++		'ORDER_UP'			=&gt; ($row['articles_order'] &gt; 1),
++
++		'LINK_ORDER_UP' 	=&gt; generate_link('articles&amp;mode=order&amp;option=up&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'LINK_ORDER_TOP' 	=&gt; generate_link('articles&amp;mode=order&amp;option=top&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'LINK_ORDER_DOWN'	=&gt; generate_link('articles&amp;mode=order&amp;option=down&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++		'LINK_ORDER_BOTTOM'	=&gt; generate_link('articles&amp;mode=order&amp;option=bottom&amp;id='.$row['articles_id'], array('admin' =&gt; true)),
++	));
++}
++
++$_CLASS['core_template']-&gt;assign_array(array(
++	'LINK_ADD'			=&gt; generate_link('articles&amp;mode=add', array('admin' =&gt; true))
++));
++
++$_CLASS['core_db']-&gt;free_result($result);
++
++$_CLASS['core_display']-&gt;display(false, 'admin/articles/index.html');
++
++script_close();
++
++function articles_edit($id = false, $article = false, $error = false)
++{
++    global $_CLASS;
++
++	if ($id)
++	{
++		$result = $_CLASS['core_db']-&gt;query('SELECT * FROM ' . ARTICLES_TABLE . ' WHERE articles_id = ' . $id);
++		$article = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++		
++		if (!$article)
++		{
++			redirect(generate_link('articles', array('admin' =&gt; true)));
++		}
++		
++		if (isset($_POST['submit']))
++		{
++			// need to re-validate data with the db type
++			articles_get_data($articles_post, $error);
++			$article = array_merge($article, $articles_post);
++		}
++
++		unset($articles_post);
++	}
++	
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'B_TITLE'			=&gt; $article['articles_title'],
++		'B_TEXT'			=&gt; $article['articles_text'],
++		'B_INTRO'			=&gt; $article['articles_intro'],
++		'B_NOTES'			=&gt; $article['articles_notes'],
++
++		'B_ACTIVE'			=&gt; $article['articles_status'],
++		'B_EXPIRES'			=&gt; is_numeric($article['articles_expires']) ? $_CLASS['core_user']-&gt;format_date($article['articles_expires'], 'M d, Y h:i a') : $article['articles_expires'],
++		'B_ERROR'			=&gt; $error,
++		'B_STARTS'			=&gt; is_numeric($article['articles_starts']) ? $_CLASS['core_user']-&gt;format_date($article['articles_starts'], 'M d, Y h:i a') : $article['articles_starts'],
++		'B_DELETE_LINK'		=&gt; ($id) ? generate_link('articles&amp;mode=delete&amp;id='.$id, array('admin' =&gt; true)) : false,
++		'B_ACTION'			=&gt; generate_link('articles&amp;mode=save'.(($id) ? '&amp;id='.$id : ''), array('admin' =&gt; true)),
++		'B_CURRENT_TIME'=&gt; $_CLASS['core_user']-&gt;format_date($_CLASS['core_user']-&gt;time)
++	));
++	
++	$_CLASS['core_template']-&gt;display('admin/articles/edit.html');
++}
++
++function articles_get_data(&amp;$data, &amp;$error)
++{
++	global $_CLASS;
++	
++	$error = '';
++	$data = array();
++
++	if (!isset($_POST['submit']))
++	{
++		return;
++	}
++
++	$data['articles_title'] = get_variable('title', 'POST', '');
++	$data['articles_text'] = get_variable('text', 'POST', '');
++
++	foreach ($data as $field =&gt; $value)
++	{
++		if (!$value)
++		{
++			$error .= $_CLASS['core_user']-&gt;get_lang('ERROR_'.$field).'&lt;br /&gt;';
++		}
++	}
++
++	$data['articles_intro'] = get_variable('intro', 'POST', '');
++	$data['articles_notes'] = get_variable('notes', 'POST', '');
++
++	$data['articles_status']	= (get_variable('active', 'POST', STATUS_DISABLED, 'int') === STATUS_DISABLED) ? STATUS_DISABLED : STATUS_ACTIVE;
++	$data['articles_expires']	= get_variable('expires', 'POST', 0);
++	$data['articles_starts']	= get_variable('starts', 'POST', '');
++
++	$start = $expires = '';
++
++	if ($data['articles_starts'])
++	{
++		$start = strtotime($data['articles_starts']);
++
++		if (!$start || $start == -1)
++		{
++			$error .= $_CLASS['core_user']-&gt;lang['ERROR_START_TIME'].'&lt;br /&gt;';
++		}
++	}
++
++	if ($data['articles_expires'])
++	{
++		$expires = strtotime($data['articles_expires']);
++
++		if (!$expires || $expires == -1)
++		{
++			$error .= $_CLASS['core_user']-&gt;lang['ERROR_END_TIME'].'&lt;br /&gt;';
++		}
++	}
++	
++	if (!$error)
++	{
++		$data['articles_starts'] = ($start) ? $_CLASS['core_user']-&gt;time_convert($start, 'gmt') : 0;
++		$data['articles_expires'] = ($expires) ? $_CLASS['core_user']-&gt;time_convert($expires, 'gmt') : 0;
++	}
++}
++
++function articles_save($id = false)
++{
++    global $_CLASS;
++    
++	if ($id)
++	{
++		$result = $_CLASS['core_db']-&gt;query('SELECT articles_id FROM ' . ARTICLES_TABLE . ' WHERE articles_id = '. $id);
++		$articles = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		if (!$articles)
++		{
++			redirect(generate_link('articles', array('admin' =&gt; true)));
++		}
++
++		// need to validate data with the db type
++		articles_get_data($data, $error);
++
++		if ($error)
++		{
++			return articles_edit($id, $data, $error);
++		}
++
++		$sql = 'UPDATE ' . ARTICLES_TABLE . ' SET ' . $_CLASS['core_db']-&gt;sql_build_array('UPDATE', $data) .'  WHERE articles_id = '.$id;
++
++		$_CLASS['core_db']-&gt;query($sql);
++	}
++	else
++	{
++		articles_get_data($data, $error);
++
++		if ($error)
++		{
++			return articles_edit(false, $data, $error);
++		}
++
++		$result = $_CLASS['core_db']-&gt;query('SELECT MAX(articles_order) as articles_order FROM ' . ARTICLES_TABLE);
++		list($max_order) = $_CLASS['core_db']-&gt;fetch_row_num($result);
++		$_CLASS['core_db']-&gt;free_result($result);
++
++		$data['articles_order'] = (int) $max_order + 1;
++		$data['articles_posted'] = (int) $_CLASS['core_user']-&gt;time;
++		$data['articles_type'] = 1;
++
++		$data['poster_id'] = $_CLASS['core_user']-&gt;data['user_id'];
++		$data['poster_ip'] = $_CLASS['core_user']-&gt;ip;
++		$data['poster_name'] = $_CLASS['core_user']-&gt;data['username'];
++
++		$_CLASS['core_db']-&gt;query('INSERT INTO ' . ARTICLES_TABLE . ' ' . $_CLASS['core_db']-&gt;sql_build_array('INSERT', $data));
++	}
++
++	$_CLASS['core_display']-&gt;meta_refresh('3', generate_link('articles', array('admin' =&gt; true)));
++	trigger_error(sprintf($_CLASS['core_user']-&gt;lang['SAVED'], generate_link('articles', array('admin' =&gt; true))));	
++}
++
++?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/modules/articles/index.php
+===================================================================
+--- cms/trunk/modules/articles/index.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/modules/articles/index.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -78,10 +78,11 @@
+ }
+ 
+ $start = get_variable('start', 'GET', false, 'int');
++$collapable_holding = array();
++$expire_updated = false;
+ $limit = 10;
+-$collapable_holding = array();
+ 
+-$sql = 'SELECT * FROM '.  ARTICLES_TABLE .' WHERE articles_status = ' . STATUS_ACTIVE . ' ORDER BY articles_order DESC';
++$sql = 'SELECT * FROM '.  ARTICLES_TABLE .' WHERE articles_status = ' . STATUS_ACTIVE . ' ORDER BY articles_order ASC';
+ $result = $_CLASS['core_db']-&gt;query_limit($sql, $limit, $start);
+ 
+ while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+@@ -91,6 +92,19 @@
+ 	{
+ 		continue;
+ 	}
++	
++	if ($row['articles_expires'] &amp;&amp; !$expire_updated &amp;&amp; ($_CLASS['core_user']-&gt;time &gt; $row['articles_expires']))
++	{
++		$_CLASS['core_db']-&gt;query('UPDATE '.ARTICLES_TABLE.' SET articles_status = ' . STATUS_DISABLED . ' WHERE articles_expires &gt; 0 AND articles_expires &lt;= ' . $_CLASS['core_user']-&gt;time);
++		$expire_updated = true;
++
++		continue;
++	}
++
++	if ($row['articles_starts'] &amp;&amp; ($row['articles_starts'] &gt; $_CLASS['core_user']-&gt;time))
++	{
++		continue;
++	}
+ 
+ 	$_CLASS['core_template']-&gt;assign_vars_array('articles', array(
+ 		'poster' 		=&gt; ($row['poster_name']) ? $row['poster_name'] : $_CLASS['core_user']-&gt;get_lang('ANONYMOUS'),
+
+Modified: cms/trunk/modules/articles/install.php
+===================================================================
+--- cms/trunk/modules/articles/install.php	2005-09-08 04:34:17 UTC (rev 103)
++++ cms/trunk/modules/articles/install.php	2005-09-09 01:19:33 UTC (rev 104)
+@@ -46,13 +46,13 @@
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_id', array('max' =&gt; 16000000, 'auto_increment' =&gt; true));
+ 		$_CLASS['core_db']-&gt;add_table_field_char('articles_title', 80);
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_posted', array('max' =&gt; 200000000));
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_start', array('max' =&gt; 200000000, 'null' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_starts', array('max' =&gt; 200000000, 'null' =&gt; true));
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_expires', array('max' =&gt; 200000000, 'null' =&gt; true));
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_intro', 60000, true);
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_text', 10000000);
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_notes', 60000, true);
+ 
+-		$_CLASS['core_db']-&gt;add_table_field_int('articles_order', array('max' =&gt; 16000000, 'null' =&gt; true));
++		$_CLASS['core_db']-&gt;add_table_field_int('articles_order', array('max' =&gt; 16000000));
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_type', array('max' =&gt; 10));
+ 		$_CLASS['core_db']-&gt;add_table_field_int('articles_status', array('max' =&gt; 10));
+ 		$_CLASS['core_db']-&gt;add_table_field_text('articles_auth', 60000, true);
+@@ -76,6 +76,7 @@
+ 			'articles_title'	=&gt; 'Welcome Post',
+ 			'articles_posted'	=&gt; (int) $_CLASS['core_user']-&gt;time,
+ 			'articles_text'		=&gt; '&lt;p align=&quot;center&quot;&gt;I need something snappy here&lt;/p&gt;',
++			'articles_order'	=&gt; 1,
+ 			'articles_type'		=&gt; 1,
+ 			'articles_status'	=&gt; STATUS_ACTIVE,
+ 			'poster_id'			=&gt; 0,
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000024.html">[Viperals-svncheckins] r101 - / cms cms/trunk
+</A></li>
+	<LI>Next message: <A HREF="000026.html">[Viperals-svncheckins] r105 - in cms/branches/1.0alpha1: includes/templates/admin includes/templates/admin/articles modules/articles modules/articles/admin
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#25">[ date ]</a>
+              <a href="thread.html#25">[ thread ]</a>
+              <a href="subject.html#25">[ subject ]</a>
+              <a href="author.html#25">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

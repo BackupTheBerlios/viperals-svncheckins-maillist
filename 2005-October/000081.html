@@ -1,0 +1,562 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r161 - in modules: . google_search google_search/includes google_search/includes/templates google_search/includes/templates/modules google_search/includes/templates/modules/google_search google_search/javascript google_search/javascript/google_search google_search/modules google_search/modules/google_search
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r161%20-%20in%20modules%3A%20.%20google_search%20google_search/includes%20google_search/includes/templates%20google_search/includes/templates/modules%20google_search/includes/templates/modules/google_search%20google_search/javascript%20google_search/javascript/google_search%20google_search/modules%20google_search/modules/google_search&In-Reply-To=%3C200510061749.j96Hnf3X006580%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000080.html">
+   <LINK REL="Next"  HREF="000082.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r161 - in modules: . google_search google_search/includes google_search/includes/templates google_search/includes/templates/modules google_search/includes/templates/modules/google_search google_search/javascript google_search/javascript/google_search google_search/modules google_search/modules/google_search</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r161%20-%20in%20modules%3A%20.%20google_search%20google_search/includes%20google_search/includes/templates%20google_search/includes/templates/modules%20google_search/includes/templates/modules/google_search%20google_search/javascript%20google_search/javascript/google_search%20google_search/modules%20google_search/modules/google_search&In-Reply-To=%3C200510061749.j96Hnf3X006580%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r161 - in modules: . google_search google_search/includes google_search/includes/templates google_search/includes/templates/modules google_search/includes/templates/modules/google_search google_search/javascript google_search/javascript/google_search google_search/modules google_search/modules/google_search">viperal at berlios.de
+       </A><BR>
+    <I>Thu Oct  6 19:49:41 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000080.html">[Viperals-svncheckins] r160 - in cms/branches/1.0alpha2: . includes/db
+</A></li>
+        <LI>Next message: <A HREF="000082.html">[Viperals-svncheckins] r162 - in cms/trunk: . blocks images includes includes/display includes/forums includes/forums/admin includes/forums/mcp includes/templates includes/templates/installer includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List install modules/Control_Panel/ucp modules/Forums themes/viperal/style
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-10-06 19:49:39 +0200 (Thu, 06 Oct 2005)
+New Revision: 161
+
+Added:
+   modules/google_search/
+   modules/google_search/includes/
+   modules/google_search/includes/templates/
+   modules/google_search/includes/templates/modules/
+   modules/google_search/includes/templates/modules/google_search/
+   modules/google_search/includes/templates/modules/google_search/index.html
+   modules/google_search/includes/templates/modules/google_search/results.html
+   modules/google_search/javascript/
+   modules/google_search/javascript/google_search/
+   modules/google_search/javascript/google_search/google_search.js
+   modules/google_search/modules/
+   modules/google_search/modules/google_search/
+   modules/google_search/modules/google_search/ajax.php
+   modules/google_search/modules/google_search/configurator.php
+   modules/google_search/modules/google_search/index.php
+Log:
+
+
+Added: modules/google_search/includes/templates/modules/google_search/index.html
+===================================================================
+--- modules/google_search/includes/templates/modules/google_search/index.html	2005-10-01 22:45:03 UTC (rev 160)
++++ modules/google_search/includes/templates/modules/google_search/index.html	2005-10-06 17:49:39 UTC (rev 161)
+@@ -0,0 +1,52 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;script type=&quot;text/javascript&quot; src=&quot;javascript/google_search/google_search.js&quot;&gt;&lt;/script&gt;
++
++{ $THEME_TABLE_OPEN }
++
++&lt;form method=&quot;post&quot; onsubmit=&quot;return google_search();&quot; action=&quot;{ $GS_ACTION }&quot;&gt;
++	&lt;table  id=&quot;google_form&quot; class=&quot;tablebg&quot; width=&quot;100%&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot;&gt;
++		&lt;tbody&gt;
++			&lt;tr&gt; 
++				&lt;th&gt;{ $L_SEARCH_QUERY }&lt;/th&gt;
++			&lt;/tr&gt;
++			&lt;tr&gt;
++				&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;
++				
++				&lt;input id=&quot;query&quot; name=&quot;query&quot; size=&quot;15&quot; maxlength=&quot;200&quot; value=&quot;&quot; type=&quot;text&quot; /&gt; 
++				&lt;select id=&quot;search_type&quot; name=&quot;search_type&quot;&gt;
++					&lt;option value=&quot;1&quot; select=&quot;selected&quot;&gt;This Site&lt;/option&gt;
++					&lt;option value=&quot;2&quot;&gt;Web&lt;/option&gt;
++				&lt;/select&gt;
++				
++				&lt;input class=&quot;button&quot; name=&quot;submit&quot; value=&quot;Search&quot; type=&quot;submit&quot; /&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++		&lt;/tbody&gt;
++	&lt;/table&gt;
++&lt;/form&gt;
++
++&lt;div id=&quot;google_results&quot;&gt;
++
++&lt;!-- if { $google_results } --&gt;
++	&lt;!-- INCLUDE modules/google_search/results.html --&gt;
++&lt;!-- ENDIF --&gt;
++
++&lt;/div&gt;
++
++&lt;div id=&quot;google_progress_bar&quot; style=&quot;display: none&quot;&gt;
++	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot;&gt;
++		&lt;tbody&gt;
++			&lt;tr&gt;
++				&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;
++					&lt;b&gt;Search In Progress please Wait&lt;/b&gt; &lt;br/&gt;
++					&lt;img src=&quot;images/progress_bar.gif&quot; /&gt;
++				&lt;/td&gt;
++			&lt;/tr&gt;
++		&lt;/tbody&gt;
++	&lt;/table&gt;
++&lt;/div&gt;
++
++{ $THEME_TABLE_CLOSE }
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Added: modules/google_search/includes/templates/modules/google_search/results.html
+===================================================================
+--- modules/google_search/includes/templates/modules/google_search/results.html	2005-10-01 22:45:03 UTC (rev 160)
++++ modules/google_search/includes/templates/modules/google_search/results.html	2005-10-06 17:49:39 UTC (rev 161)
+@@ -0,0 +1,58 @@
++&lt;br /&gt;
++
++&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot;&gt;
++	&lt;tbody&gt;
++		&lt;tr&gt; 
++			&lt;th colspan=&quot;2&quot;&gt;{ $L_SEARCH_RESULTS }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;!-- IF { $google_pagination } || { $spelling_suggestion } --&gt;
++		&lt;tr class=&quot;row2&quot;&gt;
++			&lt;td style=&quot;padding: 5px;&quot; valign=&quot;middle&quot; colspan=&quot;2&quot;&gt;
++				&lt;table width=&quot;100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
++					&lt;tbody&gt;
++						&lt;tr&gt;
++				&lt;!-- IF { $spelling_suggestion } --&gt;&lt;td&gt;&lt;font color=&quot;#cc0000&quot;&gt;Did you mean: &lt;/font&gt;&lt;a href=&quot;{ $link_spelling_suggestion } &quot;&gt;{ $spelling_suggestion }&lt;/a&gt;&lt;/td&gt;&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $google_pagination } --&gt;&lt;td align=&quot;right&quot;&gt;&lt;div style=&quot;padding-right: 5px; text-align: right;&quot;&gt;{ $google_pagination }&lt;/div&gt;&lt;/td&gt;&lt;!-- ENDIF --&gt;
++						&lt;/tr&gt;
++					&lt;/tbody&gt;
++				&lt;/table&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;2&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOP $google_result --&gt;
++		&lt;tr&gt;
++			&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;
++				&lt;b&gt;{ $google_result:num }&lt;/b&gt;
++			&lt;/td&gt;
++			&lt;td class=&quot;row1&quot;&gt;
++				&lt;a href=&quot;{ $google_result:url } &quot;&gt;&lt;b&gt;{ $google_result:title }&lt;/b&gt;&lt;/a&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td colspan=&quot;2&quot; class=&quot;row1&quot;&gt;
++				&lt;p&gt;{ $google_result:snippet }&lt;/p&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;spacer&quot; colspan=&quot;2&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- LOOPELSE --&gt;
++		&lt;tr class=&quot;row2&quot;&gt;
++			&lt;td align=&quot;center&quot; colspan=&quot;2&quot;&gt;
++				{ $L_RESULTS_FOUND }
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDLOOP --&gt;
++
++		&lt;!-- IF { $google_pagination } --&gt;
++		&lt;tr class=&quot;row2&quot;&gt;
++			&lt;td style=&quot;padding: 5px;&quot; valign=&quot;middle&quot; colspan=&quot;2&quot;&gt;
++				&lt;div style=&quot;padding-right: 5px; text-align: right;&quot;&gt;{ $google_pagination }&lt;/div&gt;
++			&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++	&lt;/tbody&gt;
++&lt;/table&gt;
+\ No newline at end of file
+
+Added: modules/google_search/javascript/google_search/google_search.js
+===================================================================
+--- modules/google_search/javascript/google_search/google_search.js	2005-10-01 22:45:03 UTC (rev 160)
++++ modules/google_search/javascript/google_search/google_search.js	2005-10-06 17:49:39 UTC (rev 161)
+@@ -0,0 +1,43 @@
++// By Ryan Marshall ( <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A> )
++
++function google_search()
++{
++	ajax = new core_ajax();
++
++	if (!ajax)
++	{
++		return true;
++	}
++
++	var query = document.getElementById('query');
++	var search_type = document.getElementById('search_type');
++
++	var google_form = document.getElementById('google_form');
++	var progress_bar = document.getElementById('google_progress_bar');
++	var google_results = document.getElementById('google_results');
++
++	var onreadystatechange = function()
++	{
++		if (ajax.state_ready() &amp;&amp; ajax.responseText())
++		{
++			var area = document.getElementById('google_results');
++			area.innerHTML = ajax.responseText();
++
++			google_form.style.display = '';
++			google_results.style.display = '';
++			progress_bar.style.display = 'none';
++			//query.value = '';
++		}
++	}
++
++	ajax.onreadystatechange(onreadystatechange);
++
++	google_results.style.display = 'none';
++	google_form.style.display = 'none';
++	progress_bar.style.display = '';
++
++//alert(search_type.options[search_type.selectedIndex].value);
++	ajax.send('ajax.php?mod=google_search', '&amp;query=' + query.value + '&amp;search_type=' + search_type.options[search_type.selectedIndex].value);
++
++	return false;
++}
+\ No newline at end of file
+
+Added: modules/google_search/modules/google_search/ajax.php
+===================================================================
+--- modules/google_search/modules/google_search/ajax.php	2005-10-01 22:45:03 UTC (rev 160)
++++ modules/google_search/modules/google_search/ajax.php	2005-10-06 17:49:39 UTC (rev 161)
+@@ -0,0 +1,111 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++header('Content-Type: text/html');
++
++$_CLASS['core_user']-&gt;user_setup();
++
++require_once(SITE_FILE_ROOT.'includes/nusoap/nusoap.php');
++
++$google_license_key = &quot;dJ5XAtRQFHIlbfutrovVj3TizF1Q2TXP&quot;;
++
++$query = get_variable('query', 'POST');
++$search_type = get_variable('search_type', 'POST', 0, 'int');
++
++$limit = 10;
++
++if (!$query)
++{
++	script_close();
++}
++
++$query_command = $query;
++
++if ($search_type === 1)
++{
++	$query_command .= ' site:viperals.berlios.de';
++}
++
++$params = array(
++	'key' 		=&gt; (string) $google_license_key,
++	'q' 		=&gt; (string) $query_command, //'viperal site:cpgnuke.com',
++	'start'		=&gt; (int) 0,	
++	'maxResults' =&gt; (int) $limit,
++	'filter' 	=&gt; (boolean) true,
++	'restricts'	=&gt; (string)'', //'lang_en'
++	'safeSearch'=&gt; (boolean) false,
++	'lr'		=&gt; (string) '',	
++
++	'ie'		=&gt; 'UTF-8', // No longer used
++	'oe'		=&gt; 'UTF-8',	// No longer used
++);		
++
++$client = new soapclient('<A HREF="http://api.google.com/search/beta2">http://api.google.com/search/beta2</A>');
++$result = $client-&gt;call('doGoogleSearch', $params, 'urn:GoogleSearch');
++
++if ($client-&gt;fault || $client-&gt;getError())
++{
++	script_close();
++}
++
++$pagination = generate_pagination('google_search&amp;query='.urlencode($query).'&amp;search_type='.$search_type, $result['estimatedTotalResultsCount'], $limit, 0);
++$count = count($result['resultElements']);
++$num = 1;
++
++for ($i = 0; $i &lt; $count; $i++)
++{
++	$_CLASS['core_template']-&gt;assign_vars_array('google_result', array(
++		'num' 			=&gt; $num,
++		'url' 			=&gt; $result['resultElements'][$i]['URL'],
++		'title'			=&gt; $result['resultElements'][$i]['title'],
++		'snippet'		=&gt; $result['resultElements'][$i]['snippet'],
++	));
++
++	$num++;
++}
++unset($result);
++
++$params = array(
++	'key' 		=&gt; (string) $google_license_key,
++	'phrase' 	=&gt; (string) $query,
++);
++
++$spelling_suggestion = $client-&gt;call('doSpellingSuggestion', $params, 'urn:GoogleSearch');
++
++if (is_array($spelling_suggestion))
++{
++	$spelling_suggestion = false;
++}
++
++$_CLASS['core_template']-&gt;assign_array(array(
++	'spelling_suggestion'		=&gt; $spelling_suggestion,
++	'link_spelling_suggestion'	=&gt; ($spelling_suggestion) ? generate_link('google_search&amp;query='.urlencode($spelling_suggestion).'&amp;search_type='.$search_type) : '',
++	'google_pagination' 		=&gt; $pagination['formated'],
++	'google_pagination_array'	=&gt; $pagination['array']
++));
++
++$_CLASS['core_template']-&gt;display('modules/google_search/results.html');
++
++script_close();
++
++?&gt;
+\ No newline at end of file
+
+Added: modules/google_search/modules/google_search/configurator.php
+===================================================================
+--- modules/google_search/modules/google_search/configurator.php	2005-10-01 22:45:03 UTC (rev 160)
++++ modules/google_search/modules/google_search/configurator.php	2005-10-06 17:49:39 UTC (rev 161)
+@@ -0,0 +1,44 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++class google_search_configurator
++{
++	var $error = array();
++	
++	function install()
++	{
++		return true;
++	}
++
++	function uninstall()
++	{
++		return true;
++	}
++}
++
++?&gt;
+\ No newline at end of file
+
+Added: modules/google_search/modules/google_search/index.php
+===================================================================
+--- modules/google_search/modules/google_search/index.php	2005-10-01 22:45:03 UTC (rev 160)
++++ modules/google_search/modules/google_search/index.php	2005-10-06 17:49:39 UTC (rev 161)
+@@ -0,0 +1,128 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++$_CLASS['core_user']-&gt;user_setup();
++
++require_once(SITE_FILE_ROOT.'includes/nusoap/nusoap.php');
++
++$query = get_variable('query', 'POST');
++
++if (!$query)
++{
++	$query = urldecode(get_variable('query', 'GET'));
++}
++
++if (!$query)
++{
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'GS_ACTION'					=&gt; generate_link('google_search'),
++		'google_results'			=&gt; false,
++	));
++
++	$_CLASS['core_display']-&gt;display(false, 'modules/google_search/index.html');
++}
++
++$google_license_key = &quot;dJ5XAtRQFHIlbfutrovVj3TizF1Q2TXP&quot;;
++
++$search_type = get_variable('search_type', 'REQUEST', 0, 'int');
++$start = get_variable('start', 'GET', 0, 'int');
++$query_command = $query;
++$limit = 10;
++
++if ($search_type === 1)
++{
++	$query_command .= ' site:viperals.berlios.de';
++}
++
++$params = array(
++	'key' 		=&gt; (string) $google_license_key,
++	'q' 		=&gt; (string) $query_command,
++	'start'		=&gt; (int) $start,	
++	'maxResults' =&gt; (int) $limit,
++	'filter' 	=&gt; (boolean) true,
++	'restricts'	=&gt; (string)'', //'lang_en'
++	'safeSearch'=&gt; (boolean) false,
++	'lr'		=&gt; (string) '',	
++
++	'ie'		=&gt; 'UTF-8', // No longer used
++	'oe'		=&gt; 'UTF-8',	// No longer used
++);		
++
++$client = new soapclient('<A HREF="http://api.google.com/search/beta2">http://api.google.com/search/beta2</A>');
++$result = $client-&gt;call('doGoogleSearch', $params, 'urn:GoogleSearch');
++
++if ($client-&gt;fault || $client-&gt;getError())
++{
++	//$err = $client-&gt;getError();
++	//print_r($result);
++	$_CLASS['core_template']-&gt;assign_array(array(
++		'ERROR'						=&gt; '',
++		'GS_ACTION'					=&gt; generate_link('google_search'),
++		'google_results'			=&gt; false,
++	));
++
++	$_CLASS['core_display']-&gt;display(false, 'modules/google_search/index.html');
++}
++
++$pagination = generate_pagination('google_search&amp;query='.urlencode($query).'&amp;search_type='.$search_type, $result['estimatedTotalResultsCount'], $limit, $start);
++$count = count($result['resultElements']);
++$num = $start + 1;
++
++for ($i = 0; $i &lt; $count; $i++)
++{
++	$_CLASS['core_template']-&gt;assign_vars_array('google_result', array(
++		'num' 			=&gt; $num,
++		'url' 			=&gt; $result['resultElements'][$i]['URL'],
++		'title'			=&gt; $result['resultElements'][$i]['title'],
++		'snippet'		=&gt; $result['resultElements'][$i]['snippet'],
++	));
++
++	$num++;
++}
++
++unset($result);
++
++$params = array(
++	'key' 		=&gt; (string) $google_license_key,
++	'phrase' 	=&gt; (string) $query,
++);
++
++$spelling_suggestion = $client-&gt;call('doSpellingSuggestion', $params, 'urn:GoogleSearch');
++
++if (is_array($spelling_suggestion))
++{
++	$spelling_suggestion = false;
++}
++
++$_CLASS['core_template']-&gt;assign_array(array(
++	'GS_ACTION'					=&gt; generate_link('google_search'),
++	'google_results'			=&gt; true,
++	'spelling_suggestion'		=&gt; $spelling_suggestion,
++	'link_spelling_suggestion'	=&gt; ($spelling_suggestion) ? generate_link('google_search&amp;query='.urlencode($spelling_suggestion).'&amp;search_type='.$search_type) : '',
++	'google_pagination' 		=&gt; $pagination['formated'],
++	'google_pagination_array'	=&gt; $pagination['array']
++));
++
++$_CLASS['core_display']-&gt;display(false, 'modules/google_search/index.html');
++
++?&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000080.html">[Viperals-svncheckins] r160 - in cms/branches/1.0alpha2: . includes/db
+</A></li>
+	<LI>Next message: <A HREF="000082.html">[Viperals-svncheckins] r162 - in cms/trunk: . blocks images includes includes/display includes/forums includes/forums/admin includes/forums/mcp includes/templates includes/templates/installer includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List install modules/Control_Panel/ucp modules/Forums themes/viperal/style
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

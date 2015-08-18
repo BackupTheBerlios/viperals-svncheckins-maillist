@@ -1,0 +1,1010 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r182 - in cms/trunk/includes: db	templates/modules/forums templates/modules/members_list
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r182%20-%20in%20cms/trunk/includes%3A%20db%0A%09templates/modules/forums%20templates/modules/members_list&In-Reply-To=%3C200608062032.k76KW0PM000612%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000100.html">
+   <LINK REL="Next"  HREF="000102.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r182 - in cms/trunk/includes: db	templates/modules/forums templates/modules/members_list</H1>
+    <B>viperal at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r182%20-%20in%20cms/trunk/includes%3A%20db%0A%09templates/modules/forums%20templates/modules/members_list&In-Reply-To=%3C200608062032.k76KW0PM000612%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r182 - in cms/trunk/includes: db	templates/modules/forums templates/modules/members_list">viperal at mail.berlios.de
+       </A><BR>
+    <I>Sun Aug  6 22:32:00 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000100.html">[Viperals-svncheckins] r181 - cms/trunk/includes/db
+</A></li>
+        <LI>Next message: <A HREF="000102.html">[Viperals-svncheckins] r183 - in cms/trunk: includes includes/db	includes/forums includes/forums/mcp	includes/templates/modules/forums modules/control_panel	modules/control_panel/modules modules/forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#101">[ date ]</a>
+              <a href="thread.html#101">[ thread ]</a>
+              <a href="subject.html#101">[ subject ]</a>
+              <a href="author.html#101">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2006-08-06 22:31:57 +0200 (Sun, 06 Aug 2006)
+New Revision: 182
+
+Added:
+   cms/trunk/includes/templates/modules/forums/mcp_notes_front.html
+   cms/trunk/includes/templates/modules/forums/mcp_notes_user.html
+   cms/trunk/includes/templates/modules/forums/mcp_whois.html
+Modified:
+   cms/trunk/includes/db/mysqli.php
+   cms/trunk/includes/templates/modules/forums/faq_body.html
+   cms/trunk/includes/templates/modules/forums/index_body.html
+   cms/trunk/includes/templates/modules/forums/mcp_forum.html
+   cms/trunk/includes/templates/modules/forums/mcp_header.html
+   cms/trunk/includes/templates/modules/forums/mcp_move.html
+   cms/trunk/includes/templates/modules/forums/mcp_post.html
+   cms/trunk/includes/templates/modules/forums/mcp_topic.html
+   cms/trunk/includes/templates/modules/forums/viewforum_subforum.html
+   cms/trunk/includes/templates/modules/members_list/memberlist_body.html
+   cms/trunk/includes/templates/modules/members_list/memberlist_header.html
+   cms/trunk/includes/templates/modules/members_list/memberlist_search.html
+Log:
+
+
+Modified: cms/trunk/includes/db/mysqli.php
+===================================================================
+--- cms/trunk/includes/db/mysqli.php	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/db/mysqli.php	2006-08-06 20:31:57 UTC (rev 182)
+@@ -236,7 +236,7 @@
+ 
+ 		$values = $this-&gt;sql_build_array($query_type, $array);
+ 
+-		if (!$value)
++		if (!$values)
+ 		{
+ 			return false;
+ 		}
+
+Modified: cms/trunk/includes/templates/modules/forums/faq_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/faq_body.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/faq_body.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -57,7 +57,7 @@
+ &lt;/table&gt;
+ 
+ &lt;br clear=&quot;all&quot; /&gt;
+-&lt;!-- ENDLOOP --&gt;
++&lt;!-- ENDLOOP $faq_block --&gt;
+ 
+ &lt;!-- IF { $DISPLAY_STYLESHEET_LINK } --&gt;
+ 	&lt;!-- INCLUDE modules/Forums/simple_footer.html --&gt;
+
+Modified: cms/trunk/includes/templates/modules/forums/index_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/index_body.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/index_body.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -5,6 +5,14 @@
+ 
+ &lt;!-- INCLUDE modules/forums/overall_header.html --&gt;
+ 
++&lt;!-- IF { $U_MCP } --&gt;
++	&lt;div id=&quot;pageheader&quot;&gt;
++		&lt;p class=&quot;linkmcp&quot;&gt;[ &lt;a href=&quot;{ $U_MCP }&quot;&gt;{ $L_MCP }&lt;/a&gt; ]&lt;/p&gt;
++	&lt;/div&gt;
++
++	&lt;br clear=&quot;all&quot; /&gt;&lt;br /&gt;
++&lt;!-- ENDIF --&gt;
++
+ &lt;table class=&quot;tablebg&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
+ 	&lt;tr&gt;
+ 		&lt;td class=&quot;cat&quot; colspan=&quot;5&quot; align=&quot;right&quot;&gt;&lt;a class=&quot;nav&quot; href=&quot;{ $U_MARK_FORUMS }&quot;&gt;{ $L_MARK_FORUMS_READ }&lt;/a&gt;&nbsp;&lt;/td&gt;
+@@ -52,17 +60,17 @@
+ 		&lt;td class=&quot;row2&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;gensmall&quot;&gt;{ $forumrow:POSTS }&lt;/p&gt;&lt;/td&gt;
+ 		&lt;td class=&quot;row2&quot; align=&quot;center&quot; nowrap=&quot;nowrap&quot;&gt;
+ 			&lt;!-- IF { $forumrow:LAST_POST_TIME } --&gt;
+-				&lt;p class=&quot;gensmall&quot;&gt;{ $forumrow:LAST_POST_TIME }&lt;/p&gt;
+-				&lt;p class=&quot;gensmall&quot;&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;{ $forumrow:LAST_POST_TIME }&lt;/p&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;
+ 				&lt;!-- IF { $forumrow:U_LAST_POSTER } --&gt;
+ 					&lt;a href=&quot;{ $forumrow:U_LAST_POSTER }&quot;&gt;{ $forumrow:LAST_POSTER }&lt;/a&gt;
+ 				&lt;!-- ELSE --&gt;
+ 					{ $forumrow:LAST_POSTER }
+ 				&lt;!-- ENDIF --&gt;
+-				&lt;a href=&quot;{ $forumrow:U_LAST_POST }&quot;&gt;{ $forumrow:LAST_POST_IMG }&lt;/a&gt;
++				&lt;a href=&quot;{ $forumrow:U_LAST_POST }&quot;&gt;{ $LAST_POST_IMG }&lt;/a&gt;
+ 				&lt;/p&gt;
+ 			&lt;!-- ELSE --&gt;
+-				&lt;p class=&quot;gensmall&quot;&gt;{ $L_NO_POSTS }&lt;/p&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;{ $L_NO_POSTS }&lt;/p&gt;
+ 			&lt;!-- ENDIF --&gt;
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_forum.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_forum.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_forum.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -2,9 +2,13 @@
+ 
+ &lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
+ 
+-&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $S_MCP_ACTION }&quot;&gt;&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++&lt;!-- IF { $U_VIEW_FORUM_LOGS } --&gt;&lt;a href=&quot;{ $U_VIEW_FORUM_LOGS }&quot;&gt;{ $L_VIEW_FORUM_LOGS }&lt;/a&gt;&lt;!-- ENDIF --&gt;
++
++&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $S_MCP_ACTION }&quot;&gt;
++
++&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;cat&quot; colspan=&quot;6&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_DISPLAY_TOPICS }:&lt;/span&gt; { $S_SELECT_SORT_DAYS }&nbsp;&lt;span class=&quot;gensmall&quot;&gt;{ $L_SORT_BY }&lt;/span&gt; { $S_SELECT_SORT_KEY } { $S_SELECT_SORT_DIR }&nbsp;&lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;sort&quot; value=&quot;{ $L_GO }&quot; /&gt;&lt;/span&gt;&lt;/td&gt;
++		&lt;td class=&quot;cat&quot; colspan=&quot;6&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_DISPLAY_TOPICS }:&lt;/span&gt; { $S_SELECT_SORT_DAYS }&nbsp;&lt;span class=&quot;gensmall&quot;&gt;{ $L_SORT_BY }&lt;/span&gt; { $S_SELECT_SORT_KEY } { $S_SELECT_SORT_DIR }&nbsp;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;sort&quot; value=&quot;{ $L_GO }&quot; /&gt;&lt;/span&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;tr&gt;
+ 		&lt;th width=&quot;4%&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;&lt;/th&gt;
+@@ -25,17 +29,17 @@
+ 			&lt;!-- IF { $topicrow:S_SELECT_TOPIC } --&gt;
+ 				&lt;span class=&quot;genmed&quot;&gt;[ &lt;a href=&quot;{ $topicrow:U_SELECT_TOPIC }&quot;&gt;{ $L_SELECT }&lt;/a&gt; ]&nbsp;&lt;/span&gt;
+ 			&lt;!-- ENDIF --&gt;
+-			&lt;!-- IF { $topicrow:S_TOPIC_UNAPPROVED } --&gt;
+-				&lt;a href=&quot;{ $topicrow:U_MCP_QUEUE }&quot;&gt;{ $UNAPPROVED_IMG }&lt;/a&gt;&nbsp;
++			&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt;
++			&lt;!-- IF { $topicrow:S_TOPIC_UNAPPROVED } || { $topicrow:S_POSTS_UNAPPROVED } --&gt;
++				&lt;a href=&quot;{ $topicrow:U_MCP_QUEUE }&quot;&gt;{ $topicrow:UNAPPROVED_IMG }&lt;/a&gt;&nbsp;
+ 			&lt;!-- ENDIF --&gt;
+ 			&lt;!-- IF { $topicrow:S_TOPIC_REPORTED } --&gt;
+ 				&lt;a href=&quot;{ $topicrow:U_MCP_REPORT }&quot;&gt;{ $REPORTED_IMG }&lt;/a&gt;&nbsp;
+ 			&lt;!-- ENDIF --&gt;
+-			&lt;p class=&quot;topictitle&quot;&gt;{ $topicrow:NEWEST_POST_IMG } { $topicrow:ATTACH_ICON_IMG } &lt;a href=&quot;{ $topicrow:U_VIEW_TOPIC }&quot;&gt;{ $topicrow:TOPIC_TITLE }&lt;/a&gt;&lt;/p&gt;
+ 		&lt;/td&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;50&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:REPLIES }&lt;/p&gt;&lt;/td&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;120&quot; align=&quot;center&quot;&gt;&lt;p class=&quot;topicdetails&quot;&gt;{ $topicrow:LAST_POST_TIME }&lt;/p&gt;&lt;/td&gt;
+-		&lt;td class=&quot;row2&quot; align=&quot;center&quot;&gt;&lt;input type=&quot;checkbox&quot; name=&quot;topic_id_list[]&quot; value=&quot;{ $topicrow:TOPIC_ID }&quot; { $topicrow:S_TOPIC_CHECKED }/&gt;&lt;/td&gt;
++		&lt;td class=&quot;row2&quot; align=&quot;center&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;radio&quot; name=&quot;topic_id_list[]&quot; value=&quot;{ $topicrow:TOPIC_ID }&quot; { $topicrow:S_TOPIC_CHECKED }/&gt;&lt;/td&gt;
+ 
+ 	&lt;/tr&gt;
+ 	&lt;!-- LOOPELSE --&gt;
+@@ -63,8 +67,15 @@
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
++
+ &lt;/form&gt;
+ 
++&lt;table width=&quot;100%&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++	&lt;tr&gt;
++		&lt;td align=&quot;right&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;&lt;a href=&quot;javascript:marklist('mcp', 'topic_id_list', true);&quot;&gt;{ $L_MARK_ALL }&lt;/a&gt; :: &lt;a href=&quot;javascript:marklist('mcp', 'topic_id_list', false);&quot;&gt;{ $L_UNMARK_ALL }&lt;/a&gt;&lt;/b&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++&lt;/table&gt;
++
+ &lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
+ 
+ &lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_header.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_header.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_header.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -2,19 +2,45 @@
+ 
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; defer=&quot;defer&quot;&gt;
+ &lt;!--
+-function marklist(form_name, status)
+-{
+-	for (i = 0; i &lt; document.forms[form_name].length; i++)
+-	{
+-		document.forms[form_name].elements[i].checked = status;
+-	}
++function marklist(id, name, state)
++{
++	var parent = document.getElementById(id);
++	if (!parent)
++	{
++		eval('parent = document.' + id);
++	}
++
++	if (!parent)
++	{
++		return;
++	}
++
++	var rb = parent.getElementsByTagName('input');
++	
++	for (var r = 0; r &lt; rb.length; r++)
++	{
++		if (rb[r].name.substr(0, name.length) == name)
++		{
++			rb[r].checked = state;
++		}
++	}
+ }
+ //--&gt;
+ &lt;/script&gt;
+ 
+ &lt;!-- IF isset({ $TOPIC_TITLE }) || isset({ $FORUM_NAME }) --&gt;
+-&lt;h2&gt;&lt;!-- IF isset({ $TOPIC_TITLE }) --&gt;&lt;a class=&quot;titles&quot; href=&quot;{ $U_VIEWTOPIC }&quot;&gt;{ $TOPIC_TITLE }&lt;/a&gt;&lt;!-- ELSE --&gt;&lt;a class=&quot;titles&quot; href=&quot;{ $U_VIEW_FORUM }&quot; title=&quot;{ $FORUM_DESC }&quot;&gt;{ $FORUM_NAME }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/h2&gt;
+-&lt;br clear=&quot;all&quot; /&gt;
++	&lt;div id=&quot;pageheader&quot;&gt;
++		&lt;h2&gt;&lt;!-- IF isset({ $TOPIC_TITLE }) --&gt;&lt;a class=&quot;titles&quot; href=&quot;{ $U_VIEWTOPIC }&quot;&gt;{ $TOPIC_TITLE }&lt;/a&gt;&lt;!-- ELSE --&gt;&lt;a class=&quot;titles&quot; href=&quot;{ $U_VIEW_FORUM }&quot;&gt;{ $FORUM_NAME }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;/h2&gt;
++
++		&lt;!-- IF isset({ $MODERATORS }) --&gt;
++			&lt;p class=&quot;moderators&quot;&gt;{ $L_MODERATORS }: { $MODERATORS }&lt;/p&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;!-- IF isset({ $U_MCP }) --&gt;
++			&lt;p class=&quot;linkmcp&quot;&gt;[ &lt;a href=&quot;{ $U_MCP }&quot;&gt;{ $L_MCP }&lt;/a&gt; ]&lt;/p&gt;
++		&lt;!-- ENDIF --&gt;
++	&lt;/div&gt;
++
++	&lt;br clear=&quot;all&quot; /&gt;
+ &lt;!-- ENDIF --&gt;
+ 
+ &lt;!-- IF isset({ $MESSAGE }) --&gt;
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_move.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_move.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_move.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -5,7 +5,7 @@
+ &lt;form name=&quot;confirm&quot; action=&quot;{ $CONFIRM_ACTION }&quot; method=&quot;post&quot;&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+ 		&lt;tr&gt;
+-			&lt;th&gt;{ $MESSAGE }&lt;/th&gt;
++			&lt;th&gt;{ $MESSAGE_TITLE }&lt;/th&gt;
+ 		&lt;/tr&gt;
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
+@@ -15,10 +15,10 @@
+ 				&lt;span class=&quot;gen&quot;&gt;&lt;br /&gt;{ $L_SELECT_DESTINATION_FORUM }&nbsp;&nbsp;&lt;br /&gt;&lt;/span&gt;
+ 					&lt;select name=&quot;to_forum_id&quot;&gt;{ $S_FORUM_SELECT }&lt;/select&gt;&lt;br /&gt;
+ 				&lt;!-- IF { $S_CAN_LEAVE_SHADOW } --&gt;
+-					&lt;input type=&quot;checkbox&quot; name=&quot;move_leave_shadow&quot; checked=&quot;checked&quot; /&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_LEAVE_SHADOW }&lt;/span&gt;&lt;br /&gt;
++					&lt;input type=&quot;checkbox&quot; class=&quot;radio&quot; name=&quot;move_leave_shadow&quot; checked=&quot;checked&quot; /&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_LEAVE_SHADOW }&lt;/span&gt;&lt;br /&gt;
+ 				&lt;!-- ENDIF --&gt;
+-				&lt;br /&gt;{ $HIDDEN_FIELDS }&lt;span class=&quot;gen&quot;&gt;{ $MESSAGE }&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
+-				&lt;input class=&quot;button&quot; name=&quot;confirm&quot; value=&quot;Submit&quot; type=&quot;submit&quot; /&gt;&nbsp;&nbsp;&lt;input class=&quot;button&quot; value=&quot;{ $L_CANCEL }&quot; name=&quot;cancel&quot; type=&quot;submit&quot; /&gt;
++				&lt;br /&gt;{ $HIDDEN_FIELDS }&lt;span class=&quot;gen&quot;&gt;{ $MESSAGE_TEXT }&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;
++				&lt;input class=&quot;button&quot; name=&quot;confirm&quot; value=&quot;{ $L_YES }&quot; type=&quot;submit&quot; /&gt;&nbsp;&nbsp;&lt;input class=&quot;button&quot; value=&quot;{ $L_NO }&quot; name=&quot;cancel&quot; type=&quot;submit&quot; /&gt;
+ 			&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 	&lt;/table&gt;
+
+Added: cms/trunk/includes/templates/modules/forums/mcp_notes_front.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_notes_front.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_notes_front.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -0,0 +1,26 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
++
++&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_POST_ACTION }&quot;&gt;
++
++&lt;table class=&quot;tablebg&quot; width=&quot;75%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;4&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
++&lt;tr&gt;
++	&lt;th colspan=&quot;2&quot;align=&quot;center&quot;&gt;{ $L_SELECT_USER }&lt;/th&gt;
++&lt;/tr&gt;
++&lt;tr&gt;
++	&lt;td class=&quot;row1&quot; width=&quot;40%&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_FIND_USERNAME }: &lt;/b&gt;&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;[ &lt;a href=&quot;{ $U_FIND_MEMBER }&quot; onclick=&quot;window.open('{ $U_FIND_MEMBER }', '_phpbbsearch', 'HEIGHT=500,resizable=yes,scrollbars=yes,WIDTH=740');return false;&quot;&gt;{ $L_FIND_USERNAME }&lt;/a&gt; ]&lt;/span&gt;&lt;/td&gt;
++	&lt;td class=&quot;row2&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;post&quot; name=&quot;username&quot; maxlength=&quot;50&quot; size=&quot;20&quot; /&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;tr&gt;
++	&lt;td class=&quot;cat&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input type=&quot;submit&quot; name=&quot;submituser&quot; value=&quot;{ $L_SUBMIT }&quot; class=&quot;button&quot; /&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;/table&gt;
++
++&lt;/form&gt;
++
++&lt;br clear=&quot;all&quot; /&gt;&lt;br /&gt;
++
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Added: cms/trunk/includes/templates/modules/forums/mcp_notes_user.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_notes_user.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_notes_user.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -0,0 +1,125 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
++
++&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_POST_ACTION }&quot;&gt;
++	
++&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
++&lt;tr&gt;
++	&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{ $USERNAME }&lt;/th&gt;
++&lt;/tr&gt;
++&lt;tr&gt; 
++	&lt;td class=&quot;row1&quot; align=&quot;center&quot;&gt;
++		&lt;table cellspacing=&quot;1&quot; cellpadding=&quot;2&quot; border=&quot;0&quot;&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;gen&quot; align=&quot;center&quot;&gt;&lt;!-- IF { $USER_COLOR } --&gt;&lt;b style=&quot;color: #{ $USER_COLOR }&quot;&gt;&lt;!-- ELSE --&gt;&lt;b&gt;&lt;!-- ENDIF --&gt;{ $USERNAME }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;!-- IF { $RANK_TITLE } --&gt;
++			&lt;tr&gt;
++				&lt;td class=&quot;postdetails&quot; align=&quot;center&quot;&gt;{ $RANK_TITLE }&lt;/td&gt;
++			&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;!-- IF { $RANK_IMG } --&gt;
++			&lt;tr&gt;
++				&lt;td align=&quot;center&quot;&gt;{ $RANK_IMG }&lt;/td&gt;
++			&lt;/tr&gt;
++		&lt;!-- ENDIF --&gt;
++		&lt;tr&gt;
++			&lt;td align=&quot;center&quot;&gt;&lt;!-- IF { $AVATAR_IMG } --&gt;{ $AVATAR_IMG }&lt;!-- ELSE --&gt;&lt;img src=&quot;{ $T_THEME_PATH }/images/no_avatar.gif&quot; alt=&quot;&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;/table&gt;
++	&lt;/td&gt;
++	&lt;td class=&quot;row1&quot;&gt;
++		&lt;table width=&quot;100%&quot; cellspacing=&quot;1&quot; cellpadding=&quot;2&quot; border=&quot;0&quot;&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;gen&quot; align=&quot;right&quot; nowrap=&quot;nowrap&quot;&gt;{ $L_JOINED }: &lt;/td&gt;
++			&lt;td width=&quot;100%&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $JOINED }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;gen&quot; align=&quot;right&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;{ $L_TOTAL_POSTS }: &lt;/td&gt;
++			&lt;td&gt;&lt;b class=&quot;gen&quot;&gt;{ $POSTS }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt; 
++			&lt;td class=&quot;gen&quot; align=&quot;right&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;{ $L_WARNINGS }: &lt;/td&gt;
++			&lt;td&gt;&lt;b class=&quot;gen&quot;&gt;{ $WARNINGS }&lt;/b&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++		&lt;/table&gt;
++	&lt;/td&gt;
++&lt;/tr&gt;
++&lt;/table&gt;
++
++&lt;br /&gt;
++
++&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
++&lt;tr&gt;
++	&lt;th colspan=&quot;5&quot; align=&quot;center&quot;&gt;{ $L_FEEDBACK }&lt;/th&gt;
++&lt;/tr&gt;
++&lt;!-- IF { $S_USER_NOTES } --&gt;
++
++	&lt;tr align=&quot;center&quot;&gt;
++		&lt;td colspan=&quot;5&quot; class=&quot;row3&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_DISPLAY_LOG }:&lt;/span&gt; { $S_SELECT_SORT_DAYS }&nbsp;&lt;span class=&quot;gensmall&quot;&gt;{ $L_SORT_BY }:&lt;/span&gt; { $S_SELECT_SORT_KEY } { $S_SELECT_SORT_DIR }&nbsp;&lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;{ $L_GO }&quot; name=&quot;sort&quot; /&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++	&lt;tr&gt;
++		&lt;th&gt;{ $L_REPORT_BY }&lt;/th&gt;
++		&lt;th&gt;{ $L_IP }&lt;/th&gt;
++		&lt;th&gt;{ $L_TIME }&lt;/th&gt;
++		&lt;th&gt;{ $L_ACTION }&lt;/th&gt;
++		&lt;th&gt;&lt;!-- IF { $S_CLEAR_ALLOWED } --&gt;{ $L_MARK }&lt;!-- ENDIF --&gt;&lt;/th&gt;
++	&lt;/tr&gt;
++
++	&lt;!-- LOOP $usernotes --&gt;
++		&lt;!-- IF { $usernotes:#LOOP_INDEX } % 2  --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
++			&lt;td class=&quot;gen&quot;&gt;{ $usernotes:REPORT_BY }&lt;/td&gt;
++			&lt;td style=&quot;text-align: center;&quot;&gt;{ $usernotes:IP }&lt;/td&gt;
++			&lt;td style=&quot;text-align: center;&quot;&gt;{ $usernotes:REPORT_AT }&lt;/td&gt;
++			&lt;td class=&quot;gen&quot;&gt;
++				{ $usernotes:ACTION }
++				&lt;!-- IF { $usernotes:DATA } --&gt;&lt;br /&gt;&#187; &lt;span class=&quot;gensmall&quot;&gt;[ { $usernotes:DATA } ]&lt;/span&gt;&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;td style=&quot;text-align: center;&quot;&gt;&lt;!-- IF { $S_CLEAR_ALLOWED } --&gt;&lt;input type=&quot;checkbox&quot; class=&quot;radio&quot; name=&quot;marknote[]&quot; value=&quot;{ $usernotes:ID }&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- ENDLOOP $usernotes --&gt;
++
++	&lt;!-- IF { $S_CLEAR_ALLOWED } --&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;5&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;action[del_marked]&quot; value=&quot;{ $L_DELETE_MARKED }&quot; /&gt;&nbsp; &lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;action[del_all]&quot; value=&quot;{ $L_DELETE_ALL }&quot; /&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- ENDIF --&gt;
++
++&lt;!-- ELSE --&gt;
++	&lt;tr&gt;
++		&lt;td class=&quot;row1&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_NO_FEEDBACK }&lt;/span&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++&lt;!-- ENDIF --&gt;
++&lt;/table&gt;
++
++&lt;br clear=&quot;all&quot; /&gt;
++	
++&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
++&lt;tr&gt;
++	&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{ $L_ADD_FEEDBACK }&lt;/th&gt;
++&lt;/tr&gt;
++&lt;tr&gt;
++	&lt;td class=&quot;row3&quot; align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_ADD_FEEDBACK_EXPLAIN }&lt;/span&gt;&lt;/td&gt;
++&lt;tr&gt;
++	&lt;td colspan=&quot;2&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;&lt;textarea name=&quot;usernote&quot; rows=&quot;10&quot; cols=&quot;76&quot;&gt;&lt;/textarea&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;tr&gt;
++	&lt;td class=&quot;cat&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;action[add_feedback]&quot; value=&quot;{ $L_SUBMIT }&quot; /&gt;&nbsp;&nbsp;&lt;input class=&quot;button&quot; type=&quot;reset&quot; value=&quot;{ $L_RESET }&quot; /&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;/table&gt;
++
++&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
++&lt;tr&gt;
++	&lt;td class=&quot;pagination&quot;&gt;{ $PAGE_NUMBER } [ { $TOTAL_REPORTS } ]&lt;/td&gt;
++	&lt;td align=&quot;right&quot;&gt;&lt;span class=&quot;pagination&quot;&gt;&lt;!-- IF { $PAGINATION } --&gt;&lt;a href=&quot;javascript:jumpto();&quot;&gt;{ $L_GOTO_PAGE }&lt;/a&gt; &lt;!-- IF { $PREVIOUS_PAGE } --&gt;&lt;a href=&quot;{ $PREVIOUS_PAGE }&quot;&gt;{ $L_PREVIOUS }&lt;/a&gt;&nbsp;&nbsp;&lt;!-- ENDIF --&gt;{ $PAGINATION }&lt;!-- IF NEXT_PAGE --&gt;&nbsp;&nbsp;&lt;a href=&quot;{ $NEXT_PAGE }&quot;&gt;{ $L_NEXT }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;!-- ENDIF --&gt;&lt;/span&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;/table&gt;
++
++&lt;/form&gt;
++
++&lt;br clear=&quot;all&quot; /&gt;&lt;br /&gt;
++
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_post.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_post.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_post.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -1,8 +1,48 @@
+ &lt;!-- DISPLAY_HEADER --&gt;
+ 
+ &lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
++
++&lt;!-- IF { $S_MCP_REPORT } --&gt;
++	&lt;form method=&quot;post&quot; name=&quot;mcp_report&quot; action=&quot;{ $U_CLOSE_ACTION }&quot;&gt;
++	
++	&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
++	&lt;tr&gt;
++		&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{ $L_REPORT_DETAILS }&lt;/th&gt;
++	&lt;/tr&gt;
++	&lt;tr&gt;
++		&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_REPORT_REASON }: &lt;/b&gt;&lt;/td&gt;
++		&lt;td class=&quot;row2&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $REPORT_REASON_TITLE } &raquo; { $REPORT_REASON_DESCRIPTION }&lt;/span&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++	&lt;tr&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;20%&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_REPORTER }: &lt;/b&gt;&lt;/td&gt;
++		&lt;td class=&quot;row2&quot; width=&quot;80%&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $REPORTER_NAME } &nbsp; [ &lt;!-- IF { $U_VIEW_REPORTER_PROFILE } --&gt;&lt;a href=&quot;{ $U_VIEW_REPORTER_PROFILE }&quot;&gt;{ $L_READ_PROFILE }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;!-- IF { $S_USER_NOTES } --&gt;&lt;!-- IF { $U_VIEW_REPORTER_PROFILE } --&gt; | &lt;!-- ENDIF --&gt;&lt;a href=&quot;{ $U_MCP_REPORTER_NOTES }&quot;&gt;{ $L_VIEW_NOTES }&lt;/a&gt; | &lt;a href=&quot;{ $U_MCP_WARN_REPORTER }&quot;&gt;{ $L_WARN_USER }&lt;/a&gt;&lt;!-- ENDIF --&gt; ]&lt;/span&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++	&lt;tr&gt;
++		&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_REPORTED }: &lt;/b&gt;&lt;/td&gt;
++		&lt;td class=&quot;row2&quot;&gt;&lt;span class=&quot;postdetails&quot;&gt;{ $REPORT_DATE }&lt;/span&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++	&lt;!-- IF { $REPORT_TEXT } --&gt;
++		&lt;tr&gt;
++			&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{ $L_MORE_INFO }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row1&quot; colspan=&quot;2&quot;&gt;&lt;div class=&quot;gen&quot; style=&quot;overflow: auto; width: 100%; height: 80pt; border: 1px;&quot;&gt;{ $REPORT_TEXT }&lt;/div&gt;&lt;/td&gt;
++		&lt;/tr&gt;
++	&lt;!-- ENDIF --&gt;
++	&lt;tr&gt;
++		&lt;td class=&quot;cat&quot; align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;!-- IF { $S_POST_REPORTED } --&gt;&lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;{ $L_CLOSE_REPORT }&quot; name=&quot;action[close]&quot; /&gt;&lt;!-- ELSE --&gt;{ $L_REPORT_CLOSED }&lt;!-- ENDIF --&gt; &nbsp; &lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;{ $L_DELETE_REPORT }&quot; name=&quot;action[delete]&quot; /&gt;&lt;/td&gt;
++	&lt;/tr&gt;
++	&lt;/table&gt;
+ 
+-&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_APPROVE_ACTION }&quot;&gt;
++	&lt;input type=&quot;hidden&quot; name=&quot;post_id_list[]&quot; value=&quot;{POST_ID}&quot; /&gt;
++	&lt;/form&gt;
++
++	&lt;br clear=&quot;all&quot;/&gt;
++&lt;!-- ENDIF --&gt;
++
++&lt;!-- IF { $S_MCP_QUEUE } --&gt;&lt;form method=&quot;post&quot; name=&quot;mcp_approve&quot; action=&quot;{ $U_APPROVE_ACTION }&quot;&gt;&lt;!-- ELSE --&gt;&lt;form method=&quot;post&quot; name=&quot;mcp_report&quot; action=&quot;{ $U_CLOSE_ACTION }&quot;&gt;&lt;!-- ENDIF --&gt;
++
++&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
+ &lt;tr&gt;
+ 	&lt;th colspan=&quot;2&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;{ $L_POST_DETAILS }&lt;/th&gt;
+ &lt;/tr&gt;
+@@ -11,11 +51,11 @@
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ 	&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_POST_SUBJECT }: &lt;/b&gt;&lt;/td&gt;
+-	&lt;td class=&quot;row2&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $POST_SUBJECT }&lt;/span&gt;&lt;/td&gt;
++	&lt;td class=&quot;row2&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $POST_SUBJECT }&lt;/span&gt;&lt;!-- IF { $S_POST_UNAPPROVED } --&gt;&lt;span class=&quot;postapprove&quot;&gt;{ $UNAPPROVED_IMG } &lt;a href=&quot;{ $U_MCP_APPROVE }&quot;&gt;{ $L_POST_UNAPPROVED }&lt;/a&gt;&lt;/span&gt; &lt;!-- ENDIF --&gt; &lt;!-- IF { $S_POST_REPORTED } &amp;&amp; !{ $S_MCP_REPORT  } --&gt;&lt;span class=&quot;postreported&quot;&gt;{ $REPORTED_IMG } &lt;a href=&quot;{ $U_MCP_REPORT}&quot;&gt;{ $L_POST_REPORTED }&lt;/a&gt;&lt;/span&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ 	&lt;td class=&quot;row1&quot; width=&quot;20%&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_POSTER }: &lt;/b&gt;&lt;/td&gt;
+-	&lt;td class=&quot;row2&quot; width=&quot;80%&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $POSTER_NAME } &nbsp; [ &lt;a href=&quot;{ $U_VIEW_PROFILE }&quot;&gt;{ $L_READ_PROFILE }&lt;/a&gt; ]&lt;/span&gt;&lt;/td&gt;
++	&lt;td class=&quot;row2&quot; width=&quot;80%&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $POSTER_NAME } &nbsp; [ &lt;!-- IF { $U_VIEW_PROFILE } --&gt;&lt;a href=&quot;{ $U_VIEW_PROFILE }&quot;&gt;{ $L_READ_PROFILE }&lt;/a&gt; &lt;!-- ENDIF --&gt;&lt;!-- IF { $S_USER_NOTES } --&gt;&lt;!-- IF { $U_VIEW_PROFILE } --&gt; | &lt;!-- ENDIF --&gt;&lt;a href=&quot;{ $U_MCP_USER_NOTES }&quot;&gt;{ $L_VIEW_NOTES }&lt;/a&gt; &lt;!-- IF { $U_MCP_WARN_USER } --&gt;| &lt;a href=&quot;{ $U_MCP_WARN_USER }&quot;&gt;{ $L_WARN_USER }&lt;/a&gt;&lt;!-- ENDIF --&gt;&lt;!-- ENDIF --&gt; ]&lt;/span&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;!-- IF { $S_CAN_VIEWIP } --&gt;
+ 	&lt;tr&gt;
+@@ -33,9 +73,9 @@
+ &lt;tr&gt;
+ 	&lt;td class=&quot;row1&quot; colspan=&quot;2&quot;&gt;&lt;div class=&quot;gen&quot; style=&quot;overflow: auto; width: 100%; height: 80pt; border: 1px;&quot;&gt;{ $POST_PREVIEW }&lt;/div&gt;&lt;!-- IF { $U_EDIT } --&gt;&lt;div class=&quot;gen&quot; style=&quot;float: right;&quot;&gt;&lt;a href=&quot;{ $U_EDIT }&quot;&gt;{ $EDIT_IMG }&lt;/a&gt;&lt;/div&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+-&lt;!-- IF { $S_POST_UNAPPROVED } --&gt;
++&lt;!-- IF { $S_POST_UNAPPROVED } &amp;&amp; { $S_MCP_QUEUE } --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;cat&quot; align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;btnmain&quot; type=&quot;submit&quot; value=&quot;{ $L_APPROVE }&quot; name=&quot;mode[approve]&quot; /&gt; &nbsp; &lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; value=&quot;{ $L_DISAPPROVE }&quot; name=&quot;mode[disapprove]&quot; /&gt;&lt;/td&gt;
++		&lt;td class=&quot;cat&quot; align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;{ $L_APPROVE }&quot; name=&quot;mode[approve]&quot; /&gt; &nbsp; &lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;{ $L_DISAPPROVE }&quot; name=&quot;mode[disapprove]&quot; /&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;input type=&quot;hidden&quot; name=&quot;post_id_list[]&quot; value=&quot;{ $POST_ID }&quot; /&gt;
+ &lt;!-- ENDIF --&gt;
+@@ -43,99 +83,45 @@
+ &lt;/form&gt;
+ 
+ &lt;!-- IF { $S_MCP_QUEUE } --&gt;
++	&lt;br clear=&quot;all&quot; /&gt;
++
++	&lt;!-- IF { $S_TOPIC_REVIEW } --&gt;&lt;!-- INCLUDE modules/forums/posting_topic_review.html --&gt;&lt;!-- ENDIF --&gt;
++&lt;!-- ELSEIF { $S_MCP_REPORT } --&gt;
+ 	&lt;br clear=&quot;all&quot; /&gt;
+-	&lt;!-- IF { $S_TOPIC_REVIEW } --&gt;&lt;!-- INCLUDE modules/Forums/posting_topic_review.html --&gt;&lt;!-- ENDIF --&gt;
+-&lt;!-- ELSE --&gt;
+-	&lt;!-- IF { $S_SHOW_USER_NOTES } --&gt;
+-		&lt;br /&gt;&lt;a name=&quot;usernotes&quot;&gt;&lt;/a&gt;
+-		&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_POST_ACTION }&quot;&gt;
+-		
+-		&lt;!-- IF { $S_USER_NOTES } --&gt;
+-			&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
+-			&lt;tr&gt;
+-				&lt;th colspan=&quot;2&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;{ $L_FEEDBACK }&lt;/th&gt;
+-			&lt;/tr&gt;
+-			&lt;!-- LOOP $usernotes --&gt;
+-			&lt;!-- IF { $usernotes:#LOOP_INDEX } % 2 --&gt;&lt;tr class=&quot;row1&quot;&gt;&lt;!-- ELSE --&gt;&lt;tr class=&quot;row2&quot;&gt;&lt;!-- ENDIF --&gt;
+-				&lt;td&lt;!-- IF !{ $S_CLEAR_ALLOWED } --&gt; colspan=&quot;2&quot;&lt;!-- ENDIF --&gt;&gt;&lt;span class=&quot;gensmall&quot;&gt;Report by: &lt;b&gt;{ $usernotes:REPORT_BY }&lt;/b&gt; on { $usernotes:REPORT_AT }&lt;/span&gt;&lt;hr /&gt;&lt;span class=&quot;gen&quot;&gt;{ $usernotes:ACTION }&lt;/span&gt;&lt;/td&gt;
+-				&lt;!-- IF { $S_CLEAR_ALLOWED } --&gt;&lt;td width=&quot;5%&quot; align=&quot;center&quot;&gt;&lt;input type=&quot;checkbox&quot; name=&quot;marknote[]&quot; value=&quot;{ $usernotes:ID }&quot; /&gt;&lt;/td&gt;&lt;!-- ENDIF --&gt;
+-			&lt;/tr&gt;
+-			&lt;!-- ENDLOOP --&gt;
+-			&lt;!-- IF { $S_CLEAR_ALLOWED } --&gt;
+-			&lt;tr&gt;
+-				&lt;td class=&quot;cat&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;action[del_marked]&quot; value=&quot;{ $L_DELETE_MARKED }&quot; /&gt;&nbsp; &lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;action[del_all]&quot; value=&quot;{ $L_DELETE_ALL }&quot; /&gt;&lt;/td&gt;
+-			&lt;/tr&gt;
+-			&lt;!-- ENDIF --&gt;
+-			&lt;/table&gt;
+-			&lt;br /&gt;
+-		&lt;!-- ENDIF --&gt;
+-		
+-		&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
+-		&lt;tr&gt;
+-			&lt;th colspan=&quot;2&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;{ $L_ADD_FEEDBACK }&lt;/th&gt;
+-		&lt;/tr&gt;
+-		&lt;tr&gt;
+-			&lt;td class=&quot;row3&quot; align=&quot;center&quot; colspan=&quot;2&quot;&gt;&lt;span class=&quot;genmed&quot;&gt;{ $L_ADD_FEEDBACK_EXPLAIN }&lt;/span&gt;&lt;/td&gt;
+-		&lt;tr&gt;
+-			&lt;td colspan=&quot;2&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;&lt;textarea name=&quot;usernote&quot; rows=&quot;10&quot; cols=&quot;76&quot;&gt;&lt;/textarea&gt;&lt;/td&gt;
+-		&lt;/tr&gt;
+-		&lt;tr&gt;
+-			&lt;td class=&quot;cat&quot; colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;input class=&quot;btnmain&quot; type=&quot;submit&quot; name=&quot;action[add_feedback]&quot; value=&quot;{ $L_SUBMIT }&quot; /&gt;&nbsp;&nbsp;&lt;input class=&quot;btnlite&quot; type=&quot;reset&quot; value=&quot;{ $L_RESET }&quot; /&gt;&lt;/td&gt;
+-		&lt;/tr&gt;
+-		&lt;/table&gt;
+ 
+-		&lt;/form&gt;
+-	&lt;!-- ENDIF --&gt;
+-	
+-	&lt;!-- IF { $S_SHOW_REPORTS } --&gt;
+-		&lt;br /&gt;&lt;a name=&quot;reports&quot;&gt;&lt;/a&gt;
+-
+-		&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
+-		&lt;tr&gt;
+-			&lt;th colspan=&quot;2&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;{ $L_REPORTS }&lt;/th&gt;
+-		&lt;/tr&gt;
+-		&lt;!-- LOOP $reports --&gt;
+-			&lt;tr&gt;
+-				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $reports:REPORT_TIME }&lt;/b&gt;&lt;/td&gt;
+-				&lt;td class=&quot;row2&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $reports:REASON_TITLE } &#187; { $reports:REASON_DESC }&lt;/span&gt;&lt;/td&gt;
+-			&lt;/tr&gt;
+-			&lt;tr&gt;
+-				&lt;td class=&quot;row1&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_REPORTER }: &lt;/b&gt;&lt;/td&gt;
+-				&lt;td class=&quot;row2&quot;&gt;&lt;span class=&quot;gen&quot;&gt;&lt;!-- IF { $reports:U_REPORTER } --&gt;&lt;a href=&quot;{ $reports:U_REPORTER }&quot;&gt;{ $reports:REPORTER }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $reports:REPORTER }&lt;!-- ENDIF --&gt;&lt;/span&gt;&lt;/td&gt;
+-			&lt;/tr&gt;
+-			&lt;!-- IF { $reports:REPORT_TEXT } --&gt;
+-				&lt;tr&gt;
+-					&lt;td class=&quot;row1&quot; valign=&quot;top&quot;&gt;&lt;b class=&quot;genmed&quot;&gt;{ $L_MORE_INFO }: &lt;/b&gt;&lt;/td&gt;
+-					&lt;td class=&quot;row2&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $reports:REPORT_TEXT }&lt;/span&gt;&lt;/td&gt;
+-				&lt;/tr&gt;
+-			&lt;!-- ENDIF --&gt;
+-			&lt;tr&gt;
+-				&lt;td colspan=&quot;2&quot; class=&quot;spacer&quot;&gt;&lt;/td&gt;
+-			&lt;/tr&gt;
+-		&lt;!-- ENDLOOP --&gt;
+-		&lt;/table&gt;
+-	&lt;!-- ENDIF --&gt;
+-
++	&lt;!-- IF { $S_TOPIC_REVIEW } --&gt;&lt;!-- INCLUDE modules/forums/posting_topic_review.html --&gt;&lt;!-- ENDIF --&gt;
++&lt;!-- ELSE --&gt;
+ 	&lt;!-- IF { $S_CAN_LOCK_POST } || { $S_CAN_DELETE_POST } || { $S_CAN_CHGPOSTER } --&gt;
+ 		&lt;br /&gt;&lt;a name=&quot;mod&quot;&gt;&lt;/a&gt;
+ 
+ 		&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
+ 		&lt;tr&gt;
+-			&lt;th colspan=&quot;2&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;{ $L_MOD_OPTIONS }&lt;/th&gt;
++			&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{ $L_MOD_OPTIONS }&lt;/th&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- IF { $S_CAN_CHGPOSTER } --&gt;
+ 			&lt;tr&gt;
+-				&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_POST_ACTION }&quot; { $S_FORM_ENCTYPE }&gt;
++				&lt;form method=&quot;post&quot; name=&quot;mcp_chgposter&quot; action=&quot;{ $U_POST_ACTION }&quot;&gt;
+ 					&lt;td class=&quot;row1&quot; valign=&quot;top&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_CHANGE_POSTER }&lt;/b&gt;&lt;/td&gt;
+-					&lt;td class=&quot;row2&quot;&gt;&lt;!-- IF { $S_USER_SELECT } --&gt;&lt;select name=&quot;u&quot;&gt;{ $S_USER_SELECT }&lt;/select&gt; &lt;input type=&quot;submit&quot; class=&quot;btnmain&quot; name=&quot;action[chgposter]&quot; value=&quot;{ $L_CONFIRM }&quot; /&gt;&lt;br /&gt;&lt;!-- ENDIF --&gt; &lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; value=&quot;{ $SEARCH_USERNAME }&quot; /&gt; &lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; value=&quot;{ $L_SEARCH }&quot; name=&quot;action[chgposter_search]&quot; /&gt;&lt;/td&gt;
++					&lt;td class=&quot;row2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;username&quot; value=&quot;&quot; /&gt; &lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;{ $L_CONFIRM }&quot; name=&quot;action[chgposter]&quot; /&gt;&lt;br /&gt;&lt;span class=&quot;gensmall&quot;&gt;[ &lt;a href=&quot;{ $U_FIND_MEMBER }&quot; onclick=&quot;window.open('{ $U_FIND_MEMBER }', '_phpbbsearch', 'HEIGHT=500,resizable=yes,scrollbars=yes,WIDTH=740');return false;&quot;&gt;{ $L_FIND_USERNAME }&lt;/a&gt; ]&lt;/span&gt;&lt;!-- IF { $S_USER_SELECT } --&gt;&lt;br /&gt;&lt;select name=&quot;u&quot;&gt;{ $S_USER_SELECT }&lt;/select&gt; &lt;input type=&quot;submit&quot; class=&quot;button&quot; name=&quot;action[chgposter_ip]&quot; value=&quot;{ $L_CONFIRM }&quot; /&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ 				&lt;/form&gt;
+ 			&lt;/tr&gt;
+ 		&lt;!-- ENDIF --&gt;
+ 		&lt;!-- IF { $S_CAN_LOCK_POST } || { $S_CAN_DELETE_POST } --&gt;
+ 			&lt;tr&gt;
+-				&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_MCP_ACTION }&quot;{ $S_FORM_ENCTYPE }&gt;
++				&lt;form method=&quot;post&quot; name=&quot;mcp&quot; action=&quot;{ $U_MCP_ACTION }&quot;&gt;
+ 					&lt;td class=&quot;row1&quot; valign=&quot;top&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_MOD_OPTIONS }&lt;/b&gt;&lt;/td&gt;
+-					&lt;td class=&quot;row2&quot;&gt;&lt;select name=&quot;mode&quot;&gt;&lt;!-- IF { $S_CAN_LOCK_POST } --&gt;&lt;!-- IF { $S_POST_LOCKED } --&gt;&lt;option value=&quot;unlock_post&quot;&gt;{ $L_UNLOCK_POST } [{ $L_UNLOCK_POST_EXPLAIN }]&lt;/option&gt;&lt;!-- ELSE --&gt;&lt;option value=&quot;lock_post&quot;&gt;{ $L_LOCK_POST } [{ $L_LOCK_POST_EXPLAIN }]&lt;/option&gt;&lt;!-- ENDIF --&gt;&lt;!-- ENDIF --&gt;&lt;!-- IF { $S_CAN_DELETE_POST } --&gt;&lt;option value=&quot;delete_post&quot;&gt;{ $L_DELETE_POST }&lt;/option&gt;&lt;!-- ENDIF --&gt;&lt;/select&gt; &lt;input class=&quot;btnmain&quot; type=&quot;submit&quot; value=&quot;{ $L_SUBMIT }&quot; /&gt;&lt;/td&gt;
++					&lt;td class=&quot;row2&quot;&gt;&lt;select name=&quot;action&quot;&gt;
++					&lt;!-- IF { $S_CAN_LOCK_POST } --&gt;
++						&lt;!-- IF { $S_POST_LOCKED } --&gt;
++						&lt;option value=&quot;unlock_post&quot;&gt;{ $L_UNLOCK_POST } [{ $L_UNLOCK_POST_EXPLAIN }]&lt;/option&gt;
++						&lt;!-- ELSE --&gt;
++						&lt;option value=&quot;lock_post&quot;&gt;{ $L_LOCK_POST } [{ $L_LOCK_POST_EXPLAIN }]&lt;/option&gt;
++						&lt;!-- ENDIF --&gt;
++					&lt;!-- ENDIF --&gt;
++					&lt;!-- IF S_CAN_DELETE_POST --&gt;
++						&lt;option value=&quot;delete_post&quot;&gt;{ $L_DELETE_POST }&lt;/option&gt;
++					&lt;!-- ENDIF --&gt;
++					&lt;/select&gt; &lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;{ $L_SUBMIT }&quot; /&gt;&lt;/td&gt;
+ 				&lt;/form&gt;
+ 			&lt;/tr&gt;
+ 		&lt;!-- ENDIF --&gt;
+@@ -147,10 +133,10 @@
+ 
+ 		&lt;table width=&quot;100%&quot; cellpadding=&quot;3&quot; cellspacing=&quot;1&quot; border=&quot;0&quot; class=&quot;tablebg&quot;&gt;
+ 		&lt;tr&gt;
+-			&lt;th colspan=&quot;2&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;{ $L_IP_INFO }&lt;/th&gt;
++			&lt;th colspan=&quot;2&quot; align=&quot;center&quot;&gt;{ $L_IP_INFO }&lt;/th&gt;
+ 		&lt;/tr&gt;
+ 		&lt;tr&gt;
+-			&lt;td colspan=&quot;2&quot; height=&quot;28&quot; class=&quot;cat&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_OTHER_USERS }&lt;/b&gt;&lt;/td&gt;
++			&lt;td colspan=&quot;2&quot; class=&quot;cat&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_OTHER_USERS }&lt;/b&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- LOOP $userrow --&gt;
+ 			&lt;!-- IF { $userrow:#LOOP_INDEX } % 2 --&gt;
+@@ -158,20 +144,20 @@
+ 			&lt;!-- ELSE --&gt;
+ 				&lt;tr class=&quot;row2&quot;&gt;
+ 			&lt;!-- ENDIF --&gt;
+-				&lt;td&gt;&lt;span class=&quot;gen&quot;&gt;&lt;a href=&quot;{ $userrow:U_PROFILE }&quot;&gt;{ $userrow:USERNAME }&lt;/a&gt; [ { $userrow:NUM_POSTS } { $userrow:L_POST_S } ]&lt;/span&gt;&lt;/td&gt;
++				&lt;td&gt;&lt;span class=&quot;gen&quot;&gt;&lt;a href=&quot;{ $userrow:U_PROFILE }&quot;&gt;{ $userrow:USERNAME}&lt;/a&gt; [ { $userrow:NUM_POSTS } { $userrow:L_POST_S } ]&lt;/span&gt;&lt;/td&gt;
+ 				&lt;td align=&quot;center&quot;&gt;&lt;a href=&quot;{ $userrow:U_SEARCHPOSTS }&quot;&gt;{ $SEARCH_IMG }&lt;/a&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+ 		&lt;!-- LOOPELSE --&gt;
+ 			&lt;tr class=&quot;row1&quot;&gt;
+-				&lt;td colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_NO_MATCHES_FOUND }&lt;/span&gt;&lt;/td&gt;
++				&lt;td colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_NO_MATCHES_FOUND}&lt;/span&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+-		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- ENDLOOP $userrow --&gt;
+ 		&lt;tr&gt;
+-			&lt;td height=&quot;28&quot; class=&quot;cat&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_OTHER_IPS }&lt;/b&gt;&lt;/td&gt;
++			&lt;td class=&quot;cat&quot;&gt;&lt;b class=&quot;gen&quot;&gt;{ $L_OTHER_IPS }&lt;/b&gt;&lt;/td&gt;
+ 			&lt;td class=&quot;cat&quot; width=&quot;10%&quot; nowrap=&quot;nowrap&quot;&gt;&lt;!-- IF { $U_LOOKUP_ALL } --&gt;&lt;span class=&quot;gen&quot;&gt;[ &lt;a href=&quot;{ $U_LOOKUP_ALL }&quot;&gt;{ $L_LOOKUP_ALL }&lt;/a&gt; ]&lt;/span&gt;&lt;!-- ENDIF --&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- LOOP $iprow --&gt;
+-			&lt;!-- IF { $userrow:#iprow } % 2 --&gt;
++			&lt;!-- IF { $iprow:#LOOP_INDEX } % 2 --&gt;
+ 				&lt;tr class=&quot;row1&quot;&gt;
+ 			&lt;!-- ELSE --&gt;
+ 				&lt;tr class=&quot;row2&quot;&gt;
+@@ -183,7 +169,7 @@
+ 			&lt;tr class=&quot;row1&quot;&gt;
+ 				&lt;td colspan=&quot;2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_NO_MATCHES_FOUND }&lt;/span&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+-		&lt;!-- ENDLOOP --&gt;
++		&lt;!-- ENDLOOP $iprow --&gt;
+ 		&lt;/table&gt;
+ 	&lt;!-- ENDIF --&gt;
+ &lt;!-- ENDIF --&gt;
+
+Modified: cms/trunk/includes/templates/modules/forums/mcp_topic.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_topic.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_topic.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -4,7 +4,7 @@
+ 
+ &lt;form name=&quot;mcp&quot; method=&quot;post&quot; action=&quot;{ $S_MCP_ACTION }&quot;&gt;
+ 	&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
+-		&lt;!-- IF { $S_CAN_SPLIT } --&gt;
++	&lt;!-- IF { $S_CAN_SPLIT } --&gt;
+ 		&lt;tr&gt;
+ 			&lt;th colspan=&quot;3&quot; nowrap=&quot;nowrap&quot;&gt;{ $L_SPLIT_TOPIC }&lt;/th&gt;
+ 		&lt;/tr&gt;
+@@ -29,7 +29,8 @@
+ 				&lt;/tr&gt;
+ 			&lt;/table&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+-		&lt;!-- ENDIF --&gt;&lt;!-- ENDIF --&gt;
++		&lt;!-- ENDIF --&gt;
++	&lt;!-- ENDIF --&gt;
+ 	
+ 		&lt;!-- IF { $S_CAN_MERGE } --&gt;
+ 		&lt;tr&gt;
+@@ -40,7 +41,7 @@
+ 		&lt;/tr&gt;
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;row1&quot; nowrap=&quot;nowrap&quot;&gt;&lt;span class=&quot;gen&quot;&gt;{ $L_MERGE_TOPIC_ID }&lt;/span&gt;&lt;/td&gt;
+-			&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; size=&quot;6&quot; name=&quot;to_topic_id&quot; value=&quot;{ $TO_TOPIC_ID }&quot; /&gt; &lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;action[merge_select]&quot; value=&quot;{ $L_SELECT_TOPIC }&quot; /&gt;&lt;/td&gt;
++			&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; size=&quot;6&quot; name=&quot;to_topic_id&quot; value=&quot;{ $TO_TOPIC_ID }&quot; /&gt; &lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;action[merge_select]&quot; value=&quot;{ $L_SELECT_TOPIC }&quot; /&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- IF { $TO_TOPIC_INFO } --&gt;
+ 		&lt;tr&gt;
+@@ -55,12 +56,15 @@
+ 			&lt;td class=&quot;row2&quot; colspan=&quot;2&quot;&gt;&lt;input class=&quot;post&quot; type=&quot;text&quot; name=&quot;posts_per_page&quot; size=&quot;6&quot; value=&quot;{ $POSTS_PER_PAGE }&quot;&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;tr&gt;
+-			&lt;td class=&quot;cat&quot; colspan=&quot;3&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_DISPLAY_POSTS }:&lt;/span&gt; { $S_SELECT_SORT_DAYS }&nbsp;&lt;span class=&quot;gensmall&quot;&gt;{ $L_SORT_BY }&lt;/span&gt; { $S_SELECT_SORT_KEY } { $S_SELECT_SORT_DIR }&nbsp;&lt;input class=&quot;btnlite&quot; type=&quot;submit&quot; name=&quot;sort&quot; value=&quot;{ $L_GO }&quot; /&gt;&lt;/span&gt;&lt;/td&gt;
++			&lt;td class=&quot;cat&quot; colspan=&quot;3&quot; height=&quot;28&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $L_DISPLAY_POSTS }:&lt;/span&gt; { $S_SELECT_SORT_DAYS }&nbsp;&lt;span class=&quot;gensmall&quot;&gt;{ $L_SORT_BY }&lt;/span&gt; { $S_SELECT_SORT_KEY } { $S_SELECT_SORT_DIR }&nbsp;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;sort&quot; value=&quot;{ $L_GO }&quot; /&gt;&lt;/span&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;tr&gt;
+ 			&lt;th height=&quot;28&quot; nowrap=&quot;nowrap&quot;&gt;{ $L_AUTHOR }&lt;/th&gt;
+ 			&lt;th nowrap=&quot;nowrap&quot;&gt;{ $L_MESSAGE }&lt;/th&gt;
+ 			&lt;th nowrap=&quot;nowrap&quot;&gt;{ $L_SELECT }&lt;/th&gt;
++		&lt;/tr&gt;
++		&lt;tr&gt;
++			&lt;td class=&quot;row3&quot; colspan=&quot;3&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $RETURN_TOPIC }&lt;/span&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 		&lt;!-- LOOP $postrow --&gt;
+ 			&lt;!-- IF { $postrow:#LOOP_INDEX } % 2 --&gt;
+@@ -76,7 +80,7 @@
+ 						&lt;td class=&quot;gensmall&quot; width=&quot;100%&quot;&gt;{ $postrow:POST_SUBJECT }&lt;/td&gt;
+ 					&lt;/tr&gt;
+ 				&lt;/table&gt;&lt;/td&gt;
+-				&lt;td rowspan=&quot;2&quot; width=&quot;5%&quot; align=&quot;center&quot;&gt;{ $postrow:S_CHECKBOX }&lt;/td&gt;
++			&lt;td rowspan=&quot;2&quot; width=&quot;5%&quot; align=&quot;center&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;radio&quot; name=&quot;post_id_list[]&quot; value=&quot;{ $postrow:POST_ID }&quot;&lt;!-- IF { $postrow:S_CHECKED } --&gt; checked=&quot;checked&quot;&lt;!-- ENDIF --&gt; /&gt;&lt;/td&gt;
+ 			&lt;/tr&gt;
+ 			&lt;!-- IF { $postrow:#LOOP_INDEX } % 2 --&gt;
+ 				&lt;tr class=&quot;row1&quot;&gt;
+@@ -86,7 +90,7 @@
+ 				&lt;td valign=&quot;bottom&quot;&gt;
+ 					&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
+ 						&lt;tr valign=&quot;middle&quot;&gt;
+-							&lt;td height=&quot;28&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;[ &lt;a href=&quot;{ $postrow:U_POST_DETAILS }&quot;&gt;{$L_POST_DETAILS}&lt;/a&gt; ]&lt;/span&gt;&lt;/td&gt;
++							&lt;td height=&quot;28&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;[ &lt;a href=&quot;{ $postrow:U_POST_DETAILS }&quot;&gt;{ $L_POST_DETAILS }&lt;/a&gt; ]&lt;/span&gt;&lt;/td&gt;
+ 						&lt;/tr&gt;
+ 					&lt;/table&gt;
+ 				&lt;/td&gt;
+@@ -98,15 +102,10 @@
+ 						&lt;td valign=&quot;bottom&quot;&gt;
+ 							&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
+ 								&lt;tr valign=&quot;middle&quot;&gt;
+-									&lt;!-- IF { $postrow:S_POST_UNAPPROVED } --&gt;
+-									&lt;td width=&quot;5&quot;&gt;{ $UNAPPROVED_IMG }&lt;/td&gt;
+-									&lt;td class=&quot;gensmall&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;&lt;b&gt;&lt;a style=&quot;color:green&quot;  href=&quot;{ $postrow:U_MCP_APPROVE }&quot;&gt;{ $L_POST_UNAPPROVED }&lt;/a&gt;&lt;/b&gt;&nbsp;&nbsp;&lt;/td&gt;
+-									&lt;!-- ENDIF --&gt;
+-									&lt;!-- IF { $postrow:S_POST_REPORTED } --&gt;
+-									&lt;td width=&quot;5&quot;&gt;{ $REPORTED_IMG }&lt;/td&gt;
+-									&lt;td class=&quot;gensmall&quot; nowrap=&quot;nowrap&quot;&gt;&nbsp;&lt;b&gt;&lt;a style=&quot;color:red&quot; href=&quot;{ $postrow:U_POST_DETAILS }&quot;&gt;{ $L_POST_REPORTED }&lt;/a&gt;&lt;/b&gt;&nbsp;&lt;/td&gt;
+-									&lt;!-- ENDIF --&gt;
+-									&lt;td width=&quot;100%&quot;&gt;&nbsp;&lt;/td&gt;
++									&lt;td width=&quot;100%&quot;&gt;
++										&lt;!-- IF { $postrow:S_POST_UNAPPROVED } --&gt;{ $UNAPPROVED_IMG } &lt;span class=&quot;postapprove&quot;&gt;&lt;a href=&quot;{ $postrow:U_MCP_APPROVE }&quot;&gt;{ $L_POST_UNAPPROVED }&lt;/a&gt;&lt;/span&gt;&lt;!-- ENDIF --&gt;
++										&lt;!-- IF { $postrow:S_POST_REPORTED } --&gt;{ $REPORTED_IMG }&lt;span class=&quot;postreported&quot;&gt;&lt;a href=&quot;{ $postrow:U_MCP_REPORT }&quot;&gt;{ $L_POST_REPORTED }&lt;/a&gt;&lt;/span&gt;&lt;!-- ENDIF --&gt;
++									&lt;/td&gt;
+ 									&lt;td width=&quot;10&quot; nowrap=&quot;nowrap&quot;&gt;{ $postrow:MINI_POST_IMG }&lt;/td&gt;
+ 									&lt;td class=&quot;gensmall&quot; nowrap=&quot;nowrap&quot;&gt;&lt;b&gt;{ $L_POSTED }:&lt;/b&gt; { $postrow:POST_DATE }&lt;/td&gt;
+ 								&lt;/tr&gt;
+@@ -125,16 +124,16 @@
+ 				&lt;!-- IF { $S_CAN_APPROVE } --&gt;&lt;option value=&quot;approve&quot;&gt;{ $L_APPROVE_POSTS}&lt;/option&gt;&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $S_CAN_LOCK } --&gt;&lt;option value=&quot;lock_post&quot;&gt;{ $L_LOCK_POST_POSTS } [ { $L_LOCK_POST_EXPLAIN } ]&lt;/option&gt;&lt;option value=&quot;unlock_post&quot;&gt;{ $L_UNLOCK_POST_POSTS }&lt;/option&gt;&lt;!-- ENDIF --&gt;
+ 				&lt;!-- IF { $S_CAN_DELETE } --&gt;&lt;option value=&quot;delete_post&quot;&gt;{ $L_DELETE_POSTS }&lt;/option&gt;&lt;!-- ENDIF --&gt;
+-				&lt;!-- IF { $S_CAN_MERGE } --&gt;&lt;option value=&quot;merge_posts&quot;&lt;!-- IF { $MODE } == 'merge' --&gt; selected=&quot;selected&quot;&lt;!-- ENDIF --&gt;&gt;{ $L_MERGE_POSTS }&lt;/option&gt;&lt;!-- ENDIF --&gt;
+-				&lt;!-- IF { $S_CAN_SPLIT } --&gt;&lt;option value=&quot;split_all&quot;&lt;!-- IF { $MODE } == 'split' --&gt; selected=&quot;selected&quot;&lt;!-- ENDIF --&gt;&gt;{ $L_SPLIT_POSTS }&lt;/option&gt;&lt;option value=&quot;split_beyond&quot;&gt;{ $L_SPLIT_AFTER }&lt;/option&gt;&lt;!-- ENDIF --&gt;
+-			&lt;/select&gt;&nbsp;&lt;input class=&quot;btnmain&quot; type=&quot;submit&quot; name=&quot;quick&quot; value=&quot;{$L_SUBMIT}&quot;&gt;&lt;/form&gt;&lt;/td&gt;
++				&lt;!-- IF { $S_CAN_MERGE } --&gt;&lt;option value=&quot;merge_posts&quot;&lt;!-- IF { $MODE } === 'merge' --&gt; selected=&quot;selected&quot;&lt;!-- ENDIF --&gt;&gt;{ $L_MERGE_POSTS }&lt;/option&gt;&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $S_CAN_SPLIT } --&gt;&lt;option value=&quot;split_all&quot;&lt;!-- IF { $MODE } === 'split' --&gt; selected=&quot;selected&quot;&lt;!-- ENDIF --&gt;&gt;{ $L_SPLIT_POSTS }&lt;/option&gt;&lt;option value=&quot;split_beyond&quot;&gt;{ $L_SPLIT_AFTER }&lt;/option&gt;&lt;!-- ENDIF --&gt;
++			&lt;/select&gt;&nbsp;&lt;input class=&quot;button&quot; type=&quot;submit&quot; name=&quot;mcp_topic_submit&quot; value=&quot;{$L_SUBMIT}&quot;&gt;&lt;/form&gt;&lt;/td&gt;
+ 		&lt;/tr&gt;
+ 	&lt;/table&gt;
+ &lt;/form&gt;
+ 
+ &lt;table width=&quot;100%&quot; cellspacing=&quot;2&quot; cellpadding=&quot;2&quot; border=&quot;0&quot; align=&quot;center&quot;&gt;
+ 	&lt;tr&gt;
+-		&lt;td align=&quot;right&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;&lt;a href=&quot;javascript:marklist('mcp', true);&quot;&gt;{ $L_MARK_ALL }&lt;/a&gt; :: &lt;a href=&quot;javascript:marklist('mcp', false);&quot;&gt;{ $L_UNMARK_ALL }&lt;/a&gt;&lt;/b&gt;&lt;/td&gt;
++		&lt;td align=&quot;right&quot; valign=&quot;top&quot; nowrap=&quot;nowrap&quot;&gt;&lt;b class=&quot;gensmall&quot;&gt;&lt;a href=&quot;javascript:marklist('mcp', '', true);&quot;&gt;{ $L_MARK_ALL }&lt;/a&gt; :: &lt;a href=&quot;javascript:marklist('mcp', '', false);&quot;&gt;{ $L_UNMARK_ALL }&lt;/a&gt;&lt;/b&gt;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+
+Added: cms/trunk/includes/templates/modules/forums/mcp_whois.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/mcp_whois.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/mcp_whois.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -0,0 +1,19 @@
++&lt;!-- DISPLAY_HEADER --&gt;
++
++&lt;!-- INCLUDE modules/forums/mcp_header.html --&gt;
++
++&lt;table class=&quot;tablebg&quot; width=&quot;100%&quot; cellspacing=&quot;1&quot;&gt;
++&lt;tr&gt; 
++	&lt;th&gt;{ $L_WHOIS }&lt;/th&gt;
++&lt;/tr&gt;
++&lt;tr&gt;
++	&lt;td class=&quot;row3&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $RETURN_POST }&lt;/span&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;tr&gt;
++	&lt;td class=&quot;row1&quot;&gt;&lt;pre&gt;{ $WHOIS }&lt;/pre&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;/table&gt;
++
++&lt;!-- INCLUDE modules/forums/mcp_footer.html --&gt;
++
++&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/forums/viewforum_subforum.html
+===================================================================
+--- cms/trunk/includes/templates/modules/forums/viewforum_subforum.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/forums/viewforum_subforum.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -14,12 +14,12 @@
+ &lt;!-- LOOP $forumrow --&gt;
+ 	&lt;!-- IF { $forumrow:S_IS_CAT } --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;cat&quot; colspan=&quot;2&quot;&gt;&lt;a class=&quot;cattitle&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;/td&gt;
++		&lt;td class=&quot;cat&quot; colspan=&quot;2&quot;&gt;&lt;h4&gt;&lt;a href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;/h4&gt;&lt;/td&gt;
+ 		&lt;td class=&quot;catdiv&quot; colspan=&quot;3&quot; align=&quot;right&quot;&gt;&nbsp;&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;!-- ELSEIF { $forumrow:S_IS_LINK } --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;td class=&quot;row1&quot; height=&quot;40&quot; id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt; width=&quot;100%&quot;&gt;
+ 			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;br /&gt;
+ 			&lt;!-- IF { $forumrow:FORUM_DESC } --&gt;
+@@ -34,27 +34,34 @@
+ 	&lt;/tr&gt;
+ 	&lt;!-- ELSE --&gt;
+ 	&lt;tr&gt;
+-		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot; id=&quot;forum_folder_status_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;lock_unlock_init('{ $forumrow:FORUM_ID }', 'forum', { $forumrow:FORUM_LOCKED });&quot; &lt;!-- ENDIF --&gt;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
++		&lt;td class=&quot;row1&quot; width=&quot;50&quot; height=&quot;40&quot; align=&quot;center&quot; valign=&quot;middle&quot; id=&quot;forum_folder_status_{ $forumrow:FORUM_ID }&quot; &lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;lock_unlock_init('{ $forumrow:FORUM_ID }', 'forum', { $forumrow:FORUM_LOCKED });&quot; &lt;!-- ENDIF --&gt;&gt;{ $forumrow:FORUM_FOLDER_IMG }&lt;/td&gt;
+ 		&lt;td class=&quot;row1&quot; width=&quot;100%&quot; height=&quot;40&quot;  id=&quot;forum_{ $forumrow:FORUM_ID }&quot;&lt;!-- IF { $MODIFY_FORUM } --&gt; onmouseover=&quot;tite_edit_init('{ $forumrow:FORUM_ID }', 'forum');&quot;&lt;!-- ENDIF --&gt;&gt;
+ 			&lt;a class=&quot;forumlink&quot; id=&quot;forum_name_{ $forumrow:FORUM_ID }&quot; href=&quot;{ $forumrow:U_VIEWFORUM }&quot;&gt;{ $forumrow:FORUM_NAME }&lt;/a&gt;&lt;br /&gt;
+-			&lt;!-- IF { $forumrow:FORUM_DESC } --&gt;
+-			&lt;table cellspacing=&quot;5&quot; cellpadding=&quot;0&quot; border=&quot;0&quot;&gt;
+-				&lt;tr&gt;
+-					&lt;td&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $forumrow:FORUM_DESC }&lt;/span&gt;&lt;/td&gt;
+-				&lt;/tr&gt;
+-			&lt;/table&gt;
+-			&lt;!-- ENDIF --&gt;&lt;!-- IF { $forumrow:MODERATORS } || { $forumrow:SUBFORUMS }--&gt;
+-			&lt;span class=&quot;gensmall&quot;&gt;&lt;!-- IF { $forumrow:MODERATORS } --&gt;&lt;b&gt;{ $forumrow:L_MODERATOR_STR }:&lt;/b&gt; { $forumrow:MODERATORS }&lt;br /&gt;&lt;!-- ENDIF --&gt;&lt;!-- IF { $forumrow:SUBFORUMS } --&gt;&lt;br /&gt;&lt;b&gt;{ $forumrow:L_SUBFORUM_STR }&lt;/b&gt; { $forumrow:SUBFORUMS }&lt;!-- ENDIF --&gt;&lt;/span&gt;
+-			&lt;!-- ENDIF --&gt;
++			&lt;p class=&quot;forumdesc&quot;&gt;{ $forumrow:FORUM_DESC }&lt;/p&gt;
++				&lt;!-- IF { $forumrow:MODERATORS } --&gt;
++					&lt;p class=&quot;forumdesc&quot;&gt;&lt;strong&gt;{ $forumrow:L_MODERATOR_STR  }:&lt;/strong&gt; { $forumrow:MODERATORS }&lt;/p&gt;
++				&lt;!-- ENDIF --&gt;
++				&lt;!-- IF { $forumrow:SUBFORUMS } --&gt;
++					&lt;p class=&quot;forumdesc&quot;&gt;&lt;strong&gt;{ $forumrow:L_SUBFORUM_STR }&lt;/strong&gt; { $forumrow:SUBFORUMS }&lt;/p&gt;
++				&lt;!-- ENDIF --&gt;
+ 		&lt;/td&gt;
+ 		&lt;td class=&quot;row2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $forumrow:TOPICS }&lt;/span&gt;&lt;/td&gt;
+ 		&lt;td class=&quot;row2&quot; align=&quot;center&quot;&gt;&lt;span class=&quot;gensmall&quot;&gt;{ $forumrow:POSTS }&lt;/span&gt;&lt;/td&gt;
+ 		&lt;td class=&quot;row2&quot; align=&quot;center&quot; nowrap=&quot;nowrap&quot;&gt;
+ 			&lt;span class=&quot;gensmall&quot;&gt;
+-				&lt;!-- IF { $forumrow:LAST_POST_TIME } --&gt;{ $forumrow:LAST_POST_TIME }&lt;br /&gt;
+-				&lt;!-- IF { $forumrow:U_LAST_POSTER } --&gt;&lt;a href=&quot;{ $forumrow:U_LAST_POSTER }&quot;&gt;{ $forumrow:LAST_POSTER }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $forumrow:LAST_POSTER }&lt;!-- ENDIF --&gt;
+-				&lt;a href=&quot;{ $forumrow:U_LAST_POST }&quot;&gt;{ $forumrow:LAST_POST_IMG }&lt;/a&gt;&lt;!-- ELSE --&gt;{ $L_NO_POSTS }&lt;!-- ENDIF --&gt;
+-				&lt;/span&gt;
++				&lt;!-- IF { $forumrow:LAST_POST_TIME } --&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;{ $forumrow:LAST_POST_TIME }&lt;/p&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;
++				&lt;!-- IF { $forumrow:U_LAST_POSTER } --&gt;
++					&lt;a href=&quot;{forumrow.U_LAST_POSTER }&quot;&gt;{ $forumrow:LAST_POSTER }&lt;/a&gt;
++				&lt;!-- ELSE --&gt;
++					{ $forumrow:LAST_POSTER }
++				&lt;!-- ENDIF --&gt;
++				&lt;a href=&quot;{ $forumrow:U_LAST_POST}&quot;&gt;{ $LAST_POST_IMG }&lt;/a&gt;
++				&lt;/p&gt;
++			&lt;!-- ELSE --&gt;
++				&lt;p class=&quot;topicdetails&quot;&gt;{ $L_NO_POSTS }&lt;/p&gt;
++			&lt;!-- ENDIF --&gt;
+ 		&lt;/td&gt;
+ 	&lt;/tr&gt;
+ 	&lt;!-- ENDIF --&gt;
+
+Modified: cms/trunk/includes/templates/modules/members_list/memberlist_body.html
+===================================================================
+--- cms/trunk/includes/templates/modules/members_list/memberlist_body.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/members_list/memberlist_body.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -1,4 +1,6 @@
+-&lt;!-- DISPLAY_HEADER --&gt;
++&lt;!-- IF !{ $DISPLAY_STYLESHEET_LINK } --&gt;
++	&lt;!-- DISPLAY_HEADER --&gt;
++&lt;!-- ENDIF --&gt;
+ 
+ &lt;!-- INCLUDE modules/members_list/memberlist_header.html --&gt;
+ 
+@@ -134,4 +136,6 @@
+ 
+ &lt;!-- INCLUDE modules/members_list/memberlist_footer.html --&gt;
+ 
+-&lt;!-- DISPLAY_FOOTER --&gt;
+\ No newline at end of file
++&lt;!-- IF !{ $DISPLAY_STYLESHEET_LINK } --&gt;
++	&lt;!-- DISPLAY_FOOTER --&gt;
++&lt;!-- ENDIF --&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/templates/modules/members_list/memberlist_header.html
+===================================================================
+--- cms/trunk/includes/templates/modules/members_list/memberlist_header.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/members_list/memberlist_header.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -2,7 +2,7 @@
+ 
+ &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+ &lt;meta http-equiv=&quot;content-Type&quot; content=&quot;text/html; charset={ $SITE_CHARSET }&quot; /&gt;
+-&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
++&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $THEME_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
+ 
+ &lt;!-- ENDIF --&gt;
+ 
+
+Modified: cms/trunk/includes/templates/modules/members_list/memberlist_search.html
+===================================================================
+--- cms/trunk/includes/templates/modules/members_list/memberlist_search.html	2006-08-06 20:26:49 UTC (rev 181)
++++ cms/trunk/includes/templates/modules/members_list/memberlist_search.html	2006-08-06 20:31:57 UTC (rev 182)
+@@ -1,22 +1,29 @@
+ &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+ &lt;!--
+-function insert_user(user)
+-{
+-	opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.value = ( opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.value.length &amp;&amp; opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.type == &quot;textarea&quot; ) ? opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.value + &quot;\n&quot; + user : user;
++function insert_user(user)
++{
++	opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.value = ( opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.value.length &amp;&amp; opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.type == &quot;textarea&quot; ) ? opener.document.forms['{ $S_FORM_NAME }'].{ $S_FIELD_NAME }.value + &quot;\n&quot; + user : user;
++}
++
++function insert_marked(users)
++{
++	if (typeof(users.length) == &quot;undefined&quot;)
++	{
++		insert_user(users.value);
++	}
++	else if (users.length &gt; 0)
++	{
++		for (i = 0; i &lt; users.length; i++)
++		{
++			if (users[i].checked)
++			{
++				insert_user(users[i].value);
++			}
++		}
++	}
++
++	self.close();
+ }
+-
+-function insert_marked(users)
+-{
+-	for(i = 0; i &lt; users.length; i++)
+-	{
+-		if ( users[i].checked )
+-		{
+-			insert_user(users[i].value);
+-		}
+-	}
+-	self.close();
+-}
+-
+ function marklist(status)
+ {
+ 	for (i = 0; i &lt; document.results.length; i++)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000100.html">[Viperals-svncheckins] r181 - cms/trunk/includes/db
+</A></li>
+	<LI>Next message: <A HREF="000102.html">[Viperals-svncheckins] r183 - in cms/trunk: includes includes/db	includes/forums includes/forums/mcp	includes/templates/modules/forums modules/control_panel	modules/control_panel/modules modules/forums
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#101">[ date ]</a>
+              <a href="thread.html#101">[ thread ]</a>
+              <a href="subject.html#101">[ subject ]</a>
+              <a href="author.html#101">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

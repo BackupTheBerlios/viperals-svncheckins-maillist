@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r144 - in cms/trunk: . blocks includes/forums modules/Forums themes/viperal themes/viperal/template
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r144%20-%20in%20cms/trunk%3A%20.%20blocks%20includes/forums%20modules/Forums%20themes/viperal%20themes/viperal/template&In-Reply-To=%3C200509280106.j8S16IFv003740%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000063.html">
+   <LINK REL="Next"  HREF="000065.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r144 - in cms/trunk: . blocks includes/forums modules/Forums themes/viperal themes/viperal/template</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r144%20-%20in%20cms/trunk%3A%20.%20blocks%20includes/forums%20modules/Forums%20themes/viperal%20themes/viperal/template&In-Reply-To=%3C200509280106.j8S16IFv003740%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r144 - in cms/trunk: . blocks includes/forums modules/Forums themes/viperal themes/viperal/template">viperal at berlios.de
+       </A><BR>
+    <I>Wed Sep 28 03:06:18 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000063.html">[Viperals-svncheckins] r143 - in cms/trunk: includes includes/db includes/display includes/forums includes/forums/mcp includes/templates includes/templates/en/email includes/templates/en/email/members_list includes/templates/modules/Contact includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List includes/templates/modules/Quick_Message install javascript modules/Control_Panel modules/Control_Panel/ucp modules/Forums modules/Forums/admin modules/Members_List
+</A></li>
+        <LI>Next message: <A HREF="000065.html">[Viperals-svncheckins] r145 - in cms/trunk: . blocks includes includes/display includes/forums includes/forums/admin includes/templates/modules/Forums javascript modules/Forums modules/Members_List modules/articles/admin themes/viperal/template themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-28 03:06:13 +0200 (Wed, 28 Sep 2005)
+New Revision: 144
+
+Added:
+   cms/trunk/blocks/block-latest-forums.php
+Modified:
+   cms/trunk/includes/forums/auth.php
+   cms/trunk/installer.php
+   cms/trunk/modules/Forums/posting.php
+   cms/trunk/themes/viperal/index.php
+   cms/trunk/themes/viperal/template/header.html
+Log:
+
+
+Added: cms/trunk/blocks/block-latest-forums.php
+===================================================================
+--- cms/trunk/blocks/block-latest-forums.php	2005-09-27 23:57:50 UTC (rev 143)
++++ cms/trunk/blocks/block-latest-forums.php	2005-09-28 01:06:13 UTC (rev 144)
+@@ -0,0 +1,88 @@
++&lt;?php
++/*
++||**************************************************************||
++||  Viperal CMS &#169; :												||
++||**************************************************************||
++||																||
++||	Copyright (C) 2004, 2005									||
++||  By Ryan Marshall ( Viperal )								||
++||																||
++||  Email: <A HREF="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">viperal1 at gmail.com</A>									||
++||  Site: <A HREF="http://www.viperal.com">http://www.viperal.com</A>								||
++||																||
++||**************************************************************||
++||	LICENSE: ( <A HREF="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</A> )			||
++||**************************************************************||
++||  Viperal CMS is released under the terms and conditions		||
++||  of the GNU General Public License version 2					||
++||																||
++||**************************************************************||
++
++$Id$
++*/
++
++if (!defined('VIPERAL'))
++{
++    die;
++}
++
++global $_CLASS;
++
++load_class(SITE_FILE_ROOT.'includes/forums/auth.php', 'forums_auth');
++$_CLASS['forums_auth']-&gt;acl($_CLASS['core_user']-&gt;data);
++$auth_read = $_CLASS['forums_auth']-&gt;acl_getf('f_read');
++
++if (!$auth_read)
++{
++	return;
++}
++
++$latest_active_topics = 12;
++
++$sql = 'SELECT forum_id, topic_last_post_id ,topic_title, topic_last_poster_name, topic_last_poster_id, topic_last_post_time
++			FROM ' . FORUMS_TOPICS_TABLE . ' WHERE forum_id IN ('. implode(', ', array_keys($auth_read)) .') 
++				AND topic_moved_id = 0 AND topic_approved = 1
++				ORDER BY topic_last_post_time DESC';
++
++$result = $_CLASS['core_db']-&gt;query_limit($sql, $latest_active_topics);
++$row = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++
++if (!$row)
++{
++	$_CLASS['core_db']-&gt;free_result($result);
++
++	return;
++}
++
++$counter = 0;
++$num = 1;
++
++$this-&gt;content = '&lt;table width=&quot;100%&quot; border=&quot;0&quot; cellpadding=&quot;4&quot;&gt;&lt;tr&gt;';
++do {
++
++	if ($counter == 3)
++	{
++		$this-&gt;content .= '&lt;/tr&gt;&lt;tr&gt;';
++
++		$counter = 0;
++	}
++
++	$row['topic_title'] = (strlen($row['topic_title']) &lt;  25) ? $row['topic_title'] : substr($row['topic_title'], 0, 25) . '...';
++
++	$this-&gt;content .= '&lt;td width=&quot;33%&quot;&gt;'
++    .'&lt;span style=&quot;font-size: 140%; font-weight: bold;&quot; &gt;'.$num.'&lt;/span&gt;&nbsp;'
++    .'&lt;a style=&quot;font-weight: bold;&quot; href=&quot;'.generate_link('Forums&amp;file=viewtopic&amp;f='.$row['forum_id'].'&amp;p='.$row['topic_last_post_id'].'#'.$row['topic_last_post_id'])
++    .'&quot; &gt;'.$row['topic_title'].'&lt;/a&gt;&lt;br /&gt;'
++    .'&lt;i&gt;Last post by &lt;a href=&quot;'.generate_link('Members_List&amp;mode=viewprofile&amp;u='.$row['topic_last_poster_id']).'&quot;&gt;'. $row['topic_last_poster_name'] .'&lt;/a&gt;'
++    .'&lt;br/&gt; on '.$_CLASS['core_user']-&gt;format_date($row['topic_last_post_time']).'&lt;/i&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;';
++	
++	$counter ++;
++	$num ++;
++}
++while($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result));
++
++$_CLASS['core_db']-&gt;free_result($result);
++
++$this-&gt;content .= '&lt;/tr&gt;&lt;/table&gt;';
++
++?&gt;
+\ No newline at end of file
+
+Modified: cms/trunk/includes/forums/auth.php
+===================================================================
+--- cms/trunk/includes/forums/auth.php	2005-09-27 23:57:50 UTC (rev 143)
++++ cms/trunk/includes/forums/auth.php	2005-09-28 01:06:13 UTC (rev 144)
+@@ -267,12 +267,13 @@
+ 	
+ 			while ($row = $_CLASS['core_db']-&gt;fetch_row_assoc($result))
+ 			{
+-				$groups[] = $row['group_id'];
++				$groups[$row['group_id']] = true;
+ 				$group_members[$row['group_id']][] = $row['user_id'];
+ 			}
+ 			$_CLASS['core_db']-&gt;free_result($result);
+ 
+-			$sql_user = empty($groups) ? ' AND a.' . $sql_user :  'AND (a.'.$sql_user.' OR a.group_id IN ('.implode(', ', $groups).'))';
++			$sql_user = empty($groups) ? ' AND a.' . $sql_user :  'AND (a.'.$sql_user.' OR a.group_id IN ('.implode(', ', array_keys($groups)).'))';
++			unset($groups);
+ 		}
+ 
+ 		// Sort by group_id since we want user setting to over right grp..  specific &gt; broad
+@@ -293,7 +294,7 @@
+ 
+ 			if ($row['group_id'])
+ 			{
+-				$group_id_array[$row['group_id']] = $row;
++				$group_id_array[$row['group_id']][] = $row;
+ 
+ 				continue;
+ 			}
+@@ -316,7 +317,7 @@
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 			}
+ 
+-			foreach ($group_id_array as $group_id =&gt; $row)
++			foreach ($group_id_array as $group_id =&gt; $rows)
+ 			{
+ 				if (empty($group_members[$group_id]))
+ 				{
+@@ -325,7 +326,10 @@
+ 
+ 				foreach ($group_members[$group_id] as $user_id)
+ 				{
+-					$hold_ary[$user_id][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
++					foreach($rows as $row)
++					{
++						$hold_ary[$user_id][$row['forum_id']][$row['auth_option']] = $row['auth_setting'];
++					}
+ 				}
+ 			}
+ 		}
+
+Modified: cms/trunk/installer.php
+===================================================================
+--- cms/trunk/installer.php	2005-09-27 23:57:50 UTC (rev 143)
++++ cms/trunk/installer.php	2005-09-28 01:06:13 UTC (rev 144)
+@@ -22,7 +22,7 @@
+ */
+ define('VIPERAL', 'INSTALLER');
+ 
+-error_reporting(E_ALL);
++error_reporting(0);
+ 
+ define('SITE_FILE_ROOT', str_replace('\\','/', dirname(getenv('SCRIPT_FILENAME'))).'/');
+ 
+@@ -465,7 +465,7 @@
+ 	$_CLASS['core_template']-&gt;assign_array(array(
+ 		'error'				=&gt; false,
+ 		'magic_quotes_gpc'	=&gt; ((bool) ini_get('magic_quotes_gpc') === false),
+-		'output_buffering'	=&gt; ((int) ini_get('output_buffering') &gt; 0),
++		'output_buffering'	=&gt; ((int) ini_get('output_buffering') === 0),
+ 		'register_globals'	=&gt; ((bool) ini_get('register_globals') === false),
+ 		'safe_mode'			=&gt; ((bool) ini_get('safe_mode') === false),
+ 
+
+Modified: cms/trunk/modules/Forums/posting.php
+===================================================================
+--- cms/trunk/modules/Forums/posting.php	2005-09-27 23:57:50 UTC (rev 143)
++++ cms/trunk/modules/Forums/posting.php	2005-09-28 01:06:13 UTC (rev 144)
+@@ -1491,6 +1491,7 @@
+ 				'topic_replies_real'	=&gt; 0,
+ 				'topic_replies'			=&gt; 0,
+ 				'topic_views'			=&gt; 0,
++				'topic_moved_id'		=&gt; 0
+ 			);
+ 
+ 			if (isset($poll['poll_options']) &amp;&amp; !empty($poll['poll_options']))
+@@ -1544,7 +1545,7 @@
+ 				'poll_vote_change'			=&gt; isset($poll['poll_vote_change']) ? $poll['poll_vote_change'] : 0,
+ 				'topic_attachment'			=&gt; ($post_mode == 'edit_topic') ? ((isset($data['filename_data']['physical_filename']) &amp;&amp; !empty($data['filename_data'])) ? 1 : 0) : (int) $data['topic_attachment']
+ 			);
+-			break;
++		break;
+ 	}
+ 
+ 	$_CLASS['core_db']-&gt;transaction();
+
+Modified: cms/trunk/themes/viperal/index.php
+===================================================================
+--- cms/trunk/themes/viperal/index.php	2005-09-27 23:57:50 UTC (rev 143)
++++ cms/trunk/themes/viperal/index.php	2005-09-28 01:06:13 UTC (rev 144)
+@@ -37,9 +37,10 @@
+ 		$this-&gt;table_close	= '&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;';
+ 		
+ 		$_CLASS['core_template']-&gt;assign_array(array(
+-			'A_TABLE_OPEN'	=&gt; $this-&gt;table_open,
+-			'A_TABLE_CLOSE'	=&gt; $this-&gt;table_close,
+-			'A_STYLESHEET'	=&gt; 'themes/viperal/style/style.css',
++			'THEME_TABLE_OPEN'	=&gt; $this-&gt;table_open,
++			'THEME_TABLE_CLOSE'	=&gt; $this-&gt;table_close,
++			'THEME_STYLESHEET'	=&gt; 'themes/viperal/style/style.css',
++			'THEME_PATH'		=&gt; 'themes/viperal',
+ 		));
+ 	}
+ 
+
+Modified: cms/trunk/themes/viperal/template/header.html
+===================================================================
+--- cms/trunk/themes/viperal/template/header.html	2005-09-27 23:57:50 UTC (rev 143)
++++ cms/trunk/themes/viperal/template/header.html	2005-09-28 01:06:13 UTC (rev 144)
+@@ -7,7 +7,7 @@
+ &lt;meta name=&quot;copyright&quot; content=&quot;Copyright { $SITE_NAME } { $SITE_URL }&quot; /&gt;
+ &lt;meta name=&quot;robots&quot; content=&quot;index, follow&quot; /&gt;
+ { $HEADER_META }
+-&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $A_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
++&lt;link rel=&quot;stylesheet&quot; href=&quot;{ $THEME_STYLESHEET }&quot; type=&quot;text/css&quot; /&gt;
+ { $HEADER_REGULAR }
+ { $HEADER_JS }
+ &lt;script type=&quot;text/javascript&quot; src=&quot;javascript/collapse.js&quot;&gt;&lt;/script&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000063.html">[Viperals-svncheckins] r143 - in cms/trunk: includes includes/db includes/display includes/forums includes/forums/mcp includes/templates includes/templates/en/email includes/templates/en/email/members_list includes/templates/modules/Contact includes/templates/modules/Control_Panel includes/templates/modules/Forums includes/templates/modules/Members_List includes/templates/modules/Quick_Message install javascript modules/Control_Panel modules/Control_Panel/ucp modules/Forums modules/Forums/admin modules/Members_List
+</A></li>
+	<LI>Next message: <A HREF="000065.html">[Viperals-svncheckins] r145 - in cms/trunk: . blocks includes includes/display includes/forums includes/forums/admin includes/templates/modules/Forums javascript modules/Forums modules/Members_List modules/articles/admin themes/viperal/template themes_admin/viperal_admin/template
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>

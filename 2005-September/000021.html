@@ -1,0 +1,513 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Viperals-svncheckins] r98 - in trunk: admin includes/templates/admin/modules install
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/viperals-svncheckins/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r98%20-%20in%20trunk%3A%20admin%20includes/templates/admin/modules%20install&In-Reply-To=%3C200509031626.j83GQk4w015488%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000020.html">
+   <LINK REL="Next"  HREF="000022.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Viperals-svncheckins] r98 - in trunk: admin includes/templates/admin/modules install</H1>
+    <B>Ryan Marshall at BerliOS</B> 
+    <A HREF="mailto:viperals-svncheckins%40lists.berlios.de?Subject=Re%3A%20%5BViperals-svncheckins%5D%20r98%20-%20in%20trunk%3A%20admin%20includes/templates/admin/modules%20install&In-Reply-To=%3C200509031626.j83GQk4w015488%40sheep.berlios.de%3E"
+       TITLE="[Viperals-svncheckins] r98 - in trunk: admin includes/templates/admin/modules install">viperal at berlios.de
+       </A><BR>
+    <I>Sat Sep  3 18:26:46 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000020.html">[Viperals-svncheckins] r97 - in trunk: admin admin/functions includes includes/templates/admin/modules modules/Quick_Message
+</A></li>
+        <LI>Next message: <A HREF="000022.html">[Viperals-svncheckins] r99 - in trunk: . admin includes includes/compatiblity includes/db includes/display includes/forums/admin includes/templates includes/templates/modules/Forums includes/templates/rss install language/en modules modules/Contact modules/Forums modules/Quick_Message modules/articles themes/viperal/images themes/viperal/images/modules themes/viperal/images/modules/Forums themes/viperal/style
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: viperal
+Date: 2005-09-03 18:26:45 +0200 (Sat, 03 Sep 2005)
+New Revision: 98
+
+Added:
+   trunk/admin/index.html
+Modified:
+   trunk/admin/blocks.php
+   trunk/admin/messages.php
+   trunk/admin/modules.php
+   trunk/includes/templates/admin/modules/index.html
+   trunk/install/build_tables.php
+Log:
+
+
+Modified: trunk/admin/blocks.php
+===================================================================
+--- trunk/admin/blocks.php	2005-09-03 03:13:23 UTC (rev 97)
++++ trunk/admin/blocks.php	2005-09-03 16:26:45 UTC (rev 98)
+@@ -343,7 +343,7 @@
+ 		$data['block_position'] = BLOCK_RIGHT;
+ 	}
+ 
+-	$data['block_status']	= get_variable('b_active', 'POST', 0, 'integer');
++	$data['block_status']	= (get_variable('b_active', 'POST', STATUS_DISABLED, 'integer') === STATUS_DISABLED) ? STATUS_DISABLED : STATUS_ACTIVE;
+ 	$data['block_expires']	= get_variable('b_expires', 'POST', '');
+ 	$data['block_starts']	= get_variable('b_time', 'POST', '');
+ 
+
+
+Property changes on: trunk/admin/blocks.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: trunk/admin/index.html
+===================================================================
+
+Modified: trunk/admin/messages.php
+===================================================================
+--- trunk/admin/messages.php	2005-09-03 03:13:23 UTC (rev 97)
++++ trunk/admin/messages.php	2005-09-03 16:26:45 UTC (rev 98)
+@@ -210,7 +210,7 @@
+ 		}
+ 	}
+ 	
+-	$data['block_status']	= get_variable('active', 'POST', 0);
++	$data['block_status']	= (get_variable('active', 'POST', STATUS_DISABLED, 'integer') === STATUS_DISABLED) ? STATUS_DISABLED : STATUS_ACTIVE;
+ 	$data['block_expires']	= get_variable('expires', 'POST', 0);
+ 	$data['block_starts']	= get_variable('time', 'POST', '');
+ 	$data['block_position']	= get_variable('b_position', 'POST', BLOCK_MESSAGE_TOP, 'integer');
+
+
+Property changes on: trunk/admin/messages.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Modified: trunk/admin/modules.php
+===================================================================
+--- trunk/admin/modules.php	2005-09-03 03:13:23 UTC (rev 97)
++++ trunk/admin/modules.php	2005-09-03 16:26:45 UTC (rev 98)
+@@ -43,7 +43,7 @@
+ 		}
+ 		return false;
+ 	}
+-	
++
+ 	return true;
+ }
+ 
+@@ -53,7 +53,6 @@
+ 	{
+ 		switch ($_REQUEST['mode'])
+ 		{
+-			
+ 			case 'change':
+ 				$result = $_CLASS['core_db']-&gt;query('SELECT module_status, module_type FROM '.CORE_MODULES_TABLE.' WHERE module_id = '.$id);
+ 				$module = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+@@ -69,67 +68,85 @@
+ 				$status = ($module['module_status'] == STATUS_ACTIVE) ? STATUS_DISABLED : STATUS_ACTIVE;
+ 				$result = $_CLASS['core_db']-&gt;query('UPDATE '. CORE_MODULES_TABLE . &quot; SET module_status = $status WHERE module_id = $id&quot;);
+ 			break;
+-		
++
++			case 'install':
++				$result = $_CLASS['core_db']-&gt;query('SELECT module_status, module_name, module_type FROM '.CORE_MODULES_TABLE.' WHERE module_id = '.$id);
++				$module = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
++				$_CLASS['core_db']-&gt;free_result($result);
++			
++				if (!$module || $module['module_status'] != STATUS_PENDING)
++				{
++					trigger_error($module ? 'MODULE_ALREADY_INSTALLED' : 'MODULE_NOT_FOUND');
++				}
++
++				check_type($module['module_type']);
++
++				if (display_confirmation())
++				{
++					$error = true;
++
++					if (file_exists($site_file_root.'modules/'.$module['module_name'].'/install.php'))
++					{
++						require_once($site_file_root.'modules/'.$module['module_name'].'/install.php');
++	
++						$name = $module['module_name'].'_install';
++						$install = new $name;
++						$error = $install-&gt;install();
++	
++						if ($error !== true)
++						{
++							// do something better than this
++							trigger_error($error);
++						}
++					}
++
++					$_CLASS['core_db']-&gt;query('UPDATE '.CORE_MODULES_TABLE.' set module_status = '.STATUS_DISABLED.' WHERE module_id = '.$id);
++				}
++			break;
++
+ 			case 'uninstall':
+ 				$result = $_CLASS['core_db']-&gt;query('SELECT module_status, module_name, module_type FROM '.CORE_MODULES_TABLE.' WHERE module_id = '.$id);
+ 				$module = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 			
+-				if (!$module)
++				if (!$module || $module['module_status'] == STATUS_PENDING)
+ 				{
+-					trigger_error('MODULE_NOT_FOUND');
++					trigger_error($module ? 'MODULE_NOT_UNINSTALLABLE' : 'MODULE_NOT_FOUND');
+ 				}
+ 			
+ 				check_type($module['module_type']);
+ 				
+ 				if (display_confirmation())
+ 				{
+-					if ($module['module_status'] !== STATUS_PENDING)
++					if (file_exists($site_file_root.'modules/'.$module['module_name'].'/install.php'))
+ 					{
+-						if (file_exists($site_file_root.'modules/'.$module['module_name'].'/install.php'))
+-						{
+-							require_once($site_file_root.'modules/'.$module['module_name'].'/install.php');
+-							
+-							$name = $module['module_name'].'_install';
+-							$install = new $name;
+-							
+-							$install-&gt;uninstall();
+-						}
++						require_once($site_file_root.'modules/'.$module['module_name'].'/install.php');
++						
++						$name = $module['module_name'].'_install';
++						$install = new $name;
++						
++						$install-&gt;uninstall();
+ 					}
+ 
+-					$_CLASS['core_db']-&gt;query('DELETE from ' . CORE_MODULES_TABLE . ' where module_id = '.$id);
++					$_CLASS['core_db']-&gt;query('UPDATE ' . CORE_MODULES_TABLE . ' set module_status = ' . STATUS_PENDING . ' WHERE module_id = '.$id);
+ 				}
+ 			break;
+ 
+-			case 'install':
++			case 'remove':
+ 				$result = $_CLASS['core_db']-&gt;query('SELECT module_status, module_name, module_type FROM '.CORE_MODULES_TABLE.' WHERE module_id = '.$id);
+ 				$module = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+ 				$_CLASS['core_db']-&gt;free_result($result);
+ 			
+-				if (!$module || $module['module_status'] !== STATUS_PENDING)
++				if (!$module || $module['module_status'] != STATUS_PENDING)
+ 				{
+-					trigger_error($module ? 'MODULE_ALREADY_INSTALLED' : 'MODULE_NOT_FOUND');
++					trigger_error($module ? 'MODULE_NOT_REMOVABLE' : 'MODULE_NOT_FOUND');
+ 				}
+ 
+ 				check_type($module['module_type']);
+ 
+-				if (file_exists($site_file_root.'modules/'.$module['module_name'].'/install.php'))
++				if (display_confirmation())
+ 				{
+-					require_once($site_file_root.'modules/'.$module['module_name'].'/install.php');
+-					
+-					$name = $module['module_name'].'_install';
+-					$install = new $name;
+-					$error = $install-&gt;install();
+-
+-					if ($error == true)
+-					{
+-						$_CLASS['core_db']-&gt;query('UPDATE '.CORE_MODULES_TABLE.' set module_status = '.STATUS_DISABLED.' WHERE module_id = '.$id);
+-					}
+-					else
+-					{
+-						// do something better than this
+-						trigger_error($error);
+-					}
++					$_CLASS['core_db']-&gt;query('DELETE from ' . CORE_MODULES_TABLE . ' WHERE module_id = '.$id);
+ 				}
+ 			break;
+ 
+@@ -186,7 +203,7 @@
+ $_CLASS['core_db']-&gt;free_result($result);
+ 
+ $admin_auth = false;
+-$_CLASS['core_template']-&gt;assign('S_ADMIN_AUTH_LINK', $admin_auth);
++$_CLASS['core_template']-&gt;assign('S_LINK_ADMIN_AUTH', $admin_auth);
+ 
+ $module_type = array(MODULE_SYSTEM =&gt; 'system', MODULE_NORMAL =&gt; 'normal');
+ 
+@@ -205,25 +222,28 @@
+ 		{
+ 			$installed = false;
+ 			$installer_link = generate_link('modules&amp;mode=install&amp;id='.$module['module_id'], array('admin' =&gt; true));
++			$remove_link = generate_link('modules&amp;mode=remove&amp;id='.$module['module_id'], array('admin' =&gt; true));
+ 		}
+ 		else
+ 		{
+ 			$installed = true;
+ 			$installer_link = ($module['module_type'] != BLOCKTYPE_SYSTEM) ? generate_link('modules&amp;mode=uninstall&amp;id='.$module['module_id'], array('admin' =&gt; true)) : '';
++			$remove_link = '';
+ 		}
+ 
+ 		$_CLASS['core_template']-&gt;assign_vars_array($name.'_modules', array(
+-				'INSTALLED'		=&gt; $installed,
+ 				'ACTIVE'		=&gt; ($active),
+-				'ACTIVE_LINK'	=&gt; generate_link('modules&amp;mode=change&amp;id='.$module['module_id'], array('admin' =&gt; true)),
+ 				'CHANGE'		=&gt; ($active) ? $_CLASS['core_user']-&gt;lang['DEACTIVATE'] : $_CLASS['core_user']-&gt;lang['ACTIVATE'],
+ 				'ERROR'			=&gt; '',
+-				'EDIT_LINK'		=&gt; generate_link('modules&amp;mode=edit&amp;id='.$module['module_id'], array('admin' =&gt; true)),
+-				'AUTH_LINK'		=&gt; generate_link('modules&amp;mode=auth&amp;id='.$module['module_id'], array('admin' =&gt; true)),
+-				'ADMIN_AUTH_LINK'=&gt; ($admin_auth) ? generate_link('modules&amp;mode=admin_auth&amp;id='.$module['module_id'], array('admin' =&gt; true)) : '' ,
+-				'INSTALLER_LINK'=&gt; $installer_link,
++				'INSTALLED'		=&gt; $installed,
+ 				'TITLE'			=&gt; ($module['module_title']) ? $module['module_title'] : $module['module_name'],
+ 
++				'LINK_ACTIVE'		=&gt; generate_link('modules&amp;mode=change&amp;id='.$module['module_id'], array('admin' =&gt; true)),
++				'LINK_EDIT'			=&gt; generate_link('modules&amp;mode=edit&amp;id='.$module['module_id'], array('admin' =&gt; true)),
++				'LINK_AUTH'			=&gt; generate_link('modules&amp;mode=auth&amp;id='.$module['module_id'], array('admin' =&gt; true)),
++				'LINK_ADMIN_AUTH'	=&gt; ($admin_auth) ? generate_link('modules&amp;mode=admin_auth&amp;id='.$module['module_id'], array('admin' =&gt; true)) : '' ,
++				'LINK_INSTALLER'	=&gt; $installer_link,
++				'LINK_REMOVE'		=&gt; $remove_link,
+ 		));
+ 	}
+ 	unset($modules[$type], $module);
+@@ -231,70 +251,4 @@
+ 
+ $_CLASS['core_display']-&gt;display(false, 'admin/modules/index.html');
+ 
+-/*
+-function modules_homepage($id, $option)
+-{
+-	global $_CLASS;
+-
+-	if (!in_array($option, array('down', 'up', 'bottom', 'top')))
+-	{
+-		return;
+-	}
+-
+-	$result = $_CLASS['core_db']-&gt;query('SELECT type, homepage FROM '.CORE_MODULES_TABLE.' WHERE id ='. $id);
+-	$module = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-	$_CLASS['core_db']-&gt;free_result($result);
+-
+-	if (!$module || !$module['module_homepage'])
+-	{
+-		trigger_error('MODULE_NOT_FOUND');
+-	}
+-
+-	check_type($module['module_position']);
+-	$module['module_homepage'] = (int) $module['module_homepage'];
+-
+-	switch ($option)
+-	{
+-		case 'down':
+-			$result = $_CLASS['core_db']-&gt;query('SELECT MAX(homepage) as homepage FROM '.CORE_MODULES_TABLE);
+-			$max_homepage = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-			$_CLASS['core_db']-&gt;free_result($result);
+-
+-			if ($module['module_homepage'] &lt; $max_homepage['homepage'])
+-			{
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage=homepage-1 WHERE position='.$module['module_position'].' AND homepage='.($module['module_homepage'] + 1));
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage='.($module['module_homepage'] + 1).' WHERE id ='. $id);
+-			}
+-		break;
+-
+-		case 'up':
+-			if ($module['module_homepage'] &amp;&amp; $module['module_homepage'] != 1)
+-			{
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage=homepage+1 WHERE position='.$module['module_position'].' AND homepage='.($module['module_homepage'] - 1));
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage='.($module['module_homepage'] -1 ).' WHERE id ='. $id);
+-			}
+-		break;
+-
+-		case 'bottom':
+-			$result = $_CLASS['core_db']-&gt;query('SELECT MAX(homepage) as homepage FROM '.CORE_MODULES_TABLE);
+-			$max_homepage = $_CLASS['core_db']-&gt;fetch_row_assoc($result);
+-			$_CLASS['core_db']-&gt;free_result($result);
+-
+-			if ($module['module_homepage'] &lt; $max_homepage['homepage'])
+-			{
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage=homepage-1 WHERE position='.$module['module_position'].' AND homepage &gt; '.$module['module_homepage']);
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage='.$max_homepage['homepage'].' WHERE id='.$id);
+-			}
+-		break;
+-
+-		case 'top':
+-			if ($module['module_homepage'] != 1)
+-			{
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage=homepage+1 WHERE position='.$module['module_position'].' AND homepage &lt; '.$module['module_homepage']);
+-				$result = $_CLASS['core_db']-&gt;query('UPDATE '.BLOCKS_TABLE.' SET homepage=1 WHERE id='.$id);
+-			}
+-		break;
+-	}
+-}
+-*/
+ ?&gt;
+\ No newline at end of file
+
+
+Property changes on: trunk/admin/modules.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Modified: trunk/includes/templates/admin/modules/index.html
+===================================================================
+--- trunk/includes/templates/admin/modules/index.html	2005-09-03 03:13:23 UTC (rev 97)
++++ trunk/includes/templates/admin/modules/index.html	2005-09-03 16:26:45 UTC (rev 98)
+@@ -5,10 +5,10 @@
+ &lt;table class=&quot;tablebg&quot; cellpadding=&quot;4&quot; cellspacing=&quot;1&quot; width=&quot;100%&quot;&gt;
+     &lt;tbody&gt;
+ 		&lt;tr&gt;
+-			&lt;th width=&quot;&lt;!-- IF { $S_ADMIN_AUTH_LINK } --&gt;30&lt;!-- ELSE --&gt;50&lt;!-- ENDIF --&gt;%&quot; align=&quot;center&quot;&gt;&lt;b&gt;{ $L_TITLE }&lt;/b&gt;&lt;/th&gt;
++			&lt;th width=&quot;&lt;!-- IF { $S_LINK_ADMIN_AUTH } --&gt;30&lt;!-- ELSE --&gt;50&lt;!-- ENDIF --&gt;%&quot; align=&quot;center&quot;&gt;&lt;b&gt;{ $L_TITLE }&lt;/b&gt;&lt;/th&gt;
+ 			&lt;th align=&quot;center&quot;&gt;&lt;b&gt;{ $L_STATUS }&lt;/b&gt;&lt;/td&gt;
+ 			&lt;th align=&quot;center&quot;&gt;&lt;b&gt;{ $L_FUNCTIONS }&lt;/b&gt;&lt;/th&gt;
+-			&lt;!-- IF { $S_ADMIN_AUTH_LINK } --&gt;
++			&lt;!-- IF { $S_LINK_ADMIN_AUTH } --&gt;
+ 			&lt;th align=&quot;center&quot;&gt;&lt;/th&gt;
+ 			&lt;!-- ENDIF --&gt;
+ 		&lt;/tr&gt;
+@@ -22,45 +22,45 @@
+ 		&lt;/tr&gt;
+ 		&lt;!-- LOOP $normal_modules --&gt;
+ 		&lt;tr&gt;
+-			&lt;td height=&quot;24&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $normal_modules:EDIT_LINK }'&quot;&gt;
+-				&lt;a href=&quot;{ $normal_modules:EDIT_LINK }&quot;&gt;{ $normal_modules:TITLE }&lt;/a&gt;
++			&lt;td height=&quot;24&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $normal_modules:LINK_EDIT }'&quot;&gt;
++				&lt;a href=&quot;{ $normal_modules:LINK_EDIT }&quot;&gt;{ $normal_modules:TITLE }&lt;/a&gt;
+ 				&lt;!-- IF { $normal_modules:ERROR } --&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 90%; color: red;&quot;&gt;{ $normal_modules:ERROR }&lt;/span&gt;&lt;!-- ENDIF --&gt;
+ 			&lt;/td&gt;
+-			&lt;!-- IF { $normal_modules:INSTALLED } --&gt;
+-				&lt;!-- IF { $normal_modules:ACTIVE } --&gt;
+-				&lt;td align=&quot;center&quot; class=&quot;row2&quot; onmouseover=&quot;this.className='row1'&quot; onmouseout=&quot;this.className='row2'&quot; onclick=&quot;location.href='{ $normal_modules:ACTIVE_LINK }'; return false;&quot;&gt;
+-					&lt;a href=&quot;{ $normal_modules:ACTIVE_LINK }&quot;&gt;{ $normal_modules:CHANGE }&lt;/a&gt;
+-				&lt;/td&gt;
+-				&lt;!-- ELSE --&gt;
+-				&lt;td align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $normal_modules:ACTIVE_LINK }'; return false;&quot;&gt;
+-					&lt;a href=&quot;{ $normal_modules:ACTIVE_LINK }&quot;&gt;{ $normal_modules:CHANGE }&lt;/a&gt;
+-				&lt;/td&gt;
++		&lt;!-- IF { $normal_modules:INSTALLED } --&gt;
++			&lt;!-- IF { $normal_modules:ACTIVE } --&gt;
++			&lt;td align=&quot;center&quot; class=&quot;row2&quot; onmouseover=&quot;this.className='row1'&quot; onmouseout=&quot;this.className='row2'&quot; onclick=&quot;location.href='{ $normal_modules:LINK_ACTIVE }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $normal_modules:LINK_ACTIVE }&quot;&gt;{ $normal_modules:CHANGE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;!-- ELSE --&gt;
++			&lt;td align=&quot;center&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $normal_modules:LINK_ACTIVE }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $normal_modules:LINK_ACTIVE }&quot;&gt;{ $normal_modules:CHANGE }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;!-- ENDIF --&gt;
++			&lt;td nowrap=&quot;nowrap&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;
++				&lt;!-- IF { $normal_modules:LINK_EDIT } --&gt;
++					&lt;a href=&quot;{ $normal_modules:LINK_EDIT }&quot;&gt;{ $L_EDIT }&lt;/a&gt; |
+ 				&lt;!-- ENDIF --&gt;
+-				&lt;td nowrap=&quot;nowrap&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;
+-					&lt;!-- IF { $normal_modules:EDIT_LINK } --&gt;
+-						&lt;a href=&quot;{ $normal_modules:EDIT_LINK }&quot;&gt;{ $L_EDIT }&lt;/a&gt; |
+-					&lt;!-- ENDIF --&gt;
+-					&lt;!-- IF { $normal_modules:AUTH_LINK } --&gt;
+-						&lt;a href=&quot;{ $normal_modules:AUTH_LINK }&quot;&gt;{ $L_PERMISSIONS }&lt;/a&gt;
+-					&lt;!-- ENDIF --&gt;
+-					&lt;!-- IF { $normal_modules:INSTALLER_LINK } --&gt;
+-						 | &lt;a href=&quot;{ $normal_modules:INSTALLER_LINK }&quot;&gt;{ $L_UNINSTALL }&lt;/a&gt;
+-					&lt;!-- ENDIF --&gt;
+-				&lt;/td&gt;
+-				&lt;!-- IF { $S_ADMIN_AUTH_LINK } --&gt;
+-				&lt;td nowrap=&quot;nowrap&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;
+-					&lt;a href=&quot;{ $normal_modules:ADMIN_AUTH_LINK }&quot;&gt;{ $L_ADMIN_PERMISSIONS }&lt;/a&gt;
+-				&lt;/td&gt;
++				&lt;!-- IF { $normal_modules:LINK_AUTH } --&gt;
++					&lt;a href=&quot;{ $normal_modules:LINK_AUTH }&quot;&gt;{ $L_PERMISSIONS }&lt;/a&gt;
+ 				&lt;!-- ENDIF --&gt;
+-			&lt;!-- ELSE --&gt;
++				&lt;!-- IF { $normal_modules:LINK_INSTALLER } --&gt;
++					 | &lt;a href=&quot;{ $normal_modules:LINK_INSTALLER }&quot;&gt;{ $L_UNINSTALL }&lt;/a&gt;
++				&lt;!-- ENDIF --&gt;
++			&lt;/td&gt;
++			&lt;!-- IF { $S_LINK_ADMIN_AUTH } --&gt;
++			&lt;td nowrap=&quot;nowrap&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;
++				&lt;a href=&quot;{ $normal_modules:LINK_ADMIN_AUTH }&quot;&gt;{ $L_ADMIN_PERMISSIONS }&lt;/a&gt;
++			&lt;/td&gt;
++			&lt;!-- ENDIF --&gt;
++		&lt;!-- ELSE --&gt;
+ 			&lt;td align=&quot;center&quot; class=&quot;row1&quot;&gt;
+ 				{ $L_NOT_INSTALLED }
+ 			&lt;/td&gt;
+ 			&lt;td nowrap=&quot;nowrap&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;
+-				&lt;a href=&quot;{ $normal_modules:INSTALLER_LINK }&quot;&gt;{ $L_INSTALL }&lt;/a&gt;
++				&lt;a href=&quot;{ $normal_modules:LINK_INSTALLER }&quot;&gt;{ $L_INSTALL }&lt;/a&gt; |
++				&lt;a href=&quot;{ $normal_modules:LINK_REMOVE }&quot;&gt;{ $L_REMOVE }&lt;/a&gt;
+ 			&lt;/td&gt;
+-			&lt;!-- ENDIF --&gt;
+-
++		&lt;!-- ENDIF --&gt;
+ 		&lt;/tr&gt;
+ 		&lt;tr&gt;
+ 			&lt;td class=&quot;spacer&quot; colspan=&quot;4&quot; height=&quot;7&quot;&gt;&lt;/td&gt;
+@@ -76,12 +76,12 @@
+ 		&lt;/tr&gt;
+ 		&lt;!-- LOOP $system_modules --&gt;
+ 		&lt;tr&gt;
+-			&lt;td colspan=&quot;3&quot; height=&quot;24&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $system_modules:EDIT_LINK }'; return false;&quot;&gt;
+-				&lt;a href=&quot;{ $system_modules:EDIT_LINK }&quot;&gt;{ $system_modules:TITLE }&lt;/a&gt;
++			&lt;td colspan=&quot;3&quot; height=&quot;24&quot; class=&quot;row1&quot; onmouseover=&quot;this.className='row2'&quot; onmouseout=&quot;this.className='row1'&quot; onclick=&quot;location.href='{ $system_modules:LINK_EDIT }'; return false;&quot;&gt;
++				&lt;a href=&quot;{ $system_modules:LINK_EDIT }&quot;&gt;{ $system_modules:TITLE }&lt;/a&gt;
+ 			&lt;/td&gt;
+-			&lt;!-- IF { $S_ADMIN_AUTH_LINK } --&gt;
++			&lt;!-- IF { $S_LINK_ADMIN_AUTH } --&gt;
+ 			&lt;td nowrap=&quot;nowrap&quot; class=&quot;row1&quot; align=&quot;center&quot;&gt;
+-				&lt;a href=&quot;{ $system_modules:ADMIN_AUTH_LINK }&quot;&gt;{ $L_ADMIN_PERMISSIONS }&lt;/a&gt;
++				&lt;a href=&quot;{ $system_modules:LINK_ADMIN_AUTH }&quot;&gt;{ $L_ADMIN_PERMISSIONS }&lt;/a&gt;
+ 			&lt;/td&gt;
+ 			&lt;!-- ENDIF --&gt;
+ 		&lt;/tr&gt;
+
+Modified: trunk/install/build_tables.php
+===================================================================
+--- trunk/install/build_tables.php	2005-09-03 03:13:23 UTC (rev 97)
++++ trunk/install/build_tables.php	2005-09-03 16:26:45 UTC (rev 98)
+@@ -881,7 +881,7 @@
+ $_CLASS['core_db']-&gt;add_table_field_int('bbcode_bitfield', 1000000000);
+ $_CLASS['core_db']-&gt;add_table_field_char('bbcode_uid', 5);
+ field_unix_time('message_edit_time', true);
+-$_CLASS['core_db']-&gt;add_table_field_text('message_edit_count', array('max' =&gt; 200, 'null' =&gt; true));
++$_CLASS['core_db']-&gt;add_table_field_int('message_edit_count', array('max' =&gt; 200, 'null' =&gt; true));
+ $_CLASS['core_db']-&gt;add_table_field_text('to_address', 1000000);
+ $_CLASS['core_db']-&gt;add_table_field_text('bcc_address', 1000000);
+ 
+
+
+Property changes on: trunk/install/build_tables.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000020.html">[Viperals-svncheckins] r97 - in trunk: admin admin/functions includes includes/templates/admin/modules modules/Quick_Message
+</A></li>
+	<LI>Next message: <A HREF="000022.html">[Viperals-svncheckins] r99 - in trunk: . admin includes includes/compatiblity includes/db includes/display includes/forums/admin includes/templates includes/templates/modules/Forums includes/templates/rss install language/en modules modules/Contact modules/Forums modules/Quick_Message modules/articles themes/viperal/images themes/viperal/images/modules themes/viperal/images/modules/Forums themes/viperal/style
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#21">[ date ]</a>
+              <a href="thread.html#21">[ thread ]</a>
+              <a href="subject.html#21">[ subject ]</a>
+              <a href="author.html#21">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/viperals-svncheckins">More information about the Viperals-svncheckins
+mailing list</a><br>
+</body></html>
